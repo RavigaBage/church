@@ -1,0 +1,651 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: Ninu;
+  src: url("../font/Nunito-Regular_1.ttf");
+}
+
+:root {
+  --white: #fff;
+  --black: #000;
+  --fadeWhite: #b4b4b4;
+  --blue: rgb(1, 89, 161);
+  --green: rgb(11, 228, 47);
+  --crimson: crimson;
+  --border-radius-1: 1rem;
+  --border-radius-2: 6px;
+  --radius10: 10px;
+  --radius16: 16px;
+  --radius7: 7px;
+  --bgblack: #000002f6;
+  --bgfadeblack: #080b0e;
+  --bgfadeblack-light: #16181a;
+}
+
+body {
+  width: 100%;
+  background: var(--bgblack);
+  color: var(--white);
+  font-family: Ninu;
+}
+main {
+  display: grid;
+  grid-template-columns: 16% 84%;
+}
+.flex {
+  display: flex;
+  align-items: center;
+}
+main.animate {
+  display: block;
+}
+main.animate section.container {
+  width: 84%;
+  margin-left: 16%;
+}
+main.animate aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16%;
+}
+
+aside {
+  border-right: 1px solid var(--fadeWhite);
+  padding: 10px;
+  background-color: var(--bgfadeblack);
+}
+aside .logo {
+  display: flex;
+  margin-bottom: 20px;
+}
+aside .logo h1 {
+  font-size: 20px;
+}
+aside .header {
+  font-size: 16px;
+  color: var(--fadeWhite);
+  margin-block: 10px;
+}
+aside .item {
+  padding-block: 5px;
+  height: 45px;
+}
+
+aside .item .cover {
+  background-color: var(--white);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+}
+aside .item .cover i {
+  color: var(--black);
+}
+aside .item p {
+  margin-left: 20px;
+}
+
+section {
+  padding-block: 10px;
+  background-color: var(--bgfadeblack);
+}
+.container nav {
+  width: calc(100% - 20px);
+  height: 45px;
+  padding-inline: 10px;
+}
+.container nav .user_details {
+  justify-content: flex-end;
+  float: right;
+}
+.container nav .user_details .item {
+  margin-right: 30px;
+  position: relative;
+}
+.container nav .user_details .item i {
+  font-size: 18px;
+}
+.container nav .user_details .item .counter {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  background-color: var(--crimson);
+
+  border-radius: 50%;
+}
+.container nav .user_details .item .counter p {
+  font-size: 13px;
+  font-weight: 500;
+}
+.container nav .user_details .item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile_main {
+  width: 100%;
+  background-color: var(--bgblack);
+  padding: 10px 20px;
+}
+
+.profile_main header {
+  font-size: 25px;
+  font-weight: bolder;
+  margin-bottom: 10px;
+}
+
+.profile_main .grid_sx {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  gap: 10px;
+}
+.profile_main .grid_sx.tithebook {
+  grid-template-columns: 100%;
+}
+.profile_main .grid_sx .profile {
+  background-color: var(--bgfadeblack);
+  border-radius: var(--radius16);
+}
+.profile .profile_status {
+  margin-bottom: 10px;
+  padding: 10px 40px;
+  border-bottom: 1px solid var(--fadeWhite);
+}
+.profile .profile_status .cover {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: rgb(255, 196, 0);
+  margin-right: 40px;
+}
+.profile .profile_status .cover img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.profile .profile_status .details button {
+  padding: 10px;
+  border-radius: var(--radius7);
+  outline: none;
+  height: 35px;
+  border-width: 0px;
+  background-color: var(--bgfadeblack-light);
+  color: var(--white);
+  box-shadow: 0px 0px 4px 0px #1a1919;
+  margin-bottom: 10px;
+}
+
+.profile .personal_details {
+  padding: 10px 40px;
+  width: 100%;
+}
+.profile .personal_details_info {
+  border-radius: var(--radius7);
+  border: 1px solid var(--fadeWhite);
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+.profile .personal_details .info {
+  width: 100%;
+  display: grid;
+  margin-top: 20px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.profile .personal_details .info .feild {
+  width: 100%;
+}
+.profile .personal_details .info .feild label {
+  width: 100%;
+  color: var(--fadeWhite);
+}
+
+.profile .personal_details .location {
+  padding: 20px 40px;
+  background-color: var(--bgblack);
+  border-radius: var(--radius7);
+  margin-top: 30px;
+}
+.profile .personal_details .location .info_bar {
+  width: 100%;
+  height: auto;
+  gap: 10px;
+}
+.profile .personal_details .location .compass {
+  background-color: var(--bgfadeblack);
+  padding: 5px;
+  width: calc(100% - 130px);
+  border-radius: var(--radius7);
+  margin-block: 20px;
+}
+.profile .personal_details .location .compass input {
+  width: calc(100% - 20px);
+  height: 35px;
+  background-color: transparent;
+  outline: none;
+  border-width: 0px;
+  margin-left: 10px;
+}
+.profile .personal_details .location .info_bar button {
+  padding: 10px;
+  border-radius: var(--radius7);
+  outline: none;
+  width: 130px;
+  height: 35px;
+  border-width: 0px;
+  background-color: var(--blue);
+  color: var(--white);
+  box-shadow: 0px 0px 4px 0px #1a1919;
+  font-weight: bolder;
+}
+.profile .personal_details .bio {
+  padding: 5px;
+  width: 100%;
+  border-radius: var(--radius7);
+  margin-block: 20px;
+}
+.profile .personal_details .bio .bio_data {
+  width: 100%;
+}
+.profile .personal_details .bio .bio_data p:nth-child(even) {
+  margin-top: 10px;
+}
+.status {
+  background-color: var(--bgfadeblack);
+  border-radius: var(--radius16);
+  height: fit-content;
+  padding-bottom: 20px;
+}
+.status header {
+  text-align: center;
+  font-size: 18px;
+  margin-block: 20px;
+}
+.status .gauge {
+  width: 130px;
+  height: 130px;
+  margin: 20px auto;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--bgfadeblack-light) 160deg,
+    var(--green) 160deg
+  );
+  display: grid;
+  place-items: center;
+}
+
+.status .gauge .details {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--bgfadeblack);
+  display: grid;
+  place-items: center;
+}
+.status .gauge .details p {
+  font-weight: bolder;
+  font-size: 20px;
+}
+.checklist {
+  width: 100%;
+}
+.checklist .item {
+  width: 80%;
+  margin: 10px auto;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.checklist .item p {
+  font-size: 14px;
+}
+
+.checklist .item p:nth-child(odd) {
+  color: var(--fadeWhite);
+}
+.checklist .uncheck i,
+.checklist .uncheck p {
+  color: var(--fadeWhite);
+}
+.checklist .uncheck p:nth-child(odd) {
+  color: var(--green);
+}
+.title {
+  width: 100%;
+  justify-content: space-between;
+}
+.title p {
+  font-weight: 700px;
+  font-size: 20px;
+}
+.title div i {
+  margin-right: 10px;
+}
+.delete {
+  color: var(--crimson);
+}
+.sidemenu_trigger {
+  justify-content: flex-start;
+  display: none;
+}
+.sidemenu_trigger svg {
+  fill: #fff;
+  float: left;
+}
+p span {
+  color: var(--green);
+}
+/*------------------payment------------------------------------*/
+.payment_list {
+  width: 100%;
+  padding: 10px;
+}
+.payment_list .item,
+.tithe_item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  text-align: center;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 10px;
+}
+.tithe_item {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  text-align: left;
+}
+.payment_list .item:hover,
+.tithe_item:hover,
+.annc_item.check:hover {
+  background-color: #464545;
+}
+.payment_list .item button,
+.welfare button {
+  width: 90px;
+  height: 35px;
+  background-color: var(--green);
+  outline: none;
+  border-width: 0px;
+  border-radius: var(--radius7);
+  font-size: 16px;
+  color: var(--white);
+  font-weight: 500;
+}
+.payment_list .item h1 {
+  font-size: 18px;
+}
+.tithe_list {
+  padding: 10px;
+}
+.month_image {
+  width: 100%;
+  height: 150px;
+  border-radius: var(--radius7);
+}
+.annc_item {
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: var(--radius7);
+  padding: 10px;
+}
+.annc_item:not(.check) {
+  border-top: 5px solid var(--crimson);
+  box-shadow: 0px 0px 4px 0px var(--fadeWhite);
+}
+.annc_item .img_details {
+  width: 100%;
+  height: 100%;
+}
+.flex.annc_item {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 10px;
+}
+.annc_item img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius10);
+}
+.language {
+  width: 100%;
+  height: 100%;
+}
+.language .img_flag {
+  width: auto;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.language .img_flag img {
+  width: 70px;
+  height: 70px;
+  border-radius: var(--radius7);
+  object-fit: cover;
+}
+.language .grid_select {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+.language .grid_select .img_flag {
+  width: 100%;
+  height: 120px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+}
+@media screen and (max-width: 1100px) {
+  main.animate {
+    display: block;
+  }
+  main.animate section.container {
+    width: 100%;
+    margin-left: 0%;
+  }
+  main.animate aside {
+    position: relative;
+  }
+  .language .grid_select {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .sidemenu_trigger {
+    display: block;
+  }
+  .sidemenu_trigger svg {
+    margin-right: 10px;
+    font-size: 45px;
+    margin-left: 10px;
+  }
+  .sidemenu_trigger.active svg:nth-child(1) {
+    display: block;
+  }
+  .sidemenu_trigger.active svg:nth-child(2) {
+    display: none;
+  }
+
+  .sidemenu_trigger svg:nth-child(1) {
+    display: none;
+  }
+  .sidemenu_trigger svg:nth-child(2) {
+    display: block;
+  }
+
+  aside {
+    position: fixed;
+    top: 44px;
+    left: 0;
+    display: none;
+    z-index: 999;
+    width: 320px;
+  }
+
+  main,
+  aside.active {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .profile_main .grid_sx {
+    display: block;
+  }
+  .status {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
+  }
+  .language .grid_select {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .status header {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    height: fit-content;
+  }
+  .status .gauge {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .status .checklist {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .profile_main,
+  .profile .personal_details {
+    padding: 10px 10px;
+  }
+  .profile .personal_details .location .info_bar {
+    flex-direction: column;
+  }
+  .profile .personal_details .location .compass {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 560px) {
+  .payment_list .item h1 {
+    font-size: 16px;
+  }
+  .payment_list .item,
+  .tithe_item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-row: auto auto;
+  }
+  .tithe_item {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .payment_list .item h1,
+  .tithe_item p:nth-child(1) {
+    grid-column: 1/5;
+    grid-row: 1;
+    text-align: left;
+    margin-bottom: 15px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .profile_main,
+  .profile .personal_details {
+    padding: 10px 10px;
+  }
+  .profile .personal_details .info {
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto;
+  }
+  .profile .personal_details .info .feild:nth-child(3) {
+    grid-column: 1/3;
+  }
+  .language .grid_select {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .profile_main,
+  .profile .personal_details {
+    padding: 10px 10px;
+  }
+  .profile .personal_details .info {
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto;
+  }
+  .profile .personal_details .info .feild:nth-child(3) {
+    grid-column: 1;
+  }
+  .profile .profile_status {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .status {
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto;
+  }
+  .status .checklist {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .status header {
+    grid-column: 1;
+  }
+  .profile_status .details {
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  aside {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .feild p {
+    font-size: 13px;
+    word-wrap: break-word;
+  }
+  .payment_list .item button,
+  .welfare button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 200px) {
+  .feild,
+  section {
+    overflow: hidden;
+  }
+  .payment_list .item,
+  .tithe_item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+  }
+  .payment_list .item h1,
+  .tithe_item p:nth-child(1) {
+    grid-column: 1;
+  }
+  .payment_list .item button,
+  .welfare button {
+    width: 100%;
+  }
+}

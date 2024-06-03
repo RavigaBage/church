@@ -1,0 +1,188 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  list-style: none;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+.container {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 22% 56% 22%;
+  grid-template-rows: 1fr;
+}
+
+.grid_profile {
+  width: 100%;
+  grid-column: 1;
+  grid-row: 1;
+  border: 1px solid rgb(200, 255, 0);
+}
+.grid_profile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 280px auto;
+}
+.grid_profile .profile_main {
+  grid-column: 1/3;
+}
+.grid_profile .profile_main img {
+  width: 90%;
+  height: 150px;
+  border-radius: 10px;
+  margin: 10px 5%;
+  object-fit: cover;
+}
+.grid_profile .details {
+  width: 100%;
+  padding: 10px;
+}
+.grid_profile .details div {
+  margin-top: 10px;
+}
+.grid_profile .details h1 {
+  font-size: 15px;
+}
+.grid_profile .details .txt p {
+  color: rgb(0, 174, 255);
+}
+.grid_profile .profile .details h1 {
+  font-size: 14px;
+}
+.grid_profile .profile {
+  max-height: 70px;
+}
+.grid_profile .profile img {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  margin: 10px;
+  object-fit: cover;
+}
+.grid_profile .profile details {
+  width: 100%;
+}
+.grid_main {
+  width: 100%;
+  grid-column: 2;
+  grid-row: 1;
+  border: 1px solid red;
+}
+.grid_main .grid_performance {
+  width: 100%;
+  height: 300px;
+  border: 1px solid teal;
+}
+.grid_main .grid_more {
+  width: 100%;
+  min-height: 200px;
+  border: 1px solid teal;
+}
+.grid_main .grid_more .records {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.grid_main .grid_more .records .record_book.positive:hover {
+  background-color: rgb(66, 228, 66);
+}
+.grid_main .grid_more .records .record_book.negative:hover {
+  background-color: rgb(228, 66, 66);
+}
+.grid_main .grid_more .records .record_book.neutral:hover {
+  background-color: rgb(66, 223, 228);
+}
+.grid_main .grid_more .records .record_book {
+  width: 300px;
+  min-height: 45px;
+  margin: 10px;
+  cursor: pointer;
+}
+.grid_main .grid_more .grid_about {
+  width: 100%;
+  grid-column: 3;
+  grid-row: 1;
+  border: 1px solid rgb(15, 15, 15);
+}
+.grid_about .report {
+  width: 100%;
+  height: 200px;
+}
+.grid_about .about {
+  padding: 10px;
+  width: 100%;
+  height: calc(100% - 200px);
+}
+.grid_about .about header {
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-block: 10px;
+}
+.grid_about .about .stat h1 {
+  font-size: 16px;
+}
+.grid_about .about .stat div {
+  margin-top: 5px;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.options {
+  position: fixed;
+  bottom: 8%;
+  right: 0;
+}
+
+.options button {
+  width: 70px;
+  height: 40px;
+  background-color: rgb(27, 27, 27);
+  border-radius: 6px;
+  font-size: 17px;
+  outline: none;
+  border-width: 0px;
+  margin-top: 10px;
+  color: #fff;
+}
+@media screen and (max-width: 1100px) {
+  .container {
+    grid-template-rows: minmax(400px, 800px) minmax(200px, 700px) 1fr;
+    grid-template-columns: auto;
+    height: 100%;
+  }
+  .grid_profile {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .grid_main {
+    grid-column: 1;
+    grid-row: 2;
+    height: 500px;
+  }
+  .grid_about {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}
+@media screen and (max-width: 502px) {
+  .event_menu_add {
+    width: 90% !important;
+    left: 5% !important;
+  }
+  .cate_view {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+  }
+}
+@media screen and (max-width: 350px) {
+  .grid_main .grid_more .records .record_book {
+    width: 100%;
+  }
+}

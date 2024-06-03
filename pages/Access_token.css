@@ -1,0 +1,59 @@
+.content_main {
+  background: #000000;
+}
+.content_main .header_slider {
+  width: 98%;
+  height: 300px;
+  box-shadow: 0px 0px 4px 0px #ddd;
+  border-radius: 16px;
+  margin-inline: 1%;
+}
+.access_token {
+  padding: 10px;
+  margin-top: 10px;
+  display: grid;
+  place-items: center;
+}
+.access_token header {
+  text-align: center;
+  font-size: 25px;
+  letter-spacing: 1px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+}
+.timer_set {
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.timer_set div {
+  width: 100px;
+  margin: 10px auto;
+  font-size: 20px;
+}
+.token {
+  display: grid;
+  place-items: center;
+}
+.token span,
+.token h1 {
+  padding: 20px;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  letter-spacing: 3px;
+  font-weight: bolder;
+}
+.token button {
+  width: 250px;
+  height: 45px;
+  margin-top: 10px;
+  border-radius: 10px;
+  outline: none;
+  border-width: 0px;
+  font-size: 18px;
+  background-color: crimson;
+  color: #fff;
+}

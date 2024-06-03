@@ -1,0 +1,541 @@
+body {
+  overflow-x: hidden;
+}
+main .main {
+  overflow-x: hidden;
+}
+.media {
+  width: 98%;
+  margin: 10px;
+  border-radius: 16px;
+  padding-inline: 5px;
+  height: calc(100% - 100px);
+  display: flex;
+  border: 1px solid #dddddd3f;
+}
+.media .container_play {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+.media .wrapper_covering {
+  height: 100%;
+  width: 60%;
+}
+.media .container_play .player {
+  width: 100%;
+  height: 150px;
+}
+.media .playList {
+  width: 40%;
+  margin-left: 10px;
+  overflow: auto;
+}
+.media .playList::-webkit-scrollbar {
+  width: 10px;
+  background-color: rgba(90, 88, 88, 0);
+}
+.media .playList::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  border-radius: 10px;
+}
+.media .playList header {
+  font-size: 25px;
+  text-align: center;
+  margin-bottom: 10px;
+  width: 90%;
+}
+.media .playList .header svg {
+  width: 30px;
+  fill: red;
+  display: none;
+}
+.media .playList .item {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dddddd38;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.media .playList .item .icon {
+  width: 12%;
+  height: 50px;
+  background-color: #fff;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  margin: 10px 5px;
+}
+.media .playList .item .icon svg {
+  width: 30px;
+}
+.media .playList .item .details {
+  width: 55%;
+  padding-left: 10px;
+}
+.media .playList .item .details h1 {
+  font-size: 18px;
+  color: #ffffff;
+}
+.media .playList .item .details p {
+  color: #ffffff93;
+  font-size: 16px;
+}
+
+.media .playList .item .options {
+  width: 30%;
+  display: flex;
+  justify-self: center;
+  align-items: center;
+}
+.media .playList .item .options svg {
+  width: 20px;
+}
+.media .playList .item .options .icon_add {
+  background: rgba(6, 175, 6, 0.288);
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  margin-right: 10px;
+}
+.media .playList .item .options .icon_add svg {
+  fill: rgb(0, 255, 0);
+}
+.media .playList .item .options .icon_download {
+  background: rgba(113, 6, 175, 0.288);
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  margin-right: 10px;
+}
+.media .playList .item .options .icon_download svg {
+  fill: rgb(153, 0, 255);
+}
+.playerArea {
+  width: 100%;
+  height: 300px;
+}
+.playericon {
+  width: 100%;
+  padding: 30px;
+  height: 40px;
+}
+.playericon .iconwrapper {
+  width: 40%;
+  height: 70%;
+  border-radius: 16px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  background-color: #fff;
+}
+.playericon p {
+  font-size: 20px;
+  text-align: center;
+}
+.playericon svg {
+  width: 50px;
+}
+.playericon .spinner {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgba(220, 20, 60, 0.021);
+  box-shadow: 0px 0px 16px 0px #000;
+  margin: 10px auto;
+  overflow: hidden;
+}
+.playericon .spinner.active {
+  animation: spin infinite 5s linear;
+}
+.playericon .spinner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.player {
+  background: #000;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+.playerComponent {
+  width: 100%;
+  height: 100%;
+}
+.videoControl {
+  width: 100%;
+  height: 100%;
+}
+.playerComponent .videoControl .Non_tracker {
+  width: 100%;
+  height: 50%;
+  border-bottom: 1px solid #201c1ca4;
+  display: flex;
+  align-items: center;
+}
+.playerComponent .videoControl .Non_tracker .volume {
+  width: 30%;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.playerComponent .videoControl .Non_tracker .volume .volumebar {
+  width: 70%;
+  height: 10px;
+  position: relative;
+}
+.playerComponent .videoControl .Non_tracker .volume .volumebar svg {
+  width: 20px;
+  fill: #fff;
+}
+
+.playerComponent .videoControl .Non_tracker .volume .icon {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.playerComponent .videoControl .Non_tracker .volume .icon div {
+  width: 12%;
+  margin-inline: 1px;
+}
+.playerComponent .videoControl .Non_tracker .volume .icon .v1 {
+  height: 12px;
+  background: #fff;
+}
+.playerComponent .videoControl .Non_tracker .volume .icon .v2 {
+  height: 16px;
+  background: #fff;
+}
+.playerComponent .videoControl .Non_tracker .volume .icon .v3 {
+  height: 20px;
+  background: #dfdfdf36;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main {
+  width: 40%;
+  display: grid;
+  place-items: center;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main.active #pause {
+  display: block;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main.active #play {
+  display: none;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main #play {
+  display: block;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main #pause {
+  display: none;
+}
+.playerComponent .videoControl .Non_tracker .icon_Main svg {
+  width: 30px;
+  fill: #fff;
+}
+.playerComponent .videoControl .Non_tracker .menu {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.playerComponent .videoControl .Non_tracker .menu .quality {
+  max-width: 40%;
+  display: flex;
+  align-items: center;
+  background: #0c0c0ca2;
+  border-radius: 4px;
+  font-family: paragraph1;
+  font-weight: 200;
+  padding: 3px;
+  margin-inline: 10px;
+  cursor: pointer;
+}
+.playerComponent .videoControl .Non_tracker .menu .quality img {
+  width: 15px;
+}
+.playerComponent .videoControl .Non_tracker .menu .quality .hd {
+  color: rgb(221, 123, 11);
+}
+.playerComponent .videoControl .Non_tracker .menu .subtitle,
+.playerComponent .videoControl .Non_tracker .menu .screen_mode {
+  width: 20%;
+  margin-inline: 5px;
+}
+.playerComponent .videoControl .Non_tracker .menu .subtitle img {
+  width: 25px;
+}
+.playerComponent .videoControl .Non_tracker .menu .screen_mode img,
+.playerComponent .videoControl .Non_tracker .menu .screen_mode svg {
+  width: 25px;
+  fill: #fff;
+}
+.playerComponent .videoControl .Non_tracker .menu .episodes {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.playerComponent .videoControl .Non_tracker .menu .episodes .e1,
+.playerComponent .videoControl .Non_tracker .menu .episodes .e3 {
+  width: 40%;
+  height: 3px;
+  background-color: #fff;
+  margin-block: 2px;
+  border-radius: 5px;
+}
+.playerComponent .videoControl .Non_tracker .menu .episodes .e2 {
+  width: 25%;
+  height: 3px;
+  background-color: #fff;
+}
+.videoContainer
+  .videoControl
+  .Non_tracker
+  .volume
+  .volumebar
+  .volumeScribber::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 3px;
+  height: 10px;
+  z-index: 999;
+  background: rgb(255, 255, 255);
+  margin-top: -3px;
+}
+.playerComponent .videoControl .tracker {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow-x: hidden;
+}
+.playerComponent .videoControl .tracker p {
+  font-family: paragraph;
+  font-size: 18px;
+}
+.playerComponent .videoControl .tracker .scribber {
+  width: 80%;
+  height: 5px;
+  margin-inline: 5px;
+  background-color: #dddddd6e;
+}
+.playerComponent .videoControl .tracker .scribber .scribber_track {
+  width: calc(var(--preview-position) * 100%);
+  height: 100%;
+  background: teal;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: relative;
+}
+.playerComponent .videoControl .tracker .scribber .scribber_track::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  width: 13px;
+  height: 13px;
+  z-index: 999;
+  background: teal;
+  margin-top: -5px;
+  border-radius: 50%;
+}
+
+.comment_section {
+  width: 100%;
+}
+.comment_section .item {
+  width: 100%;
+  padding-inline: 10px;
+  padding-block: 30px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(70, 68, 68, 0.116);
+}
+.comment_section .item .profile {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid #dddddd60;
+  padding-bottom: 10px;
+}
+.comment_section .item .profile .icon {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  margin-inline: 10px;
+}
+
+.comment_section .item .profile .icon svg {
+  width: 20px;
+}
+.comment_section .item .profile .name_details p:nth-child(1) {
+  font-size: 20px;
+}
+.comment_section .item .profile .name_details p:nth-child(2) {
+  color: #dddddd8e;
+}
+
+.comment_section .item .comment {
+  font-size: 18px;
+  padding-block: 20px;
+  border-bottom: 1px solid #dddddd54;
+}
+.comment_section .item .trackinfo {
+  width: 100%;
+  padding-top: 10px;
+}
+.comment_section .item .trackinfo .user_view {
+  float: left;
+  display: flex;
+  align-items: center;
+}
+.comment_section .item .trackinfo .reply {
+  float: right;
+  display: flex;
+  align-items: center;
+}
+.reply .covering svg {
+  width: 20px;
+  fill: #fff;
+}
+.comment_section .item .trackinfo .user_view .list {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+}
+.covering {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+}
+.comment_section .item .trackinfo .user_view .list svg {
+  width: 10px;
+}
+.comment_section .item .trackinfo .user_view .list.like {
+  fill: #fff;
+  border: 1px solid rgba(7, 199, 7, 0.671);
+  border-radius: 6px;
+}
+
+.comment_section .item .trackinfo .user_view .list.dislike {
+  border: 1px solid crimson;
+}
+
+.recommendation {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.recommendation .item_recommend {
+  width: 150px;
+  height: 250px;
+  margin-inline: 10px;
+}
+
+.recommendation .item_recommend img {
+  width: 100%;
+  height: 60%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.recommendation .item_recommend .details {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+.recommendation .item_recommend .details h1 {
+  font-size: 18px;
+  color: #ddddddb7;
+}
+.recommendation .item_recommend .details p {
+  font-size: 16px;
+  color: #dddddd7c;
+}
+#playList {
+  display: none;
+}
+@media screen and (max-width: 1000px) {
+  .media .wrapper_covering {
+    width: 100%;
+  }
+  #playList {
+    display: block;
+  }
+  .media .playList {
+    display: none;
+    margin-left: 0px;
+  }
+  .media .playList .item .icon {
+    display: none;
+  }
+  .media .playList .item .options {
+    width: 45%;
+  }
+  .media .playList.active {
+    display: block;
+  }
+  .media .playList .header {
+    display: flex;
+  }
+  .media .playList .header header {
+    width: 90%;
+    font-size: 20px;
+    font-weight: bolder;
+  }
+  .media .playList .header svg {
+    display: block;
+  }
+  .media .playList.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 70%;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background-color: #000;
+    overflow: auto;
+  }
+  .media .container_play {
+    width: 100%;
+    margin: 0px auto;
+  }
+  .playerArea {
+    height: 70%;
+  }
+  .player {
+    height: 30% !important;
+  }
+  .media {
+    width: 95%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .playerComponent .videoControl .Non_tracker .icon_Main {
+    width: 30%;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,386 @@
+:root {
+  /**
+   * COLORS
+   */
+
+  /* backgroud colors */
+  --bg-white: hsl(0, 0%, 100%);
+  --bg-black-alpha-20: hsla(0, 0%, 0%, 0.884);
+  --bg-lavender-blush: hsl(0, 100%, 98%);
+  --bg-majorelle-blue: hsl(249, 95%, 63%);
+  --bg-ocean-blue: hsl(249, 63%, 54%);
+  --bg-majorelle-blue-alpha-5: hsla(249, 95%, 63%, 0.05);
+  --bg-misty-rose: hsl(0, 100%, 95%);
+  --bg-red-salsa: hsl(357, 94%, 63%);
+  --bg-red-salsa-alpha-5: hsla(357, 94%, 63%, 0.05);
+  --bg-english-vermillion: hsl(357, 64%, 53%);
+  --bg-chrome-yellow-alpha-5: hsla(40, 100%, 50%, 0.05);
+  --bg-sunglow-alpha-10: hsla(48, 100%, 50%, 0.1);
+  --bg-gainsboro: hsl(0, 0%, 85%);
+
+  /* text color */
+  --text-white: hsl(0, 0%, 100%);
+  --text-gunmetal: hsl(209, 40%, 14%);
+  --text-light-coral: hsl(357, 96%, 73%);
+  --text-granite-gray: hsl(210, 4%, 38%);
+  --text-majorelle-blue: hsl(249, 95%, 63%);
+  --text-sunglow: hsl(48, 100%, 50%);
+
+  /* border color */
+  --border-gainsboro: hsl(0, 1%, 85%);
+
+  /**
+   * TYPOGRAPHY
+   */
+
+  /* font family */
+  --ff-poppins: "Poppins", sans-serif;
+
+  /* font size */
+  --fontSize-1: 4.2rem;
+  --fontSize-2: 3.6rem;
+  --fontSize-3: 2.5rem;
+  --fontSize-4: 2.4rem;
+  --fontSize-5: 2rem;
+  --fontSize-6: 1.6rem;
+  --fontSize-7: 1.5rem;
+
+  /* font weight */
+  --weight-bold: 700;
+  --weight-semiBold: 600;
+  --weight-medium: 500;
+
+  /**
+   * SPACING
+   */
+
+  --section-spacing: 80px;
+
+  /**
+   * BOX SHADOW
+   */
+
+  --shadow-1: 0 2px 10px hsla(209, 40%, 14%, 10%);
+  --shadow-2: 0 5px 10px hsla(249, 95%, 63%, 25%);
+  --shadow-3: 0 5px 10px hsla(357, 64%, 53%, 25%);
+  --shadow-4: 0 30px 50px hsla(357, 64%, 53%, 30%);
+
+  /**
+   * RADIUS
+   */
+
+  --radius-pill: 200px;
+  --radius-circle: 50%;
+  --radius-30: 30px;
+  --radius-16: 16px;
+
+  /**
+   * TRANSITION
+   */
+
+  --transition-1: 250ms ease;
+  --transition-2: 500ms ease;
+  --cubic-out: cubic-bezier(0.05, 0.83, 0.52, 0.97);
+}
+body {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+}
+main {
+  width: 100%;
+}
+main nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+main nav .menu {
+  display: flex;
+  align-items: center;
+}
+main nav .menu .item {
+  margin: 10px;
+  padding: 10px 5px;
+  display: grid;
+  place-items: center;
+  font-size: var(--fontSize-7);
+  cursor: pointer;
+  border-radius: var(--radius-16);
+}
+main nav .menu .item:hover {
+  background-color: var(--bg-black-alpha-20);
+}
+main nav.active .menu .item:hover {
+  background-color: var(--bg-white);
+  color: #000;
+}
+
+main nav .menu .item p {
+  margin: 0px;
+}
+
+main section {
+  padding: var(--section-spacing);
+}
+main section.hero_page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+main section.hero_page .hero_txt h3 {
+  font-size: var(--fontSize-2);
+}
+main section.hero_page img {
+  width: 600px;
+}
+main section .section_title {
+  color: var(--bg-majorelle-blue);
+  font-size: var(--fontSize-7);
+  text-transform: uppercase;
+}
+
+main section .about_content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+main section .about_content .section {
+  padding: 10px;
+  height: 230px;
+  border-radius: var(--radius-16);
+}
+main section .about_content .section.mains h1 {
+  font-size: var(--fontSize-5);
+  text-transform: capitalize;
+  letter-spacing: 0.3rem;
+}
+main section .about_content .section.mains {
+  background-color: #fff;
+}
+main section .about_content .section.cth {
+  background-color: var(--bg-sunglow-alpha-10);
+}
+main section .about_content .section.cth2 {
+  background-color: var(--bg-misty-rose);
+  margin-top: 60px;
+}
+main section .about_content .section.cth3 {
+  background-color: var(--bg-gainsboro);
+}
+main section .about_content .section img {
+  width: 5rem;
+}
+main section.gallery {
+  display: grid;
+  place-items: center;
+}
+main section .gallery_container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+}
+main section .gallery_container img.mini {
+  width: 150px;
+  height: 200px;
+  border-radius: var(--radius-30);
+}
+main section .gallery_container img.min_base {
+  grid-column: 1/3;
+  grid-row: 2;
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius-16);
+}
+main section .gallery_container img.max {
+  grid-column: 3/6;
+  grid-row: 1 / 3;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-16);
+  object-fit: cover;
+}
+
+main section .gallery_container img.minmax {
+  grid-column: 6/9;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-16);
+  object-fit: cover;
+}
+.nav__menu__btn {
+  display: none;
+  margin-right: 10px;
+}
+.calenda_container {
+  width: 100%;
+  height: auto;
+}
+.calenda_header {
+  width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  padding: 10px;
+}
+.days_header {
+  width: 100%;
+  height: 40px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  place-items: center;
+}
+.calenda_data {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  place-items: center;
+  gap: 2px 0px;
+}
+.calenda_data .cx_data:hover {
+  background-color: #dfdfdfaf;
+}
+.calenda_data .cx_data {
+  width: 100%;
+  height: 180px;
+  border-top: 1px solid #b3b0b0;
+}
+.calenda_data .cx_data.activity .item {
+  width: 100%;
+  height: 30px;
+  background-color: crimson;
+  color: #fff;
+}
+.calenda_data .cx_data.activity .item p {
+  font-size: 16px;
+}
+
+.calenda_data .cx_data p {
+  font-size: 25px;
+  margin: 10px;
+}
+@media screen and (max-width: 1100px) {
+  .nav__menu__btn {
+    display: block;
+  }
+  .nav__menu__btn svg:nth-child(1) {
+    display: block;
+  }
+  .nav__menu__btn svg:nth-child(2) {
+    display: none;
+  }
+  nav.active .nav__menu__btn svg:nth-child(2) {
+    display: block;
+  }
+  nav.active .nav__menu__btn svg:nth-child(1) {
+    display: none;
+  }
+
+  main nav {
+    width: 100%;
+    margin: 0px auto;
+    position: relative;
+  }
+  main nav.active {
+    position: fixed;
+  }
+  main nav .menu {
+    display: none;
+  }
+  main nav.active .menu {
+    flex-direction: column;
+    position: fixed;
+    display: flex;
+    top: 40px;
+    z-index: 9;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--bg-black-alpha-20);
+    align-items: flex-start;
+    color: var(--bg-white);
+  }
+  main section {
+    padding: 40px;
+  }
+  main section.hero_page .hero_txt h3 {
+    font-size: 2.6rem;
+  }
+  main section.hero_page img {
+    width: 500px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  main section .about_content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 30px;
+  }
+  main section .about_content .section.cth2 {
+    background-color: var(--bg-misty-rose);
+    margin-top: 0px;
+  }
+  main section .gallery_container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  main section .gallery_container img.minmax.iq {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
+  main section .gallery_container img.minmax.imq {
+    grid-column: 3 / 6;
+    grid-row: 3;
+  }
+}
+
+@media screen and (max-width: 766px) {
+  main section.hero_page img {
+    width: 400px;
+  }
+  main section.hero_page .hero_txt h3 {
+    font-size: 2.3rem;
+  }
+}
+@media screen and (max-width: 600px) {
+  main section.hero_page {
+    flex-direction: column;
+  }
+  main section .gallery_container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 20px;
+  }
+
+  main section .gallery_container img {
+    grid-area: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 200px;
+    object-fit: cover;
+  }
+  main section {
+    padding: 10px;
+  }
+}
+@media screen and (max-width: 400px) {
+  main section.hero_page img {
+    width: 100%;
+  }
+  main section.hero_page .hero_txt h3 {
+    font-size: 2.2rem;
+  }
+  main section .about_content,
+  main section .gallery_container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 30px;
+  }
+}

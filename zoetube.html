@@ -1,0 +1,318 @@
+<!-- <?php
+session_start();
+$_SESSION['active'] = 'empty';
+if(isset($_GET['select'])){
+    $_SESSION['active'] = $_GET['select'];
+}else if(isset($_GET['workarea'])){
+    $_SESSION['active'] = 'members';
+}else{
+    
+}
+?> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/Admin.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/all.css">
+
+
+    <title>Dashboard | Area</title>
+</head>
+
+<body>
+    <nav>
+        <i class="fas fa-bars Bar hidden" id="Bar"></i>
+        <ul class="menu" id="menu">
+            <a href="homepage.php" target="_blank">
+                <li>Home</li>
+            </a>
+            <li>My files<i class="fas fa-chevron-down"></i></li>
+        </ul>
+        <ul class="log">
+            <div class="round">
+                <li><i class="fas fa-envelope"></i>
+            </div>
+            </li>
+            <div class="round">
+                <li><i class="fas fa-bell"></i>
+            </div>
+            </li>
+            <li><i class="fas fa-power-off"></i></li>
+            <li class="name">Dave Capelle</li>
+        </ul>
+
+    </nav>
+    <div class="container">
+        <div class="cnt"><i class="fas fa-chevron-left"></i>
+            <p>Menu</p>
+        </div>
+        <div class="side-bar">
+            <i class="fas fa-times" id='CLOSE'></i>
+            <div class="user-profile">
+                <div class="user">
+                    <img src="bg/wp1975168.jpg" alt="user image">
+                </div>
+                <div class="user-name">
+                    <p>Dave Capelle</p>
+                </div>
+            </div>
+
+            <div class="list">
+                <ul>
+                    <a href="../Administrator.php?homepage">
+                        <li onclick="select(this)" id="1111">Dashboard</li>
+
+                        <a href="../Administrator.php?workarea&&option='none'&&Option">
+                            <li onclick="select(this)" id="110">Work area</li>
+                        </a>
+
+                        <li onclick="select(this)" id="13">Library</li>
+                        <a href="suggestions.php">
+                            <li onclick="select(this)" id="17">SuggestionBox</li>
+                        </a>
+
+                        <a href="zoetube.php?workarea">
+                            <li class="active" onclick="select(this)" id="18">zoetube</li>
+                        </a>
+
+                        <a href="history.php">
+                            <li onclick="select(this)" id="19">History</li>
+                        </a>
+
+                        <a href="chats.php">
+                            <li onclick="select(this)" id="11">Chats</li>
+                        </a>
+
+                </ul>
+            </div>
+        </div>
+        <div class="dash-area">
+            <?php
+        /*-------------------WORK AREA---------------------------*/
+        if(isset($_GET['workarea'])){
+           echo '  
+        <section class="workingSection-Area">
+        <div class="navbar">
+            <ul>
+            <a href="zoetube?workarea&&membership&&allvideos"><li ><i class="fas fa-star" id="membership" onclick="select(this)"></i><p>All videos</p></li></a>
+              <a href="zoetube.php?workarea&&allmembers"><li ><i class="fas fa-star" id="eventdata" onclick="select(this)"></i><p>Upload videos</p></li></a>
+              <a href="zoetube.php?workarea&&Delete"><li ><i class="fas fa-star" id="department" onclick="select(this)"></i><p>Delete video</p></li></a>
+        </ul>
+        </div>
+       <section id="navigationArea">
+       <ul>
+       <a href=zoetube?workarea&&allmembers="">
+       <li><i class="fas fa-star"></i><i class="fas fa-star-half"></i>Anouncement</li></a>
+       <a href=zoetube?workarea&&search=><li><img src="../icons/search.png" alt="searchIcon" />Search</li></a>
+       </ul>
+       </section>';
+     
+       if(isset($_GET['search'])){
+           if(isset($_SESSION['active']))  {
+          
+            echo '
+            <section>
+            <div class="wrapper">
+            <div class="searchnav">
+                <form>
+                    <div class="input">
+                        <input type="text"  placeholder="search..............." />
+                        <img src="../icons/searchb.png" alt="" />
+                     </div>
+                </form>
+                
+            </div>
+            </div>
+ 
+           ';
+        }
+        
+        echo'</section>';    
+     }
+     ?>
+
+
+            <?php 
+ if(isset($_GET['allmembers'])){
+     echo '<div class="notification">
+     <header>Create or view announcement</header>
+     <div class="ancouncementList">
+     <ul>
+     <li>Upload video</li>
+     </ul>
+     </div>
+     <div clas="addPost">
+    <div class="admin">
+    <img src="../admin.jpg" alt="" />
+    <p>Administrators Name</p>
+    </div>
+    </div>
+    <div class="videodetails">
+    <header>Upload video details with video</header>
+    <div class="videocontainer">
+    <div class="feild">
+    <label>video name</label>
+    <input type="text" name="" />
+    </div>
+    <div class="feild">
+    <label>genre</label>
+    <input type="text" name="" />
+    </div>
+    <div class="box">
+    <label>video description</label>
+    <textarea></textarea>
+    </div>
+    
+    <select class="feild">
+    <option>single</option>
+   <option>Series</option>
+    </select>
+    <div class="feild">
+    <label>Select Image</label>
+    <input type="file">
+    </div>
+    <div class="feild">
+    <label>Select video</label>
+    <input type="file">
+    </div>
+    </div>
+    </div>
+
+<div class="flex" style="margin-bottom:20px">
+<button class="blue">Post your video</button>
+<p class="ccc">Upload a video to the zoetube by clicking the "Post your video button", 
+   </p>
+</div>
+</div>
+ ';
+     
+}
+        }
+?>
+
+
+            <?php 
+ if(isset($_GET['Delete'])){
+     echo '<div class="delete">
+     <div class="searchnav">
+     <form>
+         <div class="input">
+             <input type="text"  placeholder="search..............." />
+             <img src="../icons/searchb.png" alt="" />
+          </div>
+     </form>
+     
+ </div>
+ <div class="blockdata">
+     <ul>
+     <li>Video name</li>
+     <li>upload date</li>
+     <li>delete</li>
+     </ul>
+     <ul>
+     <li>Worship</li>
+     <li>12th / 03 / 2022</li>
+     <li><input type="checkbox" value="" /></li>
+     </ul>
+     
+      <ul>
+     <li>Worship</li>
+     <li>12th / 03 / 2022</li>
+     <li><input type="checkbox" value="" /></li>
+     </ul>
+     
+      <ul>
+     <li>Worship</li>
+     <li>12th / 03 / 2022</li>
+     <li><input type="checkbox" value="" /></li>
+     </ul>
+     
+      <ul>
+     <li>Worship</li>
+     <li>12th / 03 / 2022</li>
+     <li><input type="checkbox" value="" /></li>
+     </ul>
+    
+      <ul>
+     <li>Worship</li>
+     <li>12th / 03 / 2022</li>
+     <li><input type="checkbox" value="" /></li>
+     </ul>
+     <button>Proceed</button>
+     </div>
+     
+     </div>';
+ }
+ ?>
+
+            <?php 
+ if(isset($_GET['allvideos'])){
+     echo '<div class="delete">
+     <div class="searchnav">
+     <form>
+         <div class="input">
+             <input type="text"  placeholder="search..............." />
+             <img src="../icons/searchb.png" alt="" />
+          </div>
+     </form>
+     </div>
+     <div class="department">
+     <main id="searchResult">
+     <div class="division">
+     <div class="details2">20/01/22</div>
+     <img src="../admin.jpg" alt="" />
+     <div class="department_name" >
+     <h1>Achillis heels</h1>
+     <div class="details"><strong>12mbs</strong></div>
+     
+     <p>His only weakpoint was his heels vey vunirable
+     His only weakpoint was his heels vey vunirable 
+      His only weakpoint was his heels vey vunirable
+      His only weakpoint was his heels vey vunirable
+      His only weakpoint was his heels vey vunirable</p>
+     <a>more</a>
+     </div>
+     </div>
+
+     <div class="division">
+     <div class="details2">20/01/22</div>
+     <img src="../admin.jpg" alt="" />
+     <div class="department_name" >
+     <h1>Achillis heels</h1>
+     <div class="details"><strong>12mbs</strong></div>
+     
+     <p>His only weakpoint was his heels vey vunirable
+     His only weakpoint was his heels vey vunirable 
+      His only weakpoint was his heels vey vunirable
+      His only weakpoint was his heels vey vunirable
+      His only weakpoint was his heels vey vunirable</p>
+     <a>more</a>
+     </div>
+     </div>
+
+     </main>
+</div>
+ ';
+     
+}
+        
+?>
+        </div>
+        <script>
+            textField.document.designMode = "on";
+            var flow = document.getElementById("flow");
+            document.addEventListener('click', function (e) {
+                if (e.target.matches('.qwertyy')) {
+                    alert(flow.value + "helloe");
+                }
+            })
+
+        </script>
+</body>
+
+</html>

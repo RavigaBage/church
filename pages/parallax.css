@@ -1,0 +1,1140 @@
+@font-face {
+  font-family: nunito-regular;
+  src: url("../font/Nunito-Regular_1.ttf");
+}
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  -webkit-transition: all 0.2s linear;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 10px;
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #000;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #01f7ffa8;
+}
+
+a,
+p,
+li {
+  font-family: nunito-regular;
+}
+body {
+  width: 100%;
+  height: auto;
+  background-color: #000;
+  color: #fff;
+  height: 100vh;
+}
+body.christmas_theme {
+  background: url("../images/home-bg.jpg") no-repeat;
+}
+.navigation {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.navigation .nav_logo {
+  margin-inline: 10px;
+}
+.navigation .nav_logo header {
+  font-size: 20px;
+  font-weight: bolder;
+  font-weight: 500;
+  padding: 10px;
+}
+.navigation .nav_ele {
+  display: flex;
+  align-items: center;
+}
+.navigation .nav_ele .item_list {
+  margin-inline: 10px;
+  cursor: pointer;
+  position: relative;
+  padding: 10px 20px 10px 20px;
+  transition: all 0.3s ease;
+}
+.navigation .nav_ele .item_list:hover {
+  box-shadow: 0px 0px 12px 4px #01f7ff;
+  background-color: #01f7ffa8;
+}
+.navigation .nav_ele .item_list:hover svg {
+  width: 0px;
+}
+.navigation .nav_ele .item_list:hover .Ministries_list {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1.1);
+}
+.navigation .nav_ele .item_list .Ministries_list {
+  position: absolute;
+  top: 100%;
+  right: -50px;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  color: #050505;
+  width: calc(100% + 100px);
+  margin-top: 20px;
+  opacity: 0;
+  visibility: hidden;
+
+  z-index: 10;
+  transition: all 0.5s ease;
+}
+.navigation .nav_ele .item_list .Ministries_list .item_list:hover {
+  width: 100%;
+  background: #ddd;
+  box-shadow: 0px 0px 4px 0px #000;
+}
+.navigation .nav_ele .item_list .Ministries_list .item_list p {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-align: left;
+}
+
+.navigation .nav_ele .item_list p {
+  font-size: 20px;
+  text-align: center;
+  text-wrap: break-word;
+  font-weight: 400;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+}
+.navigation .nav_ele .item_list p svg {
+  margin-left: 10px;
+  width: 15px;
+}
+#christmas_theme {
+  z-index: -1;
+  display: none;
+}
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.container h1.main {
+  font-size: 90px;
+  text-align: center;
+  position: absolute;
+  bottom: 33%;
+  width: 100%;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+img.moon {
+  position: absolute;
+  left: 38%;
+  width: 350px;
+  z-index: 1;
+}
+img.mountain {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 4;
+}
+img.tree {
+  position: absolute;
+  bottom: 0;
+  z-index: 5;
+  width: 100%;
+}
+
+img.cloud_1 {
+  position: absolute;
+  left: 5%;
+  width: 660px;
+  z-index: 3;
+  top: 4%;
+}
+img.cloud_2 {
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  width: 660px;
+  z-index: 3;
+  transform: scaleX(-1);
+}
+.full_page_down {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 20px;
+}
+.full_page_down img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+.christmas_txt {
+  display: grid;
+  place-items: center;
+  grid-column: 2/4;
+  grid-row: 2;
+  text-align: center;
+}
+.christmas_txt img {
+  height: 100%;
+}
+.menu_toggle {
+  display: none;
+}
+.web_content {
+  width: 100%;
+}
+.web_content .overlay {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  background: url("images/bg\ \(1\).jpg") no-repeat;
+  background-size: cover;
+  background-position: bottom center;
+  background-attachment: fixed;
+}
+.web_content .overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    255deg,
+    rgba(0, 0, 0, 0.801),
+    rgba(36, 1, 15, 0.918),
+    rgba(0, 0, 0, 0.466)
+  );
+  z-index: 1;
+}
+.web_content .overlay .content {
+  width: calc(100% - 50px);
+  margin: 20px auto;
+  height: 80vh;
+  z-index: 2;
+}
+.web_content .overlay .content .text h1 {
+  font-size: 70px;
+  text-align: center;
+}
+.web_content .overlay .content .text p {
+  font-size: 50px;
+  text-align: center;
+  font-weight: bolder;
+}
+.web_content .overlay .content .motto {
+  max-width: 500px;
+  margin: 10px auto;
+}
+.web_content .overlay .content .motto p {
+  font-size: 20px;
+  font-weight: bolder;
+  word-spacing: 3px;
+}
+.web_content .overlay .content .slider {
+  margin-top: 30px;
+  overflow: hidden;
+}
+.web_content .overlay .content .slider ul {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  justify-content: space-around;
+}
+li .total {
+  display: grid;
+  place-items: center;
+  margin-inline: 20px;
+  width: 180px;
+  height: 100%;
+}
+li label {
+  font-size: 16px;
+}
+li .total .Number {
+  display: grid;
+  place-items: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  position: relative;
+  font-weight: 500;
+}
+
+.Number {
+  border-left: 5px solid rgb(55, 0, 255) !important;
+  border-bottom: 5px solid rgb(55, 0, 255) !important;
+  border-right: 5px solid rgb(255, 0, 43) !important;
+  border-top: 5px solid rgb(255, 0, 43) !important;
+}
+.service_display {
+  width: 100%;
+  min-height: 35rem;
+  height: 100%;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 90% 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 20px;
+}
+.service_display .head {
+  grid-column: 1;
+  text-align: center;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.service_display .social {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.service_display .social ul {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.service_display .social ul li {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.4s ease;
+  transform: rotate(90deg);
+}
+.service_display .social ul li:hover {
+  transform: scale(1.1);
+  color: #dddddd48;
+}
+.service_display .social ul li:hover i {
+  color: crimson;
+}
+.service_display .social ul li i {
+  color: #ffffff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.service_display .text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0px auto;
+  justify-content: space-around;
+}
+
+.service_display .info {
+  box-shadow: 0px 0px 12px 5px #616060;
+  width: 550px;
+  height: 350px;
+  color: #fff;
+  overflow: hidden;
+}
+.service_display .text .inner {
+  text-align: left;
+}
+.service_display .text .inner button {
+  width: 130px;
+  height: 35px;
+  outline: none;
+  border-width: 0px;
+  color: #fff;
+  background: crimson;
+}
+.service_display .text .inner button:hover {
+  transform: scale(1.1);
+}
+.upcoming_header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: 30px;
+  color: #fff;
+}
+.data_reminder {
+  margin-left: 40px;
+}
+.data_reminder p {
+  font-size: 30px;
+}
+.upcoming_header .line {
+  width: 70%;
+  height: 6px;
+  border-radius: 16px;
+  background: #ddd;
+  margin-left: 20px;
+}
+.workshop {
+  position: relative;
+  width: 95%;
+  margin: 20px auto;
+  height: 500px;
+  background: url("../images/cta-bg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.workshop img,
+.workshop video {
+  width: 470px;
+  height: 300px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.workshop .info {
+  max-width: 500px;
+  margin-left: 30px;
+}
+
+.event_section {
+  width: calc(100% - 100px);
+  margin: 30px auto;
+  padding: 20px 10px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.event_section .gallery_layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  height: 650px;
+  gap: 10px;
+}
+.event_section .gallery_layout .img.col1 {
+  grid-column: 1;
+}
+.event_section .gallery_layout .img.col2 {
+  grid-column: 2;
+}
+.event_section .gallery_layout .img.col2.main {
+  grid-row: 1 / 3;
+}
+.grid_complex {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+}
+.grid_complex img:nth-child(1) {
+  grid-row: 1 / 3;
+}
+.grid_complex img:nth-child(2),
+.grid_complex img:nth-child(3) {
+  grid-column: 2;
+}
+.event_section .gallery_layout .img:not(.xxl) img {
+  height: calc(650px / 3);
+}
+.event_section .gallery_layout .img img,
+.grid_complex img {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 16px;
+}
+.event_section .gallery_layout .img.xxl {
+  width: 100%;
+  grid-column: 3 / 4;
+  grid-row: 1 / 4;
+}
+
+.calendaMain {
+  width: 95%;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(164, 165, 167, 0.582);
+  margin: 50px auto;
+  overflow: hidden;
+}
+.calendaMain .wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 540px;
+  display: flex;
+  color: #fff;
+  overflow: hidden;
+  margin: 0%;
+}
+.monthName {
+  width: 140px;
+}
+h1 {
+  font-size: 25px;
+  font-weight: 500;
+  padding-left: 10px;
+}
+.calendaMain .wrapper .months {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 300px;
+  min-height: 100%;
+  margin-left: -270px;
+  transition: all 0.4s ease;
+  display: flex;
+}
+.calendaMain .wrapper .months.active {
+  margin-left: 0%;
+}
+.calendaMain .wrapper .months .main {
+  width: calc(100% - 30px);
+  background: rgb(6, 26, 49);
+}
+.calendaMain .wrapper i.trigger_set {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  font-size: 25px;
+  min-height: 25px;
+  transition: all 0.4s ease;
+}
+.calendaMain .wrapper i.trigger_set.active {
+  margin-left: 230px;
+}
+.calendaMain .wrapper .months ul,
+.calendaMain .wrapper .events ul {
+  width: 100%;
+  min-height: 100%;
+}
+.calendaMain .wrapper .months ul li {
+  min-height: 30px;
+  padding-left: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+.calendaMain .wrapper .months ul li.active {
+  background-color: teal;
+}
+.calendaMain .wrapper .months ul li,
+.calendaMain .wrapper .events ul li {
+  list-style: none;
+  width: 95%;
+  margin: 10px auto;
+}
+.calendaMain .wrapper .year {
+  position: relative;
+  width: 70%;
+  min-height: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px 10px rgb(0 0 0 / 33%);
+  /* background:rgba(220, 223, 226, 0.486); */
+}
+.calendaMain .wrapper .year .yearcnt {
+  width: 90%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+.calendaMain .wrapper .year .yearcnt i {
+  margin-inline: 10px;
+  transition: all 0.2s ease;
+}
+.calendaMain .wrapper .year .yearcnt i:hover {
+  color: crimson;
+  background: teal;
+}
+.calendaMain .wrapper .year ul {
+  display: flex;
+  width: 100%;
+}
+.calendaMain .wrapper .year ul li {
+  list-style: none;
+  padding: 10px;
+  width: calc(100% / 7);
+  cursor: pointer;
+}
+.calendaMain .wrapper .year ul li:hover {
+  background-color: teal;
+}
+.calendaMain .wrapper .months ul li:hover {
+  background-color: teal;
+}
+.calendaMain .wrapper .year .day {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.calendaMain .wrapper .year .day p {
+  width: calc(100% / 7);
+  text-align: center;
+  display: grid;
+  place-items: center;
+  margin-block: 10px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.calendaMain .wrapper .year .day p.active {
+  background: teal;
+}
+.calendaMain .wrapper .year .day p.CalenderEvent {
+  background: crimson;
+}
+.calendaMain .wrapper .year .day p.active .indicator {
+  width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: gold;
+}
+.calendaMain .wrapper .year .day p:hover {
+  background-color: rgba(221, 221, 221, 0.24);
+}
+.calendaMain .wrapper .events {
+  width: 30%;
+  min-height: 100%;
+  background: rgb(23, 31, 41);
+  position: relative;
+}
+.calendaMain .wrapper .events .eventsDetails {
+  width: 97%;
+  margin: 0 auto;
+}
+.calendaMain .wrapper .events .eventsDetails .image {
+  width: 100%;
+  object-fit: cover;
+  max-height: 250px;
+}
+.calendaMain .wrapper .events .eventsDetails .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.calendaMain .wrapper .events .eventsDetails p {
+  font-weight: 300px;
+}
+.calendaMain .wrapper .events .eventsDetails .error {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.calendaMain .wrapper .events .eventsDetails .error img {
+  width: auto;
+}
+.calendaMain .wrapper .events .loader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  background: rgb(34, 33, 33);
+  opacity: 0.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+.calendaMain .wrapper .events .loader {
+  display: none;
+}
+.calendaMain .wrapper .events .loader.active {
+  display: flex;
+}
+.calendaMain .wrapper .events .loader.active .loaderanimate {
+  width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  animation: loader 5s infinite ease;
+  transition: all 0.3s ease;
+  border: 5px solid #fff;
+  border-right: 5px solid transparent;
+  overflow: hidden;
+}
+.calendaMain .wrapper .events .loader.active .loaderanimate img {
+  width: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.mark {
+  background-color: red !important;
+}
+.display_active {
+  background-color: crimson;
+  border-radius: 10px;
+}
+
+.slider_custome {
+  width: calc(100% - 100px);
+  height: 240px;
+  margin: 15px auto;
+  overflow: hidden;
+}
+.slider_custome ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+.slider_custome ul li {
+  margin-right: 20px;
+}
+.slider_custome ul li .item {
+  width: 220px;
+  height: 230px;
+  border-top: 5px solid #ddd;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.slider_custome ul li .item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider_custome ul li .item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(220, 20, 60, 0.568),
+    rgba(0, 128, 128, 0.603)
+  );
+  z-index: 1;
+}
+.slider_custome ul li .item .name {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  width: 100%;
+  padding: 10px;
+  font-weight: bolder;
+}
+.send_up.active {
+  display: grid;
+  place-items: center;
+}
+
+.send_up {
+  position: fixed;
+  right: 0;
+  bottom: 8%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 30px;
+  background-color: crimson;
+  color: #fff;
+  display: none;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+    border: 5px solid #fff;
+  }
+  50% {
+    transform: rotate(180deg);
+    border: 5px solid red;
+  }
+  100% {
+    transform: rotate(360deg);
+    border: 5px solid rgb(0, 60, 255);
+  }
+}
+.footer_content {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  overflow: hidden;
+  box-shadow: 0px 0px 4px 0px #ddd;
+  padding: 20px;
+}
+footer .images {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+footer .grid_complex {
+  height: 100%;
+}
+footer .welcome {
+  padding: 10px;
+  text-align: justify;
+}
+footer .welcome h1 {
+  text-align: center;
+  font-size: 30px;
+}
+footer .welcome ul {
+  width: 100px;
+  margin: 10px auto;
+}
+footer .social_media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.request .field {
+  width: 100%;
+}
+.request .field h1 {
+  width: 100%;
+  font-size: 20px;
+  font-weight: bolder;
+}
+.request .field textarea {
+  width: 95%;
+  height: 90px;
+  outline: none;
+  border-width: 0px;
+  background: #ddd;
+  border-radius: 10px;
+  margin-block: 10px;
+}
+.request button {
+  background: crimson;
+  width: 90%;
+  height: 45px;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  margin: 10px auto;
+  color: #fff;
+}
+footer .social_media div {
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+}
+.fa-facebook {
+  background-color: #fff;
+  color: rgb(0, 89, 255) !important;
+  -webkit-background-clip: text;
+}
+.fa-youtube {
+  color: rgb(252, 13, 5) !important;
+}
+.fa-twitter {
+  color: rgb(0, 183, 255) !important;
+}
+.fa-instagram {
+  overflow: hidden;
+  background: linear-gradient(
+    225deg,
+    crimson,
+    rgb(241, 4, 170),
+    rgb(0, 102, 255)
+  ) !important;
+  -webkit-background-clip: text;
+}
+a {
+  color: #fff;
+  text-decoration: none;
+}
+@media screen and (max-width: 1100px) {
+  .web_content .overlay .content .motto p {
+    font-size: 17px;
+    word-spacing: 1px;
+  }
+  .web_content {
+    width: 100%;
+    margin: 0px auto;
+  }
+  .web_content .overlay .content .text h1 {
+    font-size: 50px;
+  }
+  .web_content .overlay .content .text p {
+    font-size: 30px;
+  }
+  .navigation .nav_ele .item_list .Ministries_list {
+    left: 0;
+    right: 0;
+  }
+  .menu_toggle {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 20px;
+    padding: 10px;
+    margin-right: 20px;
+    z-index: 999;
+  }
+  .menu_toggle svg:nth-child(1) {
+    display: block;
+  }
+  .menu_toggle svg:nth-child(2) {
+    display: none;
+  }
+  .menu_toggle.active svg:nth-child(2) {
+    display: block;
+  }
+  .menu_toggle.active svg:nth-child(1) {
+    display: none;
+  }
+  img {
+    object-fit: cover;
+  }
+  .navigation {
+    position: fixed !important;
+    top: 0;
+    display: block;
+    z-index: 99;
+    max-width: 300px;
+  }
+  .navigation.active {
+    height: 100%;
+    background: #000000bf;
+  }
+  .navigation.active .nav_ele {
+    display: flex;
+  }
+
+  .navigation .nav_ele {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  img.cloud_1 {
+    width: 500px;
+    top: 27%;
+  }
+  img.cloud_2 {
+    width: 500px;
+    top: 27%;
+  }
+  img.moon {
+    width: 350px;
+    top: 24%;
+    left: calc((100% - 350px) / 2);
+  }
+  .container h1.main {
+    font-size: 70px;
+    bottom: 18%;
+  }
+
+  img.mountain {
+    height: 280px;
+  }
+  img.tree {
+    height: 180px;
+  }
+  .service_display .info {
+    width: 400px;
+    height: 280px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .footer_content {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr;
+  }
+  .calendaMain {
+    width: 95%;
+    min-height: 700px;
+  }
+  .service_display .text,
+  .workshop {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .event_section {
+    width: calc(100% - 10px);
+    margin: 30px auto;
+    padding: 5px 10px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .event_section .gallery_layout {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+    gap: 10px;
+  }
+  .event_section .gallery_layout .img.xxl {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+@media screen and (max-width: 650px) {
+  .data_reminder {
+    margin-left: 5px;
+  }
+  .data_reminder p {
+    font-size: 20px;
+  }
+  .upcoming_header h1 {
+    font-size: 20px;
+  }
+  .web_content .overlay .content .text h1 {
+    font-size: 30px;
+  }
+  .web_content .overlay .content .text p {
+    font-size: 20px;
+  }
+
+  .calendaMain .wrapper {
+    display: block;
+    min-height: 100%;
+    border: 1px solid transparent;
+  }
+  .calendaMain .wrapper .year {
+    min-height: auto;
+  }
+  .calendaMain .wrapper .year {
+    width: 100%;
+  }
+  .calendaMain .wrapper .events {
+    width: 100%;
+    background: transparent;
+  }
+}
+@media screen and (max-width: 600px) {
+  .navigation {
+    position: absolute;
+    top: 0;
+    display: block;
+    z-index: 99;
+    max-width: 300px;
+  }
+  .navigation .nav_ele {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  img.cloud_1 {
+    width: 380px;
+  }
+  img.cloud_2 {
+    width: 380px;
+  }
+  img.moon {
+    width: 280px;
+    left: calc((100% - 280px) / 2);
+  }
+  .container h1.main {
+    font-size: 50px;
+    bottom: 18%;
+  }
+  .full_page_down {
+    grid-template-columns: 1fr 1fr;
+  }
+  .christmas_txt {
+    grid-column: 1 /3;
+  }
+
+  .full_page_down img {
+    border-radius: 5px;
+    min-height: 200px;
+  }
+  .full_page_down {
+    gap: 4px;
+  }
+}
+@media screen and (max-width: 425px) {
+  .footer_content {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .web_content .overlay .content .motto p {
+    font-size: 16px;
+    word-spacing: 1px;
+  }
+  .service_display .info {
+    width: 90%;
+    margin: 0px auto;
+  }
+  .christmas_txt {
+    grid-column: 1 /2;
+  }
+  .full_page_down {
+    grid-template-columns: 1fr;
+  }
+  .event_section .gallery_layout .img.col2 {
+    grid-column: auto;
+  }
+  .event_section .gallery_layout .img.col2.main {
+    grid-row: auto;
+  }
+  .event_section .gallery_layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 10px;
+  }
+  .event_section .gallery_layout .img {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .grid_complex {
+    height: 350px;
+  }
+  footer .grid_complex {
+    height: 100%;
+  }
+}
+@media screen and (max-width: 300px) {
+  .navigation .nav_ele .item_list .Ministries_list {
+    width: auto;
+  }
+  .web_content .overlay .content .motto p {
+    font-size: 13px;
+    word-spacing: 1px;
+  }
+  .web_content .overlay .content .text h1 {
+    font-size: 20px;
+  }
+  .web_content .overlay .content .text p {
+    font-size: 18px;
+  }
+}

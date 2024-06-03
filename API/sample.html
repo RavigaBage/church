@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SSE example</title>
+</head>
+
+<body>
+    <a href="#Data">
+        <h1>SSE example Start</h1>
+    </a>
+    <a href="#Datar">
+        <h1>SSE example Stop</h1>
+    </a>
+    <div id="news-list"></div>
+    <input hidden value="2" id="last_modified">
+    <script type="application/javascript">
+        const newsList = document.getElementById('news-list');
+        var source = "";
+        let loop_in_progress = false;
+        let lastModified = document.getElementById('last_modified').value;
+        window.addEventListener("hashchange", function (e) {
+            responding_trigger = window.location.hash;
+            request = 'Data';
+            if (responding_trigger == '#Data') {
+                if (typeof (EventSource) !== 'undefined') {
+                    console.log(lastModified);
+                    source = new EventSource('sse.php?Data=' + request + '&&modified=' + lastModified);
+                    // const source = new EventSource('http://127.0.0.1:5200/');
+                    source.onopen = function (event) {
+                        console.log('onopen', event);
+                        loop_in_progress = true;
+                    };
+                    source.onerror = function (event) {
+                        console.log('onerror', event);
+
+                    };
+                    source.onmessage = function (event) {
+                        console.log(event)
+                        newsList.innerHTML += event.data + '<br />';
+                    };
+                    source.addEventListener('news', function (event) {
+                        const Object_data = JSON.parse(event.data);
+                        lastModified = Object_data['news']['id'];
+                        document.getElementById('last_modified').value = lastModified;
+                        newsList.innerHTML += event.data + '<br />';
+                        console.log(lastModified);
+                        // source.close(); // disconnect stream
+                    });
+
+
+                } else {
+                    newsList.innerHTML = 'Sorry, your browser does not support server-sent events...';
+                }
+            } else {
+                if (loop_in_progress) {
+                    source.close();
+                    console.log('Source Connection Closed')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

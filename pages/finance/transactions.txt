@@ -1,0 +1,196 @@
+<div class="content_pages">
+    <div class="content_page_event">
+
+        <div class="add_event">
+            <i>+</i>
+            <p>New</p>
+        </div>
+        <div class="records_table ">
+        <header class="flex ">
+        <p class="transaction_header">Transactions</p>
+        <div class="download flex">
+        <img src="../../images/cfile.png" alt="" />
+        <p>Export Data</p>
+        </div>
+        </header>
+        <div class="transaction_search_menu flex">
+            <div class="filter_option">
+                <p>Account</p>
+                <div class="input">
+                    <select>
+                        <option>Select</option>
+                        <option>ABSA BANK</option>
+                        <option>FDB BANK</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter_option">
+                <p>Category</p>
+                <div class="input">
+                    <select>
+                        <option>Select</option>
+                        <option>salary</option>
+                        <option>expenditure</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter_option">
+                <p>Year</p>
+                <div class="input">
+                    <select>
+                        <option>Select</option>
+                        <option>2022</option>
+                        <option>2023</option>
+                        
+                    </select>
+                </div>
+            </div><i class="fas fa-funnel"></i>
+            <button>Filter <i class="fas fa-funnel"></i></button>
+        </div>
+        </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>status</th>
+                        <th>Authorize</th>
+                        <th>Amount</th>
+                        <th>category</th>
+                        <th>...</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                        <div class="details">
+                        <div class="text">
+                        <p>FDBbank</p>
+                        <p>Jan,20,2022</p>
+                        </div>
+                        
+                        </div>
+                        </td>
+                        
+                        <td>
+                            <div class='out_btn'><div></div>Pending</div>
+                        </td>
+                        <td>Kwamina Amoah Quaku</td>
+                        <td>998.38</td>
+                        <td>Payment</td>
+
+                    </tr>
+                    <tr>
+                        <td><div class="details">
+                       
+                        <div class="text">
+                        <p>Camiel@gmail.com</p>
+                        <p>20/03/2024</p>
+                        </div>
+                        
+                        </div></td>
+                        <td>
+                            <div class='in_btn'><div></div>Male</div>
+                        </td>
+                        <td>(233) 553 8384 46</td>
+                        <td>$998.38</td>
+                        <td>school</td>
+                        <td class="option">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                                <path
+                                    d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
+                            </svg>
+                            <div class="opt_element">
+                                <p class="delete_item">Delete item <i></i></p>
+                                <p class="Update_item" data-information='{"id":2,"account":"FDBbank","status":"","authorize":"","category":"Salary payment","Amount":"122","Date":"Aug,12,2023","description":"more"}'>Update item <i></i></p>
+                            </div>
+                        </td>
+
+                    </tr>
+                                        <tr>
+                        <td><div class="details">
+                       
+                        <div class="text">
+                        <p>Camiel@gmail.com</p>
+                        <p>20/03/2024</p>
+                        </div>
+                        
+                        </div></td>
+                        <td>
+                            <div class='in_btn'><div></div>Male</div>
+                        </td>
+                        <td>(233) 553 8384 46</td>
+                        <td>$998.38</td>
+                        <td>school</td>
+                        <td class="option">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                                <path
+                                    d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
+                            </svg>
+                            <div class="opt_element">
+                                <p class="delete_item">Delete item <i></i></p>
+                                <p class="update_item">Update item <i></i></p>
+                            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+<div class="event_menu_add">
+    <header>New Activity</header>
+    <div class="container_event">
+        <div class="field">
+            <label>Account</label>
+            <select name="account">
+                <option value="FDBbank">FDBbank</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Status</label>
+            <select name="status">
+                <option value="pending">pending</option>
+            </select>
+        </div>
+
+         <div class="field">
+            <label>Authorize</label>
+            <input type="number" name="authorize" value=""placeholder="" />
+        </div>
+        <div class="field">
+            <label>category</label>
+            <input type="number" name="category" value=""placeholder="" />
+        </div>
+
+        <div class="field">
+            <label>Amount</label>
+            <input name="amount" />
+        </div>
+        <div class="field">
+            <label>Activity Date</label>
+            <input type="date" name="date" value=""placeholder="" />
+        </div>
+        <input name="delete_key" hidden />
+        <button>create Activity</button>
+    </div>
+</div>
+
+<div class="page_sys">
+            <header>
+            Pages:
+            <div class="pages">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <span>...............</span>
+            <div>13</div>
+            </div>
+            </header>
+</div>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../../css/fonts.css" />
+    <link rel="stylesheet" href="../../css/all.css" />
+    <title>user account</title>
+</head>
+
+<body>
+    <main>
+        <div class="grid_menu">
+            <div class="nav_menu">
+                <div class="menu">
+                    <div class="ham_icon">
+                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="ui_user_details">
+                        <div class="ui_notification">
+                            <i class="fas fa-bell"></i>
+                            <div class="ui_indicator"></div>
+                        </div>
+                        <div class="ui_image">
+                            <img src="../img/user.jpeg" alt="" />
+                        </div>
+                        <div class="ui_info">
+                            <p>Victoria Ama Sepah</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="side_menu">
+                <header>Homepage</header>
+                <div class="menu_list">
+                    <div class="item"><a href="index.html">General</a></div>
+                    <div class="item"><a href="table_tithe.html">Tithe Book</a></div>
+                    <div class="item"><a href="table_annc.html">Announcement</a></div>
+                    <div class="item"><a href="table_dues.html">Dues and payment</a></div>
+                    <div class="item"><a href="table_settings.html">settings</a></div>
+                    <div class="item"><a href="index.html">contact admin</a></div>
+                    <div class="item logout"><a href="index.html"><i class="fas fa-power-off"></i>Log_out</a></div>
+                </div>
+            </div>
+            <div class="content_menu active">
+                <div class="ui_cover">
+                    <div class="ui_table_container">
+                        <div class="container-table">
+                            <div class="ui_list">
+                                <div class="head">
+                                    <ul class="settings">
+                                        <li class="ui_account">Account Info <i class="fas fa-chevron-right"></i></li>
+                                        <li class="ui_privacy">privacy<i class="fas fa-chevron-right"></i></li>
+                                        <li class="ui_pass">update Password<i class="fas fa-chevron-right"></i></li>
+                                        <li class="ui_history">history<i class="fas fa-chevron-right"></i></li>
+                                        <li class="ui_prompt">delete Account<i class="fas fa-chevron-right"></i></li>
+                                        <li class="ui_prompt">logout<i class="fas fa-chevron-right"></i></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="annc_pop_up main_ui_pop">
+                <div class="flex" style="display:flex;align-items:center;">
+                    <header style="font-size:17px;">Winedown Experience </header><i class="fas fa-times"
+                        id="closebtn"></i>
+                </div>
+
+                <div class="annc_data">
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem quia dicta nulla,
+                        unde
+                        inventore numquam, sit, beatae autem eligendi dolorem asperiores eveniet
+                        dignissimos illo
+                        pariatur? Et ab maiores alias dolorem?Lorem ipsum dolor sit amet consectetur,
+                        adipisicing
+                        elit. Rem quia dicta nulla, unde
+                        inventore numquam, sit, beatae autem eligendi dolorem asperiores eveniet
+                        dignissimos illo
+                        pariatur? Et ab maiores alias dolorem</p>
+                </div>
+            </div>
+
+            <div class="annc_pop_up prompt" style="height:300px;">
+                <div class="flex" style="display:flex;align-items:center;">
+                    <header style="font-size:17px;">Are you sure you want to execute command ?</header><i
+                        class="fas fa-times" id="closebtn_prompt"></i>
+                </div>
+
+                <div class="annc_data">
+                    <div class="buttons_prompt">
+                        <button>Confirm</button>
+                        <button>Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="annc_pop_up history">
+                <div>
+                    <header>History</header><i class="fas fa-times" id="closebtn_history"></i>
+                    <ul>
+                        <li>Login in 23-22-12</li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="annc_pop_up account" style="height:300px;">
+                <div class="flex" style="display:flex;align-items:center;">
+                    <header style="font-size:18px;">Are you sure you want to execute command ?</header><i
+                        class="fas fa-times" id="closebtn_account"></i>
+                </div>
+
+                <div class="annc_data">
+                    <div class="buttons_prompt">
+                        <button>Confirm</button>
+                        <button>Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="annc_pop_up privacy">
+                <div>
+                    <header style="font-size:20px;">Account Privacy information</header><i class="fas fa-times"
+                        id="closebtn_privacy"></i>
+
+                    <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui non totam modi cumque veritatis
+                        pariatur accusamus quibusdam, nostrum nemo soluta quam magnam tempore ratione esse quasi
+                        vel. Itaque, nulla quibusdam.</P>
+
+                </div>
+            </div>
+            <div class="annc_pop_up pass" style="height:300px;">
+                <div class="flex" style="display:flex;align-items:center;">
+                    <header style="font-size:17px;">You are requesting for an account password update. if this was
+                        accidental click on close
+                        else click on confirm to recieve an email confirmation</header><i class="fas fa-times"
+                        id="closebtn_pass"></i>
+                </div>
+
+                <div class="annc_data">
+                    <div class="buttons_prompt">
+                        <button>Confirm</button>
+                        <button>Close</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <script>
+        var navigation = document.querySelector(".nav_menu .menu .ham_icon");
+        navigation.addEventListener("click", (e) => {
+            document.querySelector(".side_menu").classList.toggle("active");
+            navigation.classList.toggle("active");
+        });
+        document.querySelector("#closebtn_prompt").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.prompt").classList.remove("active");
+        });
+        document.querySelector("#closebtn_history").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.history").classList.remove("active");
+        });
+        document.querySelector("#closebtn_privacy").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.privacy").classList.remove("active");
+        });
+        document.querySelector("#closebtn_pass").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.pass").classList.remove("active");
+        });
+        document.querySelector("#closebtn_account").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.account").classList.remove("active");
+        });
+
+        document.querySelector("#closebtn").addEventListener("click", (e) => {
+            document.querySelector(".annc_pop_up.main_ui_pop").classList.remove("active");
+        });
+        var elements_toClick = document.querySelectorAll('.ui_list ul.settings li');
+        elements_toClick.forEach(element => {
+            element.addEventListener("click", (e) => {
+                if (element.classList.contains('ui_prompt')) {
+                    document.querySelector(".annc_pop_up.prompt").classList.add("active");
+                } else if (element.classList.contains('ui_history')) {
+                    document.querySelector(".annc_pop_up.history").classList.add("active");
+                } else if (element.classList.contains('ui_privacy')) {
+                    document.querySelector(".annc_pop_up.privacy").classList.add("active");
+                } else if (element.classList.contains('ui_account')) {
+                    document.querySelector(".annc_pop_up.account").classList.add("active");
+                } else if (element.classList.contains('ui_pass')) {
+                    document.querySelector(".annc_pop_up.pass").classList.add("active");
+                } else {
+                    document.querySelector(".annc_pop_up.main_ui_pop").classList.add("active");
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>

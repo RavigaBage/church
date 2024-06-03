@@ -1,0 +1,6 @@
+{
+    "require": {
+        "react/async": "^3.2",
+        "react/http": "^1.10"
+    }
+}

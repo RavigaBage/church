@@ -1,0 +1,611 @@
+<?php
+include_once 'php/home/viewData.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="library/css/all.css">
+    <link rel="stylesheet" type="text/css" href="js/slick/slick.css">
+    <link rel="stylesheet" type="text/css" href="js/slick/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="css/aos.css" />
+    <link rel="stylesheet" href="js/lightslider.css">
+    <link rel="stylesheet" href="library/css/aos.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/calender.css">
+    <link rel="stylesheet" href="css/appearance.css">
+    <link rel="stylesheet" href="css/homestyle.css">
+    <script src="library/Jquery3.4.1.min.js"></script>
+    <script src="js/JQuery3.3.1.js"></script>
+    <script src="js/lightslider.js"></script>
+    <script src="js/xmas.js" defer></script>
+    <script src="js/calenda.js" defer></script>
+    <script src="js/home_script.js" defer></script>
+    <script src="js/nav.js" defer></script>
+    <title>The Apostolic Church Ghana</title>
+</head>
+<style>
+    #page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        color: #fff;
+        /* Semi-transparent white background */
+        z-index: 9999;
+        /* Ensure loader is above all other content */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease;
+        /* Smooth fade-in/out */
+    }
+
+    #page-loader h3 {
+        font-size: 26px;
+        margin-left: 20px;
+    }
+
+    #page-loader.hidden {
+        opacity: 0;
+        z-index: -1;
+    }
+
+    .loader-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        align-items: center
+    }
+
+
+
+    .loader-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #333;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        border: 3px solid;
+        border-color: #FFF #FFF transparent transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+
+    .loader::after,
+    .loader::before {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        border: 3px solid;
+        border-color: transparent transparent #FF3D00 #FF3D00;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        animation: rotationBack 0.5s linear infinite;
+        transform-origin: center center;
+    }
+
+    .loader::before {
+        width: 32px;
+        height: 32px;
+        border-color: #FFF #FFF transparent transparent;
+        animation: rotation 1.5s linear infinite;
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotationBack {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(-360deg);
+        }
+    }
+
+    .navbar.hover {
+        width: 100%;
+        color: silver;
+        box-shadow: 0px 0px 4px 0px rgb(43, 42, 42);
+        background: rgba(0, 0, 0, 0.842);
+        display: flex;
+        height: 70px;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+</style>
+
+<body>
+    <!-- <div id="page-loader">
+        <div class="loader-container">
+            <div class="loader">
+            </div>
+            <h3 class="loader-text"></h3>
+        </div>
+    </div> -->
+    <section class="christmas_ui theme_design mainchristmas">
+        <div class="christmas">
+            <div class="bg"><img src="xmas/home-bg.jpg" alt="" /></div>
+            <img src="xmas/cloud.png" alt="" class="cs cloud" id="cloud1" />
+            <div class="line">
+                <img src="xmas/moon.png" alt="" id="moon" />
+                <p>WE WISH A YOU A</p>
+                <h1>MERRY CHRISTMAS</h1>
+            </div>
+            <img src="xmas/cloud.png" alt="" class="cs cloud" id="cloud2" />
+            <img src="xmas/mountains.png" alt="" class="cs" id="mountains" />
+            <img src="xmas/trees.png" alt="" class="cs" id="trees" />
+        </div>
+        <div class="displaySection">
+            <div class="wrap cloud_flex parallax" data-speed="0.3">
+                <img data-speed="1" src="xmas/new1.png" alt="" />
+                <img src="xmas/home.png" alt="" />
+                <img data-speed="0.4" src="xmas/giving1.png" alt="" />
+                <img data-speed="0.7" src="xmas/celebrate.png" alt="" />
+                <img data-speed="0.2" src="xmas/new2.png" alt="" />
+                <img data-speed="0.8" src="xmas/new3.png" alt="" />
+                <img data-speed="0.5" src="xmas/giving2.png" alt="" />
+            </div>
+
+        </div>
+    </section>
+    <main>
+        <section class="mainsection">
+            <div class="container appearance_active">
+                <!-- navigation section -->
+                <nav class="navbar">
+
+                    <div class="logo"><img src="../zoe.jpg" alt="" /></div>
+                    <i class="fas fa-bars Bar" id="Bar"></i>
+
+                    <ul class="menu" id="menu">
+
+                        <form id="form1">
+                            <a href="user/userDash.php?login">
+                                <div class="Hlog" title="account"><i class="fas fa-user-circle"></i>
+                                </div>
+                            </a>
+                        </form>
+                        <a href="Admin/home.php?login">
+                            <li><i class="fas fa-lock"></i>
+                                <p>Admin</p>
+                            </li>
+                        </a>
+                        <a href="complaints.php">
+                            <li><i class="fas fa-lapt"></i>
+                                <p>Complaints</p>
+                            </li>
+                        </a>
+
+                        <a href="gallary/">
+                            <li><i class="fas fa-image"></i>
+                                <p>Gallery</p>
+                            </li>
+                        </a>
+                        <a href="projects.php">
+                            <li><i class="fas fa-lapt"></i>
+                                <p>Projects</p>
+                            </li>
+                        </a>
+                        <li><i class="fas fa-users"></i>
+                            <p>Department</p>
+                            <ul>
+                                <a href="department/kidsplatform.html">
+                                    <li>Children ministry</li>
+                                </a>
+                                <a href="department/prayer.html">
+                                    <li>Prayer depart.</li>
+                                </a>
+                                <a href="department/music_department.php">
+                                    <li>music ministry</li>
+                                </a>
+                                <a href="department/welfare.html">
+                                    <li>welfare depart.</li>
+                                </a>
+                            </ul>
+                        </li>
+                        <a href="leaders.php">
+                            <li><i class="fas fa-user"></i>
+                                <p>leadership</p>
+                            </li>
+                        </a>
+                        <a href="zoetube/index.html">
+                            <li><i class="fab fa-audio-description"></i>
+                                <p>Podcast</p>
+                            </li>
+                        </a>
+                        <a href="partnership/partner.html">
+                            <li><i class="fas fa-hands-helping"></i>
+                                <p>Partnership</p>
+                            </li>
+                        </a>
+
+
+                    </ul>
+                    <img src="xmas/gift2.png" class="christmas_ui theme_design cs cs1" alt="" />
+                    <img src="xmas/giving2.png" class="christmas_ui theme_design cs cs2" alt="" />
+                </nav>
+                <div class="Bigger_Picture">
+                    <header>THE APOSTOLIC CHURCH GHANA<p>ZOE Assembly Projects</p>
+                    </header>
+
+                    <ul class="cs-hidden totally" id="autoWidth3">
+                        <li>
+                            <div class="total">
+                                <label>New Souls</label>
+
+                                <div class="Number one">
+                                    <p class="totalMen count" data-target="<?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->fetchRecord('soul');
+                                    ?>"></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="total">
+                                <label>Births</label>
+                                <div class="Number two">
+                                    <p class="totalWomen count" data-target="<?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->fetchRecord('birth');
+                                    ?>"></p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="total">
+                                <label>Death</label>
+                                <div class="Number three">
+                                    <p class="totalYouth count" data-target="
+                                    <?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->fetchRecord('death');
+                                    ?>"></p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="total">
+                                <label>Baptism</label>
+                                <div class="Number four">
+                                    <p class="totalKids count" data-target="
+                                    <?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->fetchRecord('baptism');
+                                    ?>"></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="total Kids">
+                                <label>HolySpirit</label>
+                                <div class="Number">
+                                    <p class="totalKids count" data-target="<?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->fetchRecord('holyspirit');
+                                    ?>"></p>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <div class="service_display">
+                        <div class="head">
+                            <p>2ND NOVEMBER 2022</p>
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="black"></div>
+                        <div class="text">
+                            <div class="inner">
+                                <h1>SUNDAY SERVICE</h1>
+
+                                <button>Check Gallery</button>
+                            </div>
+                        </div>
+                        <div class="social">
+                            <ul>
+                                <li>Facebook<i></i></li>
+                                <li>Instagram<i class="fab fa-facebook"></i></li>
+                                <li>Twitter<i class="fab fa-twitter"></i></li>
+                                <li>Youtube<i class="fab fa-youtube"></i></li>
+                            </ul>
+                        </div>
+                        <div class="info" data-aos='fade-left'>
+                            <div class="slider">
+                                <div class="slide" id="slick">
+                                    <div><img src="images/img (1).jpg" alt="" /></div>
+                                    <div><img src="images/img (2).jpg" alt="" /></div>
+                                    <div><img src="images/img (3).jpg" alt="" /></div>
+                                    <div><img src="images/img (4).jpg" alt="" /></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="upcoming_header">
+                        <h1>PROGRAMMES</h1>
+                        <div class="line"></div>
+                    </div>
+
+                    <ul class="Upcoming-issues" id="autoWidth">
+                        <?php
+                        $getRecords = new viewData();
+                        echo $getRecords->fetchProgrames();
+                        ?>
+                    </ul>
+                    <div class="workshop">
+                        <div class="info">
+                            <?php
+                            $getRecords = new viewData();
+                            echo $getRecords->fetchupcoming();
+                            ?>
+                        </div>
+                    </div>
+                    <div class="workshop affirmation_quotes">
+                        <img src="Bible-Affirmation-062119.png" alt="" style="width:90%;
+                        height:90%;margin:0 auto;object-fit:scale-down;" />
+                    </div>
+                    <div class="blogs" id="blogs">
+
+                        <h1 class="christmas_ui theme_design heading" style="color:#fff;">Celebrate the <span>Festive
+                                season</span>
+                            with Love</h1>
+
+                        <div class="christmas_ui theme_design box-container">
+
+                            <div class="boxi">
+                                <div class="images">
+                                    <img src="xmas/blog-1.jpg" alt="">
+                                </div>
+                            </div>
+
+                            <div class="boxi">
+                                <div class="images">
+                                    <img src="xmas/blog-2.jpg" alt="">
+                                </div>
+                            </div>
+
+                            <div class="boxi">
+                                <div class="images">
+                                    <img src="xmas/blog-3.jpg" alt="">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="calendaMain">
+                        <div class="wrapper">
+
+                            <i class="fas fa-list trigger_set" onclick="indicator(this);"></i>
+                            <div class="months">
+                                <?php
+                                $getRecords = new viewData();
+                                echo $getRecords->calender();
+                                ?>
+                                <div class="main">
+                                    <h1>Months</h1>
+                                    <ul>
+                                        <li class="monthsList" id="jan" onclick="monthSelector(this);" datavalue="0">
+                                            January</li>
+                                        <li class="monthsList" id="feb" onclick="monthSelector(this);" datavalue="1">
+                                            Febuary</li>
+                                        <li class="monthsList" id="march" onclick="monthSelector(this);" datavalue="2">
+                                            Match</li>
+                                        <li class="monthsList" id="apr" onclick="monthSelector(this);" datavalue="3">
+                                            April</li>
+                                        <li class="monthsList" id="may" onclick="monthSelector(this);" datavalue="4">May
+                                        </li>
+                                        <li class="monthsList" id="jun" onclick="monthSelector(this);" datavalue="5">
+                                            June</li>
+                                        <li class="monthsList" id="jul" onclick="monthSelector(this);" datavalue="6">
+                                            July</li>
+                                        <li class="monthsList" id="Aug" onclick="monthSelector(this);" datavalue="7">
+                                            August</li>
+                                        <li class="monthsList" id="sep" onclick="monthSelector(this);" datavalue="8">
+                                            September</li>
+                                        <li class="monthsList" id="oct" onclick="monthSelector(this);" datavalue="9">
+                                            October</li>
+                                        <li class="monthsList" id="nov" onclick="monthSelector(this);" datavalue="10">
+                                            November</li>
+                                        <li class="monthsList" id="dec" onclick="monthSelector(this);" datavalue="11">
+                                            December</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="year">
+                                <div class="yearcnt">
+                                    <i class="fas fa-arrow-down" onclick="Prev(this);"></i>
+                                    <i class="fas fa-arrow-up" onclick="next(this);"></i>
+                                    <h1 class="monthName">January</h1>
+                                    <h1 class="current"></h1>
+                                </div>
+                                <ul>
+                                    <li>Su</li>
+                                    <li>Mo</li>
+                                    <li>Tu</li>
+                                    <li>We</li>
+                                    <li>Th</li>
+                                    <li>Fr</li>
+                                    <li>Sa</li>
+                                </ul>
+                                <div class="day" id="daysList">
+
+                                </div>
+                            </div>
+                            <div class="events" style="overflow: auto;">
+                                <h1>Event</h1>
+                                <div class="eventsDetails">
+                                    <div class="head">Wednesday,17th 2021</div>
+                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia ipsa veritatis
+                                        dolorem nihil iusto eligendi, distinctio optio reprehenderit commodi possimus
+                                        laborum. Ex recusandae dolorem rerum dignissimos, facilis labore enim
+                                        voluptates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="christmas_ui theme_design x-mas_heading">
+                        <img src="xmas/logo.png" alt="" />
+                        <img src="xmas/gift3.png" alt="" />
+                        <h1>Happy Holidays</h1>
+                        <img src="xmas/gift5.png" alt="" />
+                        <img src="xmas/gift4.png" alt="" />
+                    </div>
+                    <div class="workshop" data-aos="fade-right">
+                        <img src="xmas/gift1.png" class="christmas_ui theme_design cs" alt="" />
+                        <div class="info">
+
+                            <?php
+                            $getRecords = new viewData();
+                            echo $getRecords->announcement();
+                            ?>
+
+
+                        </div>
+
+                    </div>
+
+                    <footer>
+                        <div class="footer">
+                            <div class="section">
+                                <h1>ZOE WORSHIP CENTRE</h1>
+                                <ul>
+                                    <li>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto quas
+                                            fugiat aut quos vero consectetur magni alias, laborum ut dicta
+                                            molestiae libero ad architecto quisquam maiores officiis, soluta fugit quod?
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <div class="images">
+                                            <img src="department/images/a1.jpg" alt="">
+                                            <img src="department/images/a2.jpg" alt="">
+                                            <img src="department/images/a3.jpg" alt="">
+                                            <img src="department/images/a4.jpg" alt="">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="section">
+                                <h1>QUICK LINKS<i class="fas fa-landmark"></i></h1>
+                                <ul>
+                                    <li>Media department</li>
+                                    <li>Prayer ministry</li>
+                                    <li>Music ministry</li>
+                                    <li>Protocol deparment</li>
+                                    <li>Mission department</li>
+                                    <li>welfare deparment</li>
+
+                                </ul>
+                            </div>
+                            <div class="section">
+                                <H1>CONTACT INFO <i class="fas fa-phone"></i></H1>
+                                <ul>
+                                    <li>+233 553838464</li>
+                                    <li>+233 591825476</li>
+                                    <li>zoeworshipcenter@gmail.com</li>
+                                    <li>Kasoa galalia</li>
+                                </ul>
+                            </div>
+                            <div class="section">
+                                <H1>Follow Us </H1>
+                                <ul>
+                                    <li>
+                                        <p>Zoe_worship center<i class="fab fa-facebook-square"></i></p>
+                                    </li>
+                                    <li>
+                                        <p>Zoeworship center<i class="fab fa-instagram"></i></p>
+                                    </li>
+                                    <li>
+                                        <p>Zoeworship_center<i class="fab fa-twitter"></i></p>
+                                    </li>
+                                    <li>
+                                        <p>Zoe_worship center<i class="fab fa-youtube"></i></p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>
+        </section>
+        <div class="send_up">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+    </main>
+    <script src="js/slick/slick.js"></script>
+    <script src="library/aos.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const pageLoader = document.getElementById("page-loader");
+            pageLoader.classList.add("hidden");
+            window.addEventListener("load", function () {
+                pageLoader.classList.remove("hidden");
+                setTimeout(function () {
+                    pageLoader.classList.add("hidden");
+                }, 0);
+            });
+        });
+        function themeDesign(a) {
+            var Items = document.querySelectorAll('.theme_design');
+            var container = document.querySelector('.container');
+            if (a == 'default') {
+                Items.forEach(element => {
+                    element.classList.add('theme_inactive');
+                });
+                container.classList.remove('appearance_active');
+            } else if (a == 'container') {
+                Items.forEach(element => {
+                    element.classList.add('theme_active');
+                });
+            }
+        }
+        // <? php
+        // $getRecords = new viewData();
+        // echo $getRecords -> theme();
+        // ?>
+    </script>
+</body>
+
+</html>

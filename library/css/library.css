@@ -1,0 +1,232 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+html::-webkit-scrollbar-track {
+  background: #444;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: crimson;
+  border-radius: 5rem;
+}
+
+.hidden {
+  display: none;
+}
+.fa-times {
+  color: red;
+}
+
+.main_library .Podcast {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.main_library .Podcast h1 {
+  width: 100%;
+}
+.main_library .Podcast .slide {
+  display: flex;
+}
+.main_library .Podcast .slide.twick {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.main_library .Podcast .item {
+  width: 270px;
+  height: 320px;
+  overflow: hidden;
+  margin: 5px;
+  position: relative;
+}
+
+p {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.main_library .Podcast .item .info {
+  position: absolute;
+  bottom: 20%;
+  background: crimson;
+  width: 30px;
+  padding: 5px;
+  right: 0;
+  height: 30px;
+  color: rgb(255, 255, 255);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50%;
+  align-items: center;
+}
+.main_library .Podcast .item .info p:nth-child(2) {
+  margin-inline: 5px;
+}
+.main_library .Podcast .item img {
+  width: 100%;
+  height: 75%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.main_library .Podcast .item .text {
+  width: 100%;
+  word-wrap: wrap;
+  height: 20%;
+  font-size: 17px;
+}
+.main_library .Podcast .item .text .date {
+  margin-bottom: 10px;
+}
+.main_library .Podcast .item .play {
+  position: absolute;
+  bottom: 0;
+  display: none;
+}
+.main_library .Podcast .item:hover .play {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.479);
+  display: grid;
+  place-items: center;
+  color: rgb(226, 6, 43);
+  font-size: 50px;
+}
+
+.main_library .Podcast .item .history_line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+}
+.main_library .Podcast .item .history_line .line {
+  height: 100%;
+  width: 30%;
+  background: crimson;
+}
+.main_library .swiper {
+  width: 100%;
+}
+.main_library .swiper h1 {
+  width: 100%;
+}
+.main_library .swiper .slide {
+  display: flex;
+}
+.main_library .swiper .item {
+  width: 250px;
+  height: 310px;
+  overflow: hidden;
+  margin: 5px;
+  position: relative;
+  background: #000;
+}
+
+p {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.main_library .swiper .item .info {
+  position: absolute;
+  top: 0;
+  margin-top: 120px;
+  background: crimson;
+  width: auto;
+  padding: 5px;
+  left: 0;
+  height: 50px;
+  color: rgb(255, 255, 255);
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 4px;
+  align-items: center;
+}
+.main_library .swiper .item .info p:nth-child(2) {
+  margin-inline: 5px;
+}
+.main_library .swiper .item img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+}
+.main_library .swiper .item .text {
+  width: 100%;
+  word-wrap: wrap;
+  height: 20%;
+  font-size: 17px;
+  text-align: center;
+  text-transform: capitalize;
+}
+.main_library .swiper .item .play {
+  position: absolute;
+  bottom: 0;
+  display: none;
+}
+.main_library .swiper .item:hover .play {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.479);
+  display: grid;
+  place-items: center;
+  color: rgb(226, 6, 43);
+  font-size: 50px;
+}
+.Podcast .slider {
+  position: absolute;
+  z-index: 999;
+  background: rgba(58, 57, 57, 0.527);
+  color: #fff;
+  margin-top: 10%;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  width: 32px;
+  transition: all 0.4s ease;
+}
+.Podcast .slider#slidePrev {
+  left: 0;
+  margin-left: -100%;
+}
+.Podcast .slider#slideNext {
+  right: 0;
+  margin-right: -100%;
+}
+.Podcast:hover .slider#slideNext {
+  margin-right: 10px;
+}
+.Podcast:hover .slider#slidePrev {
+  margin-left: 20px;
+}
+
+.Podcast .slider#slidePrev2 {
+  left: 0;
+  margin-left: -100%;
+}
+.Podcast .slider#slideNext2 {
+  right: 0;
+  margin-right: -100%;
+}
+.Podcast:hover .slider#slideNext2 {
+  margin-right: 10px;
+}
+.Podcast:hover .slider#slidePrev2 {
+  margin-left: 20px;
+}

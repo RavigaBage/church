@@ -1,0 +1,353 @@
+button {
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  width: 130px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.option {
+  width: 20px;
+  position: relative;
+}
+tbody td svg {
+  fill: #fff;
+  width: 20px;
+}
+.option .opt_element {
+  display: none;
+}
+.option .opt_element.active {
+  position: absolute;
+  right: 100%;
+  top: 10%;
+  width: 150px;
+  height: 90px;
+  background-color: #000;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  padding: 10px;
+  cursor: pointer;
+  display: block;
+}
+.option .opt_element p {
+  border-radius: 10px;
+  padding: 10px;
+}
+.option .opt_element p:hover {
+  background-color: #9c9c9c;
+}
+
+.event_menu_add.active {
+  display: block;
+  opacity: 1;
+  transition: 200ms all ease;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: initial;
+  z-index: 9999;
+}
+.event_menu_add.series_upload {
+  z-index: 99999;
+}
+.event_menu_add.series_upload .close {
+  float: right;
+  background-color: crimson;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  margin: 10px;
+  border-radius: 50%;
+  padding: 2px;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.event_menu_add {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 560px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 16px;
+  z-index: -1;
+  box-shadow: 0px -1px 4px 0px #313131;
+  transform: translate(-50%, -50%) scale(1.1);
+  transition: 200ms all ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.Activity_record header {
+  font-size: 18px;
+  color: #ddd;
+  margin-bottom: 0px;
+  margin-block: 3px;
+}
+.event_menu_add header {
+  text-align: center;
+  font-size: 30px;
+}
+.display_setting .field,
+.Activity_record .field,
+.event_menu_add .field {
+  width: 100%;
+  height: 60px;
+  padding: 5px;
+  margin-block: 5px;
+}
+.display_setting .field label,
+.Activity_record .field label,
+.event_menu_add .field label {
+  font-size: 15px;
+  padding-bottom: 5px;
+}
+.event_menu_add .field_e {
+  width: 100%;
+  height: 180px;
+  padding: 10px;
+  margin-block: 5px;
+}
+.display_setting .field input,
+.display_setting .field select,
+.Activity_record .field input,
+.Activity_record .field select,
+.event_menu_add .field input,
+.event_menu_add .field select {
+  width: 100%;
+  height: 38px;
+  outline: none;
+  border-width: 0px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 7px;
+}
+.Activity_record .field input,
+.Activity_record .field select {
+  height: 35px;
+  border: none;
+  border-radius: 0px;
+  background-color: #0a0a0a;
+  color: #fff;
+  pointer-events: none;
+  border-bottom: 1px solid rgb(22, 22, 22);
+}
+.Activity_record.edit .field input,
+.Activity_record.edit .field select {
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #000000;
+  pointer-events: initial;
+  border-bottom: 1px solid rgb(252, 252, 252);
+}
+
+.event_menu_add .field_e textarea {
+  width: 100%;
+  height: 150px;
+  padding: 5px;
+  outline: none;
+  border-width: 0px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+}
+.Activity_record button {
+  display: none;
+}
+.display_setting .field button,
+.Activity_record.edit button,
+.event_menu_add button {
+  width: 250px;
+  height: 45px;
+  background-color: crimson;
+  border-width: 0px;
+  border: 1px solid crimson;
+  border-radius: 10px;
+  font-size: 18px;
+  margin: 15px;
+  display: block;
+}
+.cate_view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.cate_view_e {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.add_event {
+  position: fixed;
+  bottom: 8%;
+  right: 0;
+  margin-right: 50px;
+  width: 90px;
+  height: 40px;
+  border-radius: 7px;
+  color: #fff;
+  background-color: #222121;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.add_event.far {
+  right: 100px;
+}
+.add_event p {
+  color: #fff;
+  margin-left: 10px;
+}
+
+/* .event_menu_add.series_version {
+  position: absolute;
+  top: calc((100% - 560px) / 2);
+  left: 20px;
+  width: 900px;
+} */
+
+.slider_menu_main {
+  width: 100%;
+  overflow: hidden;
+}
+.menu {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-block: 30px;
+  cursor: pointer;
+  position: relative;
+  padding-inline: 20px;
+}
+.menu header {
+  font-size: 30px;
+}
+.menu .item.hide {
+  display: none;
+}
+.menu .item {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-inline: 20px;
+  margin: 10px auto;
+  border-radius: 7px;
+}
+.menu .item:hover {
+  background-color: hsla(0, 0%, 27%, 0.212);
+}
+.menu .item .details {
+  width: 90%;
+}
+.menu .item .details p:nth-child(1) {
+  font-size: 18px;
+  font-weight: bolder;
+  margin-right: 20px;
+}
+.menu .item .details p:nth-child(2) {
+  font-size: 14px;
+  text-transform: capitalize;
+}
+.field_desc {
+  padding: 10px;
+}
+.field_desc textarea {
+  width: 100%;
+  height: 120px;
+}
+.genre {
+  display: flex;
+  align-items: center;
+}
+.genre .g_item {
+  height: 30px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.flex_pn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.loader_space {
+  width: 99%;
+  margin: 5px auto;
+  border-radius: 10px;
+  height: 20px;
+  background-color: #ddd;
+  overflow: hidden;
+  display: flex;
+}
+
+.uploader {
+  width: 80%;
+  height: 100%;
+  background-color: crimson;
+}
+
+.view_cards {
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 20px 40px;
+}
+.view_cards .card {
+  height: 300px;
+  padding: 10px;
+  border-radius: 16px;
+}
+.view_cards .card:hover {
+  box-shadow: 0px 0px 4px 0px #ddd;
+}
+.view_cards .card .image {
+  height: 230px;
+  width: 100%;
+}
+
+.view_cards .card .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.title_opt {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title_opt header {
+  font-size: 18px;
+  font-weight: bolder;
+}
+
+.toggle_mode svg {
+  margin-right: 10px;
+  font-size: 45px;
+  margin-left: 10px;
+}
+.toggle_mode.active svg:nth-child(1) {
+  display: block;
+}
+.toggle_mode.active svg:nth-child(2) {
+  display: none;
+}
+
+.toggle_mode svg:nth-child(1) {
+  display: none;
+}
+.toggle_mode svg:nth-child(2) {
+  display: block;
+}

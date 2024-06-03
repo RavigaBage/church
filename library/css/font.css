@@ -1,0 +1,29 @@
+@font-face {
+  font-family: paragraph;
+  src: url("../fonts/Ysabeau-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: boldtext;
+  src: url("../fonts/Nunito-Bold.ttf");
+}
+@font-face {
+  font-family: headertext;
+  src: url("../fonts/AndikaNewBasic-Regular.ttf");
+}
+
+p {
+  font-family: headertext;
+}
+span li,
+div {
+  font-family: paragraph;
+}
+h1,
+header,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: boldtext;
+}

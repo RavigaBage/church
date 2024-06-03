@@ -1,0 +1,299 @@
+<?php
+include_once 'classes/verification.php';
+include_once 'classes/homeview/ViewData.php';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/AdminSitesermonpage.css" />
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/all.css" />
+    <script type="module" src="node_modules/chart.js/dist/chart.umd.js"></script>
+    <title>AdminSite</title>
+</head>
+<style>
+    <style>.sermon_content_main .sermon_body .body_main ul.main {
+        height: 45px;
+        flex-wrap: initial;
+    }
+
+    .slide {
+        top: 0;
+    }
+
+    #sidebar {
+        position: fixed;
+        left: 0;
+    }
+
+    nav {
+        position: fixed;
+    }
+
+    .content_main {
+        margin-left: 250px;
+    }
+
+    #sidebar,
+    aside,
+    .content_main {
+        margin-top: 60px;
+    }
+</style>
+
+<body>
+    <main>
+        <?php include_once 'Admin_nav.php'; ?>
+
+        <section class="content_body">
+            <?php include_once 'Admin_sidebar.php' ?>
+            <div class="content_main">
+                <div class="inherit">
+                    <i class="fas fa-times" onclick="CloseInherit(this);"></i>
+                    <canvas id="inherit"></canvas>
+                </div>
+                <div class="info-data">
+                    <div class="card">
+                        <div class="head">
+                            <div class="icon" style="--color:#000;">
+                                <i class='fas fa-users'></i>
+                            </div>
+                            <div class="float right">
+                                <p>membership records</p>
+                                <h2>
+                                    U-
+                                    <?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->displayRecords();
+                                    ?>
+
+                                </h2>
+                            </div>
+                            <div class="rate">
+                                <p>
+                                    <?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->displayRecordsAnalysis();
+                                    ?>
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="head">
+                            <div class="icon" style="--color:crimson;">
+                                <i class='fas fa-shopping-bag'></i>
+                            </div>
+                            <div class="float right">
+                                <p>total Assets</p>
+                                <h2>
+                                    As-
+                                    <?php
+                                    $getRecords = new viewData();
+                                    echo $getRecords->displayRecordsAssets();
+                                    ?>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="head">
+                            <div class="icon" style="--color:green;">
+                                <i class="fas fa-toolbox"></i>
+                            </div>
+                            <div class="float right">
+                                <p>Projects</p>
+                                <?php
+                                $getRecords = new viewData();
+                                echo $getRecords->displayRecordsProjectAnalysis();
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="min-card calendar">
+                        <div class="date">
+                            <i class="fas fa-calendar"></i>
+                            <?php
+                            date('UTC');
+                            $date = date('d');
+                            echo '
+                            <p>' . date('D') . '</p>
+                            <p class="num">' . $date . '</p>';
+                            ?>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="graphs">
+                    <div class="cnttrt">
+                        <div>
+                            <canvas id="myChart" onclick="InheritData(this);"></canvas>
+                            <div class="info">
+                                <div class='dataFetch' data-id=""></div>
+                                <p>The chart shows the the trajectory of the tithe paying records of the church
+                                    indicating increment and the vice vers
+                                </p>
+                                <div class="date">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Data drawn from
+                                        <span>
+                                            <?php
+                                            $date = date("Y-m-d");
+                                            $explode_Date = explode("-", $date);
+                                            $year = $explode_Date[0];
+                                            $year;
+                                            ?>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cnttrt">
+                        <div>
+                            <div class="info">
+                                <p>Population sensus of the Church[teen(13-20),kids(0-12),adult(20+)]</p>
+                            </div>
+
+                            <canvas id="Canvas_membership"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="menu_aside">
+
+                <div class="aside_icons">
+                    <img src="./img/calendar-48.png" alt="" class="hover" />
+                    <div class="relative grid ">
+                        <img src="./img/keep-48.png" alt="" class="hover" />
+                        <div class="result grid center notify">219</div>
+                    </div>
+                    <img src="./img/task-48.png" alt="" class="hover" />
+                    <img src="./img/account-48.png" alt="" class="hover" />
+                    <span></span>
+                    <ion-icon name="add" class="hover"></ion-icon>
+
+                    <div>
+                        <ion-icon name="chevron-forward-outline" class="hover"></ion-icon>
+                    </div>
+                </div>
+            </aside>
+        </section>
+    </main>
+    <script>
+        var AdaptClass = document.querySelector('.inherit');
+        let inherit = 'myChart';
+        function InheritData() {
+            AdaptClass.classList.toggle('active');
+            inherit = 'inherit';
+            SetData()
+        }
+        function CloseInherit() {
+            AdaptClass.classList.toggle('active');
+            inherit = 'myChart';
+            SetData()
+        }
+        function SetData() {
+            <?php
+
+            $getRecords = new viewData();
+            $data = $getRecords->displayRecordsTithe();
+            ?>
+            let sumAmount =
+                [<?php
+                foreach ($data as &$value) {
+                    echo "'" . $value[1] . "',";
+                }
+                ?>''];
+            let labelData =
+                [<?php
+                foreach ($data as &$value) {
+                    echo "'" . $value[0] . "',";
+                }
+                ?>''];
+            sumAmount.pop();
+            labelData.pop();
+            new Chart(inherit, {
+                type: "line",
+                data: {
+                    labels: labelData,
+                    datasets: [{
+                        label: "<?php
+                        $date = date("Y-m-d");
+                        $explode_Date = explode("-", $date);
+                        $year = $explode_Date[0];
+                        $year; ?> Tithe pattern",
+                        data: sumAmount,
+                        fill: true,
+                        borderColor: 'crimson',
+                        backgroundColor: ['#ddd', 'yellow', 'green', 'blue', 'violet'],
+                        tension: 0.1
+                    }]
+            },
+                options: {
+                legend: { display: true },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            },
+                title: {
+                display: true,
+                text: 'Chart.js Doughnut Chart'
+            }
+            });
+        }
+        setTimeout(() => {
+            var yValues = ['7', '20', '8'];
+
+            new Chart('Canvas_membership', {
+                type: "doughnut",
+                data: {
+                    <?php
+                    $getRecords = new viewData();
+                    $data = $getRecords->displayChatPopulation();
+                    ?>
+                    labels: ['Men <?php echo $data[0]; ?>', 'Women <?php echo $data[1]; ?>', 'Teen  <?php echo $data[2]; ?>', 'Children  <?php echo $data[3]; ?>'],
+                    datasets: [{
+                        label: ['Men ', 'Women', 'Teen', 'Children'],
+                        data: ['<?php echo $data[0]; ?>', '<?php echo $data[1]; ?>', '<?php echo $data[2]; ?>', '<?php echo $data[3]; ?>'],
+                        backgroundColor: [
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75 227 8 / 93%)'
+                        ]
+                    }]
+                },
+                options: {
+                    legend: { display: true },
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Doughnut Chart'
+                }
+            });
+            SetData()
+
+        }, 100);
+    </script>
+    <script defer>
+        var logoutId = document.querySelector('#logoutId');
+        logoutId.addEventListener('click', function () {
+            if (confirm('Are you sure you want to log out') == true) {
+                location.href = "php/logout.php?loginVerify=<?php echo $verification; ?>";
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.calendaMain {
+  width: 95%;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(164, 165, 167, 0.582);
+  margin: 50px auto;
+  overflow: hidden;
+}
+.calendaMain .wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 540px;
+  display: flex;
+  color: #fff;
+  overflow: hidden;
+  margin: 0%;
+}
+.monthName {
+  width: 140px;
+}
+h1 {
+  font-size: 25px;
+  font-weight: 500;
+  padding-left: 10px;
+}
+.calendaMain .wrapper .months {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 300px;
+  min-height: 100%;
+  margin-left: -270px;
+  transition: all 0.4s ease;
+  display: flex;
+}
+.calendaMain .wrapper .months.active {
+  margin-left: 0%;
+}
+.calendaMain .wrapper .months .main {
+  width: calc(100% - 30px);
+  background: rgb(6, 26, 49);
+}
+.calendaMain .wrapper i.trigger_set {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  font-size: 25px;
+  min-height: 25px;
+  transition: all 0.4s ease;
+}
+.calendaMain .wrapper i.trigger_set.active {
+  margin-left: 230px;
+}
+.calendaMain .wrapper .months ul,
+.calendaMain .wrapper .events ul {
+  width: 100%;
+  min-height: 100%;
+}
+.calendaMain .wrapper .months ul li {
+  min-height: 30px;
+  padding-left: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+.calendaMain .wrapper .months ul li.active {
+  background-color: teal;
+}
+.calendaMain .wrapper .months ul li,
+.calendaMain .wrapper .events ul li {
+  list-style: none;
+  width: 95%;
+  margin: 10px auto;
+}
+.calendaMain .wrapper .year {
+  position: relative;
+  width: 70%;
+  min-height: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px 10px rgb(0 0 0 / 33%);
+  /* background:rgba(220, 223, 226, 0.486); */
+}
+.calendaMain .wrapper .year .yearcnt {
+  width: 90%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+.calendaMain .wrapper .year .yearcnt i {
+  margin-inline: 10px;
+  transition: all 0.2s ease;
+}
+.calendaMain .wrapper .year .yearcnt i:hover {
+  color: crimson;
+  background: teal;
+}
+.calendaMain .wrapper .year ul {
+  display: flex;
+  width: 100%;
+}
+.calendaMain .wrapper .year ul li {
+  list-style: none;
+  padding: 10px;
+  width: calc(100% / 7);
+  cursor: pointer;
+}
+.calendaMain .wrapper .year ul li:hover {
+  background-color: teal;
+}
+.calendaMain .wrapper .months ul li:hover {
+  background-color: teal;
+}
+.calendaMain .wrapper .year .day {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.calendaMain .wrapper .year .day p {
+  width: calc(100% / 7);
+  text-align: center;
+  display: grid;
+  place-items: center;
+  margin-block: 10px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.calendaMain .wrapper .year .day p.active {
+  background: teal;
+}
+.calendaMain .wrapper .year .day p.CalenderEvent {
+  background: crimson;
+}
+.calendaMain .wrapper .year .day p.active .indicator {
+  width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: gold;
+}
+.calendaMain .wrapper .year .day p:hover {
+  background-color: rgba(221, 221, 221, 0.24);
+}
+.calendaMain .wrapper .events {
+  width: 30%;
+  min-height: 100%;
+  background: rgb(23, 31, 41);
+  position: relative;
+}
+.calendaMain .wrapper .events .eventsDetails {
+  width: 97%;
+  margin: 0 auto;
+}
+.calendaMain .wrapper .events .eventsDetails .image {
+  width: 100%;
+  object-fit: cover;
+  max-height: 250px;
+}
+.calendaMain .wrapper .events .eventsDetails .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.calendaMain .wrapper .events .eventsDetails p {
+  font-weight: 300px;
+}
+.calendaMain .wrapper .events .eventsDetails .error {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.calendaMain .wrapper .events .eventsDetails .error img {
+  width: auto;
+}
+.calendaMain .wrapper .events .loader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  background: rgb(34, 33, 33);
+  opacity: 0.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+.calendaMain .wrapper .events .loader {
+  display: none;
+}
+.calendaMain .wrapper .events .loader.active {
+  display: flex;
+}
+.calendaMain .wrapper .events .loader.active .loaderanimate {
+  width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  animation: loader 5s infinite ease;
+  transition: all 0.3s ease;
+  border: 5px solid #fff;
+  border-right: 5px solid transparent;
+  overflow: hidden;
+}
+.calendaMain .wrapper .events .loader.active .loaderanimate img {
+  width: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+    border: 5px solid #fff;
+  }
+  50% {
+    transform: rotate(180deg);
+    border: 5px solid red;
+  }
+  100% {
+    transform: rotate(360deg);
+    border: 5px solid rgb(0, 60, 255);
+  }
+}
+@media screen and (max-width: 780px) {
+  .calendaMain {
+    width: 95%;
+    min-height: 700px;
+  }
+}
+@media screen and (max-width: 650px) {
+  .calendaMain .wrapper {
+    display: block;
+    min-height: 100%;
+    border: 1px solid transparent;
+  }
+  .calendaMain .wrapper .year {
+    min-height: auto;
+  }
+  .calendaMain .wrapper .year {
+    width: 100%;
+  }
+  .calendaMain .wrapper .events {
+    width: 100%;
+    background: transparent;
+  }
+}
+.mark {
+  background-color: red !important;
+}
+.display_active {
+  background-color: crimson;
+  border-radius: 10px;
+}

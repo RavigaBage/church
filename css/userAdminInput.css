@@ -1,0 +1,524 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+main {
+  width: 100%;
+}
+main section header {
+  padding: 10px;
+  width: 100%;
+  min-height: calc(100px + 15vw);
+  background: url("../user/img/bg.jpeg") no-repeat 50% 20% / cover;
+  position: relative;
+}
+main section header.space {
+  min-height: calc(40px + 10vw);
+}
+main section header nav {
+  position: absolute;
+  width: 100%;
+  min-height: 50px;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+main section header nav ul {
+  float: right;
+  display: flex;
+}
+
+main section header nav li.menu {
+  float: right;
+  color: #fff;
+  font-size: 22px;
+  font-weight: bolder;
+  display: none;
+}
+main section header nav ul li {
+  list-style: none;
+  font-size: 1.2rem;
+  color: #fff;
+  margin-inline: 10px;
+  position: relative;
+  margin-block: 20px;
+  text-align: justify;
+}
+main section header nav ul li.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  border-bottom: 3px solid red;
+}
+main section .col__container {
+  display: flex;
+  padding: 0rem 2rem;
+}
+main section .left-col {
+  padding: 25px 20px;
+  text-align: center;
+  max-width: 350px;
+  position: relative;
+  margin-right: auto;
+}
+main section .left-col .user .image {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translatex(-50%);
+}
+main section .left-col .user img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+main section .left-col .user .caption {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+main section .left-col .user .caption h1 {
+  font-size: 1.5rem;
+}
+main section .left-col .user .caption li {
+  display: flex;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+}
+main section .left-col .user .caption p {
+  font-size: 1rem;
+}
+
+main section .left-col .profile {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-block: 10px;
+}
+main section .left-col .profile li.status {
+  color: crimson;
+  font-weight: bold;
+}
+main section .left-col .profile li.skill {
+  margin: 3px;
+}
+main section .left-col .about {
+  line-height: 1.3rem;
+}
+.col__container .right__col {
+  margin-left: 2rem;
+  max-width: 100%;
+}
+.col__container .right__col nav {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.col__container .right__col nav ul {
+  display: flex;
+  gap: 20px;
+  padding: 0rem;
+  box-sizing: border-box;
+}
+.col__container .right__col nav ul li {
+  padding: 0rem;
+  margin: 0rem;
+  cursor: pointer;
+}
+.col__container .right__col nav ul li a {
+  text-transform: uppercase;
+  color: #818181;
+}
+.col__container .right__col nav ul li:nth-child(1) a {
+  color: #1d1d1d;
+  font-weight: 600;
+}
+.col__container .right__col nav button {
+  background: #0091ff;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px auto;
+}
+.col__container .right__col nav button:hover {
+  opacity: 0.8;
+}
+.col__container .right__col .photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 20px;
+}
+.col__container .right__col .photos img {
+  max-width: 100%;
+  display: block;
+  height: 100%;
+  object-fit: cover;
+}
+.col__container .right__col .photos a {
+  height: auto;
+  max-height: 150px;
+}
+.col__container .right__col .photos .card {
+  max-width: 210px;
+  max-height: 150px;
+  display: block;
+  position: relative;
+  margin-inline: 10px;
+}
+.col__container .right__col .photos .card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.col__container .right__col .photos .card .head {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.534);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.col__container .right__col .photos .card .head li {
+  list-style: none;
+  width: 100%;
+  text-align: center;
+}
+.col__container .right__col .photos .card .head li h1,
+.col__container .right__col .photos .card .head li h2 {
+  font-size: 1.5rem;
+}
+.col__container .right__col .photos .card .head li i {
+  color: crimson;
+  font-size: 30px;
+}
+.col__container .right__col .photos .card .head .progress {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: 10px;
+  background: #ddd;
+  overflow: hidden;
+}
+
+.col__container .right__col .photos .card .head .progress::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 30%;
+  height: 100%;
+  background-color: crimson;
+}
+main section header nav ul li.menu {
+  display: none;
+}
+main section header nav ul li.menu i {
+  font-size: 20px;
+}
+.mainSlide {
+  width: 100%;
+  max-width: 925px;
+  overflow-x: hidden;
+  display: flex;
+}
+.mainSlide .photos.active {
+  margin-right: 0%;
+  margin-left: 0%;
+}
+.mainSlide .photos {
+  width: 100%;
+  margin-left: -100%;
+  transition: all 0.5s ease;
+}
+.mainSlide .bio.active {
+  margin-right: 0%;
+}
+.mainSlide .bio {
+  width: 100%;
+  margin-right: -100%;
+  transition: all 0.5s ease;
+}
+/*-------------------------profile--------------*/
+.form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.form .field {
+  max-width: 320px;
+  width: 100%;
+  min-height: 40px;
+  margin: 10px;
+}
+.form input,
+.form select {
+  width: 100%;
+  min-height: 40px;
+  outline: none;
+  border-radius: 4px;
+  border-width: 0px;
+  border: 1px solid #ddd;
+}
+.form textarea {
+  width: 100%;
+  min-height: 120px;
+  outline: none;
+  border-radius: 4px;
+  border-width: 0px;
+  border: 1px solid #ddd;
+}
+form .nav {
+  display: flex;
+}
+form .nav button {
+  background: #0091ff;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px;
+}
+.form .field.textarea {
+  max-width: 100%;
+}
+.pwd__space,
+.book__space {
+  width: 100%;
+  max-width: 900px;
+  margin: 10px auto;
+  min-height: 250px;
+}
+.book__space table {
+  width: 100%;
+}
+.book__space table tr {
+  margin: 5px;
+  line-height: 2rem;
+}
+.book__space table tr th {
+  text-transform: uppercase;
+  color: #fff;
+}
+.book__space table tr:nth-child(odd) {
+  background: rgb(148, 201, 214);
+}
+.book__space table tr:nth-child(even) {
+  background: #8d979c;
+}
+.book__space .section {
+  display: block;
+  box-shadow: 0px 0px 4px 0px #ddd;
+  margin-block: 10px;
+}
+.book__space .section .month {
+  width: 100%;
+}
+.pwd__space .field {
+  max-width: 320px;
+  width: 100%;
+  min-height: 40px;
+  margin: 10px;
+}
+.pwd__space .field input {
+  width: 100%;
+  min-height: 40px;
+  outline: none;
+  border-radius: 4px;
+  border-width: 0px;
+  border: 1px solid #ddd;
+}
+.pwd__space .field button {
+  background: #0091ff;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px;
+}
+.Notification ul.main,
+.Notification ul.sub {
+  width: 95%;
+  display: flex;
+  margin: 0 auto;
+}
+.Notification ul.main li,
+.Notification ul.sub li {
+  width: 25%;
+  margin: 10px;
+  font-weight: bolder;
+}
+.Notification ul.main li:nth-child(2),
+.Notification ul.sub li:nth-child(2) {
+  width: 50%;
+}
+@media screen and (max-width: 840px) {
+  main section header nav li.menu {
+    display: block;
+  }
+  main section .left-col .user .image {
+    top: -60px;
+    left: 30%;
+  }
+  header {
+    overflow: hidden;
+  }
+  header.active {
+    display: auto;
+    min-height: 90vh;
+  }
+  main section header nav {
+    z-index: 999;
+    color: #000;
+  }
+  main section header nav ul {
+    display: none;
+  }
+  main section header nav ul li.menu {
+    display: block;
+    float: right;
+    color: #fff;
+    text-align: right;
+  }
+  main section header nav.active {
+    background: rgb(0, 0, 0);
+    height: 100%;
+  }
+  main section header nav.active ul {
+    display: flex;
+    text-align: right;
+    width: 100%;
+  }
+  main section header nav ul li {
+    color: #000;
+  }
+  main section header nav ul {
+    flex-direction: column;
+  }
+  .col__container {
+    flex-direction: column;
+    padding: 0rem 1rem !important;
+  }
+  .col__container .left-col,
+  .col__container .right__col {
+    width: 100%;
+    max-width: 730px;
+    margin-right: 0rem;
+  }
+  .col__container .right__col {
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 790px) {
+  .book__space {
+    overflow: hidden;
+  }
+  .book__space .details {
+    width: auto;
+    overflow-x: auto;
+  }
+  .header {
+    width: 100% !important;
+    overflow-x: auto;
+  }
+  .header .section {
+    width: 780px !important;
+  }
+}
+@media screen and (max-width: 560px) {
+  table {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+@media screen and (max-width: 522px) {
+  .mainSlide .photos.active {
+    justify-content: center;
+  }
+}
+/* @media screen and (max-width:510px){
+  .mainSlide .photos.active{
+    display:block;
+  }
+} */
+
+@media screen and (max-width: 388px) {
+  .col__container .right__col nav {
+    flex-direction: column;
+  }
+  .col__container .right__col nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.Pin {
+  position: relative;
+}
+.notification_pin {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: -12px;
+  margin-right: -9px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  background: crimson;
+  display: grid;
+  place-items: center;
+}
+.log {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+}
+.log .year {
+  width: auto;
+  color: #000;
+}
+.log .year.active {
+  width: auto;
+  color: rgb(255, 0, 0);
+}
+.user_nav ul li a {
+  color: rgb(252, 247, 247);
+  font-weight: bolder;
+}
+.user_nav ul {
+  background: rgba(0, 0, 0, 0);
+}
+.fa-times {
+  color: red;
+}
+table {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+table tr td {
+  padding: 15px;
+}
+.tableWrapper {
+  width: 100%;
+  overflow: auto;
+}

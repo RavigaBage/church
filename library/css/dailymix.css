@@ -1,0 +1,82 @@
+section .container {
+  width: 90%;
+  height: auto;
+  display: block !important;
+  margin: 0 auto;
+}
+section .container .daily:nth-child(odd) {
+  background: #dddddd52;
+}
+section .container .daily {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding-block: 20px;
+  margin-block: 10px;
+}
+
+section .container .daily .item_name {
+  width: 40%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+section .container .daily .item_name h1 {
+  font-size: 18px;
+  color: #ffffffea;
+}
+section .container .daily .item_name p.resize {
+  display: none;
+  color: #dddddd9f;
+}
+section .container .daily .item_name .icon {
+  display: none;
+  margin-inline: 10px;
+  height: 100%;
+  width: 30px;
+
+  place-items: center;
+}
+section .container .daily .item_name:hover .icon {
+  background-color: #dddddd80;
+  display: grid;
+}
+section .container .daily .item_name svg {
+  width: 20px;
+  fill: #fff;
+}
+section .container .daily .tick {
+  width: 30%;
+}
+
+section .container .daily .single {
+  width: 5%;
+}
+
+@media screen and (max-width: 1000px) {
+  section .container {
+    width: 98%;
+    margin: 0 auto;
+  }
+  section .container .daily {
+    height: 70px;
+  }
+  section .container .daily .tick {
+    display: none;
+  }
+  section .container .daily .item_name {
+    width: 80%;
+    height: 70px;
+  }
+
+  section .container .daily .single.year {
+    display: none;
+  }
+  section .container .daily .item_name p.resize {
+    display: block;
+  }
+  section .container .daily .single {
+    width: 20%;
+  }
+}
