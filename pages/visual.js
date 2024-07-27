@@ -69,6 +69,6 @@ var options = {
     },
   ],
 };
-
 var chart = new ApexCharts(document.querySelector("#chart_2"), options);
 chart.render();
+

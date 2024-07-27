@@ -90,11 +90,11 @@ define(function () {
     });
   };
   callMethod.calender = (monthValue, yearValue, dayValue, eventData) => {
-    const calender = document.querySelector(".view.month_view .view_main ");
-    const monthValue_f = parseInt(monthValue) - 1;
+    const calender = document.querySelector(".min_data.event_days");
+    const CalenderMonth = document.querySelector(".view.month_view .view_main");
+    const monthValue_f = parseInt(monthValue);
     const yearValue_f = parseInt(yearValue);
     const dayValue_f = parseInt(dayValue);
-    calender.innerHTML = "";
     const monthNames = [
       "January",
       "February",
@@ -126,8 +126,10 @@ define(function () {
 
     const DayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"];
     let first_day = new Date(yearValue_f, monthValue_f, 1);
-    console.log(first_day);
     SpaceGenerator(first_day.getDay(), calender);
+    SpaceGenerator(first_day.getDay(), CalenderMonth);
+    console.log(monthValue_f);
+    console.log(DaysOfMonth[monthValue_f]);
     for (i = 0; i <= DaysOfMonth[monthValue_f]; i++) {
       if (i <= 0) {
       } else if (
@@ -135,19 +137,11 @@ define(function () {
         yearValue_f === now.getFullYear() &&
         monthValue_f === now.getMonth()
       ) {
-        calender.innerHTML += `<div class='active_today' title="today">${i}${EventList_Marking(
-          monthValue_f,
-          yearValue_f,
-          dayValue_f,
-          eventData
-        )}</div>`;
+        calender.innerHTML += `<div class='active_today' title="today" data-icu=""><p>${i}</p></div>`;
+        CalenderMonth.innerHTML += `<div class='active_today' title="today" data-icu=""><span>${i}</span></div>`;
       } else {
-        calender.innerHTML += `<div class="" >${i}${EventList_Marking(
-          monthValue_f,
-          yearValue_f,
-          i,
-          eventData
-        )}</div>`;
+        calender.innerHTML += `<div class="" data-icu=""><p>${i}</p></div>`;
+        CalenderMonth.innerHTML += `<div data-icu=""><span>${i}</span></div>`;
       }
     }
     // Name.innerHTML = monthNames[monthValue];

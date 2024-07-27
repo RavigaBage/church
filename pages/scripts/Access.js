@@ -5,24 +5,27 @@ define(function () {
   CallMethods.IntervalSet = (HourEle, MinuteEle, SecondEle, originValue) => {
     try {
       const IntervalData = setInterval(() => {
-        OriginTime = new Date(parseInt(originValue));
-        CurrentTime = new Date();
-        EndDate = OriginTime - CurrentTime;
-        Cnt = 24 * 60 * 60 * 1000;
-        DaysTime = EndDate / Cnt;
-        HoursTime = DaysTime * 24;
-        MinTime = HoursTime * 60;
-        SecondTime = MinTime * 60;
-        Backwards_24 = Math.floor(HoursTime % 24);
-        Backwards_minute = Math.floor(MinTime % 60);
-        Backwards_second = Math.floor(SecondTime % 60);
-        HourEle.innerText = `${Backwards_24}hr`;
-        MinuteEle.innerText = `${Backwards_minute}min`;
-        SecondEle.innerText = `${Backwards_second}sec`;
-        Value_Check = Backwards_24;
-
-        if (Value_Check <= 0) {
+        if (isNaN(originValue)) {
           clearInterval(IntervalData);
+        } else {
+          OriginTime = new Date(parseInt(originValue));
+          CurrentTime = new Date();
+          Cnt = 24 * 60 * 60 * 1000;
+          EndDate = new Date(parseInt(originValue) + Cnt) - CurrentTime;
+          DaysTime = EndDate / Cnt;
+          HoursTime = DaysTime * 24;
+          MinTime = HoursTime * 60;
+          SecondTime = MinTime * 60;
+          Backwards_24 = Math.floor(HoursTime % 24);
+          Backwards_minute = Math.floor(MinTime % 60);
+          Backwards_second = Math.floor(SecondTime % 60);
+          HourEle.innerText = `${Backwards_24}hr`;
+          MinuteEle.innerText = `${Backwards_minute}min`;
+          SecondEle.innerText = `${Backwards_second}sec`;
+          Value_Check = Backwards_24;
+          if (Value_Check <= 0) {
+            clearInterval(IntervalData);
+          }
         }
       }, 500);
     } catch (error) {

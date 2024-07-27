@@ -22,9 +22,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Account_delete_Records($name)
+    public function Account_delete_Records($name, $id)
     {
-        $RecordsResult = $this->Account_delete_data($name);
+        $RecordsResult = $this->Account_delete_data($name, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -44,7 +44,7 @@ class viewData extends fetchData
         }
     }
 
-    public function Account_user_records($acc_name, $description, $date, $time, $category, $percentage, $amount, $balance)
+    public function Account_user_upload_records($acc_name, $description, $date, $time, $category, $percentage, $amount, $balance)
     {
         $RecordsResult = $this->Account_user_Records($acc_name, $description, $date, $time, $category, $percentage, $amount, $balance);
         if ($RecordsResult == false) {
@@ -97,19 +97,19 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function OffertoryTithe($unique_id, $Medium_payment, $description, $name, $amount, $date, $month, $year)
+    public function OffertoryTithe($unique_id, $Medium_payment, $description, $amount, $date, $month, $year)
     {
-        $RecordsResult = $this->Tithe_Records($unique_id, $Medium_payment, $description, $name, $amount, $date, $month, $year);
+        $RecordsResult = $this->Tithe_Records($unique_id, $Medium_payment, $description, $amount, $date, $month, $year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
-            return $Error;
+            return json_encode($Error);
         } else {
-            return $RecordsResult;
+            return json_encode($RecordsResult);
         }
     }
-    public function UpdateTithes($unique_id, $Medium_payment, $description, $date_uploaded, $name, $amount, $Date, $month, $year)
+    public function UpdateTithes($unique_id, $Medium_payment, $description, $amount, $Date, $month, $year)
     {
-        $RecordsResult = $this->Tithe_Records_update($unique_id, $Medium_payment, $description, $date_uploaded, $name, $amount, $Date, $month, $year);
+        $RecordsResult = $this->Tithe_Records_update_data($unique_id, $Medium_payment, $description, $amount, $Date, $month, $year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -169,9 +169,20 @@ class viewData extends fetchData
         }
     }
 
-    public function user_dues_update($name, $medium, $amount, $form_name, $user_date, $id, $unique_id)
+    public function user_dues_record($name, $medium, $amount,  $user_date, $unique_id)
     {
-        $RecordsResult = $this->Dues_user_update($name, $medium, $amount, $form_name, $user_date, $id, $unique_id);
+        $RecordsResult = $this->Dues_user_record($name, $medium, $amount,  $user_date, $unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function user_dues_update($name, $medium, $amount, $form_name, $user_date,  $unique_id)
+    {
+        $RecordsResult = $this->Dues_user_update($name, $medium, $amount, $form_name, $user_date,  $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -190,9 +201,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Transaction_upload($account, $category, $amount, $status, $authorize)
+    public function Transaction_upload($account, $category, $amount, $status, $authorize,$date)
     {
-        $RecordsResult = $this->Tansaction($account, $category, $amount, $status, $authorize);
+        $RecordsResult = $this->Transaction($account, $category, $amount, $status, $authorize,$date);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -201,9 +212,9 @@ class viewData extends fetchData
         }
     }
 
-    public function Transaction_update($id, $account, $category, $amount, $status, $authorize)
+    public function Transaction_update($id, $account, $category, $amount, $status, $authorize,$date)
     {
-        $RecordsResult = $this->Transaction_update($id, $account, $category, $amount, $status, $authorize);
+        $RecordsResult = $this->Transaction_update_data($id, $account, $category, $amount, $status, $authorize,$date);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -222,6 +233,20 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+    public function TransactionFilter($account,$category,$year)
+    {
+        $RecordsResult = $this-> TransactionListFilter($account, $category,$year);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+   
+    #to fix
     public function Budget_upload($name, $status, $authorize, $about, $details)
     {
         $RecordsResult = $this->Budget($name, $status, $authorize, $about, $details);
@@ -252,11 +277,10 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-
-
-    public function Budget_list_upload($name, $category, $type, $amount, $details, $date, $year, $month, $recorded_by)
+    #end_to_fix
+    public function Budget_list_upload($category, $type, $amount, $details, $date, $year, $month, $recorded_by)
     {
-        $RecordsResult = $this->Budget_user($name, $category, $type, $amount, $details, $date, $year, $month, $recorded_by);
+        $RecordsResult = $this->Add_Budget_user($category, $type, $amount, $details, $date, $year, $month, $recorded_by);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -264,9 +288,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Budget_list_update($name, $category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id)
+    public function Budget_list_update($category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id)
     {
-        $RecordsResult = $this->Budget_user_update($name, $category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id);
+        $RecordsResult = $this->Budget_user_update($category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -274,9 +298,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function BudgetDeleteList($form_name, $id)
+    public function BudgetDeleteList($year, $id)
     {
-        $RecordsResult = $this->Budget_delete_user_data($form_name, $id);
+        $RecordsResult = $this->Budget_delete_user_data($year, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -294,6 +318,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+
     public function BudgetDataList()
     {
         $RecordsResult = $this->Budget_data_list();
@@ -304,20 +330,46 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function BudgetList($name, $year)
+    public function BudgetList($year)
     {
-        $RecordsResult = $this->Budget_list($name, $year);
+        $RecordsResult = $this->Budget_list($year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
         } else {
-            return $RecordsResult;
+            return json_encode($RecordsResult);
         }
     }
 
-    public function ExpensesList($name, $year)
+    public function BudgeCategoryList()
     {
-        $RecordsResult = $this->Expenses_list($name, $year);
+        $RecordsResult = $this->Budget_list_category();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return "$RecordsResult";
+        }
+    }
+
+    public function BudgeCategoryListFilter($year, $category)
+    {
+        $RecordsResult = $this->Budget_list_categoryFilter($year,$category);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return "$RecordsResult";
+        }
+    }
+    
+
+    
+
+    #to fix
+    public function ExpensesList($year)
+    {
+        $RecordsResult = $this->Expenses_list($year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -336,6 +388,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    
     public function ExpensesDelete($name, $id)
     {
         $RecordsResult = $this->Expenses_Delete($name, $id);
@@ -346,6 +399,17 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function TransactionList($num)
+    {
+        $RecordsResult = $this->TransactionListData($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function Records_usernames()
     {
         $RecordsResult = $this->Usernames();
@@ -359,7 +423,6 @@ class viewData extends fetchData
     public function Dues_pay_list($id)
     {
         $RecordsResult = $this->Pay_list_Info($id);
-        ;
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -368,9 +431,10 @@ class viewData extends fetchData
         }
 
     }
-    public function ListData()
+    
+    public function ListDataDues($num)
     {
-        $RecordsResult = $this->list_Info();
+        $RecordsResult = $this->list_Info_Dues($num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -378,6 +442,57 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+    public function DuesPages(){
+        $RecordsResult = $this->Dues_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Trans_Pages(){
+        $RecordsResult = $this->Transaction_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function ListData($num)
+    {
+        $RecordsResult = $this->list_Info($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function TitheData($num)
+    {
+        $RecordsResult = $this->list_Info_tithe($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function TitheSearch($name)
+    {
+        $RecordsResult = $this->list_search_tithe($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function ContributionList()
     {
         $RecordsResult = $this->c_calc();
@@ -388,5 +503,38 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function Accounts_list_view(){
+        $RecordsResult = $this->Accounts_list();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function Accounts_list_Data(){
+        $RecordsResult = $this->AccountListData();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
+
+    public function Accounts_list_Card(){
+        $RecordsResult = $this->Accounts_listCard();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    
+    
 
 }

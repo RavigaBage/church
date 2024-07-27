@@ -373,9 +373,13 @@ class fetchData extends DBH
                 $objectClass->About = $About;
                 $ObjectData = json_encode($objectClass);
                 if ($status == 'active') {
-                    $status = '<div class="in_btn"><div></div>active</div>';
+                    $status = '<div class="in_btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="green"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
+                    active</div>';
                 } else {
-                    $status = '<div class="out_btn"><div></div>Inactive</div>';
+                    $status = '<div class="out_btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="red"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
+                    Inactive</div>';
                 }
                 $exportData .=
                     "<tr>
@@ -385,17 +389,17 @@ class fetchData extends DBH
 </div>
 <div class='text'>
 <p>" . $email . "</p>
-<p>" . $Firstname . $Othername . "</p>
+<p>" . $Firstname ."  ". $Othername . "</p>
 </div>
 
 </div></td>
-                <td class='td_action'>" . $Age . "</td>
-                <td class='td_action'>" . $gender . "</td>
-                <td class='td_action'>" . $Address . "</td>
-                <td class='td_action'>" . $Baptism . "</td>
-                <td class='td_action'>" . $occupation . "</td>
+                <td class='td_action'><div class='table_center'><p>" . $Age . "</p></div></td>
+                <td class='td_action'><div class='table_center'><p>" . $gender . "</p></div></td>
+                <td class='td_action'><div class='table_center'><p>" . $Address . "</p></div></td>
+                <td class='td_action'><div class='table_center'><p>" . $Baptism . "</p></div></td>
+                <td class='td_action'><div class='table_center'><p>" . $occupation . "</p></div></td>
                 
-                <td>" . $status . "</td>
+                <td><div class='table_center'><p>" . $status . "</p></div></td>
 
                 <td class='option' style='width:100%;display:grid;place-items:center;'>
                     <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960'

@@ -266,7 +266,7 @@ class fetchData extends DBH
                 $exportData .= "
                 <div class='item' data-id=' . $unique_id . '>
                 <div class='details' style='width:calc(100% - 30px)'>
-                    <p>" . $name . " <span style='margin-left:10px;width:fit-content;text-align:center;color:#dddd;font-size:13px;'>" . $message . "</span> </p>
+                    <p>" . $name . " <span style='margin-left:10px;width:fit-content;text-align:center;font-size:13px;'>" . $message . "</span> </p>
                     <p>You edited . " . $date . "</p>
                 </div>
                 <div class='delete option'>

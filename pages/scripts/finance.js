@@ -7,10 +7,10 @@ define(function () {
         ".account .container_item .item"
       );
     } else {
-      var SearchItems = document.querySelectorAll(".container_item .item");
+      var SearchItems = document.querySelectorAll(".event .container_item .item");
     }
 
-    console.log(SearchItems, value);
+
     DateList = [];
     nameList = [];
     FilterList = [];
@@ -19,13 +19,16 @@ define(function () {
       DateList.push(
         element.querySelector(".item_name").getAttribute("data_item")
       );
-      nameList.push(element.querySelector(".item_name").innerHTML);
+      ElementName = element.querySelector(".item_name").innerHTML;
+      SplitData = ElementName.split(' ');
+      FirstName = SplitData[0];
+      nameList.push(FirstName.toLocaleLowerCase());
     });
+    
 
     DateList.forEach((element_Date) => {
       ConvertDates.push(new Date(element_Date).getTime());
     });
-
     NewList = nameList.sort();
     if (value == "modified") {
       NewListDates = [];
@@ -34,8 +37,8 @@ define(function () {
       });
       NewListDates.sort();
       NewListDates.forEach((element_Date) => {
+        console.log(new Date(element_Date))
         Index = ConvertDates.indexOf(element_Date);
-        console.log(element_Date, Index);
         SearchItems.forEach((element) => {
           if (
             element.querySelector(".item_name").getAttribute("data_item") ==
@@ -45,18 +48,22 @@ define(function () {
           }
         });
       });
-      CleanDate(FilterList);
+      CleanDate(FilterList.reverse());
     }
 
     if (value == "Descending") {
       NewList.reverse();
       NewList.forEach((element_Date) => {
         SearchItems.forEach((element) => {
-          if (element.querySelector(".item_name").innerHTML == element_Date) {
+          ElementName = element.querySelector(".item_name").innerHTML;
+          SplitData = ElementName.split(' ');
+          FirstName = SplitData[0].toLocaleLowerCase();
+          if (element_Date == FirstName) {
             FilterList.push(element);
           }
         });
       });
+      CleanDate(FilterList);
       CleanDate(FilterList);
     }
 
@@ -67,7 +74,10 @@ define(function () {
       NewList.sort();
       NewList.forEach((element_Date) => {
         SearchItems.forEach((element) => {
-          if (element.querySelector(".item_name").innerHTML == element_Date) {
+          ElementName = element.querySelector(".item_name").innerHTML;
+          SplitData = ElementName.split(' ');
+          FirstName = SplitData[0].toLocaleLowerCase();
+          if (element_Date == FirstName) {
             FilterList.push(element);
           }
         });
@@ -75,16 +85,16 @@ define(function () {
       CleanDate(FilterList);
     }
     function CleanDate(value) {
+      var Container_cover = "";
       if (location == false) {
-        var Container_cover = document.querySelector(
+        Container_cover = document.querySelector(
           ".account .container_item"
         );
       } else {
-        const Container_cover = document.querySelector(".container_item");
+        Container_cover = document.querySelector(".event .container_item");
       }
-
+    
       if (value.length > 0) {
-        Container_cover.innerHTML = "";
         value.forEach((element) => {
           Container_cover.append(element);
         });

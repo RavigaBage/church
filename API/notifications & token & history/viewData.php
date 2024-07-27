@@ -12,12 +12,13 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Theme($id)
+
+    public function annc_update($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name,$id)
     {
-        $RecordsResult = $this->themeStatus($id);
+        $RecordsResult = $this->annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name,$id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
-            return $RecordsResult;
+            return $Error;
         } else {
             return $RecordsResult;
         }
@@ -31,7 +32,29 @@ class viewData extends fetchData
         } else {
             return $RecordsResult;
         }
+    }   
+    public function annc_status($name,$id)
+    {
+        $RecordsResult = $this->annc_status_data($name,$id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    } 
+    
+    public function Theme($id)
+    {
+        $RecordsResult = $this->themeStatus($id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
     }
+
     public function viewList()
     {
         $RecordsResult = $this->annc_view();
@@ -91,7 +114,7 @@ class viewData extends fetchData
             $Error = 'Error Occurred';
             return $Error;
         } else {
-            return json_encode($RecordsResult);
+            return $RecordsResult;
         }
     }
     public function History_data($name, $event, $Date, $sitename, $action)

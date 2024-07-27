@@ -2,7 +2,6 @@
 require ('autoloader.php');
 if (isset($_GET['submit'])) {
     if ($_GET['submit'] != 'delete' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter') {
-
         $opening_prayer = $_POST['opening_prayer'];
         $praises = $_POST['praises'];
         $scripture_reading = $_POST['scripture_reading'];
@@ -28,9 +27,9 @@ if (isset($_GET['submit'])) {
         $total_attendance = $_POST['Total_attendance'];
         $date = $_POST['date'];
     }
+    
     if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
         try {
-
             $viewDataClass = new viewData();
             $result_data = $viewDataClass->sunday_upload($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date)
             ;
@@ -42,9 +41,6 @@ if (isset($_GET['submit'])) {
     } else if ($_GET['submit'] == 'update' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
         try {
             $unique_id = $_POST['delete_key'];
-
-
-
             $viewDataClass = new viewData();
             $result_data = $viewDataClass->sunday_update($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date, $unique_id);
             json_encode(["status" => "result", "result" => $result_data]);

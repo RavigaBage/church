@@ -31,10 +31,10 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status)
+    protected function calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name)
     {
 
-        $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status);
+        $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status);
         $clean = true;
         $exportData = 0;
         $resultValidate = true;
@@ -58,8 +58,33 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-                $unique_id = rand(time(), 1999);
 
+                if ($file_name == '') {
+                    $file_name = '';
+                } else {
+                    $explodes = explode('.', $file_name);
+                    $explode_end = end($explodes);
+                    $Extensions = array('jpg', 'png', 'jpeg');
+                    if (in_array($explode_end, $Extensions)) {
+                        $types = ["image/jpg", "image/png", "image/jpeg"];
+                        if (in_array($Image_type, $types)) {
+                            $filename4 = time() . $file_name;
+                            $target4 = "../images/calenda/$filename4";
+                            if (move_uploaded_file($Image_tmp_name, $target4)) {
+                                $unique_id = rand(time(), 3002);
+                                $file_name = $target4;
+                            } else {
+                                exit(json_encode("An error occurred while processing image, try again"));
+                            }
+                        } else {
+                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
+                        }
+                    } else {
+                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
+                    }
+                }
+
+                $unique_id = rand(time(), 1999);
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`calender`(`unique_id`, `EventName`, `Year`, `Month`, `Day`, `start_time`, `end_time`, `Venue`, `Theme`, `About`, `Image`, `Department`, `Status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
                 $stmt->bindParam('2', $EventName, PDO::PARAM_STR);
@@ -71,10 +96,11 @@ class fetchData extends DBH
                 $stmt->bindParam('8', $Venue, PDO::PARAM_STR);
                 $stmt->bindParam('9', $Theme, PDO::PARAM_STR);
                 $stmt->bindParam('10', $About, PDO::PARAM_STR);
-                $stmt->bindParam('11', $Image, PDO::PARAM_STR);
+                $stmt->bindParam('11', $file_name, PDO::PARAM_STR);
                 $stmt->bindParam('12', $Department, PDO::PARAM_STR);
                 $stmt->bindParam('13', $Status, PDO::PARAM_STR);
                 if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
                     exit($Error);
@@ -210,7 +236,7 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year`='$year' ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year`='$year' ORDER BY `start_time` DESC");
 
         if (!$stmt->execute()) {
             $stmt = null;
@@ -237,7 +263,7 @@ class fetchData extends DBH
                 $unique_id = $data['unique_id'];
 
                 $tmpClass->name = $name;
-                $tmpClass->year = $year;
+                $tmpClass->Year = $year;
                 $tmpClass->Month = $Month;
                 $tmpClass->Day = $Day;
                 $tmpClass->start = $start;
@@ -253,7 +279,7 @@ class fetchData extends DBH
 
             }
 
-            $exportData = $MainClass;
+            $exportData = json_encode($MainClass);
         } else {
             $resultCheck = false;
             $exportData = '<header>Not Records Available</header>';

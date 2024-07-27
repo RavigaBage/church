@@ -1,3 +1,5 @@
+<div class="filter_wrapper relative">
+</div>
 <header style="margin-left:30px">THEMES</header>
 <div class="view_cards">
     <div class="card">
@@ -5,7 +7,11 @@
             <img src="../../images/celebrate.png" alt="" />
         </div>
         <div class="title_opt">
+            <div class="decoration">
+                <img src="../images/nav-light.png" alt="" />
+            </div>
             <header>Christmas Appearance</header>
+
             <div class="toggle_mode" data-id="1">
                 <svg xmlns="http://www.w3.org/2000/svg" class='on' height="24" fill="green" viewBox="0 -960 960 960"
                     width="24">
@@ -22,8 +28,19 @@
         </div>
     </div>
 </div>
+<div class="dn_message switch_theme">
+                    <h1>
+                        You are currently performing a theme switch, by accepting all web designs on this system will,
+                        be affected to match this design
+                    </h1>
+                    <p>Are you sure you want to switch themes</p>
+                    <div class="btn">
+                        <div class="btn_confirm" data-confirm="false">No</div>
+                        <div class="btn_confirm" data-confirm="true">Yes</div>
+                    </div>
+                </div>
 
-<div class="display_setting">
+<!-- <div class="display_setting">
     <header>Homepage Event Customization </header>
     <div class="field">
         <label>This select element contains all list of event uploaded to the database, select and click on the submit
@@ -40,4 +57,4 @@
         <button>Submit changes</button>
     </div>
 
-</div>
+</div> -->

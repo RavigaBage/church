@@ -50,7 +50,7 @@ class fetchData extends DBH
 
             $unique_id = rand(time(), 1999);
 
-            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`sunday_records`(`unique_id`,`opening prayer`, `praises`, `scripture reading`, `scripture`, `opening_Hymn`, `Hymn_new`, `Hymn_title`, `worship`, `testimonies`, `song_thanksgving_offering`, `sermon_prayer`, `sermon_from`, `scripture_preacher`, `peacher_duration`, `alter_call`, `tithe_offering`, `special_appeal`, `welcome_visitors`, `Announcement`, `closing_prayer`, `Benediction`, `MC`, `Total_attendance`, `date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`sunday_records`(`unique_id`,`opening_prayer`, `praises`, `scripture_reading`, `scripture`, `opening_Hymn`, `Hymn_new`, `Hymn_title`, `worship`, `testimonies`, `song_thanksgving_offering`, `sermon_prayer`, `sermon_from`, `scripture_preacher`, `peacher_duration`, `alter_call`, `tithe_offering`, `special_appeal`, `welcome_visitors`, `Announcement`, `closing_prayer`, `Benediction`, `MC`, `Total_attendance`, `date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
             $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
             $stmt->bindParam('2', $opening_prayer, PDO::PARAM_STR);
@@ -128,7 +128,7 @@ class fetchData extends DBH
                 exit($exportData);
             } else {
                 if ($stmt->execute()) {
-                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`sunday_records` set  `opening prayer`=?,`praises`=?,`scripture reading`=?,`scripture`=?,`opening_Hymn`=?,`Hymn_new`=?,`Hymn_title`=?,`worship`=?,`testimonies`=?,`song_thanksgving_offering`=?,`sermon_prayer`=?,`sermon_from`=?,`scripture_preacher`=?,`peacher_duration`=?,`alter_call`=?,`tithe_offering`=?,`special_appeal`=?,`welcome_visitors`=?,`Announcement`=?,`closing_prayer`=?,`Benediction`=?,`MC`=?,`Total_attendance`=?,`date`=? where `unique_id` = ?");
+                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`sunday_records` set  `opening_prayer`=?,`praises`=?,`scripture_reading`=?,`scripture`=?,`opening_Hymn`=?,`Hymn_new`=?,`Hymn_title`=?,`worship`=?,`testimonies`=?,`song_thanksgving_offering`=?,`sermon_prayer`=?,`sermon_from`=?,`scripture_preacher`=?,`peacher_duration`=?,`alter_call`=?,`tithe_offering`=?,`special_appeal`=?,`welcome_visitors`=?,`Announcement`=?,`closing_prayer`=?,`Benediction`=?,`MC`=?,`Total_attendance`=?,`date`=? where `unique_id` = ?");
                     $stmt->bindParam('1', $opening_prayer, PDO::PARAM_STR);
                     $stmt->bindParam('2', $praises, PDO::PARAM_STR);
                     $stmt->bindParam('3', $scripture_reading, PDO::PARAM_STR);
@@ -155,7 +155,9 @@ class fetchData extends DBH
                     $stmt->bindParam('24', $date, PDO::PARAM_STR);
                     $stmt->bindParam('25', $id, PDO::PARAM_STR);
                     if (!$stmt->execute()) {
+                        print_r($stmt->errorInfo());
                         $stmt = null;
+                        
                         $Error = json_encode('Fetching data encountered a problems');
                         exit($Error);
                     } else {
@@ -241,7 +243,6 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             foreach ($result as $data) {
-
                 $open_prayer = $data['opening_prayer'];
                 $praise = $data['praises'];
                 $scripture_read = $data['scripture_reading'];
@@ -267,39 +268,41 @@ class fetchData extends DBH
                 $total_attendance = $data['Total_attendance'];
                 $date = $data['date'];
                 $item = "";
-                $id = $data['id'];
+                $id = $data['unique_id'];
                 $exportData .= '  
                 
                 <div class="annc_item">
                 <div class="flex button">
                     <div class=" flex title">
-                        <h1>Sunday Record no.- ' . $id . '</h1>
+                        <h1>Sunday Record ' . $sermon_from . '</h1>
                         <div class="flex button"><i class="fas fa-date"></i>' . $date . '</div>
                     </div>
                 </div>
 
                 <div class="div_content">
                     <details>
+                    <form form-id='.$id.'>
+                    <input name="delete_key" type="hidden" value='.$id.' />
                         <div class="Activity_record">
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Opening Prayer led By</label>
-                                    <input type="text" placeholder="' . $open_prayer . '" />
+                                    <input type="text" value=' . $open_prayer . ' placeholder="' . $open_prayer . '" name="opening_prayer" />
                                 </div>
                                 <div class="field">
                                     <label>Praises By:</label>
-                                    <input type="text" placeholder="' . $praise . '" />
+                                    <input type="text" name="praises" placeholder="' . $praise . '" value=' . $praise . ' />
                                 </div>
                             </div>
                             <header>Scripture reading</header>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Scripture Reading By</label>
-                                    <input type="text" placeholder="' . $scripture_read . '" />
+                                    <input type="text" name="scripture_reading" placeholder="' . $scripture_read . '" value=' . $scripture_read . ' />
                                 </div>
                                 <div class="field">
                                     <label>Scripture read:</label>
-                                    <input type="text" placeholder="' . $scripture . '" />
+                                    <input type="text" name="scripture" placeholder="' . $scripture . '" value=' . $scripture . ' />
                                 </div>
                             </div>
 
@@ -307,110 +310,114 @@ class fetchData extends DBH
                             <div class="cate_view_e">
                                 <div class="field">
                                     <label>Opening Hymn No</label>
-                                    <input type="text" placeholder="' . $hymn . '" />
+                                    <input type="text" name="opening_Hymn" placeholder="' . $hymn . '" value=' . $hymn . ' />
                                 </div>
                                 <div class="field">
                                     <label>New:</label>
-                                    <input type="text" placeholder="' . $hymn_new . '" />
+                                    <input type="text" name="Hymn_new" placeholder="' . $hymn_new . '" value=' . $hymn_new . ' />
                                 </div>
                                 <div class="field">
                                     <label>Title:</label>
-                                    <input type="text" placeholder="' . $hymn_title . '" />
+                                    <input type="text" name="Hymn_title" placeholder="' . $hymn_title . '" value=' . $hymn_title . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Call to worship</label>
-                                <input type="text" placeholder="' . $worship . '" />
+                                <input type="text" name="worship" placeholder="' . $worship . '" value=' . $worship . ' />
                             </div>
                             <div class="field">
                                 <label>Testimonies</label>
-                                <input type="text" placeholder="' . $testimonies . '" />
+                                <input type="text" name="testimonies" value=' . $testimonies . ' placeholder="' . $testimonies . '" />
                             </div>
                             <div class="field">
                                 <label>Song Ministration & Thanksgiving Offering:</label>
-                                <input type="text" placeholder="' . $song_thanksgivning . '" />
+                                <input type="text" name="song_thanksgving_offering" value=' . $song_thanksgivning . ' placeholder="' . $song_thanksgivning . '" />
                             </div>
 
                             <header>Sermon</header>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Sermon & Prayer By:</label>
-                                    <input type="text" placeholder="' . $sermon_prayer . '" />
+                                    <input type="text" name="sermon_prayer" value=' . $sermon_prayer . ' placeholder="' . $sermon_prayer . '" />
                                 </div>
                                 <div class="field">
                                     <label>From:</label>
-                                    <input type="text" placeholder="' . $sermon_from . '" />
+                                    <input type="text" name="sermon_from" value=' . $sermon_from . ' placeholder="' . $sermon_from . '" />
                                 </div>
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Scripture from preacher:</label>
-                                    <input type="text" placeholder="' . $scipture_preacher . '" />
+                                    <input type="text" name="scripture_preacher" value=' . $scipture_preacher . ' placeholder="' . $scipture_preacher . '" />
                                 </div>
                                 <div class="field">
                                     <label>Time Duratoin for the preacher:</label>
-                                    <input type="text" placeholder="' . $preacher_duration . '" />
+                                    <input type="text" name="peacher_duration" placeholder="' . $preacher_duration . '" value=' . $preacher_duration . '"/>
                                 </div>
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Alter Call By:</label>
-                                    <input type="text" placeholder="' . $alter_call . '" />
+                                    <input type="text" name="alter_call" placeholder="' . $alter_call . '" value=' . $alter_call . ' />
                                 </div>
                                 <div class="field">
                                     <label>Tithe and Offering</label>
-                                    <input type="text" placeholder="' . $tithe_offering . '" />
+                                    <input type="text" name="tithe_offering" placeholder="' . $tithe_offering . '" value=' . $tithe_offering . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Special Appeal</label>
-                                <input type="text" placeholder="' . $special_appeal . '" />
+                                <input type="text"  name="special_appeal" placeholder="' . $special_appeal . '" value=' . $special_appeal . ' />
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Welcome of visitors</label>
-                                    <input type="text" placeholder="' . $welcome_visitors . '" />
+                                    <input type="text" name="welcome_visitors" value=' . $welcome_visitors . ' placeholder="' . $welcome_visitors . '" />
                                 </div>
                                 <div class="field">
                                     <label>Announcement</label>
-                                    <input type="text" placeholder="' . $annc . '" />
+                                    <input type="text" name="Announcement" placeholder="' . $annc . '" value=' . $annc . ' />
                                 </div>
                             </div>
                             <header>Closing..</header>
                             <div class="field">
                                 <label>Closing Prayer</label>
-                                <input type="text" placeholder="' . $closing_prayer . '" />
+                                <input type="text" name="closing_prayer" value=' . $closing_prayer . ' placeholder="' . $closing_prayer . '" />
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Benediction</label>
-                                    <input type="text" placeholder="' . $Benediction . '" />
+                                    <input type="text" name="Benediction" value=' . $Benediction . ' placeholder="' . $Benediction . '" />
                                 </div>
                                 <div class="field">
                                     <label>Mc</label>
-                                    <input type="text" placeholder="' . $mc . '" />
+                                    <input type="text" name="MC" placeholder="' . $mc . '" value=' . $mc . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Total Attendance</label>
-                                <input type="text" placeholder="' . $total_attendance . '" />
+                                <input type="text" name="Total_attendance" value=' . $total_attendance . ' placeholder="' . $total_attendance . '" />
                             </div>
-<button>Record message</button>
+                            <div class="field">
+                                        <label>Date</label>
+                                        <input type="date" name="date" placeholder="" value='.$date.' />
+                                    </div>
+                          <button>Record message</button>
                         </div>
+                        </form>
                     </details>
                 </div>
-                <div class=" flex options title">
-                    <div class="edit flex">
-                        <i class="fas fa-edit"></i>
-                        <p>Edit</p>
-                    </div>
+                    <div class=" flex options title">
+                        <div class="edit flex Update_item">
+                            <i class="fas fa-edit Update_item"></i>
+                            <p>Edit</p>
+                        </div>
 
-
-                    <div class="edit flex">
-                        <i class="fas fa-trash"></i>
-                        <p>Remove</p>
+                        <div class="edit flex">
+                            <i class="fas fa-trash delete_item"></i>
+                            <p>Remove</p>
+                        </div>
                     </div>
-                </div>
             </div>';
 
             }
@@ -462,38 +469,40 @@ class fetchData extends DBH
                 $total_attendance = $data['Total_attendance'];
                 $date = $data['date'];
                 $item = "";
-                $id = $data['id'];
-                $exportData .= '                  
+                $id = $data['unique_id'];
+                $exportData .= '  
+                
                 <div class="annc_item">
                 <div class="flex button">
                     <div class=" flex title">
-                        <h1>Sunday Record no.- ' . $id . '</h1>
+                        <h1>Sunday Record ' . $sermon_from . '</h1>
                         <div class="flex button"><i class="fas fa-date"></i>' . $date . '</div>
                     </div>
                 </div>
 
                 <div class="div_content">
                     <details>
+                    <form form-id='.$id.'>
                         <div class="Activity_record">
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Opening Prayer led By</label>
-                                    <input type="text" placeholder="' . $open_prayer . '" />
+                                    <input type="text" value=' . $open_prayer . ' placeholder="' . $open_prayer . '" name="opening_prayer" />
                                 </div>
                                 <div class="field">
                                     <label>Praises By:</label>
-                                    <input type="text" placeholder="' . $praise . '" />
+                                    <input type="text" name="praises" placeholder="' . $praise . '" value=' . $praise . ' />
                                 </div>
                             </div>
                             <header>Scripture reading</header>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Scripture Reading By</label>
-                                    <input type="text" placeholder="' . $scripture_read . '" />
+                                    <input type="text" name="scripture_reading" placeholder="' . $scripture_read . '" value=' . $scripture_read . ' />
                                 </div>
                                 <div class="field">
                                     <label>Scripture read:</label>
-                                    <input type="text" placeholder="' . $scripture . '" />
+                                    <input type="text" name="scripture" placeholder="' . $scripture . '" value=' . $scripture . ' />
                                 </div>
                             </div>
 
@@ -501,110 +510,114 @@ class fetchData extends DBH
                             <div class="cate_view_e">
                                 <div class="field">
                                     <label>Opening Hymn No</label>
-                                    <input type="text" placeholder="' . $hymn . '" />
+                                    <input type="text" name="opening_Hymn" placeholder="' . $hymn . '" value=' . $hymn . ' />
                                 </div>
                                 <div class="field">
                                     <label>New:</label>
-                                    <input type="text" placeholder="' . $hymn_new . '" />
+                                    <input type="text" name="Hymn_new" placeholder="' . $hymn_new . '" value=' . $hymn_new . ' />
                                 </div>
                                 <div class="field">
                                     <label>Title:</label>
-                                    <input type="text" placeholder="' . $hymn_title . '" />
+                                    <input type="text" name="Hymn_title" placeholder="' . $hymn_title . '" value=' . $hymn_title . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Call to worship</label>
-                                <input type="text" placeholder="' . $worship . '" />
+                                <input type="text" name="worship" placeholder="' . $worship . '" value=' . $worship . ' />
                             </div>
                             <div class="field">
                                 <label>Testimonies</label>
-                                <input type="text" placeholder="' . $testimonies . '" />
+                                <input type="text" name="testimonies" value=' . $testimonies . ' placeholder="' . $testimonies . '" />
                             </div>
                             <div class="field">
                                 <label>Song Ministration & Thanksgiving Offering:</label>
-                                <input type="text" placeholder="' . $song_thanksgivning . '" />
+                                <input type="text" name="song_thanksgving_offering" value=' . $song_thanksgivning . ' placeholder="' . $song_thanksgivning . '" />
                             </div>
 
                             <header>Sermon</header>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Sermon & Prayer By:</label>
-                                    <input type="text" placeholder="' . $sermon_prayer . '" />
+                                    <input type="text" name="sermon_prayer" value=' . $sermon_prayer . ' placeholder="' . $sermon_prayer . '" />
                                 </div>
                                 <div class="field">
                                     <label>From:</label>
-                                    <input type="text" placeholder="' . $sermon_from . '" />
+                                    <input type="text" name="sermon_from" value=' . $sermon_from . ' placeholder="' . $sermon_from . '" />
                                 </div>
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Scripture from preacher:</label>
-                                    <input type="text" placeholder="' . $scipture_preacher . '" />
+                                    <input type="text" name="scripture_preacher" value=' . $scipture_preacher . ' placeholder="' . $scipture_preacher . '" />
                                 </div>
                                 <div class="field">
                                     <label>Time Duratoin for the preacher:</label>
-                                    <input type="text" placeholder="' . $preacher_duration . '" />
+                                    <input type="text" name="peacher_duration" placeholder="' . $preacher_duration . ' value=' . $preacher_duration . '"/>
                                 </div>
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Alter Call By:</label>
-                                    <input type="text" placeholder="' . $alter_call . '" />
+                                    <input type="text" name="alter_call" placeholder="' . $alter_call . '" value=' . $alter_call . ' />
                                 </div>
                                 <div class="field">
                                     <label>Tithe and Offering</label>
-                                    <input type="text" placeholder="' . $tithe_offering . '" />
+                                    <input type="text" name="tithe_offering" placeholder="' . $tithe_offering . '" value=' . $tithe_offering . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Special Appeal</label>
-                                <input type="text" placeholder="' . $special_appeal . '" />
+                                <input type="text"  name="special_appeal" placeholder="' . $special_appeal . '" value=' . $special_appeal . ' />
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Welcome of visitors</label>
-                                    <input type="text" placeholder="' . $welcome_visitors . '" />
+                                    <input type="text" name="welcome_visitors" value=' . $welcome_visitors . ' placeholder="' . $welcome_visitors . '" />
                                 </div>
                                 <div class="field">
                                     <label>Announcement</label>
-                                    <input type="text" placeholder="' . $annc . '" />
+                                    <input type="text" name="Announcement" placeholder="' . $annc . '" value=' . $annc . ' />
                                 </div>
                             </div>
                             <header>Closing..</header>
                             <div class="field">
                                 <label>Closing Prayer</label>
-                                <input type="text" placeholder="' . $closing_prayer . '" />
+                                <input type="text" name="closing_prayer" value=' . $closing_prayer . ' placeholder="' . $closing_prayer . '" />
                             </div>
                             <div class="cate_view">
                                 <div class="field">
                                     <label>Benediction</label>
-                                    <input type="text" placeholder="' . $Benediction . '" />
+                                    <input type="text" name="Benediction" value=' . $Benediction . ' placeholder="' . $Benediction . '" />
                                 </div>
                                 <div class="field">
                                     <label>Mc</label>
-                                    <input type="text" placeholder="' . $mc . '" />
+                                    <input type="text" name="MC" placeholder="' . $mc . '" value=' . $mc . ' />
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Total Attendance</label>
-                                <input type="text" placeholder="' . $total_attendance . '" />
+                                <input type="text" name="Total_attendance" value=' . $total_attendance . ' placeholder="' . $total_attendance . '" />
                             </div>
-<button>Record message</button>
+                            <div class="field">
+                                        <label>Date</label>
+                                        <input type="date" name="date" placeholder="" value='.$date.' />
+                                    </div>
+                          <button>Record message</button>
                         </div>
+                        </form>
                     </details>
                 </div>
-                <div class=" flex options title">
-                    <div class="edit flex">
-                        <i class="fas fa-edit"></i>
-                        <p>Edit</p>
-                    </div>
+                    <div class=" flex options title">
+                        <div class="edit flex Update_item">
+                            <i class="fas fa-edit Update_item"></i>
+                            <p>Edit</p>
+                        </div>
 
-
-                    <div class="edit flex">
-                        <i class="fas fa-trash"></i>
-                        <p>Remove</p>
+                        <div class="edit flex">
+                            <i class="fas fa-trash delete_item"></i>
+                            <p>Remove</p>
+                        </div>
                     </div>
-                </div>
             </div>';
 
             }

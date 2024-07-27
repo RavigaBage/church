@@ -1,5 +1,5 @@
 button {
-  color: #fff;
+  color: #000;
   outline: none;
   border-width: 0px;
   width: 130px;
@@ -12,32 +12,9 @@ button {
   position: relative;
 }
 tbody td svg {
-  fill: #fff;
   width: 20px;
 }
-.option .opt_element {
-  display: none;
-}
-.option .opt_element.active {
-  position: absolute;
-  right: 100%;
-  top: 10%;
-  width: 150px;
-  height: 90px;
-  background-color: #000;
-  border: 1px solid #ddd;
-  border-radius: 7px;
-  padding: 10px;
-  cursor: pointer;
-  display: block;
-}
-.option .opt_element p {
-  border-radius: 10px;
-  padding: 10px;
-}
-.option .opt_element p:hover {
-  background-color: #9c9c9c;
-}
+
 
 .event_menu_add.active {
   display: block;
@@ -82,7 +59,6 @@ tbody td svg {
 }
 .Activity_record header {
   font-size: 18px;
-  color: #ddd;
   margin-bottom: 0px;
   margin-block: 3px;
 }
@@ -128,21 +104,16 @@ tbody td svg {
 .Activity_record .field select {
   height: 35px;
   border: none;
-  border-radius: 0px;
-  background-color: #0a0a0a;
-  color: #fff;
+  border-radius: 4px;
   pointer-events: none;
-  border-bottom: 1px solid rgb(22, 22, 22);
+  background-color: transparent;
+  border: 1px solid #ddd;
 }
 .Activity_record.edit .field input,
 .Activity_record.edit .field select {
   height: 35px;
-  border: none;
   border-radius: 5px;
-  background-color: #ffffff;
-  color: #000000;
   pointer-events: initial;
-  border-bottom: 1px solid rgb(252, 252, 252);
 }
 
 .event_menu_add .field_e textarea {
@@ -164,7 +135,6 @@ tbody td svg {
   height: 45px;
   background-color: crimson;
   border-width: 0px;
-  border: 1px solid crimson;
   border-radius: 10px;
   font-size: 18px;
   margin: 15px;
@@ -195,8 +165,12 @@ tbody td svg {
   justify-content: center;
   cursor: pointer;
 }
+.add_event svg{
+  fill:#fff;
+}
 .add_event.far {
   right: 100px;
+  
 }
 .add_event p {
   color: #fff;
@@ -230,6 +204,7 @@ tbody td svg {
 .menu .item.hide {
   display: none;
 }
+
 .menu .item {
   width: 100%;
   height: 50px;
@@ -303,9 +278,11 @@ tbody td svg {
   padding: 20px 40px;
 }
 .view_cards .card {
+  max-width: 400px;
   height: 300px;
   padding: 10px;
   border-radius: 16px;
+  position: relative;
 }
 .view_cards .card:hover {
   box-shadow: 0px 0px 4px 0px #ddd;
@@ -314,7 +291,18 @@ tbody td svg {
   height: 230px;
   width: 100%;
 }
-
+.view_cards .card .decoration{
+position: absolute;
+top:0;
+left:0;
+width: 100%;
+height: calc(100% - 70px);
+z-index: 999;
+}
+.view_cards .card .decoration img{
+  width: 100%;
+  object-fit: cover;
+}
 .view_cards .card .image img {
   width: 100%;
   height: 100%;
