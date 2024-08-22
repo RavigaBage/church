@@ -29,32 +29,13 @@
     </div>
 </div>
 <div class="dn_message switch_theme">
-                    <h1>
-                        You are currently performing a theme switch, by accepting all web designs on this system will,
-                        be affected to match this design
-                    </h1>
-                    <p>Are you sure you want to switch themes</p>
-                    <div class="btn">
-                        <div class="btn_confirm" data-confirm="false">No</div>
-                        <div class="btn_confirm" data-confirm="true">Yes</div>
-                    </div>
-                </div>
-
-<!-- <div class="display_setting">
-    <header>Homepage Event Customization </header>
-    <div class="field">
-        <label>This select element contains all list of event uploaded to the database, select and click on the submit
-            to specify the event you would like to be disable on the home screen of your users </label>
-
-        <select>
-            <option value="">
-                Sunday 17th August
-            </option>
-        </select>
+    <h1>
+        You are currently performing a theme switch, by accepting all web designs on this system will,
+        be affected to match this design
+    </h1>
+    <p>Are you sure you want to switch themes</p>
+    <div class="btn">
+        <div class="btn_confirm" data-confirm="false">No</div>
+        <div class="btn_confirm" data-confirm="true">Yes</div>
     </div>
-
-    <div class="field">
-        <button>Submit changes</button>
-    </div>
-
-</div> -->
+</div>

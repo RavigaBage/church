@@ -47,6 +47,16 @@ class viewData extends fetchData
         }
     }
 
+    public function ministries_filterSearch($name, $nk)
+    {
+        $RecordsResult = $this->Partnership_filter_dataSearch($name, $nk);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function ministries_delete_inidividual($id)
     {

@@ -15,8 +15,8 @@ tbody td svg {
   width: 20px;
 }
 
-
-.event_menu_add.active {
+.event_menu_add.active,
+.export_dialogue.active {
   display: block;
   opacity: 1;
   transition: 200ms all ease;
@@ -41,7 +41,8 @@ tbody td svg {
   font-size: 18px;
   cursor: pointer;
 }
-.event_menu_add {
+.event_menu_add,
+.export_dialogue {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -62,13 +63,15 @@ tbody td svg {
   margin-bottom: 0px;
   margin-block: 3px;
 }
-.event_menu_add header {
+.event_menu_add header,
+.export_dialogue header {
   text-align: center;
   font-size: 30px;
 }
 .display_setting .field,
 .Activity_record .field,
-.event_menu_add .field {
+.event_menu_add .field,
+.export_dialogue .field {
   width: 100%;
   height: 60px;
   padding: 5px;
@@ -76,11 +79,13 @@ tbody td svg {
 }
 .display_setting .field label,
 .Activity_record .field label,
-.event_menu_add .field label {
+.event_menu_add .field label,
+.export_dialogue .field label {
   font-size: 15px;
   padding-bottom: 5px;
 }
-.event_menu_add .field_e {
+.event_menu_add .field_e,
+.export_dialogue .field_e {
   width: 100%;
   height: 180px;
   padding: 10px;
@@ -91,7 +96,9 @@ tbody td svg {
 .Activity_record .field input,
 .Activity_record .field select,
 .event_menu_add .field input,
-.event_menu_add .field select {
+.event_menu_add .field select,
+.export_dialogue .field select,
+.export_dialogue .field input {
   width: 100%;
   height: 38px;
   outline: none;
@@ -130,7 +137,8 @@ tbody td svg {
 }
 .display_setting .field button,
 .Activity_record.edit button,
-.event_menu_add button {
+.event_menu_add button,
+.export_dialogue button {
   width: 250px;
   height: 45px;
   background-color: crimson;
@@ -165,12 +173,11 @@ tbody td svg {
   justify-content: center;
   cursor: pointer;
 }
-.add_event svg{
-  fill:#fff;
+.add_event svg {
+  fill: #fff;
 }
 .add_event.far {
   right: 100px;
-  
 }
 .add_event p {
   color: #fff;
@@ -291,15 +298,15 @@ tbody td svg {
   height: 230px;
   width: 100%;
 }
-.view_cards .card .decoration{
-position: absolute;
-top:0;
-left:0;
-width: 100%;
-height: calc(100% - 70px);
-z-index: 999;
+.view_cards .card .decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);
+  z-index: 999;
 }
-.view_cards .card .decoration img{
+.view_cards .card .decoration img {
   width: 100%;
   object-fit: cover;
 }

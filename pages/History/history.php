@@ -1,5 +1,5 @@
 <?php
-include_once ('../../API/notifications & token & history/autoloader.php');
+include_once('../../API/notifications & token & history/autoloader.php');
 $newDataRequest = new viewData();
 $val = 1;
 if (isset($_GET['page'])) {
@@ -24,46 +24,34 @@ if (isset($_GET['page'])) {
 
 
                 <tbody>
-                    <tr>
-                        <td><div class="details">
-                        <div class="img">
-                        <img src="../images/blog-3.jpg" alt="" />
-                        </div>
-                        <div class="text">
-                        <p>Camiel@gmail.com</p>
-                        <p>20/03/2024</p>
-                        </div>
-                        
-                        </div></td>
-                        <td class="td_action">23</td>
-                        <td class="td_action">Female</td>
-                        
-                        <td class="td_action">24 st Kasoa, Accra</td>
-                        <td><div class="in_btn"><div></div>past</div></td>
-
-                    </tr>
-                    <tr>
-                       <td><div class="details">
-                        <div class="img">
-                        <img src="../images/blog-3.jpg" alt="" />
-                        </div>
-                        <div class="text">
-                        <p>Camiel@gmail.com</p>
-                        <p>20/03/2024</p>
-                        </div>
-                        
-                        </div></td>
-                        <td class="td_action">23</td>
-                        <td class="td_action">Female</td>
-                    
-                        <td class="td_action">24 st Kasoa, Accra</td>
-                        <td><div class="out_btn"><div></div>past</div></td>
-
-                    </tr>
 
                     <?php
-                        print_r($newDataRequest->getHistory($val))
-                        ?>
+                    $data = json_decode($newDataRequest->getHistory($val));
+                    if ($data != "" || $data != "Fetching data encountered a problem" || $data != "no data found") {
+                        foreach ($data as $item) {
+                            $name = $item->name;
+                            $event = $item->event;
+                            $date = $item->date;
+                            $sitename = $item->sitename;
+                            $action = $item->action;
+
+                            echo "<tr>
+                                <td><div class='details'>
+                                <div class='text'>
+                                <p>" . $name . "</p>
+                                <p>" . $date . "</p>
+                                </div>
+                                </div></td>
+                                <td class='td_action'>" . $action . "</td>
+                                <td class='td_action'>" . $sitename . "</td>
+                                
+                                <td class='td_action'>" . $event . "</td>
+                                </tr>";
+                        }
+                    } else {
+                        echo $data;
+                    }
+                    ?>
 
                 </tbody>
 

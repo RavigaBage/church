@@ -13,9 +13,9 @@ class viewData extends fetchData
         }
     }
 
-    public function annc_update($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name,$id)
+    public function annc_update($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $id)
     {
-        $RecordsResult = $this->annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name,$id);
+        $RecordsResult = $this->annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -32,18 +32,29 @@ class viewData extends fetchData
         } else {
             return $RecordsResult;
         }
-    }   
-    public function annc_status($name,$id)
+    }
+    public function annc_status($name, $id)
     {
-        $RecordsResult = $this->annc_status_data($name,$id);
+        $RecordsResult = $this->annc_status_data($name, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
         } else {
             return $RecordsResult;
         }
-    } 
-    
+    }
+    public function annc_SearchRequest($name, $nk)
+    {
+        $RecordsResult = $this->annc_search($name, $nk);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
     public function Theme($id)
     {
         $RecordsResult = $this->themeStatus($id);

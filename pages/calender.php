@@ -113,14 +113,14 @@ $data = $newDataRequest->viewList($year);
                             <div></div>
                         </div>
                         <div class="event_days">
-                            <strong data-id="6"><span>30</span>Sat</strong>
+
                             <strong data-id="0"><span>24</span>Sun</strong>
                             <strong data-id="1"><span>25</span>Mon</strong>
                             <strong data-id="2"><span>26</span>Tue</strong>
                             <strong data-id="3"><span>27</span>Wed</strong>
                             <strong data-id="4"><span>28</span>Thur</strong>
                             <strong data-id="5"><span>29</span>Fri</strong>
-
+                            <strong data-id="6"><span>30</span>Sat</strong>
                         </div>
                         <div class="grid_space">
                             <div class="gridcell gridrowO">
@@ -168,7 +168,7 @@ $data = $newDataRequest->viewList($year);
                         <p>Monday, January 22, 2024</p>
                     </div>
                     <div class="min_calenda" data-year="2024" data-month="1">
-                        <div class="calenda_min_data event_days">
+                        <div class="calenda_min_data event_days calenderHeader">
                             <div>S</div>
                             <div>M</div>
                             <div>T</div>
@@ -192,13 +192,13 @@ $data = $newDataRequest->viewList($year);
             </div>
         </div>
         <form id="formData">
-            <div class="event_menu">
-
+            <div class="event_menu new_event_menu">
                 <div class="navigator">
                     <div class="plus_arrow"><i class="fas fa-plus"></i></div>
                 </div>
 
                 <div class="main">
+                    <div class="error"></div>
                     <div class="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                             fill="#000">
@@ -383,7 +383,6 @@ $data = $newDataRequest->viewList($year);
                                 </svg>
                             </div>
                             <div class="items_selector">
-
                                 <div class="w8UdJc" jsname="rymPhb" role="listbox" tabindex="-1" id="c22">
                                     <div role="option" class="VKy0Ic" tabindex="1" data-ical="T000000" id="c22T000000"
                                         aria-selected="false"> 12:00am (0 mins)</div>
@@ -513,6 +512,7 @@ $data = $newDataRequest->viewList($year);
                         </div>
                     </div>
                     <div class="details"><textarea name="EventDescription"></textarea></div>
+                    <input type="hidden" name="delete_key" />
                 </div>
                 <div class="sub_option">
                     <div class="flex btn">
@@ -526,18 +526,6 @@ $data = $newDataRequest->viewList($year);
             </div>
         </form>
     </div>
-
-    <div class="dn_message">
-        <h1>
-            By accepting you wil permanently delete this record from the church's database.
-        </h1>
-        <p>Are you sure you want to delete this record</p>
-        <div class="btn">
-            <div class="btn_confirm" data-confirm="cn_no">No</div>
-            <div class="btn_confirm" data-confirm="cn_yes">Yes</div>
-        </div>
-    </div>
-
     <div class="month_selector">
         <div class="year">
             <div class="flex">

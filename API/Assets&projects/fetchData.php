@@ -298,6 +298,8 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+
             foreach ($result as $data) {
                 $name = str_replace("'", " ", $data['Name']);
                 $Source = str_replace("'", " ", $data['Acquisition']);
@@ -315,6 +317,7 @@ class fetchData extends DBH
                     $message = str_split($message, 72)[0] + "....";
                 }
                 $DataObj = new stdClass();
+                $ExportSend = "";
                 $DataObj->id = $unique_id;
                 $DataObj->name = $name;
                 $DataObj->source = $Source;
@@ -324,50 +327,22 @@ class fetchData extends DBH
                 $DataObj->status = $status;
                 $DataObj->value = $value;
                 $DataObj->About = $message;
+                $ExportSend = $DataObj;
                 $ObjectData = json_encode($DataObj);
+                $ExportSend->Obj = $ObjectData;
 
-
-
-
-                $exportData .= "<tr>
-                           <td><div class='details'>
-                        <div class='img'>
-                        <img src='../API/Images_folder/Assets/" . $Image . "' alt='asset file'/>
-                        </div>
-                        <div class='text'>
-                        <p> " . $name . "</p>
-                        <p> " . $Items . "</p>
-                        </div>
-                        
-                        </div>
-                        </td>
-                            <td class='td_action'> " . $Source . " </td>
-                            <td class='td_action'> " . $value . " </td>
-                            <td class='td_action'>Cote d'voire</td>
-                            
-                            <td><div class='in_btn'><div></div>Active</div></td>
-                            <td class='option'>
-                                <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
-                                    <path
-                                        d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                                </svg>
-                                <div class='opt_element'>
-                                    <p class='delete_item' data-id=" . $unique_id . ">Delete item <i></i></p>
-                                    <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                </div>
-                            </td>
-                        </tr>";
-
+                $ExportSendMain->$unique_id = $ExportSend;
             }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
-            $exportData = json_encode('No records available');
+            $exportData = 'No records available';
         }
 
         if ($resultCheck) {
             return $exportData;
         } else {
-            return $resultCheck;
+            return "$resultCheck";
         }
     }
     protected function Asset_pages()
@@ -387,6 +362,67 @@ class fetchData extends DBH
             return 'Error';
         }
     }
+    protected function AviewFilter($year)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`assets` where `Date` like '%$year%' ORDER BY `id` DESC limit 50");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+
+            foreach ($result as $data) {
+                $name = str_replace("'", " ", $data['Name']);
+                $Source = str_replace("'", " ", $data['Acquisition']);
+                $message = str_replace("'", " ", $data['About']);
+                $value = str_replace("'", " ", $data['Value']);
+                $Items = str_replace("'", " ", $data['Item']);
+                $Location = str_replace("'", " ", $data['Location']);
+                $Image = str_replace("'", " ", $data['Image']);
+                $unique_id = str_replace("'", " ", $data['unique_id']);
+                $date = str_replace("''", "", $data['Date']);
+                $status = str_replace("'", " ", $data['status']);
+
+
+                if (strlen($message > 72)) {
+                    $message = str_split($message, 72)[0] + "....";
+                }
+                $DataObj = new stdClass();
+                $ExportSend = "";
+                $DataObj->id = $unique_id;
+                $DataObj->name = $name;
+                $DataObj->source = $Source;
+                $DataObj->location = $Location;
+                $DataObj->total = $Items;
+                $DataObj->date = $date;
+                $DataObj->status = $status;
+                $DataObj->value = $value;
+                $DataObj->About = $message;
+                $ExportSend = $DataObj;
+                $ObjectData = json_encode($DataObj);
+                $ExportSend->Obj = $ObjectData;
+
+                $ExportSendMain->$unique_id = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = 'No records available';
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return "$resultCheck";
+        }
+    }
+
     protected function project_pages()
     { {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects` ORDER BY `id` DESC");
@@ -676,6 +712,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
                 $name = $data['Name'];
                 $description = $data['description'];
@@ -688,6 +725,7 @@ class fetchData extends DBH
                 $id = $data['id'];
 
                 $DataObj = new stdClass();
+                $ExportSend = "";
                 $DataObj->id = $id;
                 $DataObj->name = $name;
                 $DataObj->Start = $Start;
@@ -697,52 +735,126 @@ class fetchData extends DBH
                 $DataObj->Image = $Image;
                 $DataObj->target = $target;
                 $DataObj->current = $current;
+                $ExportSend = $DataObj;
                 $ObjectData = json_encode($DataObj);
+                $ExportSend->Obj = $ObjectData;
 
-                if (strlen($description > 72)) {
-                    $description = str_split($description, 72)[0] + "....";
-                }
-
-                if ($Status == 'in progress') {
-                    $Status = "<div class='in_btn blue'><div></div>In progress</div>";
-                } else if ($Status == 'complete') {
-                    $Status = "<div class='in_btn'><div></div>Completed</div>";
-                } else {
-                    $Status = "<div class='out_btn blue'><div></div>hold</div>";
-                }
-
-                $exportData .= " <tr>
-                               <td><div class='details'>
-                            <div class='img'>
-                            <img src='Asset/images/" . $Image . "' alt='' />
-                            </div>
-                            <div class='text'>
-                            <p>" . $name . "</p>
-                            <p>" . $Start . "</p>
-                            </div>
-                            
-                            </div>
-                            </td>
-                                <td class='td_action'>" . $current . " / " . $target . "</td>
-                                <td class='td_action'>" . $description . "</td>
-                                <td class='td_action'>" . $End_date . "</td>                                
-                                <td>" . $Status . "</td>
-                                <td class='option'>
-                                    <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
-                                        <path
-                                            d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                                    </svg>
-                                    <div class='opt_element'>
-                                        <p data-id='" . $id . "' class='delete_item'>Delete item <i></i></p>
-                                        <p class='Update_item' data-id='" . $id . "' data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                    </div>
-                                </td>
-                            </tr>";
-
-
-
-
+                $ExportSendMain->$id = $ExportSend;
             }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('No records available');
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+
+    protected function projects_viewSearch($name, $nk)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $num = 25 * $nk;
+        $total_pages = 0;
+        $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects` where `name` like '%$name%' ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects` where `name` like '%$name%' ORDER BY `id` DESC limit 25 OFFSET $num");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            if ($stmt_pages->execute()) {
+                $total_pages = $stmt_pages->rowCount();
+            }
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $this->validate($data['Name']);
+                $description = $this->validate($data['description']);
+                $Start = $this->validate($data['start_date']);
+                $End_date = $this->validate($data['end_date']);
+                $Status = $this->validate($data['status']);
+                $Image = $this->validate($data['Image']);
+                $target = $this->validate($data['target']);
+                $current = $this->validate($data['current']);
+                $id = $this->validate($data['id']);
+
+                $DataObj = new stdClass();
+                $ExportSend = "";
+                $DataObj->id = $id;
+                $DataObj->name = $name;
+                $DataObj->Start = $Start;
+                $DataObj->End_date = $End_date;
+                $DataObj->description = $description;
+                $DataObj->Status = $Status;
+                $DataObj->Image = $Image;
+                $DataObj->target = $target;
+                $DataObj->current = $current;
+                $ExportSend = $DataObj;
+                $ObjectData = json_encode($DataObj);
+                $ExportSend->Obj = $ObjectData;
+
+                $ExportSendMain->$id = $ExportSend;
+            }
+            $MainExport = new stdClass();
+            $MainExport->pages = $total_pages;
+            $MainExport->result = $ExportSendMain;
+            $exportData = json_encode($MainExport);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('No records available');
+        }
+
+        return $exportData;
+    }
+
+    protected function projects_viewFilter($year)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects` where `start_date` like '%$year%' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $data['Name'];
+                $description = $data['description'];
+                $Start = $data['start_date'];
+                $End_date = $data['end_date'];
+                $Status = $data['status'];
+                $Image = $data['Image'];
+                $target = $data['target'];
+                $current = $data['current'];
+                $id = $data['id'];
+
+                $DataObj = new stdClass();
+                $ExportSend = "";
+                $DataObj->id = $id;
+                $DataObj->name = $name;
+                $DataObj->Start = $Start;
+                $DataObj->End_date = $End_date;
+                $DataObj->description = $description;
+                $DataObj->Status = $Status;
+                $DataObj->Image = $Image;
+                $DataObj->target = $target;
+                $DataObj->current = $current;
+                $ExportSend = $DataObj;
+                $ObjectData = json_encode($DataObj);
+                $ExportSend->Obj = $ObjectData;
+
+                $ExportSendMain->$id = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
             $exportData = json_encode('No records available');

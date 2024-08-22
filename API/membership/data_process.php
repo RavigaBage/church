@@ -1,5 +1,5 @@
 <?php
-require ('autoloader.php');
+require('autoloader.php');
 if (isset($_GET['submit'])) {
     if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'search_file') {
         $Firstname = $_POST['Fname'];
@@ -64,10 +64,10 @@ if (isset($_GET['submit'])) {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             $search = $data['key'];
+            $nk = $data['numData'];
             $pdh = new viewData();
-
-            $resultFetch = $pdh->search($search);
-            echo json_encode(["status" => "success", "message" => $resultFetch]);
+            $resultFetch = $pdh->search($search, $nk);
+            echo json_encode($resultFetch);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);

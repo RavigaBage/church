@@ -242,6 +242,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
                 $name = $data['name'];
                 $members = $data['members'];
@@ -253,7 +254,9 @@ class fetchData extends DBH
                 if (strlen($message) > 100) {
                     $message = substr($message, 0, 100) . "....";
                 }
+
                 $objectClass = new stdClass();
+                $ExportSend = "";
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->members = $members;
@@ -261,27 +264,14 @@ class fetchData extends DBH
                 $objectClass->date = $date;
                 $objectClass->manager = $manager;
                 $objectClass->status = $status;
+                $ExportSend = $objectClass;
                 $ObjectData = json_encode($objectClass);
+                $ExportSend->Obj = $ObjectData;
 
-                $exportData .= "
-                <div class='item' data-id=' . $unique_id . '>
-                <div class='details' style='width:calc(100% - 30px)'>
-                    <p>" . $name . " <span style='margin-left:10px;width:fit-content;text-align:center;font-size:13px;'>" . $message . "</span> </p>
-                    <p>You edited . " . $date . "</p>
-                </div>
-                <div class='delete option'>
-                <svg xmlns='http://www.w3.org/2000/svg' height='30' viewBox='0 -960 960 960' width='30'>
-                    <path
-                        d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                </svg>
-                <div class='opt_element'>
-                <p data-id=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
-                <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-            </div>
-            </div>
-            </div>";
+                $ExportSendMain->$unique_id = $ExportSend;
 
             }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
             $exportData = '<header>Not Records Available</header>';

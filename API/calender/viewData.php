@@ -2,9 +2,9 @@
 class viewData extends fetchData
 {
 
-    public function calender_upload($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status,$file_name, $Image_type, $Image_tmp_name)
+    public function calender_upload($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name)
     {
-        $RecordsResult = $this->calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status,$file_name, $Image_type, $Image_tmp_name);
+        $RecordsResult = $this->calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -13,9 +13,9 @@ class viewData extends fetchData
         }
     }
 
-    public function calender_update($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status, $unique_id)
+    public function calender_update($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name, $unique_id)
     {
-        $RecordsResult = $this->calender_update_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status, $unique_id);
+        $RecordsResult = $this->calender_update_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;

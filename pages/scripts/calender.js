@@ -14,24 +14,65 @@ define(function () {
   getFebDays = (year) => {
     return isLeapYear(year) ? 29 : 28;
   };
-  SpaceGenerator = (number, calender) => {
-    console.log(number);
+  SpaceGenerator = (number, calender, MonthsTotal) => {
     if (number === 0) {
       Value_date = ``;
     } else if (number === 1) {
-      Value_date = `<div></div>`;
+      Value_date = `<div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 2) {
-      Value_date = `<div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 3) {
-      Value_date = `<div></div><div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 2
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 4) {
-      Value_date = `<div></div><div></div><div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 3
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 2
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 5) {
-      Value_date = `<div></div><div></div><div></div><div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 4
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 3
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 2
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 6) {
-      Value_date = `<div ></div><div></div><div></div><div></div><div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 5
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 4
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 3
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 2
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     } else if (number === 7) {
-      Value_date = `<div ></div><div></div><div></div><div></div><div></div><div></div><div></div>`;
+      Value_date = `<div class='dim'><p>${
+        MonthsTotal - 6
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 5
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 4
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 3
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 2
+      }</p></div><div class='dim'><p>${
+        MonthsTotal - 1
+      }</p></div><div class='dim'><p>${MonthsTotal}</p></div>`;
     }
     calender.innerHTML = Value_date;
   };
@@ -126,10 +167,9 @@ define(function () {
 
     const DayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"];
     let first_day = new Date(yearValue_f, monthValue_f, 1);
-    SpaceGenerator(first_day.getDay(), calender);
-    SpaceGenerator(first_day.getDay(), CalenderMonth);
-    console.log(monthValue_f);
-    console.log(DaysOfMonth[monthValue_f]);
+    let MonthsTotal = DaysOfMonth[monthValue_f - 1];
+    SpaceGenerator(first_day.getDay(), calender, MonthsTotal);
+    SpaceGenerator(first_day.getDay(), CalenderMonth, MonthsTotal);
     for (i = 0; i <= DaysOfMonth[monthValue_f]; i++) {
       if (i <= 0) {
       } else if (

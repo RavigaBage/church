@@ -169,9 +169,9 @@ class viewData extends fetchData
         }
     }
 
-    public function user_dues_record($name, $medium, $amount,  $user_date, $unique_id)
+    public function user_dues_record($name, $medium, $amount, $user_date, $unique_id)
     {
-        $RecordsResult = $this->Dues_user_record($name, $medium, $amount,  $user_date, $unique_id);
+        $RecordsResult = $this->Dues_user_record($name, $medium, $amount, $user_date, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -180,9 +180,9 @@ class viewData extends fetchData
         }
     }
 
-    public function user_dues_update($name, $medium, $amount, $form_name, $user_date,  $unique_id)
+    public function user_dues_update($name, $medium, $amount, $form_name, $user_date, $unique_id)
     {
-        $RecordsResult = $this->Dues_user_update($name, $medium, $amount, $form_name, $user_date,  $unique_id);
+        $RecordsResult = $this->Dues_user_update($name, $medium, $amount, $form_name, $user_date, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -201,9 +201,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Transaction_upload($account, $category, $amount, $status, $authorize,$date)
+    public function Transaction_upload($account, $category, $amount, $status, $authorize, $date)
     {
-        $RecordsResult = $this->Transaction($account, $category, $amount, $status, $authorize,$date);
+        $RecordsResult = $this->Transaction($account, $category, $amount, $status, $authorize, $date);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -212,9 +212,9 @@ class viewData extends fetchData
         }
     }
 
-    public function Transaction_update($id, $account, $category, $amount, $status, $authorize,$date)
+    public function Transaction_update($id, $account, $category, $amount, $status, $authorize, $date)
     {
-        $RecordsResult = $this->Transaction_update_data($id, $account, $category, $amount, $status, $authorize,$date);
+        $RecordsResult = $this->Transaction_update_data($id, $account, $category, $amount, $status, $authorize, $date);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -234,9 +234,9 @@ class viewData extends fetchData
         }
     }
 
-    public function TransactionFilter($account,$category,$year)
+    public function TransactionFilter($account, $category, $year, $nk)
     {
-        $RecordsResult = $this-> TransactionListFilter($account, $category,$year);
+        $RecordsResult = $this->TransactionListFilter($account, $category, $year, $nk);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -245,7 +245,8 @@ class viewData extends fetchData
         }
     }
 
-   
+
+
     #to fix
     public function Budget_upload($name, $status, $authorize, $about, $details)
     {
@@ -352,9 +353,9 @@ class viewData extends fetchData
         }
     }
 
-    public function BudgeCategoryListFilter($year, $category)
+    public function BudgeCategoryListFilter($year, $category, $nk)
     {
-        $RecordsResult = $this->Budget_list_categoryFilter($year,$category);
+        $RecordsResult = $this->Budget_list_categoryFilter($year, $category, $nk);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -362,9 +363,9 @@ class viewData extends fetchData
             return "$RecordsResult";
         }
     }
-    
 
-    
+
+
 
     #to fix
     public function ExpensesList($year)
@@ -388,7 +389,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    
+
     public function ExpensesDelete($name, $id)
     {
         $RecordsResult = $this->Expenses_Delete($name, $id);
@@ -431,7 +432,29 @@ class viewData extends fetchData
         }
 
     }
-    
+
+    public function Dues_pay_list_search($id,$name)
+    {
+        $RecordsResult = $this->Pay_list_InfoSearch($id,$name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Dues_pay_list_update($id)
+    {
+        $RecordsResult = $this->Pay_list_info_update($id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
+    }
+
     public function ListDataDues($num)
     {
         $RecordsResult = $this->list_Info_Dues($num);
@@ -442,8 +465,29 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function ListDataDuesSearch($key, $nk)
+    {
+        $RecordsResult = $this->listSearch_Info_Dues($key, $nk);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
-    public function DuesPages(){
+    public function ListOffertorySearch($key)
+    {
+        $RecordsResult = $this->listSearch_Info_Offertory($key);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function DuesPages()
+    {
         $RecordsResult = $this->Dues_pages();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -452,7 +496,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Trans_Pages(){
+    public function Trans_Pages()
+    {
         $RecordsResult = $this->Transaction_pages();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -472,9 +517,9 @@ class viewData extends fetchData
         }
     }
 
-    public function TitheData($num)
+    public function TitheData($num, $year)
     {
-        $RecordsResult = $this->list_Info_tithe($num);
+        $RecordsResult = $this->list_Info_tithe($num, $year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -482,9 +527,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function TitheSearch($name)
+    public function TitheSearch($name, $nk)
     {
-        $RecordsResult = $this->list_search_tithe($name);
+        $RecordsResult = $this->list_search_tithe($name, $nk);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -503,7 +548,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Accounts_list_view(){
+    public function Accounts_list_view()
+    {
         $RecordsResult = $this->Accounts_list();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -513,7 +559,8 @@ class viewData extends fetchData
         }
     }
 
-    public function Accounts_list_Data(){
+    public function Accounts_list_Data()
+    {
         $RecordsResult = $this->AccountListData();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -525,7 +572,8 @@ class viewData extends fetchData
 
 
 
-    public function Accounts_list_Card(){
+    public function Accounts_list_Card()
+    {
         $RecordsResult = $this->Accounts_listCard();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -534,7 +582,27 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    
-    
+    public function ExportOffertory()
+    {
+        $RecordsResult = $this->ExportDataOff();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        } 
+    }
+    public function ExportList()
+    {
+        $RecordsResult = $this->ExportDatalist();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        } 
+    }
+
+
 
 }

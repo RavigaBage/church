@@ -333,10 +333,11 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
@@ -356,6 +357,7 @@ class fetchData extends DBH
                 $status = $data['Status'];
 
                 $objectClass = new stdClass();
+                $ExportSend = new stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->Oname = $Firstname;
                 $objectClass->Fname = $Othername;
@@ -372,54 +374,31 @@ class fetchData extends DBH
                 $objectClass->occupation = $occupation;
                 $objectClass->About = $About;
                 $ObjectData = json_encode($objectClass);
-                if ($status == 'active') {
-                    $status = '<div class="in_btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="green"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
-                    active</div>';
-                } else {
-                    $status = '<div class="out_btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="red"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
-                    Inactive</div>';
-                }
-                $exportData .=
-                    "<tr>
-                <td><div class='details'>
-<div class='img'>
-<img src='../API/Images_folder/users/" . $image . "' alt='' />
-</div>
-<div class='text'>
-<p>" . $email . "</p>
-<p>" . $Firstname ."  ". $Othername . "</p>
-</div>
 
-</div></td>
-                <td class='td_action'><div class='table_center'><p>" . $Age . "</p></div></td>
-                <td class='td_action'><div class='table_center'><p>" . $gender . "</p></div></td>
-                <td class='td_action'><div class='table_center'><p>" . $Address . "</p></div></td>
-                <td class='td_action'><div class='table_center'><p>" . $Baptism . "</p></div></td>
-                <td class='td_action'><div class='table_center'><p>" . $occupation . "</p></div></td>
-                
-                <td><div class='table_center'><p>" . $status . "</p></div></td>
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->status = $status;
+                $ExportSend->Oname = $Firstname;
+                $ExportSend->Fname = $Othername;
+                $ExportSend->birth = $Age;
+                $ExportSend->Position = $Position;
+                $ExportSend->contact = $contact;
+                $ExportSend->email = $email;
+                $ExportSend->image = $image;
+                $ExportSend->location = $Address;
+                $ExportSend->Baptism = $Baptism;
+                $ExportSend->membership_start = $membership_start;
+                $ExportSend->username = $username;
+                $ExportSend->gender = $gender;
+                $ExportSend->occupation = $occupation;
+                $ExportSend->About = $About;
+                $ExportSend->Obj = $ObjectData;
 
-                <td class='option' style='width:100%;display:grid;place-items:center;'>
-                    <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960'
-                        width='48'>
-                        <path
-                            d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                    </svg>
-                    <div class='opt_element'>
-                                        <p data-id=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
-                                        <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                    </div>
-                </td>
-            </tr>";
-
-
-
+                $ExportSendMain->$unique_id = $ExportSend;
             }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = json_encode('No Record Available');
         }
 
         if ($resultCheck) {
@@ -429,26 +408,34 @@ class fetchData extends DBH
         }
     }
 
-    protected function search_data($name)
+    protected function search_data($name, $nk)
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` WHERE `Firstname` like ? OR `Othername` like ? ORDER BY `id` DESC");
+        $num = 25 * $nk;
+        $total_pages = 0;
+        $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` WHERE `Firstname` like ? OR `Othername` like ? ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` WHERE `Firstname` like ? OR `Othername` like ? ORDER BY `id` DESC limit 25 OFFSET $num");
         $name = '%' . $name . '%';
         $stmt->bindParam('1', $name, PDO::PARAM_STR);
         $stmt->bindParam('2', $name, PDO::PARAM_STR);
+
+        $stmt_pages->bindParam('1', $name, PDO::PARAM_STR);
+        $stmt_pages->bindParam('2', $name, PDO::PARAM_STR);
         if (!$stmt->execute()) {
             print_r($stmt->errorInfo());
             $stmt = null;
-            $Error = 'Fetching data encounted a problem';
+            $Error = 'Fetching data encountered a problem';
             exit($Error);
         }
         if ($stmt->rowCount() > 0) {
+            if ($stmt_pages->execute()) {
+                $total_pages = $stmt_pages->rowCount();
+            }
             $result = $stmt->fetchAll();
             $ObjMainList = new stdClass();
             foreach ($result as $data) {
                 $objectClass = new stdClass();
-
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
                 $Othername = $data['Othername'];
@@ -488,10 +475,13 @@ class fetchData extends DBH
 
 
             }
-            $exportData = $ObjMainList;
+            $MainExport = new stdClass();
+            $MainExport->pages = $total_pages;
+            $MainExport->result = $ObjMainList;
+            $exportData = json_encode($MainExport);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Record Available';
         }
 
         if ($resultCheck) {

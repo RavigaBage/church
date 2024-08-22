@@ -32,9 +32,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function View_List()
+    public function View_List($year)
     {
-        $RecordsResult = $this->Sunday_view();
+        $RecordsResult = $this->Sunday_view($year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

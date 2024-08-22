@@ -44,9 +44,9 @@ class viewData extends fetchData
         }
     }
 
-    public function search($name)
+    public function search($name, $nk)
     {
-        $RecordsResult = $this->search_data($name);
+        $RecordsResult = $this->search_data($name, $nk);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

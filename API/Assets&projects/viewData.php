@@ -103,6 +103,39 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function viewListFilter($num)
+    {
+        $RecordsResult = $this->AviewFilter($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Project_viewListFilter($num)
+    {
+        $RecordsResult = $this->projects_viewFilter($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function Project_viewSearchMain($name, $nk)
+    {
+        $RecordsResult = $this->projects_viewSearch($name, $nk);
+
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function ProjectsPages()
     {
         $RecordsResult = $this->project_pages();

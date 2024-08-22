@@ -95,7 +95,7 @@ class fetchData extends DBH
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`announcement`(`unique_id`, `title`, `Reciever`, `message`, `date`, `file`, `status`)
                         VALUES ('$unique_id','$name','$receiver','$message','$date','$file_name','active')");
                     if (!$stmt->execute()) {
-                        
+
                         $stmt = null;
                         $Error = json_encode('Fetching data encountered a problem');
                         exit($Error);
@@ -123,7 +123,7 @@ class fetchData extends DBH
         }
     }
 
-    protected function annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name,$unique_id)
+    protected function annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $unique_id)
     {
         $input_list = array($name, $receiver, $message, $date);
         $clean = true;
@@ -178,29 +178,29 @@ class fetchData extends DBH
                         }
                     }
                     $stmt = "";
-                    
-                        $stmt = $this->data_connect()->prepare("RENAME TABLE `zoeannouncement`.`$title` TO `zoeannouncement`.`$name`");
-                        if (!$stmt->execute()) {
-                            print_r($stmt->errorInfo());
-                            $stmt = null;
-                            $Error = json_encode('Fetching data encountered w a problem');
-                            exit($Error);
-                        }else{
-                            if($file_name == ""){
-                                $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET    `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',    `status`='active' WHERE `unique_id`='$unique_id'");
-                             }else{
-                                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET     `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',     `file`='$file_name', `status`='active' WHERE `unique_id`='$unique_id'");
-                             }                   
-     
-                             if (!$stmt->execute()) {
-                                 $stmt = null;
-                                 $Error = json_encode('Fetching data encountered a problem');
-                                 exit($Error);
-                             } else {
-                                 $exportData = 'Announcement session has been updated successfully';
-                                 $resultValidate = true;
-                             }
+
+                    $stmt = $this->data_connect()->prepare("RENAME TABLE `zoeannouncement`.`$title` TO `zoeannouncement`.`$name`");
+                    if (!$stmt->execute()) {
+                        print_r($stmt->errorInfo());
+                        $stmt = null;
+                        $Error = json_encode('Fetching data encountered w a problem');
+                        exit($Error);
+                    } else {
+                        if ($file_name == "") {
+                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET    `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',    `status`='active' WHERE `unique_id`='$unique_id'");
+                        } else {
+                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET     `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',     `file`='$file_name', `status`='active' WHERE `unique_id`='$unique_id'");
                         }
+
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = json_encode('Fetching data encountered a problem');
+                            exit($Error);
+                        } else {
+                            $exportData = 'Announcement session has been updated successfully';
+                            $resultValidate = true;
+                        }
+                    }
                 } else {
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problem');
@@ -276,7 +276,7 @@ class fetchData extends DBH
 
         }
     }
-    protected function annc_status_data($key,$id)
+    protected function annc_status_data($key, $id)
     {
         $exportData = 0;
         $input_list = array($id);
@@ -299,23 +299,22 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 /////////////////////drop table
                 $status = "";
-                
-                if($key == false){
+
+                if ($key == false) {
                     $status = 'inactive';
-                }else{
+                } else {
                     $status = 'active';
                 }
-               echo $key.$status;
                 $stmt1 = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET `status`= '$status' where `unique_id`='$id'");
-                    if (!$stmt1->execute()) {
-                        $stmt1 = null;
-                        $Error = 'deleting data encountered a problem';
-                        exit(json_encode($Error));
-                    } else {
-                        $resultCheck = true;
-                        $exportData = 'Item changed Successfully';
-                    }
-                
+                if (!$stmt1->execute()) {
+                    $stmt1 = null;
+                    $Error = 'deleting data encountered a problem';
+                    exit(json_encode($Error));
+                } else {
+                    $resultCheck = true;
+                    $exportData = 'Item changed Successfully';
+                }
+
 
 
             } else {
@@ -330,7 +329,61 @@ class fetchData extends DBH
 
         }
     }
+    protected function annc_search($name, $nk)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $num = 25 * $nk;
+        $total_pages = 0;
+        $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title` like '%$name%' ORDER BY `date` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title` like '%$name%' ORDER BY `date` DESC limit 25 OFFSET $num");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            if ($stmt_pages->execute()) {
+                $total_pages = $stmt_pages->rowCount();
+            }
+            $result = $stmt->fetchAll();
+            $ObjData = new stdClass();
+            foreach ($result as $data) {
+                $name = $data['title'];
+                $receiver = $data['Reciever'];
+                $message = $data['message'];
+                $date = $data['date'];
+                $unique_id = $data['unique_id'];
+                $item = rand(time(), 1292);
+                $DataName = $unique_id . $item;
+                $file = $data['file'];
+                $status = $data['status'];
 
+                $DataName = new stdClass();
+                $DataName->Id = $unique_id;
+                $DataName->name = $name;
+                $DataName->receiver = $receiver;
+                $DataName->message = $message;
+                $DataName->date = $date;
+                $DataName->file = $file;
+                $DataName->status = $status;
+
+                $ObjData->$item = $DataName;
+            }
+            $MainExport = new stdClass();
+            $MainExport->pages = $total_pages;
+            $MainExport->result = $ObjData;
+            $exportData = json_encode($MainExport);
+        } else {
+            $exportData = 'No Records Available';
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
 
     protected function themeStatus($id)
     {
@@ -400,11 +453,11 @@ class fetchData extends DBH
                 $message = $data['message'];
                 $date = $data['date'];
                 $unique_id = $data['unique_id'];
-                $item = rand(time(),1292);
-                $DataName = $unique_id.$item;
-                $file  = $data['file'];
+                $item = rand(time(), 1292);
+                $DataName = $unique_id . $item;
+                $file = $data['file'];
                 $status = $data['status'];
-                
+
                 $DataName = new stdClass();
                 $DataName->Id = $unique_id;
                 $DataName->name = $name;
@@ -523,7 +576,7 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            $exportData = $Error;
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
             $results = $stmt->fetchAll();
@@ -537,19 +590,19 @@ class fetchData extends DBH
                 } else {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
-                    $exportData = $Error;
+                    exit(json_encode($Error));
                 }
 
             } else {
                 $exportData = $num;
             }
         } else {
-            $Error = 'empty';
-            $exportData = $Error;
+            $exportData = 'empty';
+
         }
 
         if ($resultCheck) {
-            return $exportData;
+            return json_encode($exportData);
         } else {
             return $resultCheck;
         }
@@ -567,10 +620,11 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
                 $name = $data['name'];
                 $event = $data['event'];
@@ -578,21 +632,19 @@ class fetchData extends DBH
                 $sitename = $data['sitename'];
                 $action = $data['action'];
 
-                $template = "<tr>
-                <td><div class='details'>
-                <div class='text'>
-                <p>" . $name . "</p>
-                <p>" . $date . "</p>
-                </div>
-                </div></td>
-                <td class='td_action'>" . $action . "</td>
-                <td class='td_action'>" . $sitename . "</td>
-                
-                <td class='td_action'>" . $event . "</td>
-                </tr>";
-                $exportData .= $template;
+                $ExportSend = new stdClass();
+                $unique_id = rand(1012, time());
+                $ExportSend->name = $name;
+                $ExportSend->event = $event;
+                $ExportSend->date = $date;
+                $ExportSend->sitename = $sitename;
+                $ExportSend->action = $action;
+                $ExportSendMain->$unique_id = $ExportSend;
             }
+            $exportData = json_encode($ExportSendMain);
 
+        } else {
+            exit(json_encode("no data found"));
         }
 
         if ($resultCheck) {

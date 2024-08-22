@@ -23,17 +23,17 @@ $newDataRequest = new viewData();
         </div>
         <div class="token">
 
-            <div class="tokenData flex" style="flex-direction:column;align-items:center;justify-content:center">
+            <div class="tokenData flex" style="align-items:center;justify-content:center">
                 <h1>
                     <?php
-                    $item = $newDataRequest->getoken();
+                    $item = json_decode($newDataRequest->getoken());
                     echo "<input hidden id='value_data_set' value=" . $item . " />";
                     if ($item == 'empty') {
                         echo 'Z O E -';
                     } else if ($item == 'Fetching data encounted a problem') {
                         echo "error ocurred";
                     } else if ($item == 'expired') {
-                        echo "<p>we are generating a new code, the old one has reached it limit</p>";
+                        echo "<p>Generate a new code. The old one has reached it limit</p>";
                     } else {
                         echo "Code has Already been assigned";
                     }

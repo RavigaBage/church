@@ -43,20 +43,20 @@ class fetchData extends DBH
             if ($data == 'test pass failed') {
                 $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
+                exit(json_encode($Error));
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `EventName`='$EventName' AND `Year` = '$Year' AND `Month` = '$Month' AND `Day` = '$Day' AND `start_time` = '$start_time' AND `end_time`='$end_time'");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `EventName`='$EventName' AND `Year` = '$Year' AND `Month` = '$Month' AND `Day` = '$Day' AND `start_time` = '$start_time'");
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
-                exit($Error);
+                exit(json_encode($Error));
             }
             if ($stmt->rowCount() > 0) {
-                $exportData = "Data name already exist";
+                $Error = "Data name already exist";
                 $resultValidate = false;
-                exit($exportData);
+                exit(json_encode($Error));
             } else {
 
                 if ($file_name == '') {
@@ -100,17 +100,14 @@ class fetchData extends DBH
                 $stmt->bindParam('12', $Department, PDO::PARAM_STR);
                 $stmt->bindParam('13', $Status, PDO::PARAM_STR);
                 if (!$stmt->execute()) {
-                    print_r($stmt->errorInfo());
+
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
-                    exit($Error);
+                    exit(json_encode($Error));
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
+                    $exportData = json_encode('success');
                     $resultValidate = true;
-                    exit('Upload was a success');
                 }
-
-
 
             }
 
@@ -123,9 +120,9 @@ class fetchData extends DBH
         }
     }
 
-    protected function calender_update_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status, $unique_id)
+    protected function calender_update_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name, $unique_id)
     {
-        $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Image, $Department, $Status, $unique_id);
+        $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $unique_id);
         $clean = true;
         $exportData = 0;
         $resultValidate = true;
@@ -134,7 +131,7 @@ class fetchData extends DBH
             if ($data == 'test pass failed') {
                 $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
+                exit(json_encode($Error));
             }
         }
         if ($clean) {
@@ -142,15 +139,37 @@ class fetchData extends DBH
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
-                exit($Error);
+                exit(json_encode($Error));
             }
-            if ($stmt->rowCount() > 0) {
-                $exportData = "Data name already exist";
-                $resultValidate = false;
-                exit($exportData);
+            if ($stmt->rowCount() < 0) {
+                $exportData = "Data name does not already exist";
+                $resultValidate = true;
             } else {
-                $unique_id = rand(time(), 1999);
 
+                if ($file_name == '') {
+                    $file_name = '';
+                } else {
+                    $explodes = explode('.', $file_name);
+                    $explode_end = end($explodes);
+                    $Extensions = array('jpg', 'png', 'jpeg');
+                    if (in_array($explode_end, $Extensions)) {
+                        $types = ["image/jpg", "image/png", "image/jpeg"];
+                        if (in_array($Image_type, $types)) {
+                            $filename4 = time() . $file_name;
+                            $target4 = "../images/calenda/$filename4";
+                            if (move_uploaded_file($Image_tmp_name, $target4)) {
+                                $unique_id = rand(time(), 3002);
+                                $file_name = $target4;
+                            } else {
+                                exit(json_encode("An error occurred while processing image, try again"));
+                            }
+                        } else {
+                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
+                        }
+                    } else {
+                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
+                    }
+                }
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`calender` SET `EventName`=?,`Year`=?,`Month`=?,`Day`=?,`start_time`=?,`end_time`=?,`Venue`=?,`Theme`=?,`About`=?,`Image`=?,`Department`=?,`Status`=? WHERE `unique_id`=?");
                 $stmt->bindParam('1', $EventName, PDO::PARAM_STR);
                 $stmt->bindParam('2', $Year, PDO::PARAM_STR);
@@ -161,25 +180,19 @@ class fetchData extends DBH
                 $stmt->bindParam('7', $Venue, PDO::PARAM_STR);
                 $stmt->bindParam('8', $Theme, PDO::PARAM_STR);
                 $stmt->bindParam('9', $About, PDO::PARAM_STR);
-                $stmt->bindParam('10', $Image, PDO::PARAM_STR);
+                $stmt->bindParam('10', $file_name, PDO::PARAM_STR);
                 $stmt->bindParam('11', $Department, PDO::PARAM_STR);
                 $stmt->bindParam('12', $Status, PDO::PARAM_STR);
                 $stmt->bindParam('13', $unique_id, PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
-                    exit($Error);
+                    exit(json_encode($Error));
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
+                    $exportData = $EventName;
                     $resultValidate = true;
-                    exit('Upload was a success');
                 }
-
-
-
             }
-
-
         }
         if ($resultValidate) {
             return $exportData;
@@ -198,7 +211,7 @@ class fetchData extends DBH
             if ($data == 'test pass failed') {
                 $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
+                exit(json_encode($Error));
             }
         }
         if ($clean) {
@@ -206,22 +219,22 @@ class fetchData extends DBH
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
-                exit($Error);
+                exit(json_encode($Error));
             }
             if ($stmt->rowCount() > 0) {
-                /////////////////////drop table
                 $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`calender` where   `unique_id`=?");
-                $stmt->bindParam('1', $name, PDO::PARAM_STR);
+                $stmt1->bindParam('1', $name, PDO::PARAM_STR);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
                     $Error = 'deleting data encountered a problem';
-                    exit($Error);
+                    exit(json_encode($Error));
                 } else {
                     $resultCheck = true;
-                    $exportData = 'Item Deleted Successfully';
+                    $exportData = 'success';
                 }
             } else {
-                exit('No match for search query');
+                exit(json_encode('Data has already been deleted. if data is still in display, refresh
+                the page to incorporate changes'));
             }
 
             if ($resultCheck) {
@@ -236,7 +249,7 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year`='$year' ORDER BY `start_time` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%' ORDER BY `start_time` DESC");
 
         if (!$stmt->execute()) {
             $stmt = null;

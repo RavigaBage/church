@@ -1,5 +1,5 @@
 <?php
-require ('autoloader.php');
+require('autoloader.php');
 if (isset($_GET['submit'])) {
     if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter') {
         $name = $_POST['name'];
@@ -48,11 +48,12 @@ if (isset($_GET['submit'])) {
     } else if ($_GET['submit'] == 'filter' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
-            $unique_id = $data['key'];
+            $search = $data['key'];
+            $nk = $data['numData'];
             $pdh = new viewData();
 
-            $resultFetch = $pdh->ministries_filter($unique_id);
-            echo json_encode(["status" => "success", "message" => trim($resultFetch)]);
+            $resultFetch = $pdh->ministries_filterSearch($search, $nk);
+            echo json_encode(trim($resultFetch));
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);

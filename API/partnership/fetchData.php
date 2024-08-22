@@ -166,15 +166,18 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
-                $name = $data['Name'];
-                $Partnership = $data['partnership'];
-                $date = $data['date'];
-                $Email = $data['Email'];
-                $Type = $data['partnership_type'];
-                $Period = $data['period'];
-                $unique_id = $data['unique_id'];
-                $status = $data['status'];
+                $name = $this->validate($data['Name']);
+                $Partnership = $this->validate($data['partnership']);
+                $date = $this->validate($data['date']);
+                $Email = $this->validate($data['Email']);
+                $Type = $this->validate($data['partnership_type']);
+                $Period = $this->validate($data['period']);
+                $unique_id = $this->validate($data['unique_id']);
+                $status = $this->validate($data['status']);
+
+
 
                 $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
 
@@ -204,6 +207,7 @@ class fetchData extends DBH
                 $ObjectDataIndividual = json_encode($objectClassRecord);
 
                 $objectClass = new stdClass();
+                $ExportSend = new stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->partnership = $Partnership;
@@ -214,49 +218,23 @@ class fetchData extends DBH
                 $objectClass->status = $status;
                 $ObjectData = json_encode($objectClass);
 
-                if ($data['status'] == 'active') {
-                    $item = "<div class='in_btn btn_record'>
-                    <div></div>Active
-                </div>";
-                } else {
-                    $item = "<div class='out_btn btn_record'>
-                    <div></div>Inactive
-                </div>";
-                }
-
-                $exportData .= "
-                <tr>
-                            <td>
-                                <div class='details'>
-                                    
-                                    <div class='text'>
-                                        <p>" . $name . "</p>
-                                        <p>" . $date . "</p>
-                                    </div>
-
-                                </div>
-                            </td>
-                            <td class='td_action'><p>" . $Email . "</p></td>
-                            <td class='td_action'><p>" . $Type . "</p></td>
-                            <td class='td_action'><p>" . $Period . "</p></td>
-
-                            <td data-information='" . $ObjectDataIndividual . "'>" . $item . "</td>
-                            <td class='option'>
-                                <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
-                                    <path
-                                        d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                                </svg>
-                                <div class='opt_element'>
-                                <p data-id=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
-                                <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                </div>
-                            </td>
-                        </tr>";
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->name = $name;
+                $ExportSend->partnership = $Partnership;
+                $ExportSend->date = $date;
+                $ExportSend->Email = $Email;
+                $ExportSend->Type = $Type;
+                $ExportSend->Period = $Period;
+                $ExportSend->status = $status;
+                $ExportSend->Obj = $ObjectData;
+                $ExportSend->IObj = $ObjectDataIndividual;
+                $ExportSendMain->$unique_id = $ExportSend;
 
             }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Record available';
         }
 
 
@@ -306,29 +284,35 @@ class fetchData extends DBH
 
         }
     }
-    protected function Partnership_view()
-    {
 
+    protected function Partnership_filter_dataSearch($name, $nk)
+    {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` ORDER BY `id` DESC");
-
+        $num = 25 * $nk;
+        $total_pages = 0;
+        $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` WHERE  `Name` like '%$name%' ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` WHERE  `Name` like '%$name%' ORDER BY `id` DESC limit 25 OFFSET $num");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
             exit($Error);
         }
         if ($stmt->rowCount() > 0) {
+            if ($stmt_pages->execute()) {
+                $total_pages = $stmt_pages->rowCount();
+            }
             $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
             foreach ($result as $data) {
-                $name = $data['Name'];
-                $Partnership = $data['partnership'];
-                $date = $data['date'];
-                $Email = $data['Email'];
-                $Type = $data['partnership_type'];
-                $Period = $data['period'];
-                $unique_id = $data['unique_id'];
-                $status = $data['status'];
+                $name = $this->validate($data['Name']);
+                $Partnership = $this->validate($data['partnership']);
+                $date = $this->validate($data['date']);
+                $Email = $this->validate($data['Email']);
+                $Type = $this->validate($data['partnership_type']);
+                $Period = $this->validate($data['period']);
+                $unique_id = $this->validate($data['unique_id']);
+                $status = $this->validate($data['status']);
 
                 $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
 
@@ -358,6 +342,7 @@ class fetchData extends DBH
                 $ObjectDataIndividual = json_encode($objectClassRecord);
 
                 $objectClass = new stdClass();
+                $ExportSend = new stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->partnership = $Partnership;
@@ -368,49 +353,113 @@ class fetchData extends DBH
                 $objectClass->status = $status;
                 $ObjectData = json_encode($objectClass);
 
-                if ($data['status'] == 'active') {
-                    $item = "<div class='in_btn btn_record'>
-                    <div></div>Active
-                </div>";
-                } else {
-                    $item = "<div class='out_btn btn_record'>
-                    <div></div>Inactive
-                </div>";
-                }
-
-                $exportData .= "
-                <tr>
-                            <td>
-                                <div class='details'>
-                                    
-                                    <div class='text'>
-                                        <p>" . $name . "</p>
-                                        <p>" . $date . "</p>
-                                    </div>
-
-                                </div>
-                            </td>
-                            <td class='td_action'><p>" . $Email . "</p></td>
-                            <td class='td_action'><p>" . $Type . "</p></td>
-                            <td class='td_action'><p>" . $Period . "</p></td>
-
-                            <td data-information='" . $ObjectDataIndividual . "'>" . $item . "</td>
-                            <td class='option'>
-                                <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
-                                    <path
-                                        d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                                </svg>
-                                <div class='opt_element'>
-                                <p data-id=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
-                                <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                </div>
-                            </td>
-                        </tr>";
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->name = $name;
+                $ExportSend->partnership = $Partnership;
+                $ExportSend->date = $date;
+                $ExportSend->Email = $Email;
+                $ExportSend->Type = $Type;
+                $ExportSend->Period = $Period;
+                $ExportSend->status = $status;
+                $ExportSend->Obj = $ObjectData;
+                $ExportSend->IObj = $ObjectDataIndividual;
+                $ExportSendMain->$unique_id = $ExportSend;
 
             }
+            $MainExport = new stdClass();
+            $MainExport->pages = $total_pages;
+            $MainExport->result = $ExportSendMain;
+            $exportData = json_encode($MainExport);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Record available';
+        }
+
+
+        return $exportData;
+    }
+
+    protected function Partnership_view()
+    {
+
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` ORDER BY `id` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $this->validate($data['Name']);
+                $Partnership = $this->validate($data['partnership']);
+                $date = $this->validate($data['date']);
+                $Email = $this->validate($data['Email']);
+                $Type = $this->validate($data['partnership_type']);
+                $Period = $this->validate($data['period']);
+                $unique_id = $this->validate($data['unique_id']);
+                $status = $this->validate($data['status']);
+
+                $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
+
+                if (!$stmt_record->execute()) {
+                    $stmt_record = null;
+                    $Error = 'Fetching user ' . $name . ' partner records  encountered a problem';
+                    exit($Error);
+                }
+                $objectClassRecord = new stdClass();
+                if ($stmt_record->rowCount() > 0) {
+                    $result = $stmt_record->fetchAll();
+                    foreach ($result as $dfile) {
+                        $IndRecord = new stdClass();
+                        $date = $dfile['date'];
+                        $amount = $dfile['amount'];
+                        $id = $dfile['id'];
+                        $IndRecord->UniqueId = $unique_id;
+                        $IndRecord->date = $date;
+                        $IndRecord->Amount = $amount;
+                        $IndRecord->id = $id;
+
+                        $objectClassRecord->$date = $IndRecord;
+
+                    }
+                }
+
+                $ObjectDataIndividual = json_encode($objectClassRecord);
+
+                $objectClass = new stdClass();
+                $ExportSend = new stdClass();
+                $objectClass->UniqueId = $unique_id;
+                $objectClass->name = $name;
+                $objectClass->partnership = $Partnership;
+                $objectClass->date = $date;
+                $objectClass->Email = $Email;
+                $objectClass->Type = $Type;
+                $objectClass->Period = $Period;
+                $objectClass->status = $status;
+                $ObjectData = json_encode($objectClass);
+
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->name = $name;
+                $ExportSend->partnership = $Partnership;
+                $ExportSend->date = $date;
+                $ExportSend->Email = $Email;
+                $ExportSend->Type = $Type;
+                $ExportSend->Period = $Period;
+                $ExportSend->status = $status;
+                $ExportSend->Obj = $ObjectData;
+                $ExportSend->IObj = $ObjectDataIndividual;
+                $ExportSendMain->$unique_id = $ExportSend;
+
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = 'No Record available';
         }
 
 

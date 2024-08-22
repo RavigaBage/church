@@ -157,7 +157,7 @@ class fetchData extends DBH
                     if (!$stmt->execute()) {
                         print_r($stmt->errorInfo());
                         $stmt = null;
-                        
+
                         $Error = json_encode('Fetching data encountered a problems');
                         exit($Error);
                     } else {
@@ -229,201 +229,54 @@ class fetchData extends DBH
 
         }
     }
-    protected function Sunday_view()
+    protected function Sunday_view($year)
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` where `date` like '%$year%' ORDER BY `id` DESC");
 
         if (!$stmt->execute()) {
             $stmt = null;
-            $Error = 'Fetching data encounted a problem';
+            $Error = json_encode('Fetching data encounted a problem');
             exit($Error);
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
+            $exportMain = new stdClass();
             foreach ($result as $data) {
-                $open_prayer = $data['opening_prayer'];
-                $praise = $data['praises'];
-                $scripture_read = $data['scripture_reading'];
-                $scripture = $data['scripture'];
-                $hymn = $data['opening_Hymn'];
-                $hymn_new = $data['Hymn_new'];
-                $hymn_title = $data['Hymn_title'];
-                $worship = $data['worship'];
-                $testimonies = $data['testimonies'];
-                $song_thanksgivning = $data['song_thanksgving_offering'];
-                $sermon_prayer = $data['sermon_prayer'];
-                $sermon_from = $data['sermon_from'];
-                $scipture_preacher = $data['scripture_preacher'];
-                $preacher_duration = $data['peacher_duration'];
-                $alter_call = $data['alter_call'];
-                $tithe_offering = $data['tithe_offering'];
-                $special_appeal = $data['special_appeal'];
-                $welcome_visitors = $data['welcome_visitors'];
-                $annc = $data['Announcement'];
-                $closing_prayer = $data['closing_prayer'];
-                $Benediction = $data['Benediction'];
-                $mc = $data['MC'];
-                $total_attendance = $data['Total_attendance'];
-                $date = $data['date'];
-                $item = "";
                 $id = $data['unique_id'];
-                $exportData .= '  
-                
-                <div class="annc_item">
-                <div class="flex button">
-                    <div class=" flex title">
-                        <h1>Sunday Record ' . $sermon_from . '</h1>
-                        <div class="flex button"><i class="fas fa-date"></i>' . $date . '</div>
-                    </div>
-                </div>
-
-                <div class="div_content">
-                    <details>
-                    <form form-id='.$id.'>
-                    <input name="delete_key" type="hidden" value='.$id.' />
-                        <div class="Activity_record">
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Opening Prayer led By</label>
-                                    <input type="text" value=' . $open_prayer . ' placeholder="' . $open_prayer . '" name="opening_prayer" />
-                                </div>
-                                <div class="field">
-                                    <label>Praises By:</label>
-                                    <input type="text" name="praises" placeholder="' . $praise . '" value=' . $praise . ' />
-                                </div>
-                            </div>
-                            <header>Scripture reading</header>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Scripture Reading By</label>
-                                    <input type="text" name="scripture_reading" placeholder="' . $scripture_read . '" value=' . $scripture_read . ' />
-                                </div>
-                                <div class="field">
-                                    <label>Scripture read:</label>
-                                    <input type="text" name="scripture" placeholder="' . $scripture . '" value=' . $scripture . ' />
-                                </div>
-                            </div>
-
-                            <header>Hymn</header>
-                            <div class="cate_view_e">
-                                <div class="field">
-                                    <label>Opening Hymn No</label>
-                                    <input type="text" name="opening_Hymn" placeholder="' . $hymn . '" value=' . $hymn . ' />
-                                </div>
-                                <div class="field">
-                                    <label>New:</label>
-                                    <input type="text" name="Hymn_new" placeholder="' . $hymn_new . '" value=' . $hymn_new . ' />
-                                </div>
-                                <div class="field">
-                                    <label>Title:</label>
-                                    <input type="text" name="Hymn_title" placeholder="' . $hymn_title . '" value=' . $hymn_title . ' />
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Call to worship</label>
-                                <input type="text" name="worship" placeholder="' . $worship . '" value=' . $worship . ' />
-                            </div>
-                            <div class="field">
-                                <label>Testimonies</label>
-                                <input type="text" name="testimonies" value=' . $testimonies . ' placeholder="' . $testimonies . '" />
-                            </div>
-                            <div class="field">
-                                <label>Song Ministration & Thanksgiving Offering:</label>
-                                <input type="text" name="song_thanksgving_offering" value=' . $song_thanksgivning . ' placeholder="' . $song_thanksgivning . '" />
-                            </div>
-
-                            <header>Sermon</header>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Sermon & Prayer By:</label>
-                                    <input type="text" name="sermon_prayer" value=' . $sermon_prayer . ' placeholder="' . $sermon_prayer . '" />
-                                </div>
-                                <div class="field">
-                                    <label>From:</label>
-                                    <input type="text" name="sermon_from" value=' . $sermon_from . ' placeholder="' . $sermon_from . '" />
-                                </div>
-                            </div>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Scripture from preacher:</label>
-                                    <input type="text" name="scripture_preacher" value=' . $scipture_preacher . ' placeholder="' . $scipture_preacher . '" />
-                                </div>
-                                <div class="field">
-                                    <label>Time Duratoin for the preacher:</label>
-                                    <input type="text" name="peacher_duration" placeholder="' . $preacher_duration . '" value=' . $preacher_duration . '"/>
-                                </div>
-                            </div>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Alter Call By:</label>
-                                    <input type="text" name="alter_call" placeholder="' . $alter_call . '" value=' . $alter_call . ' />
-                                </div>
-                                <div class="field">
-                                    <label>Tithe and Offering</label>
-                                    <input type="text" name="tithe_offering" placeholder="' . $tithe_offering . '" value=' . $tithe_offering . ' />
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Special Appeal</label>
-                                <input type="text"  name="special_appeal" placeholder="' . $special_appeal . '" value=' . $special_appeal . ' />
-                            </div>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Welcome of visitors</label>
-                                    <input type="text" name="welcome_visitors" value=' . $welcome_visitors . ' placeholder="' . $welcome_visitors . '" />
-                                </div>
-                                <div class="field">
-                                    <label>Announcement</label>
-                                    <input type="text" name="Announcement" placeholder="' . $annc . '" value=' . $annc . ' />
-                                </div>
-                            </div>
-                            <header>Closing..</header>
-                            <div class="field">
-                                <label>Closing Prayer</label>
-                                <input type="text" name="closing_prayer" value=' . $closing_prayer . ' placeholder="' . $closing_prayer . '" />
-                            </div>
-                            <div class="cate_view">
-                                <div class="field">
-                                    <label>Benediction</label>
-                                    <input type="text" name="Benediction" value=' . $Benediction . ' placeholder="' . $Benediction . '" />
-                                </div>
-                                <div class="field">
-                                    <label>Mc</label>
-                                    <input type="text" name="MC" placeholder="' . $mc . '" value=' . $mc . ' />
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Total Attendance</label>
-                                <input type="text" name="Total_attendance" value=' . $total_attendance . ' placeholder="' . $total_attendance . '" />
-                            </div>
-                            <div class="field">
-                                        <label>Date</label>
-                                        <input type="date" name="date" placeholder="" value='.$date.' />
-                                    </div>
-                          <button>Record message</button>
-                        </div>
-                        </form>
-                    </details>
-                </div>
-                    <div class=" flex options title">
-                        <div class="edit flex Update_item">
-                            <i class="fas fa-edit Update_item"></i>
-                            <p>Edit</p>
-                        </div>
-
-                        <div class="edit flex">
-                            <i class="fas fa-trash delete_item"></i>
-                            <p>Remove</p>
-                        </div>
-                    </div>
-            </div>';
-
+                $export_item = new stdClass();
+                $export_item->open_prayer = $data['opening_prayer'];
+                $export_item->praise = $data['praises'];
+                $export_item->scripture_read = $data['scripture_reading'];
+                $export_item->scripture = $data['scripture'];
+                $export_item->hymn = $data['opening_Hymn'];
+                $export_item->hymn_new = $data['Hymn_new'];
+                $export_item->hymn_title = $data['Hymn_title'];
+                $export_item->worship = $data['worship'];
+                $export_item->testimonies = $data['testimonies'];
+                $export_item->song_thanksgivning = $data['song_thanksgving_offering'];
+                $export_item->sermon_prayer = $data['sermon_prayer'];
+                $export_item->sermon_from = $data['sermon_from'];
+                $export_item->scipture_preacher = $data['scripture_preacher'];
+                $export_item->preacher_duration = $data['peacher_duration'];
+                $export_item->alter_call = $data['alter_call'];
+                $export_item->tithe_offering = $data['tithe_offering'];
+                $export_item->special_appeal = $data['special_appeal'];
+                $export_item->welcome_visitors = $data['welcome_visitors'];
+                $export_item->annc = $data['Announcement'];
+                $export_item->closing_prayer = $data['closing_prayer'];
+                $export_item->Benediction = $data['Benediction'];
+                $export_item->mc = $data['MC'];
+                $export_item->total_attendance = $data['Total_attendance'];
+                $export_item->date = $data['date'];
+                $export_item->id = $data['unique_id'];
+                $exportMain->$id = $export_item;
             }
+            $exportData = json_encode($exportMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = json_encode('Not Records Available');
         }
         return $exportData;
 
@@ -482,7 +335,7 @@ class fetchData extends DBH
 
                 <div class="div_content">
                     <details>
-                    <form form-id='.$id.'>
+                    <form form-id=' . $id . '>
                         <div class="Activity_record">
                             <div class="cate_view">
                                 <div class="field">
@@ -600,7 +453,7 @@ class fetchData extends DBH
                             </div>
                             <div class="field">
                                         <label>Date</label>
-                                        <input type="date" name="date" placeholder="" value='.$date.' />
+                                        <input type="date" name="date" placeholder="" value=' . $date . ' />
                                     </div>
                           <button>Record message</button>
                         </div>
