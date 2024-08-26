@@ -287,9 +287,9 @@ class fetchData extends DBH
         $exportData = '';
         $resultCheck = true;
         if ($num == '1') {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`Lastname` ORDER BY `id` DESC limit 50");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`assets` ORDER BY `id` DESC limit 50");
         } else {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`Lastname` ORDER BY `id` DESC limit 50 OFFSET $num");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`assets` ORDER BY `id` DESC limit 50 OFFSET $num");
         }
         if (!$stmt->execute()) {
             $stmt = null;
@@ -305,7 +305,7 @@ class fetchData extends DBH
                 $Source = str_replace("'", " ", $data['Acquisition']);
                 $message = str_replace("'", " ", $data['About']);
                 $value = str_replace("'", " ", $data['Value']);
-                $Items = str_replace("'", " ", $data['Item']);
+                $Items = str_replace("'", " ", $data['Items']);
                 $Location = str_replace("'", " ", $data['Location']);
                 $Image = str_replace("'", " ", $data['Image']);
                 $unique_id = str_replace("'", " ", $data['unique_id']);
@@ -325,12 +325,64 @@ class fetchData extends DBH
                 $DataObj->total = $Items;
                 $DataObj->date = $date;
                 $DataObj->status = $status;
+                $DataObj->Image = $Image;
                 $DataObj->value = $value;
                 $DataObj->About = $message;
                 $ExportSend = $DataObj;
                 $ObjectData = json_encode($DataObj);
                 $ExportSend->Obj = $ObjectData;
 
+                $ExportSendMain->$unique_id = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = 'No records available';
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return "$resultCheck";
+        }
+    }
+
+    protected function Assets_view_export()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`assets` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+
+            foreach ($result as $data) {
+                $name = str_replace("'", " ", $data['Name']);
+                $Source = str_replace("'", " ", $data['Acquisition']);
+                $message = str_replace("'", " ", $data['About']);
+                $value = str_replace("'", " ", $data['Value']);
+                $Items = str_replace("'", " ", $data['Items']);
+                $Location = str_replace("'", " ", $data['Location']);
+                $unique_id = str_replace("'", " ", $data['unique_id']);
+                $date = str_replace("''", "", $data['Date']);
+                $status = str_replace("'", " ", $data['status']);
+                $ExportSend = "";
+                $DataObj = new stdClass();
+                $DataObj->id = $unique_id;
+                $DataObj->name = $name;
+                $DataObj->source = $Source;
+                $DataObj->location = $Location;
+                $DataObj->total = $Items;
+                $DataObj->date = $date;
+                $DataObj->status = $status;
+                $DataObj->value = $value;
+                $DataObj->About = $message;
+                $ExportSend = $DataObj;
                 $ExportSendMain->$unique_id = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);
@@ -805,6 +857,52 @@ class fetchData extends DBH
             $MainExport->pages = $total_pages;
             $MainExport->result = $ExportSendMain;
             $exportData = json_encode($MainExport);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('No records available');
+        }
+
+        return $exportData;
+    }
+    protected function projects_viewExportData()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects`  ORDER BY `id` DESC ");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $this->validate($data['Name']);
+                $description = $this->validate($data['description']);
+                $Start = $this->validate($data['start_date']);
+                $End_date = $this->validate($data['end_date']);
+                $Status = $this->validate($data['status']);
+                $Image = $this->validate($data['Image']);
+                $target = $this->validate($data['target']);
+                $current = $this->validate($data['current']);
+                $id = $this->validate($data['id']);
+
+                $DataObj = new stdClass();
+                $ExportSend = "";
+                $DataObj->id = $id;
+                $DataObj->name = $name;
+                $DataObj->Start = $Start;
+                $DataObj->End_date = $End_date;
+                $DataObj->description = $description;
+                $DataObj->Status = $Status;
+                $DataObj->Image = $Image;
+                $DataObj->target = $target;
+                $DataObj->current = $current;
+                $ExportSend = $DataObj;
+                $ExportSendMain->$id = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
             $exportData = json_encode('No records available');

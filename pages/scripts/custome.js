@@ -1,10 +1,10 @@
-define(["Access", "projects", "finance", "calender"], function (
+define(["Access", "projects", "finance", "calender", "xlsx"], function (
   timer,
   asset,
   Finance,
-  calender
+  calender,
+  XLSX
 ) {
-  
   const ContentDom = document.querySelector(".content_main");
   const SkeletonDom_list = document.querySelector(".skeleton_loader.list");
   const SkeletonDom_table = document.querySelector(".skeleton_loader.table");
@@ -664,7 +664,7 @@ define(["Access", "projects", "finance", "calender"], function (
                                         <i class="fas fa-clock"></i>
                                         <p>${DataObj.Start} - ${DataObj.End}</p>
                                     </div>
-        
+
                                 </div>`;
                   NewParent.innerHTML += template;
                 }
@@ -1248,7 +1248,7 @@ define(["Access", "projects", "finance", "calender"], function (
                                                   <i class="fas fa-clock"></i>
                                                   <p>${element['start']} - ${element['end']}</p>
                                               </div>
-                  
+
                                           </div>`;
                           NewParent.innerHTML += template;
                           NewParent.classList.add('active');
@@ -2080,12 +2080,12 @@ define(["Access", "projects", "finance", "calender"], function (
                 });
                 template += "</ul>";
                 ExportDataToSend = template;
-                ExportData(ExportType,ExportDataToSend,ExportDataName);
+                ExportData(ExportType, ExportDataToSend, ExportDataName);
               } else {
                 pageCondition = bodyDisplay.querySelector('.page_sys');
                 pagesmore = false;
-                if(pageCondition){
-                  if(pageCondition.innerText == " " || pageCondition.innerText == ''){
+                if (pageCondition) {
+                  if (pageCondition.innerText == " " || pageCondition.innerText == '') {
                     template = "<ul>";
                     console.log(bodyDisplay.querySelectorAll('.details p'));
                     bodyDisplay.querySelectorAll('.details p').forEach(element => {
@@ -2095,92 +2095,92 @@ define(["Access", "projects", "finance", "calender"], function (
                     ExportDataToSend = template;
                     pagesmore = true;
                   }
-                }else{
+                } else {
                   pagesmore = true;
                 }
-                if(pagesmore){
+                if (pagesmore) {
                   APIDOCS = "";
                   if (ActivityMenu == false) {
                     APIDOCS =
-                    "../API/finance/data_process.php?APICALL=true&&user=offertory&&submit=export";
-                } else {
-                  APIDOCS =
-                    "../API/finance/data_process.php?APICALL=true&&user=true&&submit=export";
-                }
+                      "../API/finance/data_process.php?APICALL=true&&user=offertory&&submit=export";
+                  } else {
+                    APIDOCS =
+                      "../API/finance/data_process.php?APICALL=true&&user=true&&submit=export";
+                  }
 
-                try {
-                  controller = new AbortController();
-                  const Request = await fetch(APIDOCS, {
-                    method: "POST",
-                    body: "",
-                  });
-    
-                  if (Request.status === 200) {
-                    data = await Request.json();
-                    if (data) {
-                      const ObjectDataFrame = JSON.parse(data);
-                      if(ObjectDataFrame){
-                        template = "<ul>"
-                         for (const key in ObjectDataFrame) {
+                  try {
+                    controller = new AbortController();
+                    const Request = await fetch(APIDOCS, {
+                      method: "POST",
+                      body: "",
+                    });
+
+                    if (Request.status === 200) {
+                      data = await Request.json();
+                      if (data) {
+                        const ObjectDataFrame = JSON.parse(data);
+                        if (ObjectDataFrame) {
+                          template = "<ul>"
+                          for (const key in ObjectDataFrame) {
                             namer = ObjectDataFrame[key]['name'];
                             amount = ObjectDataFrame[key]['amount'];
                             date = ObjectDataFrame[key]['date'];
                             template += `<li class='item_name'> <p>${namer} - Total ${amount}</p>
-                                  <p>last modified  . ${date }</p></li>`
+                                  <p>last modified  . ${date}</p></li>`
                           }
                           template += "</ul>";
                           ExportDataToSend = template;
-                          ExportData(ExportType,ExportDataToSend,ExportDataName);
+                          ExportData(ExportType, ExportDataToSend, ExportDataName);
+                        }
                       }
+                    } else {
+                      console.log("Cannot iniate Download");
                     }
-                  } else {
-                    console.log("Cannot iniate Download");
+                  } catch (error) {
+                    console.error(error);
                   }
-                } catch (error) {
-                  console.error(error);
-                }
 
-                // var ExportData = document.querySelector('#OrigDues').value;
-                // if (ExportData != "Fetching data encounted a problem" && ExportData != "Not Records Available") {
-                //   const ObjectDataFrame = JSON.parse(ExportData);
-                //   if (ObjectData) {
-                //     ExportString = "";
-                //     for (const key in ObjectDataFrame) {
-                //       Amount = ObjectDataFrame[key]['amount'];
-                //       Name = ObjectDataFrame[key]['name'];
-                //       date = ObjectDataFrame[key]['date'];
-                //       date_data = ObjectDataFrame[key]['date_data'];
-                //       purpose = ObjectDataFrame[key]['purpose'];
-                //       department = ObjectDataFrame[key]['department'];
-                //       id = ObjectDataFrame[key]['UniqueId'];
+                  // var ExportData = document.querySelector('#OrigDues').value;
+                  // if (ExportData != "Fetching data encounted a problem" && ExportData != "Not Records Available") {
+                  //   const ObjectDataFrame = JSON.parse(ExportData);
+                  //   if (ObjectData) {
+                  //     ExportString = "";
+                  //     for (const key in ObjectDataFrame) {
+                  //       Amount = ObjectDataFrame[key]['amount'];
+                  //       Name = ObjectDataFrame[key]['name'];
+                  //       date = ObjectDataFrame[key]['date'];
+                  //       date_data = ObjectDataFrame[key]['date_data'];
+                  //       purpose = ObjectDataFrame[key]['purpose'];
+                  //       department = ObjectDataFrame[key]['department'];
+                  //       id = ObjectDataFrame[key]['UniqueId'];
 
-                //       ExportString += `<div class='item'>
-                //             <div class='file'>
-                //             <img src='../images/cfile.png' alt='' />
-                //             </div>
-                //             <div class='details'>
-                //             <a href='finance/finance_event.php?data_page=$id&&amount=${amount}' target='_blank' class='flex'>
-                //                 <p class='item_name' data_item=" . ${date_data} . ">" . ${Name} . "  - Total " . ${Amount} . "</p>
-                //                 <p>last modified . " . ${date_data} . "</p>
-                //             </a>
-                //             </div>
-                //             <div class='delete option'>
-                //                 <svg xmlns='http://www.w3.org/2000/svg' height='30' viewBox='0 -960 960 960'
-                //                     width='30'>
-                //                     <path
-                //                         d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                //                 </svg>
-                //                 <div class='opt_element'>
-                //                     <p Update_item='" . ${id} . "'>Update item <i></i></p>
-                //                     <p delete_item='" . ${id} . "'>Delete item <i></i></p>
-                //                 </div>
-                //             </div>
-                //           </div>
-                //         `;
+                  //       ExportString += `<div class='item'>
+                  //             <div class='file'>
+                  //             <img src='../images/cfile.png' alt='' />
+                  //             </div>
+                  //             <div class='details'>
+                  //             <a href='finance/finance_event.php?data_page=$id&&amount=${amount}' target='_blank' class='flex'>
+                  //                 <p class='item_name' data_item=" . ${date_data} . ">" . ${Name} . "  - Total " . ${Amount} . "</p>
+                  //                 <p>last modified . " . ${date_data} . "</p>
+                  //             </a>
+                  //             </div>
+                  //             <div class='delete option'>
+                  //                 <svg xmlns='http://www.w3.org/2000/svg' height='30' viewBox='0 -960 960 960'
+                  //                     width='30'>
+                  //                     <path
+                  //                         d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
+                  //                 </svg>
+                  //                 <div class='opt_element'>
+                  //                     <p Update_item='" . ${id} . "'>Update item <i></i></p>
+                  //                     <p delete_item='" . ${id} . "'>Delete item <i></i></p>
+                  //                 </div>
+                  //             </div>
+                  //           </div>
+                  //         `;
 
-                //     }
-                //   }
-                // }
+                  //     }
+                  //   }
+                  // }
                 }
               }
             }
@@ -2355,7 +2355,7 @@ define(["Access", "projects", "finance", "calender"], function (
                       <div class='details'>
                           <p class='item_name' data_item=" ${date} "> ${Item_name}   - Total ${amount} </p>
                           <p>last modified . "${date}"</p>
-                          
+
                       </div>
                       <div class='delete option'>
                           <svg xmlns='http://www.w3.org/2000/svg' height='30' viewBox='0 -960 960 960'
@@ -2678,12 +2678,28 @@ define(["Access", "projects", "finance", "calender"], function (
           const List_filter = document.querySelector(".List_filter");
           const OptionElements = document.querySelectorAll(".delete.option");
           const filter_option = document.querySelectorAll(".filter_option");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
           const AddEventMenu_Btn = document.querySelector(
             ".event_menu_add Button"
           );
           AddEventMenuForm.addEventListener("submit", function (e) {
             e.preventDefault();
           });
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/finance/data_process.php?APICALL=transaction&&user=true&&submit=export";
+            ExportData('transactiondata', 'excel', APIDOCS)
+          })
+
           filter_option.forEach((element) => {
             element.addEventListener("click", function () {
               filter_option.forEach((element_dr) => {
@@ -2957,6 +2973,11 @@ define(["Access", "projects", "finance", "calender"], function (
                 element.querySelector(".select").classList.remove("active");
               }
             });
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
           });
 
           function UpdateItemFunction(value) {
@@ -3006,7 +3027,21 @@ define(["Access", "projects", "finance", "calender"], function (
           const OptionElements = document.querySelectorAll(".delete.option ");
           const filter_option = document.querySelectorAll(".filter_option");
           const List_filter = document.querySelector(".List_filter");
-
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/finance/data_process.php?APICALL=expenses&&user=true&&submit=export";
+            ExportData('Expenses', 'excel', APIDOCS)
+          })
           filter_option.forEach((element) => {
             element.addEventListener("click", function () {
               filter_option.forEach((element_dr) => {
@@ -3300,6 +3335,11 @@ define(["Access", "projects", "finance", "calender"], function (
                 }
               }
             });
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
 
             filter_option.forEach((element) => {
               if (!element.contains(target)) {
@@ -3316,6 +3356,24 @@ define(["Access", "projects", "finance", "calender"], function (
           const AddEventBtn = document.querySelector(".add_event");
           const AddEventMenu = document.querySelector(".event_menu_add");
           const notifyBox = document.querySelector(".notifyBox");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          const AddEventMenu_Btn = document.querySelector(
+            ".event_menu_add Button"
+          );
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/sundayRecords/data_process.php?APICALL=true&&user=true&&submit=export";
+            ExportData('records', 'excel', APIDOCS)
+          })
           AddEventBtn.addEventListener("click", function (e) {
             APIDOCS =
               "../API/sundayRecords/data_process.php?APICALL=true&&user=true&&submit=true";
@@ -3367,7 +3425,12 @@ define(["Access", "projects", "finance", "calender"], function (
             } else {
               FilterUI.classList.add("active");
             }
-            var target = e.target;
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+
             if (
               AddEventMenu.classList.contains("active") &&
               !AddEventBtn.contains(target)
@@ -3600,9 +3663,24 @@ define(["Access", "projects", "finance", "calender"], function (
           const AddEventMenuForm = document.querySelector("form");
           const filter_option = document.querySelectorAll(".filter_option");
           var OptionElements = document.querySelectorAll(".delete.option");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
           const AddEventMenu_Btn = document.querySelector(
             ".event_menu_add Button"
           );
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/finance/data_process.php?APICALL=Tithe&&user=true&&submit=export";
+            ExportData('Tithe', 'excel', APIDOCS)
+          })
           var FilterUI = document.querySelector(".notification_list_filter");
           var FilterUIList = document.querySelectorAll(".notification_list_filter .item");
           FilterUIList.forEach(element => {
@@ -3779,6 +3857,11 @@ define(["Access", "projects", "finance", "calender"], function (
                 }
               }
             });
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
 
             filter_option.forEach((element) => {
               if (!element.contains(target)) {
@@ -3923,6 +4006,21 @@ define(["Access", "projects", "finance", "calender"], function (
           const FilterBtn = document.querySelector(".filterBtn");
           var FilterUI = document.querySelector(".notification_list_filter");
           var FilterUIList = document.querySelectorAll(".notification_list_filter .item");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/Assets&projects/data_process.php?APICALL=true&&user=assets&&submit=export";
+            ExportData('AssetsExport', 'excel', APIDOCS)
+          })
           FilterUIList.forEach(element => {
             element.addEventListener('click', function () {
               value = element.innerText;
@@ -3958,6 +4056,13 @@ define(["Access", "projects", "finance", "calender"], function (
           window.addEventListener("click", function (e) {
             var target = e.target;
             var FilterUI = document.querySelector(".notification_list_filter");
+
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+
             if (!FilterBtn.contains(target) && !FilterUI.contains(target)) {
               if (FilterUI.classList.contains("active")) {
                 FilterUI.classList.remove("active");
@@ -4541,6 +4646,21 @@ define(["Access", "projects", "finance", "calender"], function (
           const AddEventBtn = document.querySelector(".add_event");
           const SubmitForm = document.querySelector(".event_menu_add form");
           const ResponseView = document.querySelector(".error_information");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/Assets&projects/data_process.php?APICALL=true&&user=projects&&submit=export";
+            ExportData('ProjectExport', 'excel', APIDOCS)
+          })
           const imageCompound = document.querySelector(
             '.event_menu_add input[name="imageFile"]'
           );
@@ -4582,6 +4702,12 @@ define(["Access", "projects", "finance", "calender"], function (
           window.addEventListener("click", function (e) {
             var target = e.target;
             var FilterUI = document.querySelector(".notification_list_filter");
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+
             if (!FilterBtn.contains(target) && !FilterUI.contains(target)) {
               if (FilterUI.classList.contains("active")) {
                 FilterUI.classList.remove("active");
@@ -4835,6 +4961,21 @@ define(["Access", "projects", "finance", "calender"], function (
           const Partnership_record = document.querySelector(".series_version");
           const AddEventMenu = document.querySelector(".event_menu_add");
           const FilterBtn = document.querySelector(".filterBtn");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/partnership/data_process.php?APICALL=true&&user=true&&submit=export";
+            ExportData('PartnershipExport', 'excel', APIDOCS)
+          })
           window.addEventListener("click", function (e) {
             var target = e.target;
             var FilterUI = document.querySelector(".notification_list_filter");
@@ -4844,6 +4985,11 @@ define(["Access", "projects", "finance", "calender"], function (
               }
             } else {
               FilterUI.classList.add("active");
+            }
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
             }
           });
 
@@ -5384,9 +5530,32 @@ define(["Access", "projects", "finance", "calender"], function (
           const SubmitSearchbutton = document.querySelector("#searchBtn");
           const ResponseView = document.querySelector(".error_information");
           const FilterBtn = document.querySelector(".filterBtn");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/membership/data_process.php?APICALL=true&&user=true&&submit=export";
+            ExportData('MembershipExport', 'excel', APIDOCS)
+          })
           const imageCompound = document.querySelector(
             '.event_menu_add input[name="imageFile"]'
           );
+          window.addEventListener('click', function (e) {
+            var target = e.target;
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+          })
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
@@ -5468,7 +5637,6 @@ define(["Access", "projects", "finance", "calender"], function (
               "../API/membership/data_process.php?APICALL=true&&user=true&&submit=update_file";
           }
           function DeleteItemFunction(value, validateKey) {
-            console.log(value, validateKey);
             if (value == "true") {
               let API =
                 "../API/membership/data_process.php?APICALL=true&&user=true&&submit=delete_file";
@@ -5665,34 +5833,81 @@ define(["Access", "projects", "finance", "calender"], function (
       intVal = 0;
     }
   }
-  function ExportData(type,data,filename){
-    var downloadLink = document.createElement("a");
-    if(type == 'word'){
+  async function ExportData(filename, type_sr, APIDOCS) {
+
+    if (type_sr == 'word') {
       var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
-    var postHtml = "</body></html>";
-    var html = preHtml+data+postHtml;
-    var blob = new Blob(['\ufeff', html], {
+      var postHtml = "</body></html>";
+      var html = preHtml + data + postHtml;
+      var blob = new Blob(['\ufeff', html], {
         type: 'application/msword'
-    });    
-    var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-    filename = filename+'.doc';
-    document.body.appendChild(downloadLink);
-    if(navigator.msSaveOrOpenBlob ){
+      });
+      var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+      filename = filename + '.doc';
+      document.body.appendChild(downloadLink);
+      if (navigator.msSaveOrOpenBlob) {
         navigator.msSaveOrOpenBlob(blob, filename);
-    }else{
+      } else {
         downloadLink.hidden = true;
         downloadLink.href = url;
         downloadLink.download = filename;
         downloadLink.click();
+      }
     }
-  }
-    if(type == "excel"){
+    if (type_sr == "excel") {
+      try {
+        dataSend = {
+          num: 1,
+        };
+        const Request = await fetch(APIDOCS, {
+          method: "POST",
+          body: JSON.stringify(dataSend),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (Request.status === 200) {
+          data = await Request.json();
+          if (data) {
+            var ExportData_vr = data;
+            if (ExportData_vr != "Fetching data encounted a problem" && ExportData_vr != "Not Records Available") {
+
+              const ObjectDataFrame = JSON.parse(ExportData_vr);
+              if (ObjectDataFrame) {
+                ExportString = "";
+                jsonData = []
+                for (const key in ObjectDataFrame) {
+                  Obj = {}
+                  jsonData.push(ObjectDataFrame[key]);
+                }
+
+                const worksheet = XLSX.utils.json_to_sheet(jsonData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+                const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                const link = document.createElement('a');
+                const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+                link.href = URL.createObjectURL(blob);
+                link.download = filename + '.xlsx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }
+            }
+
+          }
+        } else {
+          console.log("Cannot iniate Download");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (type_sr == 'pdf') {
 
     }
-    if(type =='pdf'){
 
-    }
-    document.body.removeChild(downloadLink);
   }
   function UrlTrace() {
     let DomManipulationElement;
@@ -5924,4 +6139,5 @@ define(["Access", "projects", "finance", "calender"], function (
       }, delay)
     }
   }
+
 });

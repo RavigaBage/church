@@ -63,7 +63,7 @@ if (isset($_GET['page'])) {
             </div>
 
 
-            <div class="item_opt flex">
+            <div class="item_opt flex" id="ExportBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#5f6368">
                     <path
@@ -74,6 +74,19 @@ if (isset($_GET['page'])) {
         </div>
     </div>
 </div>
+<div class="export_dialogue">
+    <form>
+        <header>Exporting Data</header>
+        <div class="loader">All fields required</div>
+        <div class="container_event">
+            <p>You are export data from this database to this current device, if you wish to proceed click on the
+                save button
+            </p>
+
+            <button id="exportDataBtn">Save document</button>
+        </div>
+    </form>
+</div>
 <div class="CloneSearch" hidden>
     <table>
         <tr>
@@ -81,20 +94,20 @@ if (isset($_GET['page'])) {
                 <div class='details'>
 
                     <div class='text'>
-                        <p class="Clonename">" . $name . "</p>
-                        <p class="Clonedate">" . $date . "</p>
+                        <p class="Clonename"></p>
+                        <p class="Clonedate"></p>
                     </div>
 
                 </div>
             </td>
             <td class='td_action'>
-                <p class="Cloneemail">" . $Email . "</p>
+                <p class="Cloneemail"></p>
             </td>
             <td class='td_action'>
-                <p class="Clonetype">" . $Type . "</p>
+                <p class="Clonetype"></p>
             </td>
             <td class='td_action'>
-                <p class="Cloneperiod">" . $Period . "</p>
+                <p class="Cloneperiod"></p>
             </td>
 
             <td Class="Cloneitem" data-information=''>

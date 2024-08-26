@@ -237,7 +237,7 @@ img.cloud_2 {
   z-index: 1;
 }
 .web_content .overlay .content {
-  width: calc(100% - 50px);
+  width: calc(100% - 20px);
   margin: 20px auto;
   height: 80vh;
   z-index: 2;
@@ -261,6 +261,7 @@ img.cloud_2 {
   word-spacing: 3px;
 }
 .web_content .overlay .content .slider {
+  width: 100%;
   margin-top: 30px;
   overflow: hidden;
 }
@@ -405,7 +406,7 @@ li .total .Number {
   position: relative;
   width: 95%;
   margin: 20px auto;
-  height: 500px;
+  min-height: 500px;
   background: url("../images/cta-bg.png");
   background-size: cover;
   background-repeat: no-repeat;
@@ -479,8 +480,8 @@ li .total .Number {
 }
 .event_section .gallery_layout .img.xxl {
   width: 100%;
-  grid-column: 3 / 4;
-  grid-row: 1 / 4;
+  grid-column: 3 / 3;
+  grid-row: 1 / 3;
 }
 
 .calendaMain {
@@ -884,7 +885,6 @@ a {
 }
 @media screen and (max-width: 1100px) {
   .web_content .overlay .content .motto p {
-    font-size: 17px;
     word-spacing: 1px;
   }
   .web_content {
@@ -901,11 +901,18 @@ a {
     left: 0;
     right: 0;
   }
+  .nav_logo {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 90px;
+    height: 40px;
+  }
   .menu_toggle {
     display: block;
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     width: 20px;
     padding: 10px;
     margin-right: 20px;
@@ -929,6 +936,7 @@ a {
   .navigation {
     position: fixed !important;
     top: 0;
+    left: 0;
     display: block;
     z-index: 99;
     max-width: 300px;
@@ -984,10 +992,18 @@ a {
     width: 95%;
     min-height: 700px;
   }
+
   .service_display .text,
   .workshop {
     flex-direction: column;
     gap: 20px;
+  }
+  .service_display .text .inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    place-items: center;
   }
   .event_section {
     width: calc(100% - 10px);
@@ -1008,6 +1024,15 @@ a {
   }
 }
 @media screen and (max-width: 650px) {
+  .web_content .overlay .content .motto p {
+    font-size: 17px;
+  }
+  .web_content .overlay .content {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
   .data_reminder {
     margin-left: 5px;
   }
@@ -1018,10 +1043,10 @@ a {
     font-size: 20px;
   }
   .web_content .overlay .content .text h1 {
-    font-size: 30px;
+    font-size: 35px;
   }
   .web_content .overlay .content .text p {
-    font-size: 20px;
+    font-size: 25px;
   }
 
   .calendaMain .wrapper {
@@ -1072,6 +1097,9 @@ a {
   .christmas_txt {
     grid-column: 1 /3;
   }
+  .events h1 {
+    padding: 0px;
+  }
 
   .full_page_down img {
     border-radius: 5px;
@@ -1080,8 +1108,19 @@ a {
   .full_page_down {
     gap: 4px;
   }
+  .workshop .info {
+    margin: 0px;
+    text-align: center;
+  }
 }
 @media screen and (max-width: 425px) {
+  .service_display,
+  .workshop {
+    gap: 10px;
+  }
+  .calendaMain .wrapper .year .yearcnt {
+    margin-top: 40px;
+  }
   .footer_content {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -1132,9 +1171,22 @@ a {
     word-spacing: 1px;
   }
   .web_content .overlay .content .text h1 {
-    font-size: 20px;
+    font-size: 30px;
+  }
+}
+@media screen and (max-width: 200px) {
+  .service_display .text .inner button {
+    max-width: 130px;
+    width: 100%;
+  }
+  .service_display .head {
+    padding: 0px;
+    font-size: 16px;
   }
   .web_content .overlay .content .text p {
-    font-size: 18px;
+    font-size: 13px;
+  }
+  h1 {
+    font-size: 16px !important;
   }
 }

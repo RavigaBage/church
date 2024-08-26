@@ -77,7 +77,13 @@ if (isset($_GET['submit'])) {
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['id'];
         $name = $data['search'];
-        $requestResponse = $pdh->Dues_pay_list_search($id,$name);
+        $requestResponse = $pdh->Dues_pay_list_search($id, $name);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'export_dues' && $_GET['user'] == 'event') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['num'];
+        $requestResponse = $pdh->Dues_pay_list($num);
         echo json_encode($requestResponse);
     }
 
@@ -137,6 +143,18 @@ if (isset($_GET['submit'])) {
         $requestResponse = $pdh->user_dues_delete($name, $id);
         echo json_encode($requestResponse);
     }
+    if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'export' && $_GET['user'] == 'true') {
+        $requestResponse = $pdh->TransactionExport();
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'expenses' && $_GET['submit'] == 'export' && $_GET['user'] == 'true') {
+        $requestResponse = $pdh->BudgeCategoryListExport();
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'Tithe' && $_GET['submit'] == 'export' && $_GET['user'] == 'true') {
+        $requestResponse = $pdh->ExportTithe();
+        echo json_encode($requestResponse);
+    }
 
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
 
@@ -150,7 +168,6 @@ if (isset($_GET['submit'])) {
         $requestResponse = $pdh->Transaction_upload($account, $category, $amount, $status, $authorize, $date);
         echo json_encode($requestResponse);
     }
-
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
         $account = $_POST['account'];
         $category = $_POST['category'];

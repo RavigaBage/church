@@ -78,7 +78,7 @@ class fetchData extends DBH
                                 $target4 = "../images/annc/$filename4";
                                 if (move_uploaded_file($Image_tmp_name, $target4)) {
                                     $unique_id = rand(time(), 3002);
-                                    $file_name = $target4;
+                                    $file_name = $filename4;
                                 } else {
                                     exit(json_encode("An error occurred while processing image, try again"));
                                 }

@@ -813,7 +813,6 @@ class fetchData extends DBH
 
         }
     }
-
     protected function Account_user_Records($acc_name, $description, $date, $time, $category, $percentage, $amount, $balance)
     {
         $input_list = array($acc_name, $description, $date, $time, $category, $percentage, $amount, $balance);
@@ -850,8 +849,6 @@ class fetchData extends DBH
             }
         }
     }
-
-
     protected function Transaction($account, $category, $amount, $status, $authorize, $date)
     {
         $exportData = "";
@@ -1109,6 +1106,51 @@ class fetchData extends DBH
             $MainSendPages->pages = $total_pages;
             $MainSendPages->result = $ExportSendMain;
             $exportData = json_encode($MainSendPages);
+        } else {
+            $exportData = 'Not Records Available';
+        }
+
+        if ($exportData != "") {
+            return $exportData;
+        } else {
+            return false;
+        }
+    }
+    protected function TransactionListExport()
+    {
+        $exportData = false;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`transaction_records`");
+        if (!$stmt->execute()) {
+
+            $stmt = null;
+            $Error = json_encode('Fetching data encountered a problem');
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $ObjectInfo = new stdClass();
+                $ExportSend = new stdClass();
+                $account = $this->validate($data['account']);
+                $amount = $this->validate($data['Amount']);
+                $date = $this->validate($data['Date']);
+                $id = $this->validate($data['unique_id']);
+                $Status = $this->validate($data['Status']);
+                $category = $this->validate($data['Category']);
+                $Authorize = $this->validate($data['Authorize']);
+
+                $ExportSend->account = $account;
+                $ExportSend->amount = $amount;
+                $ExportSend->Date = $date;
+                $ExportSend->category = $category;
+                $ExportSend->Authorize = $Authorize;
+                $ExportSend->Status = $Status;
+                $ExportSend->id = $id;
+                $exportname = $id . $amount;
+                $ExportSendMain->$exportname = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
         } else {
             $exportData = 'Not Records Available';
         }
@@ -1658,8 +1700,6 @@ class fetchData extends DBH
         }
     }
 
-
-
     protected function Accounts_list()
     {
         $exportData = 0;
@@ -2089,6 +2129,76 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+    public function Budget_list_category_export()
+    {
+        $year = date('UTC');
+        $year = date('Y');
+        $exportData = "";
+        $resultCheck = true;
+
+        $Other_income = 0;
+        $database_name = "zoe_" . $year . "_budget";
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_budget`.`$database_name` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encountered a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $Data = new stdClass();
+                $ExportSend = new stdClass();
+                $category = $data['category'];
+                $type = $data['type'];
+                $details = $data['details'];
+                $date = $data['date'];
+                $year = $data['Year'];
+                $month = $data['month'];
+                $recorded_by = $data['recorded_by'];
+                $amount = $data['amount'];
+                $id = "zoe_id" . $data['id'];
+                $unique_id = $data['unique_id'];
+
+                $ExportSend->category = $category;
+                $ExportSend->type = $type;
+                $ExportSend->details = $details;
+                $ExportSend->date = $date;
+                $ExportSend->year = $year;
+                $ExportSend->month = $month;
+                $ExportSend->amount = $amount;
+                $ExportSend->recorded_by = $recorded_by;
+                $ExportSend->id = $unique_id;
+                $exportname = $id;
+                $ExportSendMain->$exportname = $ExportSend;
+            }
+        } else {
+            exit(json_encode("no record found"));
+        }
+        $exportData = json_encode($ExportSendMain);
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+    public function Budget_list_category_pages()
+    {
+        $year = date('UTC');
+        $year = date('Y');
+
+        $database_name = "zoe_" . $year . "_budget";
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_budget`.`$database_name` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encountered a problem';
+            exit(json_encode($Error));
+        }
+        return $stmt->rowCount();
+
+    }
 
     public function Budget_list_categoryFilter($year, $category, $nk)
     {
@@ -2311,7 +2421,7 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
@@ -2321,7 +2431,7 @@ class fetchData extends DBH
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encounted a problem';
-                exit($Error);
+                exit(json_encode($Error));
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
@@ -2339,7 +2449,7 @@ class fetchData extends DBH
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encounted a problem';
-                        exit($Error);
+                        exit(json_encode($Error));
                     }
                     $Name = $namer;
                     $gender = "Guest";
@@ -2362,12 +2472,12 @@ class fetchData extends DBH
                     $ObjectInfo->id = $id;
                     $ObjectData = json_encode($ObjectInfo);
 
-                    $ExportSend->amount = $amount;
-                    $ExportSend->name = $Name;
-                    $ExportSend->gender = $gender;
-                    $ExportSend->contact = $contact;
-                    $ExportSend->medium = $Medium;
-                    $ExportSend->record_date = $Record_date;
+                    $ExportSend->amount = $this->validate($amount);
+                    $ExportSend->name = $this->validate($Name);
+                    $ExportSend->gender = $this->validate($gender);
+                    $ExportSend->contact = $this->validate($contact);
+                    $ExportSend->medium = $this->validate($Medium);
+                    $ExportSend->record_date = $this->validate($Record_date);
                     $ExportSend->UniqueId = $id;
                     $ExportSend->Obj = $ObjectData;
                     $ExportSend->Uname = $name;
@@ -2379,21 +2489,17 @@ class fetchData extends DBH
                 $exportData = json_encode($ExportSendMain);
 
             } else {
-                exit('Not Records Available');
+                exit(json_encode('Not Records Available'));
             }
 
         } else {
-            exit('Not Records Available');
+            exit(json_encode('Not Records Available'));
         }
+        return $exportData;
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
     }
 
-    public function Pay_list_InfoSearch($id,$searchname)
+    public function Pay_list_InfoSearch($id, $searchname)
     {
         $exportData = "";
         $resultCheck = true;
@@ -2451,7 +2557,7 @@ class fetchData extends DBH
                             $ObjectInfo->date = $Record_date;
                             $ObjectInfo->id = $id;
                             $ObjectData = json_encode($ObjectInfo);
-        
+
                             $ExportSend->amount = $amount;
                             $ExportSend->name = $Name;
                             $ExportSend->gender = $gender;
@@ -2461,7 +2567,7 @@ class fetchData extends DBH
                             $ExportSend->UniqueId = $id;
                             $ExportSend->Obj = $ObjectData;
                             $ExportSend->Uname = $name;
-        
+
                             $exportname = $id . $amount;
                             $ExportSendMain->$exportname = $ExportSend;
 
@@ -2987,6 +3093,74 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+    public function list_Info_tithe_Export()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` ORDER BY `id` DESC");
+
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $namer = $data['unique_id'];
+                $name = $data['name'];
+                $amount = $data['amount'];
+                $medium = $data['Medium_payment'];
+                $Date = $data['Date'];
+                $detais = $data['description'];
+
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer'");
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit($Error);
+                }
+                $Name = '-';
+                $gender = "Guest";
+                $contact = "Guest";
+                $Email = "-";
+                $ExportSend = new stdClass();
+                if ($stmt->rowCount() > 0) {
+                    $row2 = $stmt->fetchAll();
+                    foreach ($row2 as $value) {
+                        $Name = $value['Firstname'] . '  ' . $value['Othername'];
+                        $gender = $value['gender'];
+                        $contact = $value['contact'];
+                        $Email = $value['email'];
+                    }
+                }
+                $exportname = $namer;
+
+                $ExportSend->Name = $Name;
+                $ExportSend->Amount = $amount;
+                $ExportSend->Date = $Date;
+                $ExportSend->id = $namer;
+                $ExportSend->medium = $medium;
+                $ExportSend->details = $detais;
+                $ExportSend->gender = $gender;
+                $ExportSend->contact = $contact;
+                $ExportSend->Email = $Email;
+                $ExportSendMain->$exportname = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = '<header>Not Records Available</header>';
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
 
     public function list_search_tithe($name, $nk)
     {
@@ -3149,7 +3323,7 @@ class fetchData extends DBH
         $exportData = '';
         $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`offertory_records` where `year` = $year ORDER BY `year`,`month` ");
-        
+
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = json_encode('Fetching data encounted a problem');

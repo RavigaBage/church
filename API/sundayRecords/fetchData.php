@@ -281,6 +281,58 @@ class fetchData extends DBH
         return $exportData;
 
     }
+    protected function Sunday_view_export()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` ORDER BY `id` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = json_encode('Fetching data encounted a problem');
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $exportMain = new stdClass();
+            foreach ($result as $data) {
+                $id = $data['unique_id'];
+                $export_item = new stdClass();
+                $export_item->open_prayer = $data['opening_prayer'];
+                $export_item->praise = $data['praises'];
+                $export_item->scripture_read = $data['scripture_reading'];
+                $export_item->scripture = $data['scripture'];
+                $export_item->hymn = $data['opening_Hymn'];
+                $export_item->hymn_new = $data['Hymn_new'];
+                $export_item->hymn_title = $data['Hymn_title'];
+                $export_item->worship = $data['worship'];
+                $export_item->testimonies = $data['testimonies'];
+                $export_item->song_thanksgivning = $data['song_thanksgving_offering'];
+                $export_item->sermon_prayer = $data['sermon_prayer'];
+                $export_item->sermon_from = $data['sermon_from'];
+                $export_item->scipture_preacher = $data['scripture_preacher'];
+                $export_item->preacher_duration = $data['peacher_duration'];
+                $export_item->alter_call = $data['alter_call'];
+                $export_item->tithe_offering = $data['tithe_offering'];
+                $export_item->special_appeal = $data['special_appeal'];
+                $export_item->welcome_visitors = $data['welcome_visitors'];
+                $export_item->annc = $data['Announcement'];
+                $export_item->closing_prayer = $data['closing_prayer'];
+                $export_item->Benediction = $data['Benediction'];
+                $export_item->mc = $data['MC'];
+                $export_item->total_attendance = $data['Total_attendance'];
+                $export_item->date = $data['date'];
+                $export_item->id = $data['unique_id'];
+                $exportMain->$id = $export_item;
+            }
+            $exportData = json_encode($exportMain);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('Not Records Available');
+        }
+        return $exportData;
+
+    }
 
     protected function RecordsFilter($date)
     {

@@ -43,7 +43,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-
+    public function member_export()
+    {
+        $RecordsResult = $this->member_view_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function search($name, $nk)
     {
         $RecordsResult = $this->search_data($name, $nk);

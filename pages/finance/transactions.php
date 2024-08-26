@@ -37,7 +37,7 @@ if (isset($_GET['page'])) {
                 </svg>
                 <p>Print</p>
             </div>
-            <div class="item_opt flex">
+            <div class="item_opt flex" id="ExportBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#5f6368">
                     <path
@@ -48,6 +48,21 @@ if (isset($_GET['page'])) {
         </div>
     </div>
 </div>
+
+<div class="export_dialogue">
+    <form>
+        <header>Exporting Data</header>
+        <div class="loader">All fields required</div>
+        <div class="container_event">
+            <p>You are export data from this database to this current device, if you wish to proceed click on the
+                save button
+            </p>
+
+            <button id="exportDataBtn">Save document</button>
+        </div>
+    </form>
+</div>
+
 
 <div class="content_pages">
     <div class="content_page_event">
@@ -243,53 +258,57 @@ if (isset($_GET['page'])) {
     if ($total != 'Error Occurred') {
         ?>
         <header>
+
+            <!-- #fix pages for here -->
             <?php
             $total = ($total - 1);
-            $val = ceil($total / 6);
-            if ((round($total / 6)) > 1) {
+            $total = ceil($total / 40);
+            if ($total > 1) {
                 echo 'Pages:';
-            }
-            ?>
-            <div class="pages">
-                <?php
-                $loop = 6;
+                ?>
 
-                $start = $num;
-                if ($total > 1) {
-                    if (intval($num) >= 6) {
-                        if ($total - 6 > $num) {
-                            if (intval($num) <= intval($total)) {
-                                $loop = 6 + 6 * round($num / 6);
-                                $start = 6 * round($num / 6);
+
+                <div class="pages">
+                    <?php
+                    $loop = 6;
+
+                    $start = $num;
+                    if ($total > 1) {
+                        if (intval($num) >= 6) {
+                            if ($total - 6 > $num) {
+                                if (intval($num) <= intval($total)) {
+                                    $loop = 6 + 6 * round($num / 6);
+                                    $start = 6 * round($num / 6);
+                                }
+                            } else {
+                                $loop = $total;
+                                $start = $loop - 6;
                             }
-                        } else {
-                            $loop = $total;
-                            $start = $loop - 6;
                         }
                     }
-                }
-                for ($i = $start; $i < $loop; $i++) {
-                    $class = "";
+                    for ($i = $start; $i < $loop; $i++) {
+                        $class = "";
 
-                    if (($i + 1) == $num) {
-                        $class = 'active';
+                        if (($i + 1) == $num) {
+                            $class = 'active';
+                        }
+                        if ($num < $total) {
+                            echo '<div class="' . $class . '">' . ($i + 1) . '</div>';
+                        } else {
+                            echo '<div class="' . $class . '">' . $i . '</div>';
+                        }
                     }
-                    if ($num < $total) {
-                        echo '<div class="' . $class . '">' . ($i + 1) . '</div>';
+
+                    if ($loop >= 6 && $num <= ($total - 11)) {
+                        echo '<span>......</span><div>' . round($total) . '</div>';
                     } else {
-                        echo '<div class="' . $class . '">' . $i . '</div>';
+                        echo '<div>' . $total . '</div>';
                     }
-                }
-
-                if ($loop >= 6 && $num <= ($total - 11)) {
-                    echo '<span>......</span><div>' . round($total) . '</div>';
-                } else {
-                    echo '<div>' . $total . '</div>';
-                }
-                ?>
-            </div>
-        </header>
-        <?php
+                    ?>
+                </div>
+            </header>
+            <?php
+            }
     }
     ?>
 </div>

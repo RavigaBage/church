@@ -1,7 +1,7 @@
 <?php
 require('autoloader.php');
 if (isset($_GET['submit'])) {
-    if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'search_file') {
+    if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'search_file' && $_GET['submit'] != 'export') {
         $Firstname = $_POST['Fname'];
         $Othername = $_POST['Oname'];
         $Age = $_POST['birth'];
@@ -29,6 +29,17 @@ if (isset($_GET['submit'])) {
 
             $resultFetch = $pdh->member_upload($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image_name, $Image_type, $Image_tmp_name);
             echo json_encode(["status" => "errors", "message" => $resultFetch]);
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+
+    } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
+        try {
+            $pdh = new viewData();
+
+            $resultFetch = $pdh->member_export();
+            echo json_encode($resultFetch);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);

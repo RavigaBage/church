@@ -378,6 +378,50 @@ class fetchData extends DBH
 
         return $exportData;
     }
+    protected function Partnership_filter_export()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership`  ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $this->validate($data['Name']);
+                $Partnership = $this->validate($data['partnership']);
+                $date = $this->validate($data['date']);
+                $Email = $this->validate($data['Email']);
+                $Type = $this->validate($data['partnership_type']);
+                $Period = $this->validate($data['period']);
+                $unique_id = $this->validate($data['unique_id']);
+                $status = $this->validate($data['status']);
+                $ExportSend = new stdClass();
+
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->name = $name;
+                $ExportSend->partnership = $Partnership;
+                $ExportSend->date = $date;
+                $ExportSend->Email = $Email;
+                $ExportSend->Type = $Type;
+                $ExportSend->Period = $Period;
+                $ExportSend->status = $status;
+                $ExportSendMain->$unique_id = $ExportSend;
+
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = 'No Record available';
+        }
+
+
+        return $exportData;
+    }
 
     protected function Partnership_view()
     {

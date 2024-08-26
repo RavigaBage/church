@@ -39,15 +39,15 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if (!$stmt->rowCount() > 0) {
             $exportData = "User doesn't exist, if you are viewing this and is a verified member of the church, please contact your administrator";
-            exit($exportData);
+            exit(json_encode($exportData));
         } else {
             if ($Image == '') {
                 $Image = '';
-                exit('Image file does not exist, try uploading an image');
+                exit(json_encode('Image file does not exist, try uploading an image'));
             } else {
                 $explodes = explode('.', $Image);
                 $explode_end = end($explodes);
@@ -56,40 +56,32 @@ class fetchData extends DBH
                     $types = ["image/jpg", "image/png", "image/jpeg"];
                     if (in_array($Image_type, $types)) {
                         $filename4 = time() . $Image;
-                        $target4 = "../Images_folder/$filename4";
+                        $target4 = "../Images_folder/users/$filename4";
                         if (move_uploaded_file($Image_tmp_name, $target4)) {
-                            $unique_id = rand(time(), 3002);
-                            $Image = $target4;
-
-                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET  `Image` = ? where `unique_id` = ?");
-                            $stmt->bindParam('1', $Image, PDO::PARAM_STR);
+                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET  `image` = ? where `unique_id` = ?");
+                            $stmt->bindParam('1', $filename4, PDO::PARAM_STR);
                             $stmt->bindParam('2', $unique_id, PDO::PARAM_STR);
-
                             if (!$stmt->execute()) {
                                 $stmt = null;
-                                $Error = 'Fetching data encountered a problems';
+                                $Error = json_encode('Fetching data encountered a problems');
                                 exit($Error);
                             } else {
-                                $exportData = 'Data entry was a success Page will refresh to display new data';
-                                $resultValidate = true;
+                                exit(json_encode('success'));
+
                             }
 
                         } else {
-                            exit("An error occurred while processing image, try again");
+                            exit(json_encode("An error occurred while processing image, try again"));
                         }
                     } else {
-                        exit("Image file must be of the following extensions only 'jpg','png','jpeg'");
+                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
                     }
                 } else {
-                    exit("Image file must be of the following extensions only 'jpg','png','jpeg'");
+                    exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
                 }
             }
 
         }
-
-
-
-        return $exportData;
     }
     protected function user_get_data($unique_id)
     {
@@ -142,7 +134,7 @@ class fetchData extends DBH
 
             $ObjMainList->$unique_id = $objectClass;
 
-            $exportData = $ObjMainList;
+            $exportData = json_encode($ObjMainList);
         } else {
             $resultCheck = false;
             $exportData = '<header>Not Records Available</header>';
@@ -151,21 +143,21 @@ class fetchData extends DBH
         return $exportData;
     }
 
-    protected function personal_data($unique_id, $Name, $OtherName, $Email, $contact)
+    protected function personal_data($unique_id, $Name, $OtherName, $Email, $contact, $About, $Address)
     {
         $clean = true;
         $exportData = 0;
         $resultValidate = true;
 
         $exportData = 0;
-        $input_list = array($Name, $Email, $contact);
+        $input_list = array($Name, $Email, $contact, $About, $Address);
         $clean = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
                 $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
+                exit(json_encode($Error));
             }
         }
 
@@ -175,45 +167,34 @@ class fetchData extends DBH
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
-                exit($Error);
+                exit(json_encode($Error));
             }
-            if ($stmt->rowCount() > 0) {
-                $exportData = "Data already exist";
-                $resultValidate = false;
-                exit($exportData);
+            if (!$stmt->rowCount() > 0) {
+                $exportData = "Data does not exist. Check in your with your admin, your account might have been deleted";
+                exit(json_encode($exportData));
             } else {
-
-
-                $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `Firstname`=?, `Othername` =?, `email` =?, `contact`=? where `unique_id` = ?");
+                $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `Firstname`=?, `Othername` =?, `email` =?, `contact`=?,`About`=?,`Address`=? where `unique_id` = ?");
 
                 $stmt->bindParam('1', $Name, PDO::PARAM_STR);
                 $stmt->bindParam('2', $OtherName, PDO::PARAM_STR);
                 $stmt->bindParam('3', $Email, PDO::PARAM_STR);
                 $stmt->bindParam('4', $contact, PDO::PARAM_STR);
-                $stmt->bindParam('5', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('5', $About, PDO::PARAM_STR);
+                $stmt->bindParam('6', $Address, PDO::PARAM_STR);
+                $stmt->bindParam('7', $unique_id, PDO::PARAM_STR);
                 if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
-                    exit($Error);
+                    exit(json_encode($Error));
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
-                    $resultValidate = true;
-                    exit('Upload was a success');
+                    exit(json_encode('success'));
                 }
-
-
-
-
-
             }
 
 
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+
     }
 
 
@@ -468,14 +449,13 @@ class fetchData extends DBH
                 $name = $data['name'];
                 $membership = $data['members'];
                 $date = $data['Date'];
-                $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ? ORDER BY `id` DESC");
                 $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
                     exit($Error);
                 }
-
                 if ($stmt->rowCount() > 0) {
                     $data = $stmt->fetchAll();
                     $position = $data[0]['position'];
@@ -486,13 +466,11 @@ class fetchData extends DBH
                     $Ministries_data->date = $date;
                     $Ministries_data->position = $position;
 
-                    $Ministries_list->$name = $Ministries_list;
-
-
+                    $Ministries_list->$unique_id = $Ministries_data;
                 }
 
             }
-            $exportData = $Ministries_list;
+            $exportData = json_encode($Ministries_list);
         } else {
             $resultCheck = false;
             $exportData = '<header>Not Records Available</header>';
@@ -505,7 +483,7 @@ class fetchData extends DBH
         }
     }
 
-    protected function notification($unique_id, $username)
+    protected function notification($unique_id)
     {
         $exportData = '';
         $resultCheck = true;
@@ -529,13 +507,8 @@ class fetchData extends DBH
                 }
                 if ($stmt->rowCount() > 0) {
                     array_push($department_list, $name);
-
-
                 }
-
             }
-
-
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `date` DESC");
             if (!$stmt->execute()) {
                 $stmt = null;
@@ -544,31 +517,33 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
+                $ExportMain = new stdClass();
                 foreach ($result as $data) {
                     $name = $data['title'];
                     $receiver = $data['Reciever'];
                     $message = $data['message'];
                     $date = $data['date'];
-                    $list_id = $data['unique_id'];
-                    $item = '';
-                    if (in_array($receiver, $department_list)) {
-                        $confirm = $this->user_notification_status($name, $unique_id, $list_id, $username);
-                        if ($confirm) {
-                            $exportData .= $name;
-                        }
-
+                    $fileName = $data['file'];
+                    $Id = $data['unique_id'];
+                    $ExportMainSend = new stdClass();
+                    if (in_array($receiver, $department_list) || $receiver == 'All asssembly') {
+                        $ExportMainSend->title = $name;
+                        $ExportMainSend->message = $message;
+                        $ExportMainSend->date = $date;
+                        $ExportMainSend->file = $fileName;
+                        $unique_id = time() . $Id;
+                        $ExportMain->$unique_id = $ExportMainSend;
                     }
-
-
                 }
+                $exportData = json_encode($ExportMain);
             } else {
                 $resultCheck = false;
-                $exportData = '<header>Not Records Available</header>';
+                $exportData = 'No Records Available';
             }
 
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
 
         if ($resultCheck) {
@@ -623,11 +598,66 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
-    public function user_list_Info_tithe($unique_id)
+    public function user_list_Info_tithe($unique_id, $num)
+    {
+        $numer = 40 * $num;
+        $exportData = '';
+        if ($num == 1) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`='$unique_id' ORDER BY `date` DESC");
+        } else {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`='$unique_id' ORDER BY `date` DESC limit 40 OFFSET $numer");
+        }
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = json_encode('Fetching data encounted a problem');
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportMain = new stdClass();
+            foreach ($result as $data) {
+                $id = $data['unique_id'];
+                $name = $data['name'];
+                $payment = $data['Medium_payment'];
+                $amount = $data['amount'];
+                $date = $data['Date'];
+                $ExportSend = new stdClass();
+                $ExportSend->id = $id;
+                $ExportSend->name = $name;
+                $ExportSend->payment = $payment;
+                $ExportSend->date = $date;
+                $ExportSend->amount = $amount;
+                $Name = $id . $date;
+
+                $ExportMain->$Name = $ExportSend;
+            }
+            $exportData = json_encode($ExportMain);
+        } else {
+            $exportData = json_encode('No Records Available');
+        }
+        return $exportData;
+    }
+
+    public function user_list_Info_tithe_pages($unique_id)
+    {
+
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`='$unique_id' ORDER BY `date` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = json_encode('Fetching data encounted a problem');
+            exit($Error);
+        }
+
+        return $stmt->rowCount();
+
+    }
+
+    protected function transactionList($unique_id)
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`='$unique_id' ORDER BY `date` DESC");
+        $department_list = [];
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`department` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -636,18 +666,64 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             foreach ($result as $data) {
-                $exportData .= '
-                <ul class="main five">
-                <li><input type="checkbox" class="checkbox" value="' . $data['unique_id'] . '" >' . $data['name'] . '</li>
-                <li>' . $data['Medium_payment'] . '</li>
-                <li>' . $data['amount'] . '</li>
-                <li><p>Published</p>-<p>' . $data['Date'] . '</p></li>
-                </ul>';
-
+                $name = $data['name'];
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
+                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit($Error);
+                }
+                if ($stmt->rowCount() > 0) {
+                    array_push($department_list, $name);
+                }
             }
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` ORDER BY `date` DESC");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encounted a problem';
+                exit($Error);
+            }
+            if ($stmt->rowCount() > 0) {
+                $result = $stmt->fetchAll();
+                $ExportMain = new stdClass();
+                foreach ($result as $data) {
+                    $name = $data['name'];
+                    $amount = $data['amount'];
+                    $department = $data['department'];
+                    $date = $data['date'];
+                    $Id = $data['unique_id'];
+                    $ExportMainSend = new stdClass();
+                    if (in_array($department, $department_list) || $department == 'All users') {
+                        $paidAmount = 0;
+                        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoedues`.`$name` where `user`='$unique_id' ORDER BY `date` DESC");
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = 'Fetching data encounted a problem';
+                            exit($Error);
+                        }
+                        if ($stmt->rowCount() > 0) {
+                            $result = $stmt->fetchAll();
+                            $paidAmount = $result[0]['Amount'];
+                        }
+                        $ExportMainSend->name = $name;
+                        $ExportMainSend->amount = $amount;
+                        $ExportMainSend->date = $date;
+                        $ExportMainSend->department = $department;
+                        $ExportMainSend->status = $paidAmount;
+                        $unique_id = time() . $Id;
+                        $ExportMain->$unique_id = $ExportMainSend;
+                    }
+                }
+                $exportData = json_encode($ExportMain);
+            } else {
+                $resultCheck = false;
+                $exportData = 'No Records Available';
+            }
+
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
 
         if ($resultCheck) {
@@ -656,5 +732,51 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+
+    protected function paymentList($unique_id)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $department_list = [];
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`payment_log` where `user_id`='$unique_id' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportMain = new stdClass();
+            foreach ($result as $data) {
+                $webpage = $data['webpage'];
+                $gateway = $data['gateway'];
+                $status = $data['status'];
+                $date = $data['date'];
+                $time = $data['time'];
+                $amount = $data['amount'];
+                $idD = $data['transaction_id'];
+
+                $newExport = new stdClass();
+                $newExport->webpage = $webpage;
+                $newExport->gateway = $gateway;
+                $newExport->status = $status;
+                $newExport->date = $date;
+                $newExport->time = $time;
+                $newExport->amount = $amount;
+
+                $ExportMain->$idD = $newExport;
+            }
+
+            $exportData = json_encode($ExportMain);
+
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+
 
 }

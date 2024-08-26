@@ -8,6 +8,7 @@ requirejs.config({
     chartData: "apexcharts-bundle/samples/assets/stock-prices",
     finance: "finance",
     calender: "calender",
-    convertDocx: "convert_html_to_docx.js"
+    convertDocx: "convert_html_to_docx.js",
+    xlsx: "xlsx.full.min"
   },
 });

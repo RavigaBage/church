@@ -38,6 +38,18 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+    public function Asset_viewExport()
+    {
+        $RecordsResult = $this->Assets_view_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function LastModified()
     {
         $RecordsResult = $this->GetLatestUpdate();
@@ -127,6 +139,17 @@ class viewData extends fetchData
     public function Project_viewSearchMain($name, $nk)
     {
         $RecordsResult = $this->projects_viewSearch($name, $nk);
+
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Project_viewExport()
+    {
+        $RecordsResult = $this->projects_viewExportData();
 
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';

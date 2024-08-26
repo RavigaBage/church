@@ -69,7 +69,7 @@ if (isset($_GET['data_page'])) {
             </div>
 
 
-            <div class="item_opt flex">
+            <div class="item_opt flex" id="ExportBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#5f6368">
                     <path
@@ -80,6 +80,21 @@ if (isset($_GET['data_page'])) {
         </div>
     </div>
 </div>
+<div class="export_dialogue">
+    <form>
+        <header>Exporting Data</header>
+        <div class="loader">All fields required</div>
+        <div class="container_event">
+            <p>You are export data from this database to this current device, if you wish to proceed click on the
+                save button
+            </p>
+
+            <button id="exportDataBtn">Save document</button>
+        </div>
+    </form>
+</div>
+
+
 
 <div class="profile_main">
     <header>SUNDAY SERVICE PROGRAMME DATA</header>

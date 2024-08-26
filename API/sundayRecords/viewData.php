@@ -42,6 +42,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function sunday_export()
+    {
+        $RecordsResult = $this->Sunday_view_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function searchRecords($date)
     {

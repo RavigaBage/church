@@ -1,5 +1,5 @@
 <?php
-include_once ('../../API/finance/autoloader.php');
+include_once('../../API/finance/autoloader.php');
 $newDataRequest = new viewData();
 if (isset($_GET['data_page'])) {
     $num = $_GET['data_page'];
@@ -35,7 +35,7 @@ if (isset($_GET['data_page'])) {
                 <p>Print</p>
             </div>
 
-            <div class="item_opt flex">
+            <div class="item_opt flex" id="ExportBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#5f6368">
                     <path
@@ -47,7 +47,74 @@ if (isset($_GET['data_page'])) {
     </div>
 </div>
 
+<div class="export_dialogue">
+    <form>
+        <header>Exporting Data</header>
+        <div class="loader">All fields required</div>
+        <div class="container_event">
+            <p>You are export data from this database to this current device, if you wish to proceed click on the
+                save button
+            </p>
+
+            <button id="exportDataBtn">Save document</button>
+        </div>
+    </form>
+</div>
+
 <div class="content_pages">
+    <div class="event_menu_add">
+        <form>
+            <header>New Activity</header>
+            <h1 class="loader"></h1>
+            <div class="container_event">
+                <div class="field">
+                    <label>Select category</label>
+                    <select name="category">
+                        <option value="expenses">Expenses</option>
+                        <option value="income">Income</option>
+                        <option value="saving">deposit</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Type</label>
+                    <select name="type">
+                        <option>Select</option>
+                        <option value="housing">housing</option>
+                        <option value="ultilities">ultiliy(electricity,water,gas,internet)</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="transportation">transportation</option>
+                        <option value="gasoline">gasoline</option>
+                        <option value="insurance">insurance</option>
+                        <option value="food">food and groceries</option>
+                        <option value="clothings">clothings</option>
+                        <option value="investment">Investment</option>
+                        <option value="bonds">Bonds</option>
+                        <option value="paycheck">paychecks</option>
+                        <option value="gifts">Gifts</option>
+                        <option value="expenses">donation</option>
+
+                        <option value="income">food and drinks</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Amount</label>
+                    <input name="Amount" type="Amount" placeholder="" />
+                </div>
+                <div class="field_e">
+                    <label>Details</label>
+                    <textarea name="details"></textarea>
+                </div>
+                <div class="field">
+                    <label>Activity Date</label>
+                    <input name="Date" type="date" placeholder="" required />
+                </div>
+
+                <button>create Activity</button>
+                <input hidden name="delete_key" />
+            </div>
+        </form>
+
+    </div>
     <div class="content_page_event">
 
         <div class="add_event">
@@ -137,148 +204,79 @@ if (isset($_GET['data_page'])) {
                         </td>
                     </tr>";
                     }
-
                     ?>
-                    <tr class="income">
-                        <td title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
-                                                dolorem blanditiis eos.">
-                            <p>hover to view details</p>
-                        <td>
-                            <p>24 Aug</p>
-                        </td>
-                        <td>
-                            <p>Housing</p>
-                        </td>
-                        <td>
-                            <p>Income</p>
-                        </td>
-                        </td>
-                        <td>$998.38</td>
-                        <td class="option">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="48">
-                                <path
-                                    d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
-                            </svg>
-                            <div class="opt_element">
-                                <p class="delete_item">Delete item <i></i></p>
-                                <p class="Update_item" class=""
-                                    data-information='{"id":2,"Category":"FDBbank","Type":"","Amount":"122","Date":"Aug,12,2023","Details":"more"}'>
-                                    Update item <i></i></p>
-                            </div>
-                        </td>
 
-
-
-                    </tr>
-                    <tr class="expenses">
-                        <td title="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti
-                                                nostrum fugiat in.">
-                            <p>hover to view details</p>
-                        </td>
-
-                        <td>
-                            <p>24 Aug</p>
-                        </td>
-                        <td>
-                            <p>salary</p>
-                        </td>
-                        <td>
-                            <p>Income</p>
-                        </td>
-                        <td>$938</td>
-
-                        <td class="option">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="48">
-                                <path
-                                    d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
-                            </svg>
-                            <div class="opt_element">
-                                <p class="delete_item">Delete item <i></i></p>
-                                <p class="update_item">Update item <i></i></p>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr class="record">
-                        <td>
-                            <p>Income</p>
-                        </td>
-                        <td>
-                            <p>24 Aug</p>
-                        </td>
-                        <td>Clothing</td>
-                        <td>221</td>
-                        <td>$998.38</td>
-
-                        <td class="option">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="48">
-                                <path
-                                    d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
-                            </svg>
-                            <div class="opt_element">
-                                <p class="delete_item">Delete item <i></i></p>
-                                <p class="update_item">Update item <i></i></p>
-                            </div>
-                        </td>
-
-                    </tr>
                 </tbody>
 
             </table>
         </div>
     </div>
+
+    <div class="page_sys">
+        <?php
+        if (isset($_SESSION['total_pages_transactions'])) {
+            $total = $_SESSION['total_pages_transactions'];
+        } else {
+            $total = $newDataRequest->BudgeCategoryListpages();
+            $_SESSION['total_pages_transactions'] = $total;
+        }
+        if ($total != 'Error Occurred') {
+            ?>
+            <header>
+
+                <!-- #fix pages for here -->
+                <?php
+                $total = ($total - 1);
+                $total = ceil($total / 40);
+                if ($total > 1) {
+                    echo 'Pages:';
+                    ?>
+
+
+                    <div class="pages">
+                        <?php
+                        $loop = 6;
+
+                        $start = $num;
+                        if ($total > 1) {
+                            if (intval($num) >= 6) {
+                                if ($total - 6 > $num) {
+                                    if (intval($num) <= intval($total)) {
+                                        $loop = 6 + 6 * round($num / 6);
+                                        $start = 6 * round($num / 6);
+                                    }
+                                } else {
+                                    $loop = $total;
+                                    $start = $loop - 6;
+                                }
+                            }
+                        }
+                        for ($i = $start; $i < $loop; $i++) {
+                            $class = "";
+
+                            if (($i + 1) == $num) {
+                                $class = 'active';
+                            }
+                            if ($num < $total) {
+                                echo '<div class="' . $class . '">' . ($i + 1) . '</div>';
+                            } else {
+                                echo '<div class="' . $class . '">' . $i . '</div>';
+                            }
+                        }
+
+                        if ($loop >= 6 && $num <= ($total - 11)) {
+                            echo '<span>......</span><div>' . round($total) . '</div>';
+                        } else {
+                            echo '<div>' . $total . '</div>';
+                        }
+                        ?>
+                    </div>
+                </header>
+                <?php
+                }
+        }
+        ?>
+    </div>
+
 </div>
-</div>
-<div class="event_menu_add">
-    <form>
-        <header>New Activity</header>
-        <h1 class="loader"></h1>
-        <div class="container_event">
-            <div class="field">
-                <label>Select category</label>
-                <select name="category">
-                    <option value="expenses">Expenses</option>
-                    <option value="income">Income</option>
-                    <option value="saving">deposit</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Type</label>
-                <select name="type">
-                    <option>Select</option>
-                    <option value="housing">housing</option>
-                    <option value="ultilities">ultiliy(electricity,water,gas,internet)</option>
-                    <option value="maintenance">Maintenance</option>
-                    <option value="transportation">transportation</option>
-                    <option value="gasoline">gasoline</option>
-                    <option value="insurance">insurance</option>
-                    <option value="food">food and groceries</option>
-                    <option value="clothings">clothings</option>
-                    <option value="investment">Investment</option>
-                    <option value="bonds">Bonds</option>
-                    <option value="paycheck">paychecks</option>
-                    <option value="gifts">Gifts</option>
-                    <option value="expenses">donation</option>
-
-                    <option value="income">food and drinks</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Amount</label>
-                <input name="Amount" type="Amount" placeholder="" />
-            </div>
-            <div class="field_e">
-                <label>Details</label>
-                <textarea name="details"></textarea>
-            </div>
-            <div class="field">
-                <label>Activity Date</label>
-                <input name="Date" type="date" placeholder="" required />
-            </div>
-
-            <button>create Activity</button>
-            <input hidden name="delete_key" />
-        </div>
-    </form>
-
 </div>

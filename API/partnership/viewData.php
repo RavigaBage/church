@@ -46,6 +46,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function partnership_export()
+    {
+        $RecordsResult = $this->Partnership_filter_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function ministries_filterSearch($name, $nk)
     {

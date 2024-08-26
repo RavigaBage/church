@@ -1,7 +1,7 @@
 <?php
 require('autoloader.php');
 if (isset($_GET['submit'])) {
-    if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter') {
+    if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter' && $_GET['submit'] != 'export') {
         $name = $_POST['name'];
         $partnership = $_POST['amount'];
         $email = $_POST['email'];
@@ -53,6 +53,15 @@ if (isset($_GET['submit'])) {
             $pdh = new viewData();
 
             $resultFetch = $pdh->ministries_filterSearch($search, $nk);
+            echo json_encode(trim($resultFetch));
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+    } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
+        try {
+            $pdh = new viewData();
+            $resultFetch = $pdh->partnership_export();
             echo json_encode(trim($resultFetch));
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();

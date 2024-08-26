@@ -98,11 +98,11 @@ table {
 table {
   border: none;
   border-collapse: collapse;
-  border-spacing: 4px;
+  border-spacing: 10px;
 }
 table tr th:nth-child(1),
 table tr td:nth-child(1) {
-  width: 30%;
+  width: 20%;
   text-align: left;
   padding-left: 3px;
 }
@@ -110,6 +110,7 @@ table tr,
 td {
   text-align: center;
   padding: 3px;
+  font-size: 15px;
 }
 table tbody tr:last-child {
   border-top: 2px solid #000000;
@@ -164,4 +165,5 @@ header {
   height: 100%;
   border: 1px solid #ddd;
   padding: 10px;
+  background-color: #807e7e12;
 }

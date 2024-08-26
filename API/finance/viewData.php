@@ -127,6 +127,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function ExportTithe()
+    {
+        $RecordsResult = $this->list_Info_tithe_Export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function Payment_List($name, $amount, $medium, $date, $id)
     {
         $RecordsResult = $this->PayList($name, $amount, $medium, $date, $id);
@@ -352,6 +362,26 @@ class viewData extends fetchData
             return "$RecordsResult";
         }
     }
+    public function BudgeCategoryListExport()
+    {
+        $RecordsResult = $this->Budget_list_category_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return "$RecordsResult";
+        }
+    }
+    public function BudgeCategoryListpages()
+    {
+        $RecordsResult = $this->Budget_list_category_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return "$RecordsResult";
+        }
+    }
 
     public function BudgeCategoryListFilter($year, $category, $nk)
     {
@@ -410,6 +440,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function TransactionExport()
+    {
+        $RecordsResult = $this->TransactionListExport();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function Records_usernames()
     {
@@ -433,9 +473,9 @@ class viewData extends fetchData
 
     }
 
-    public function Dues_pay_list_search($id,$name)
+    public function Dues_pay_list_search($id, $name)
     {
-        $RecordsResult = $this->Pay_list_InfoSearch($id,$name);
+        $RecordsResult = $this->Pay_list_InfoSearch($id, $name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -590,7 +630,7 @@ class viewData extends fetchData
             return $Error;
         } else {
             return $RecordsResult;
-        } 
+        }
     }
     public function ExportList()
     {
@@ -600,7 +640,7 @@ class viewData extends fetchData
             return $Error;
         } else {
             return $RecordsResult;
-        } 
+        }
     }
 
 

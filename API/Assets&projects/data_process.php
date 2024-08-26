@@ -87,6 +87,18 @@ if (isset($_GET['submit'])) {
         $resultFetch = $pdh->Project_viewSearchMain($name, $nk);
         echo json_encode($resultFetch);
 
+    } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'projects') {
+
+        $pdh = new viewData();
+        $resultFetch = $pdh->Project_viewExport();
+        echo json_encode($resultFetch);
+
+    } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'assets') {
+
+        $pdh = new viewData();
+        $resultFetch = $pdh->Asset_viewExport();
+        echo json_encode($resultFetch);
+
     } else
 
 

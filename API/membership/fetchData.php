@@ -407,7 +407,70 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+    protected function member_view_export()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $unique_id = $data['unique_id'];
+                $Firstname = $data['Firstname'];
+                $Othername = $data['Othername'];
+                $Age = $data['Age'];
+                $Position = $data['Position'];
+                $contact = $data['contact'];
+                $email = $data['email'];
+                $image = $data['image'];
+                $Address = $data['Address'];
+                $Baptism = $data['Baptism'];
+                $membership_start = $data['membership_start'];
+                $username = $data['username'];
+                $gender = $data['gender'];
+                $occupation = $data['occupation'];
+                $About = $data['About'];
+                $status = $data['Status'];
 
+                $ExportSend = new stdClass();
+
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->status = $status;
+                $ExportSend->Oname = $Firstname;
+                $ExportSend->Fname = $Othername;
+                $ExportSend->birth = $Age;
+                $ExportSend->Position = $Position;
+                $ExportSend->contact = $contact;
+                $ExportSend->email = $email;
+                $ExportSend->image = $image;
+                $ExportSend->location = $Address;
+                $ExportSend->Baptism = $Baptism;
+                $ExportSend->membership_start = $membership_start;
+                $ExportSend->username = $username;
+                $ExportSend->gender = $gender;
+                $ExportSend->occupation = $occupation;
+                $ExportSend->About = $About;
+
+                $ExportSendMain->$unique_id = $ExportSend;
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('No Record Available');
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
     protected function search_data($name, $nk)
     {
         $exportData = '';

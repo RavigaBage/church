@@ -8,9 +8,9 @@ class viewData extends fetchData
         return $RecordsResult;
     }
 
-    public function Tithe_viewList($unique_id)
+    public function Tithe_viewList($unique_id, $num)
     {
-        $RecordsResult = $this->user_list_Info_tithe($unique_id);
+        $RecordsResult = $this->user_list_Info_tithe($unique_id, $num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -18,15 +18,37 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Notification_viewList($unique_id, $username)
+    public function Notification_viewList($unique_id)
     {
-        $RecordsResult = $this->notification($unique_id, $username);
+        $RecordsResult = $this->notification($unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
         } else {
             return $RecordsResult;
         }
+    }
+    public function transactionList_view($unique_id)
+    {
+        $RecordsResult = $this->transactionList($unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
+    }
+    public function paymentList_view($unique_id)
+    {
+        $RecordsResult = $this->paymentList($unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
     }
     public function ministries_viewList($unique_id)
     {
@@ -81,9 +103,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function personalData_set($unique_id, $Name, $OtherName, $Email, $contact)
+    public function personalData_set($unique_id, $Name, $OtherName, $Email, $contact, $About, $Address)
     {
-        $RecordsResult = $this->personal_data($unique_id, $Name, $OtherName, $Email, $contact);
+        $RecordsResult = $this->personal_data($unique_id, $Name, $OtherName, $Email, $contact, $About, $Address);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -92,16 +114,26 @@ class viewData extends fetchData
         }
     }
     public function getPersonalData($unique_id)
-    { {
-            $RecordsResult = $this->user_get_data($unique_id);
-            if ($RecordsResult == false) {
-                $Error = 'Error Occurred';
-                return $Error;
-            } else {
-                return $RecordsResult;
-            }
+    {
+        $RecordsResult = $this->user_get_data($unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
         }
 
+
+    }
+    public function TithePages($unique_id)
+    {
+        $RecordsResult = $this->user_list_Info_tithe_pages($unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
     }
 
 }

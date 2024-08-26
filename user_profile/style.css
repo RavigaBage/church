@@ -24,7 +24,18 @@
   --bgfadeblack: #080b0e;
   --bgfadeblack-light: #16181a;
 }
-
+p.unchecked {
+  margin-top: 10px;
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.error_information {
+  color: crimson;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 18px;
+}
 body {
   width: 100%;
   background: var(--bgblack);
@@ -57,6 +68,7 @@ aside {
   border-right: 1px solid var(--fadeWhite);
   padding: 10px;
   background-color: var(--bgfadeblack);
+  height: 100%;
 }
 aside .logo {
   display: flex;
@@ -73,6 +85,11 @@ aside .header {
 aside .item {
   padding-block: 5px;
   height: 45px;
+  border-radius: 10px;
+  transition: all 0.4s ease;
+}
+aside .item:hover {
+  background-color: crimson;
 }
 
 aside .item .cover {
@@ -137,12 +154,13 @@ section {
   width: 100%;
   background-color: var(--bgblack);
   padding: 10px 20px;
+  min-height: 99vh;
 }
 
 .profile_main header {
   font-size: 25px;
   font-weight: bolder;
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 .profile_main .grid_sx {
@@ -158,24 +176,25 @@ section {
   border-radius: var(--radius16);
 }
 .profile .profile_status {
-  margin-bottom: 10px;
-  padding: 10px 40px;
-  border-bottom: 1px solid var(--fadeWhite);
+  width: 90%;
+  margin: 0px auto;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: auto auto;
+  gap: 20px;
 }
 .profile .profile_status .cover {
+  margin: 0px;
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
   background-color: rgb(255, 196, 0);
-  margin-right: 40px;
 }
 .profile .profile_status .cover img {
-  width: 90px;
-  height: 90px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
 }
 .profile .profile_status .details button {
   padding: 10px;
@@ -237,6 +256,7 @@ section {
   background-color: transparent;
   outline: none;
   border-width: 0px;
+  color: #fff;
   margin-left: 10px;
 }
 .profile .personal_details .location .info_bar button {
@@ -268,6 +288,7 @@ section {
   border-radius: var(--radius16);
   height: fit-content;
   padding-bottom: 20px;
+  margin-top: 10px;
 }
 .status header {
   text-align: center;
@@ -280,8 +301,8 @@ section {
   margin: 20px auto;
   border-radius: 50%;
   background: conic-gradient(
-    var(--bgfadeblack-light) 160deg,
-    var(--green) 160deg
+    var(--green) var(--percent),
+    var(--bgfadeblack-light) 160deg
   );
   display: grid;
   place-items: center;
@@ -352,16 +373,22 @@ p span {
   width: 100%;
   padding: 10px;
 }
+
 .payment_list .item,
 .tithe_item {
   width: 100%;
   display: grid;
-  grid-template-columns: auto 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
   text-align: center;
   margin-bottom: 10px;
   transition: all 0.3s ease;
   cursor: pointer;
   padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.payment_list .item {
+  text-align: left;
 }
 .tithe_item {
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -388,22 +415,32 @@ p span {
   font-size: 18px;
 }
 .tithe_list {
+  width: 100%;
+  height: auto;
   padding: 10px;
+  overflow-x: auto;
 }
 .month_image {
   width: 100%;
   height: 150px;
   border-radius: var(--radius7);
 }
+.month_image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
 .annc_item {
+  width: 95%;
+  height: auto;
+  margin: 10px auto;
   cursor: pointer;
-  margin-bottom: 10px;
   border-radius: var(--radius7);
   padding: 10px;
 }
 .annc_item:not(.check) {
-  border-top: 5px solid var(--crimson);
-  box-shadow: 0px 0px 4px 0px var(--fadeWhite);
+  box-shadow: 1px 0px 2px 0px #353535;
 }
 .annc_item .img_details {
   width: 100%;
@@ -415,8 +452,10 @@ p span {
   gap: 10px;
 }
 .annc_item img {
-  width: 300px;
-  height: 300px;
+  max-width: 300px;
+  width: 100%;
+  max-height: 300px;
+  height: 100%;
   object-fit: cover;
   border-radius: var(--radius10);
 }
@@ -449,7 +488,150 @@ p span {
   place-items: center;
   gap: 10px;
 }
+
+.event_menu_add.active {
+  display: block;
+  opacity: 1;
+  transition: 200ms all ease;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: initial;
+  z-index: 9999;
+}
+.event_menu_add {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 560px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 16px;
+  z-index: -1;
+  box-shadow: 0px -1px 4px 0px #313131;
+  transform: translate(-50%, -50%) scale(1.1);
+  transition: 200ms all ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.event_menu_add header {
+  text-align: center;
+  font-size: 30px;
+}
+.event_menu_add .field {
+  width: 100%;
+  height: 60px;
+  padding: 5px;
+  margin-block: 5px;
+}
+.event_menu_add .field label {
+  font-size: 15px;
+  padding-bottom: 5px;
+}
+.event_menu_add .field_e {
+  width: 100%;
+  height: 180px;
+  padding: 10px;
+  margin-block: 5px;
+}
+.event_menu_add .field input,
+.event_menu_add .field select {
+  width: 100%;
+  height: 38px;
+  outline: none;
+  border-width: 0px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 7px;
+}
+.event_menu_add .field_e textarea {
+  width: 100%;
+  height: 150px;
+  padding: 5px;
+  outline: none;
+  border-width: 0px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+}
+
+.event_menu_add button {
+  width: 250px;
+  height: 45px;
+  background-color: crimson;
+  border-width: 0px;
+  border-radius: 10px;
+  font-size: 18px;
+  margin: 15px;
+  display: block;
+}
+.cate_view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.cate_view_e {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+input::placeholder {
+  color: #ddd;
+}
+table {
+  width: 99.5%;
+  margin: 10px auto;
+  border-collapse: collapse;
+  border-spacing: 4px;
+}
+table thead tr {
+  background-color: #1f1d1d;
+}
+
+table tr {
+  border-top: 1px solid #ddd;
+}
+table tbody tr:nth-child(even) {
+  background-color: rgba(0, 255, 255, 0.247);
+}
+table tbody tr:nth-child(odd) {
+  background-color: rgb(80, 80, 78);
+}
+table thead tr th,
+td {
+  padding: 20px;
+  text-transform: capitalize;
+  font-size: 16px;
+  text-align: left;
+}
+table tbody tr:hover {
+  background-color: #666464;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.skeleton {
+  display: none;
+}
+.skeleton.load {
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+.skeleton.load div {
+  width: 100%;
+  height: calc(100% / 3.9);
+  margin-block: 9px;
+  background-color: #080808;
+  border-radius: 10px;
+}
+a {
+  color: #fff;
+  text-decoration: none !important;
+}
+
 @media screen and (max-width: 1100px) {
+  .profile_main {
+    padding: 5px;
+  }
   main.animate {
     display: block;
   }
@@ -498,9 +680,31 @@ p span {
   aside.active {
     display: block;
   }
+  main.animate aside {
+    width: 320px;
+    position: fixed;
+  }
+  .payment_list .item {
+    display: block;
+    width: 95%;
+  }
 }
 
 @media screen and (max-width: 880px) {
+  table tr,
+  table h1 {
+    font-size: 17px;
+  }
+  table p {
+    font-size: 15px;
+  }
+  .event_menu_add {
+    width: 90% !important;
+    right: 5%;
+    height: calc(100% - 50px) !important;
+    overflow-y: auto;
+    border-radius: 5px !important;
+  }
   .profile_main .grid_sx {
     display: block;
   }
@@ -509,6 +713,7 @@ p span {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto 1fr;
     gap: 10px;
+    place-items: center;
   }
   .language .grid_select {
     grid-template-columns: repeat(3, 1fr);
@@ -528,8 +733,23 @@ p span {
     grid-row: 2;
   }
 }
-
+@media screen and (max-width: 700px) {
+  .profile .profile_status {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    place-items: center;
+  }
+  .flex.annc_item {
+    grid-template-columns: 1fr;
+    grid-template-rows: 300px 1fr;
+  }
+}
 @media screen and (max-width: 660px) {
+  .event_menu_add .cate_view {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
   .profile_main,
   .profile .personal_details {
     padding: 10px 10px;
@@ -543,15 +763,21 @@ p span {
 }
 @media screen and (max-width: 560px) {
   .payment_list .item h1 {
-    font-size: 16px;
+    font-size: 18px;
+    text-transform: uppercase;
   }
-  .payment_list .item,
+
   .tithe_item {
     width: 100%;
     display: grid;
-    grid-template-columns: auto 1fr 1fr;
-    grid-row: auto auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 2fr 1fr;
   }
+
+  .profile_main {
+    padding: 2px 2px;
+  }
+
   .tithe_item {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -564,7 +790,6 @@ p span {
   }
 }
 @media screen and (max-width: 500px) {
-  .profile_main,
   .profile .personal_details {
     padding: 10px 10px;
   }
@@ -581,9 +806,57 @@ p span {
 }
 
 @media screen and (max-width: 360px) {
+  .flex.annc_item {
+    display: block;
+  }
+  .container nav .user_details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container nav .user_details .item {
+    margin: 10px;
+  }
+  .container nav .user_details .item .counter {
+    right: -1px;
+  }
+  .container nav .user_details .item i {
+    font-size: 15px;
+  }
+  .flex.annc_item img {
+    max-height: 220px;
+    height: auto;
+  }
+  .flex.title {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .flex.title h1 {
+    font-size: 17px;
+  }
+  .flex.button {
+    flex-wrap: wrap;
+  }
+  .flex.button span,
+  .flex.button span i {
+    padding: 0px;
+    font-size: 13px !important;
+    text-align: left;
+  }
+
+  .div_content p {
+    font-size: 15px;
+  }
+
+  .profile .profile_status .cover {
+    margin-right: 0px;
+  }
   .profile_main,
   .profile .personal_details {
     padding: 10px 10px;
+  }
+  .personal_details_info {
+    width: 100%;
   }
   .profile .personal_details .info {
     grid-template-rows: auto auto auto;
@@ -592,17 +865,20 @@ p span {
   .profile .personal_details .info .feild:nth-child(3) {
     grid-column: 1;
   }
-  .profile .profile_status {
-    flex-direction: column;
-    justify-content: center;
-  }
+
   .status {
     grid-template-columns: auto;
     grid-template-rows: auto auto auto;
+    margin-top: 20px;
   }
   .status .checklist {
     grid-column: 1;
     grid-row: 3;
+    display: grid;
+    place-items: center;
+  }
+  .checklist .item {
+    width: auto;
   }
   .status header {
     grid-column: 1;
@@ -615,6 +891,9 @@ p span {
   aside {
     width: 100%;
   }
+  .payment_list .item button {
+    width: 95%;
+  }
 }
 
 @media screen and (max-width: 300px) {
@@ -626,9 +905,31 @@ p span {
   .welfare button {
     width: 100%;
   }
+  .event_menu_add .field,
+  .event_menu_add .field_e {
+    width: 95%;
+    margin: 0px auto;
+    padding: 0px;
+    padding-block: 10px;
+  }
+  .event_menu_add button {
+    width: 80%;
+    margin: 0px auto;
+  }
 }
 
 @media screen and (max-width: 200px) {
+  .profile_main header {
+    font-size: 16px;
+  }
+
+  .flex.title h1 {
+    font-size: 14px;
+  }
+  .div_content p {
+    font-size: 12px;
+  }
+
   .feild,
   section {
     overflow: hidden;
@@ -638,7 +939,6 @@ p span {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
   }
   .payment_list .item h1,
   .tithe_item p:nth-child(1) {
@@ -647,5 +947,12 @@ p span {
   .payment_list .item button,
   .welfare button {
     width: 100%;
+  }
+  .container nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 10x;
+    place-items: center;
   }
 }
