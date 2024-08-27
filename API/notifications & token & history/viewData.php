@@ -139,5 +139,17 @@ class viewData extends fetchData
         }
     }
 
+    public function DataHistory($name, $event, $Date, $sitename, $action)
+    {
+        $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
 
 }

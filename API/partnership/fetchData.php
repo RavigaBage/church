@@ -73,8 +73,12 @@ class fetchData extends DBH
                     $Error = json_encode('Fetching data encountered a problems');
                     exit($Error);
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
-                    $resultValidate = true;
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
                     exit(json_encode('Upload was a success'));
                 }
             }
@@ -129,8 +133,13 @@ class fetchData extends DBH
                         $Error = json_encode('Fetching data encountered a problems');
                         exit($Error);
                     } else {
-                        $exportData = 'Data entry was a success Page will refresh to display new data';
-                        $resultValidate = true;
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Partnership  Data Updated", $date, "Partnership  page dashboard Admin", "User Updated a data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         exit(json_encode('Upload was a success'));
                     }
                 } else {
@@ -269,6 +278,13 @@ class fetchData extends DBH
                     $Error = json_encode('deleting data encountered a problem');
                     exit($Error);
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     $resultCheck = true;
                     $exportData = json_encode('Item Deleted Successfully');
                 }
@@ -544,5 +560,31 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+    protected function history_set($name, $event, $Date, $sitename, $action)
+    {
+        $unique_id = rand(time(), 1002);
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$name' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        } else {
+            if ($stmt->rowCount() > 0) {
+                $data = $stmt->fetchAll();
+                $Username = $data[0]['Firstname'] . $data[0]['Othername'];
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES ('$unique_id','$Username','$event','$Date','$sitename','$action')");
+                if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit(json_encode($Error));
+                } else {
+
+                    return json_encode('Success');
+                }
+            }
+        }
+    }
+
 
 }

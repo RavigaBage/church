@@ -5,48 +5,65 @@ $val = 1;
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
 }
+if (isset($_SESSION['login_details'])) {
+    $login_details = $_SESSION['login_details'];
+    if (!isset($_SESSION['access_entryLog'])) {
+        $date = date('Y-m-d H:i:s');
+        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
+        $decode = json_decode($newquest);
+        if ($decode == 'Success') {
+            $condition = true;
+            $_SESSION['access_entryLog'] = true;
+        }
+    } else {
+        $condition = true;
+    }
+} else {
+    $condition = false;
+}
 
-?>
+if ($condition) {
+    ?>
 
-<div class="profile_main">
-    <div class="navigation Filter">
-        <div class="filter_wrapper mini">
-            <div style="height:40px;" class="flex">
-                <div class="ux_search_bar">
-                    <button id="searchBtn"><i class="fas fa-search" aria-hidden></i></button>
-                    <input type="search_data" type="search" id="searchInput" name="search"
-                        placeholder="...search here" />
+    <div class="profile_main">
+        <div class="navigation Filter">
+            <div class="filter_wrapper mini">
+                <div style="height:40px;" class="flex">
+                    <div class="ux_search_bar">
+                        <button id="searchBtn"><i class="fas fa-search" aria-hidden></i></button>
+                        <input type="search_data" type="search" id="searchInput" name="search"
+                            placeholder="...search here" />
+                    </div>
                 </div>
             </div>
+
         </div>
+        <div class="grid_sx tithebook">
+            <div class="profile">
+                <div class="tithe_list ancc_list">
+                    <?php
+                    $data = $newDataRequest->viewList();
+                    if ($data == 'No Records Available') {
+                        echo '<h1>Records of announcement Data is not available, upload them by clicking on the +new element</h1>';
+                    } else
+                        if ($data) {
+                            $destructure = json_decode($data);
+                            foreach ($destructure as $item) {
+                                $object = new stdClass();
+                                $object->id = $item->Id;
+                                $object->title = $item->name;
+                                $object->receiver = $item->receiver;
+                                $object->date = $item->date;
+                                $object->message = $item->message;
 
-    </div>
-    <div class="grid_sx tithebook">
-        <div class="profile">
-            <div class="tithe_list ancc_list">
-                <?php
-                $data = $newDataRequest->viewList();
-                if ($data == 'No Records Available') {
-                    echo '<h1>Records of announcement Data is not available, upload them by clicking on the +new element</h1>';
-                } else
-                    if ($data) {
-                        $destructure = json_decode($data);
-                        foreach ($destructure as $item) {
-                            $object = new stdClass();
-                            $object->id = $item->Id;
-                            $object->title = $item->name;
-                            $object->receiver = $item->receiver;
-                            $object->date = $item->date;
-                            $object->message = $item->message;
+                                $objectFile = json_encode($object);
+                                $status = "";
+                                if ($item->status == 'active') {
+                                    $status = 'active';
+                                }
 
-                            $objectFile = json_encode($object);
-                            $status = "";
-                            if ($item->status == 'active') {
-                                $status = 'active';
-                            }
-
-                            if ($item->file == " " || $item->file == "") {
-                                echo "<div class='annc_item'>
+                                if ($item->file == " " || $item->file == "") {
+                                    echo "<div class='annc_item'>
                             <div class='flex button'>
                                 <div class=' flex title'>
                                     <h1>" . $item->name . "</h1>
@@ -81,10 +98,10 @@ if (isset($_GET['page'])) {
                             </div>
         
                         </div>";
-                            } else {
+                                } else {
 
-                                echo
-                                    "
+                                    echo
+                                        "
                             <div class='annc_item'>
                                <div class='flex'>
                                 <img src='../API" . $item->file . "' alt='' />
@@ -124,85 +141,90 @@ if (isset($_GET['page'])) {
                                 </div>
                             </div>                       
                                 ";
+                                }
+
                             }
-
                         }
-                    }
 
-                ?>
+                    ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="event_menu_add">
-    <h1 class="error_information danger"></h1>
-    <header>Create Notification</header>
-    <form>
-        <div class="container_event">
-            <div class="field">
-                <label>Tile</label>
-                <input type="text" name="name" />
+    <div class="event_menu_add">
+        <h1 class="error_information danger"></h1>
+        <header>Create Notification</header>
+        <form>
+            <div class="container_event">
+                <div class="field">
+                    <label>Tile</label>
+                    <input type="text" name="name" />
+                </div>
+                <div class="field_e">
+                    <label>Enter message</label>
+                    <textarea name="message">...</textarea>
+                </div>
+                <div class="field">
+                    <label>Add file</label>
+                    <input type="file" name="file" />
+                </div>
+
+                <div class="field">
+                    <label>Send-to</label>
+                    <input type="text" name="receiver" />
+                </div>
+
+                <div class="field">
+                    <label>Schedule Update</label>
+                    <input type="date" name="date" />
+                </div>
+                <input hidden name="delete_key" />
+                <button>Record message</button>
             </div>
-            <div class="field_e">
-                <label>Enter message</label>
-                <textarea name="message">...</textarea>
-            </div>
-            <div class="field">
-                <label>Add file</label>
-                <input type="file" name="file" />
-            </div>
+        </form>
+    </div>
 
-            <div class="field">
-                <label>Send-to</label>
-                <input type="text" name="receiver" />
-            </div>
-
-            <div class="field">
-                <label>Schedule Update</label>
-                <input type="date" name="date" />
-            </div>
-            <input hidden name="delete_key" />
-            <button>Record message</button>
-        </div>
-    </form>
-</div>
-
-<div class="add_event" data-menu="event">
-    <i>+</i>
-    <p>New</p>
-</div>
+    <div class="add_event" data-menu="event">
+        <i>+</i>
+        <p>New</p>
+    </div>
 
 
-<div class="page_sys">
+    <div class="page_sys">
 
-    <header>
-        <?php
-        $total = $newDataRequest->HistoryPages();
-        if ((round($total / 6)) > 1) {
-            echo 'Pages:';
-        }
-        ?>
-        <div class="pages">
+        <header>
             <?php
-            $loop = 0;
+            $total = $newDataRequest->HistoryPages();
             if ((round($total / 6)) > 1) {
-                if (($total / 6) > 6) {
-                    $loop = 6;
-                } else {
-                    $loop = ($total / 6);
-                }
-                for ($i = 0; $i < $loop; $i++) {
-                    $class = "";
-                    if ($i == $val - 1) {
-                        $class = 'active';
-                    }
-                    echo '<div class="' . $class . '">' . ($i + 1) . '</div>';
-                }
-                if ($loop == 6) {
-                    echo '<span>......</span><div>' . $total . '</div>';
-                }
+                echo 'Pages:';
             }
             ?>
-        </div>
-    </header>
-</div>
+            <div class="pages">
+                <?php
+                $loop = 0;
+                if ((round($total / 6)) > 1) {
+                    if (($total / 6) > 6) {
+                        $loop = 6;
+                    } else {
+                        $loop = ($total / 6);
+                    }
+                    for ($i = 0; $i < $loop; $i++) {
+                        $class = "";
+                        if ($i == $val - 1) {
+                            $class = 'active';
+                        }
+                        echo '<div class="' . $class . '">' . ($i + 1) . '</div>';
+                    }
+                    if ($loop == 6) {
+                        echo '<span>......</span><div>' . $total . '</div>';
+                    }
+                }
+                ?>
+            </div>
+        </header>
+    </div>
+    <?php
+} else {
+    echo "<header>Sorry, you are not allowed access to this page, please contact the administrator</header>";
+}
+?>

@@ -105,6 +105,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problems';
                     exit(json_encode($Error));
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Calender  Data Upload", $date, "Calender  page dashboard Admin", "User Uploaded a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     $exportData = json_encode('success');
                     $resultValidate = true;
                 }
@@ -189,6 +196,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problems';
                     exit(json_encode($Error));
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Calender  Data Update", $date, "Calender  page dashboard Admin", "User Updated a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     $exportData = $EventName;
                     $resultValidate = true;
                 }
@@ -229,6 +243,12 @@ class fetchData extends DBH
                     $Error = 'deleting data encountered a problem';
                     exit(json_encode($Error));
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Calender Data delete", $date, "Calender page dashboard Admin", "User deleted a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
                     $resultCheck = true;
                     $exportData = 'success';
                 }
@@ -301,6 +321,31 @@ class fetchData extends DBH
 
         return $exportData;
 
+    }
+    protected function history_set($name, $event, $Date, $sitename, $action)
+    {
+        $unique_id = rand(time(), 1002);
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$name' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        } else {
+            if ($stmt->rowCount() > 0) {
+                $data = $stmt->fetchAll();
+                $Username = $data[0]['Firstname'] . $data[0]['Othername'];
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES ('$unique_id','$Username','$event','$Date','$sitename','$action')");
+                if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit(json_encode($Error));
+                } else {
+
+                    return json_encode('Success');
+                }
+            }
+        }
     }
 
 }

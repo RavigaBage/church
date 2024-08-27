@@ -89,6 +89,12 @@ class fetchData extends DBH
                         $Error = 'Fetching data encountered a problem';
                         exit(json_encode($Error));
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Tithe Data deleted", $date, "Tithe page dashboard Admin", "User add a tithe data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $exportData = 'upload was successful';
                     }
                 }
@@ -103,8 +109,6 @@ class fetchData extends DBH
             }
         }
     }
-
-
     protected function Tithe_Records_update_data($unique_id, $Medium_payment, $description, $amount, $Date, $month, $year)
     {
         $resultCheck = true;
@@ -142,7 +146,12 @@ class fetchData extends DBH
                         $Error = 'Fetching data encountered a problem';
                         exit(json_encode($Error));
                     } else {
-
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Tithe Data update", $date, "Tithe page dashboard Admin", "User Update a tithe data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $exportData = 'Data entry was a success';
                     }
 
@@ -194,6 +203,13 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Tithe Data deleted", $date, "Tithe page dashboard Admin", "User deleted a tithe data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -248,6 +264,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problem';
                     exit($Error);
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Offertory Data upload", $date, "Offertory page dashboard Admin", "User added an Offertory data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     $exportData = 'Upload was a success';
                 }
             }
@@ -289,6 +312,12 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problem';
                     exit($Error);
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Offertory Data Updated", $date, "Offertory page dashboard Admin", "User Updated an Offertory data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
                     $exportData = 'Upload was a success';
                 }
             }
@@ -328,6 +357,13 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Offertory Data delete", $date, "Offertory page dashboard Admin", "User deleted an Offertory data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -449,6 +485,12 @@ class fetchData extends DBH
                     )  ");
                     if ($stmt->execute()) {
                         $exportData = 'Data entry was a success Page will refresh to display new data';
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Dues Data Upload", $date, "Dues page dashboard Admin", "User Uploaded an Dues data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         exit(json_encode('Upload was a success'));
                     } else {
                         $Error = 'An Unexpected error occurred whiles creating pay list column';
@@ -497,7 +539,14 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problem';
                     exit(json_encode($Error));
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
+
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Dues Data Update", $date, "Dues page dashboard Admin", "User Updated an Dues data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     exit(json_encode('Upload was a success'));
                 }
             }
@@ -539,7 +588,12 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit(json_encode($Error));
                     } else {
-                        $resultCheck = true;
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Dues Data daleted", $date, "Dues page dashboard Admin", "User daleted an Dues data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $exportData = 'Item Deleted Successfully';
                         exit(json_encode($exportData));
                     }
@@ -596,10 +650,15 @@ class fetchData extends DBH
                     `balance` varchar(255)
                     )  ");
                     if ($stmt->execute()) {
-                        $exportData = 'Data entry was a success Page will refresh to display new data';
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Account Data Upload", $date, "Account page dashboard Admin", "User Uploaded an Account data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         exit('Upload was a success');
                     } else {
-                        print_r($stmt->errorInfo());
                         $Error = 'An Unexpected error occurred whiles creating pay list column';
                         exit($Error);
                     }
@@ -655,7 +714,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problem';
                     exit($Error);
                 } else {
-                    $exportData = 'Data entry was a success Page will refresh to display new data';
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Account Data Update", $date, "Account page dashboard Admin", "User Updated an Account data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     exit('Upload was a success');
                 }
 
@@ -702,6 +767,13 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Account Data deleted", $date, "Account page dashboard Admin", "User deleted an Account data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -746,6 +818,13 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit($Error);
             } else {
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Account Data Updated", $date, "Account page dashboard Admin", "User Updated an Account data $acc_name");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
+
                 $exportData = 'Data entry was a success Page will refresh to display new data';
                 exit($exportData);
             }
@@ -791,6 +870,13 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Account Data deleted", $date, "Account page dashboard Admin", "User deleted an Account data $form_name");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -837,6 +923,13 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit($Error);
             } else {
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Account Data Upload", $date, "Account page dashboard Admin", "User Uploaded an Account data $acc_name");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
+
                 $exportData = 'Data entry was a success Page will refresh to display new data';
                 exit($exportData);
 
@@ -910,6 +1003,12 @@ class fetchData extends DBH
                             $Error = 'Error: encountered a problem while adding data';
                             exit(json_encode($Error));
                         } else {
+                            $date = date('Y-m-d H:i:s');
+                            $namer = $_SESSION['login_details'];
+                            $historySet = $this->history_set($namer, "Transaction Data Upload", $date, "Transaction page dashboard Admin", "User Uploaded anTransaction data ");
+                            if (json_decode($historySet) != 'Success') {
+                                $exportData = 'success';
+                            }
                             $exportData = 'Upload was a success';
                         }
 
@@ -959,7 +1058,13 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit(json_encode($Error));
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Transaction Data updated", $date, "Transaction page dashboard Admin", "User updated anTransaction data ");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
+
                 exit(json_encode('Update was a success'));
 
             }
@@ -1005,6 +1110,13 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit(json_encode($Error));
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Transaction Data deleted", $date, "Transaction page dashboard Admin", "User deleted anTransaction data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -1129,6 +1241,12 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $ExportSendMain = new stdClass();
+            $date = date('Y-m-d H:i:s');
+            $namer = $_SESSION['login_details'];
+            $historySet = $this->history_set($namer, "Transaction Data Export", $date, "Transaction page dashboard Admin", "User Exported Transaction data ");
+            if (json_decode($historySet) != 'Success') {
+                $exportData = 'success';
+            }
             foreach ($result as $data) {
                 $ObjectInfo = new stdClass();
                 $ExportSend = new stdClass();
@@ -1188,15 +1306,15 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Budget  Data Upload", $date, "Budget  page dashboard Admin", "User Uploaded a Budget  data ");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
                 exit('Upload was a success');
 
             }
-
-
-
-
-
             if ($resultCheck) {
                 return $exportData;
             } else {
@@ -1234,14 +1352,15 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Budget  Data Update", $date, "Budget  page dashboard Admin", "User Updated a Budget  data ");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
                 exit('Upload was a success');
 
             }
-
-
-
-
 
             if ($resultCheck) {
                 return $exportData;
@@ -1279,6 +1398,12 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Budget  Data Update", $date, "Budget  page dashboard Admin", "User Updated a Budget  data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -1325,7 +1450,12 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit(json_encode($Error));
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Budget  Data Upload", $date, "Budget  page dashboard Admin", "User Uploaded a Budget  data ");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
                 exit(json_encode('Upload was a success'));
 
             }
@@ -1367,6 +1497,12 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problem';
                 exit(json_encode($Error));
             } else {
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Budget  Data Update", $date, "Budget  page dashboard Admin", "User Updated a Budget  data ");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
                 exit(json_encode('Upload was a success'));
 
             }
@@ -1404,6 +1540,14 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Budget  Data delete", $date, "Budget  page dashboard Admin", "User deleted a Budget  data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
+
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -1460,6 +1604,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encountered a problem';
                     exit(json_encode($Error));
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Dues  Data Update", $date, "Dues  page dashboard Admin", "User Updated a Dues  data ");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     $exportData = 'Data entry was a success';
                     exit(json_encode($exportData));
                 }
@@ -1524,6 +1675,12 @@ class fetchData extends DBH
                         $Error = 'Fetching data encountered a problem';
                         exit(json_encode($Error));
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Dues  Data Update", $date, "Dues  page dashboard Admin", "User Updated a Dues  data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $exportData = 'Data entry was a success Page will refresh to display new data';
                         exit(json_encode($exportData));
                     }
@@ -1567,6 +1724,12 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Dues  Data delete", $date, "Dues  page dashboard Admin", "User deleted a Dues  data ");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -1993,6 +2156,13 @@ class fetchData extends DBH
                 $Error = 'deleting data encountered a problem';
                 exit($Error);
             } else {
+                $date = date('Y-m-d H:i:s');
+                $namer = $_SESSION['login_details'];
+                $historySet = $this->history_set($namer, "Budget  Data Update", $date, "Budget  page dashboard Admin", "User Updated a Dues  data $database_name");
+                if (json_decode($historySet) != 'Success') {
+                    $exportData = 'success';
+                }
+
                 $resultCheck = true;
                 $exportData = 'Item Deleted Successfully';
             }
@@ -2376,6 +2546,7 @@ class fetchData extends DBH
 
     public function Pay_list_info_update($id)
     {
+
         $newDate = date('l j \of F Y h:i:s A');
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` where `unique_id`='$id'");
         if (!$stmt->execute()) {
@@ -2400,6 +2571,13 @@ class fetchData extends DBH
                     $Error = 'Fetching data encounted a problem';
                     return $Error;
                 } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Payment List  Data Update", $date, "Payment List  page dashboard Admin", "User Updated a Dues  data $name");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+
                     return json_encode('updated');
                 }
 
@@ -3108,6 +3286,13 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $ExportSendMain = new stdClass();
+            $date = date('Y-m-d H:i:s');
+            $namer = $_SESSION['login_details'];
+            $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported tithe  data");
+            if (json_decode($historySet) != 'Success') {
+                $exportData = 'success';
+            }
+
             foreach ($result as $data) {
                 $namer = $data['unique_id'];
                 $name = $data['name'];
@@ -3332,6 +3517,12 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $ExportSendMain = new stdClass();
+            $date = date('Y-m-d H:i:s');
+            $namer = $_SESSION['login_details'];
+            $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported a Offertory  data");
+            if (json_decode($historySet) != 'Success') {
+                $exportData = 'success';
+            }
             foreach ($result as $data) {
                 $name = $this->validate($data['event']);
                 $amount = $this->validate($data['amount']);
@@ -3368,6 +3559,14 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $ExportSendMain = new stdClass();
+
+            $date = date('Y-m-d H:i:s');
+            $namer = $_SESSION['login_details'];
+            $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported a Dues  data");
+            if (json_decode($historySet) != 'Success') {
+                $exportData = 'success';
+            }
+
             foreach ($result as $data) {
                 $name = $this->validate($data['name']);
                 $amount = $this->validate($data['amount']);
@@ -3390,6 +3589,31 @@ class fetchData extends DBH
             return $exportData;
         } else {
             return $resultCheck;
+        }
+    }
+    protected function history_set($name, $event, $Date, $sitename, $action)
+    {
+        $unique_id = rand(time(), 1002);
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$name' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        } else {
+            if ($stmt->rowCount() > 0) {
+                $data = $stmt->fetchAll();
+                $Username = $data[0]['Firstname'] . $data[0]['Othername'];
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES ('$unique_id','$Username','$event','$Date','$sitename','$action')");
+                if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit(json_encode($Error));
+                } else {
+
+                    return json_encode('Success');
+                }
+            }
         }
     }
 }

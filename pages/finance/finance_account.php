@@ -1,25 +1,44 @@
 <?php
-include_once ('../../API/finance/autoloader.php');
+session_start();
+include_once('../../API/finance/autoloader.php');
 $newDataRequest = new viewData();
 if (isset($_GET['data_page'])) {
     $num = $_GET['data_page'];
 } else {
     $num = 1;
 }
-?>
+if (isset($_SESSION['login_details'])) {
+    $login_details = $_SESSION['login_details'];
+    if (!isset($_SESSION['access_entryLog'])) {
+        $date = date('Y-m-d H:i:s');
+        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
+        $decode = json_decode($newquest);
+        if ($decode == 'Success') {
+            $condition = true;
+            $_SESSION['access_entryLog'] = true;
+        }
+    } else {
+        $condition = true;
+    }
+} else {
+    $condition = false;
+}
 
-<div class="part_1">
-    <div class="middle">
-        <div class="cards">
-            <?php
-            $data = json_decode($newDataRequest->Accounts_list_Card());
-            if ($data != "" || $data != "Fetch data encountered an error") {
-                foreach ($data as $item) {
-                    $amount = $item->amount;
-                    $modified = $item->modified;
-                    $name = $item->name;
+if ($condition) {
+    ?>
 
-                    echo '<div class="card">
+    <div class="part_1">
+        <div class="middle">
+            <div class="cards">
+                <?php
+                $data = json_decode($newDataRequest->Accounts_list_Card());
+                if ($data != "" || $data != "Fetch data encountered an error") {
+                    foreach ($data as $item) {
+                        $amount = $item->amount;
+                        $modified = $item->modified;
+                        $name = $item->name;
+
+                        echo '<div class="card">
                         <div class="top">
                             <div class="left">
                                 <img src="../images/BTC.png" alt="card1-1">
@@ -47,63 +66,63 @@ if (isset($_GET['data_page'])) {
                             </div>
                         </div>
                     </div>';
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
+            <!-- monthly report -->
+            <div class="monthly-report">
+                <div class="report">
+                    <h3>Income</h3>
+                    <div>
+                        <details>
+                            <h1>$19,230</h1>
+                            <h4 class="success">+4.6%</h4>
+                        </details>
+                        <p class="text-muted">Compared to $18,384 last month</p>
+                    </div>
+                </div>
+                <div class="report">
+                    <h3>Expenses</h3>
+                    <div>
+                        <details>
+                            <h1>$9,113</h1>
+                            <h4 class="danger">-6.2%</h4>
+                        </details>
+                        <p class="text-muted">Compared to $9,715 last month</p>
+                    </div>
+                </div>
+                <div class="report">
+                    <h3>Cashback</h3>
+                    <div>
+                        <details>
+                            <h1>$4,390</h1>
+                            <h4 class="success">+2.9%</h4>
+                        </details>
+                        <p class="text-muted">Compared to $4,266 last month</p>
+                    </div>
+                </div>
+                <div class="report">
+                    <h3>Income</h3>
+                    <div>
+                        <details>
+                            <h1>$86,374</h1>
+                            <h4 class="danger">-5.2%</h4>
+                        </details>
+                        <p class="text-muted">Compared to $91,111 last month</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- monthly report -->
-        <div class="monthly-report">
-            <div class="report">
-                <h3>Income</h3>
-                <div>
-                    <details>
-                        <h1>$19,230</h1>
-                        <h4 class="success">+4.6%</h4>
-                    </details>
-                    <p class="text-muted">Compared to $18,384 last month</p>
-                </div>
-            </div>
-            <div class="report">
-                <h3>Expenses</h3>
-                <div>
-                    <details>
-                        <h1>$9,113</h1>
-                        <h4 class="danger">-6.2%</h4>
-                    </details>
-                    <p class="text-muted">Compared to $9,715 last month</p>
-                </div>
-            </div>
-            <div class="report">
-                <h3>Cashback</h3>
-                <div>
-                    <details>
-                        <h1>$4,390</h1>
-                        <h4 class="success">+2.9%</h4>
-                    </details>
-                    <p class="text-muted">Compared to $4,266 last month</p>
-                </div>
-            </div>
-            <div class="report">
-                <h3>Income</h3>
-                <div>
-                    <details>
-                        <h1>$86,374</h1>
-                        <h4 class="danger">-5.2%</h4>
-                    </details>
-                    <p class="text-muted">Compared to $91,111 last month</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="right">
-        <table id="account_chart">
+        <div class="right">
+            <table id="account_chart">
 
-            <?php
-            $data = json_decode($newDataRequest->Accounts_list_Data());
-            if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
-                echo "<header class='danger'>AN ERROR OCCURED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
-            } else {
-                echo "<thead>
+                <?php
+                $data = json_decode($newDataRequest->Accounts_list_Data());
+                if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
+                    echo "<header class='danger'>AN ERROR OCCURED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
+                } else {
+                    echo "<thead>
                     <tr>
                        <th>Description</th>
                         <th>Date</th>
@@ -113,29 +132,29 @@ if (isset($_GET['data_page'])) {
                         <th>Balance</th>
                     </tr>
                 </thead><tbody>";
-                foreach ($data as $item) {
+                    foreach ($data as $item) {
 
-                    $description = $item->description;
-                    $amount = $item->amount;
-                    $balance = $item->balance;
-                    $percentage = $item->percentage;
-                    $category = $item->category;
-                    $date = $item->date;
-                    $account = $item->account;
+                        $description = $item->description;
+                        $amount = $item->amount;
+                        $balance = $item->balance;
+                        $percentage = $item->percentage;
+                        $category = $item->category;
+                        $date = $item->date;
+                        $account = $item->account;
 
-                    if ($category == 'expenses') {
-                        $item = "<div class='out_btn'><div></div>Out</div>";
-                    } else {
-                        $item = "<div class='in_btn'><div></div>In</div>";
-                    }
+                        if ($category == 'expenses') {
+                            $item = "<div class='out_btn'><div></div>Out</div>";
+                        } else {
+                            $item = "<div class='in_btn'><div></div>In</div>";
+                        }
 
-                    if (intval($percentage) <= 0) {
-                        $item_2 = "<div class='danger'>" . $percentage . "%</div>";
-                    } else {
-                        $item_2 = "<div class='success'>+ " . $percentage . "%</div>";
-                    }
+                        if (intval($percentage) <= 0) {
+                            $item_2 = "<div class='danger'>" . $percentage . "%</div>";
+                        } else {
+                            $item_2 = "<div class='success'>+ " . $percentage . "%</div>";
+                        }
 
-                    echo "<tr>
+                        echo "<tr>
                     <td>" . $account . " " . $description . "</td>
                     <td>" . $date . "</td>
                     <td>" . $item . "</td>
@@ -143,10 +162,15 @@ if (isset($_GET['data_page'])) {
                     <td>" . $amount . "</td>
                     <td>" . $balance . "</td>
                 </tr>";
+                    }
+                    echo "</tbody>";
                 }
-                echo "</tbody>";
-            }
-            ?>
-        </table>
+                ?>
+            </table>
+        </div>
     </div>
-</div>
+    <?php
+} else {
+    echo "<header>Sorry, you are not allowed on this page, please contact your administrator</header>";
+}
+?>

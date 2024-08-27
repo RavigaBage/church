@@ -61,7 +61,7 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
       description: "404 page directions",
     },
     "/": {
-      template: "home.txt",
+      template: "home.php",
       title: "404 | page not found",
       description: "404 page directions",
     },
