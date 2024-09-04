@@ -1,13 +1,25 @@
+@font-face {
+  font-family: redHart;
+  src: url("../font/RedHatText-VariableFont_wght.ttf");
+}
 *,
 html {
   margin: 0px;
   padding: 0px;
+}
+:root {
+  --primary-color: #1a2c50;
+  --secondary-color: #f4f7fe;
+  --text-dark: #333333;
+  --text-light: #767268;
+  --extra-light: #ffffff;
 }
 body {
   width: 100%;
   background-color: #000;
   color: #fff;
   overflow: hidden !important;
+  font-family: redHart;
 }
 section {
   width: 100%;
@@ -454,78 +466,115 @@ h3 {
   font-size: 120px;
   z-index: 1;
 }
-.rules_believes {
-  width: 100%;
-  height: 100%;
-  background: url("../JoinWorkikBackground.webp");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.rules_believes header {
-  font-size: 40px;
-  font-family: d2;
+
+.section__container {
+  width: 90%;
+  margin: 0px auto;
+  margin: auto;
+  padding: 1rem;
   text-align: center;
 }
-.rules_believes .pillars {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
 
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
+.section__container .header {
+  margin-bottom: 2rem;
 }
-.rules_believes .pillars .p1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  margin-top: 20px;
-  overflow: hidden;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0px 0px 4px 0px #ddd;
+
+.section__container .header p {
+  letter-spacing: 2px;
+  font-size: 1rem;
+  font-weight: 500;
 }
-.rules_believes .pillars .p1 .h1 {
-  width: 100px;
-  display: block;
-  font-size: 60px;
-  writing-mode: vertical-lr;
-  word-wrap: break-word;
-  font-family: d2;
-  color: rgb(238, 236, 236);
+
+.section__container .header h1 {
+  font-family: "Noto Serif", serif;
+  font-size: 2rem;
+  font-weight: 900;
 }
-.rules_believes .pillars .p1 .data {
-  width: calc(100% - 150px);
-  height: 100%;
-}
-.rules_believes .pillars .p1 .data div {
+.testimonials__grid,
+.swiper_class {
   width: 100%;
-  height: 40px;
-  padding: 10px;
-  background: #081481;
-  border-radius: 10px;
+}
+.testimonials__grid .swiper-wrapper {
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  overflow: hidden;
+  margin-bottom: 2rem;
 }
-.rules_believes .pillars .p1 .data div p {
-  width: 90%;
-  font-size: 18px;
-  padding: 10px;
+
+.section__container .card {
+  width: 330px;
+  height: 200px;
+  padding: 2rem;
+  display: grid;
+  gap: 1rem;
+  background-color: var(--extra-light);
+  border-radius: 5px;
+  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
-.rules_believes .pillars .p1 .data div i {
-  width: 10%;
-  color: #fff;
-  transition: all 0.3s ease;
+
+.section__container .card i {
+  font-size: 2.5rem;
+  color: gold;
 }
-.rules_believes .pillars .p1 .data div i.inverse {
-  transform: rotate(180deg);
+
+.section__container .card p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
 }
+
+.section__container .card hr {
+  width: 40px;
+  margin: auto;
+  color: var(--text-light);
+}
+
+.section__container .card img {
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  border-radius: 100%;
+  border: 1px solid var(--primary-color);
+}
+
+.section__container .card .name {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-light);
+  transition: 0.3s;
+}
+
+.section__container .card .name:hover {
+  color: var(--primary-color);
+}
+
+.footer h4 {
+  font-family: "Noto Serif", serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.footer p {
+  max-width: 450px;
+  margin: auto;
+  font-size: 0.9rem;
+  line-height: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.footer button {
+  padding: 1rem 2rem;
+  outline: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--extra-light);
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .gallary {
   width: 100%;
   height: 100svh;
@@ -538,15 +587,12 @@ h3 {
   scroll-behavior: smooth;
   scrollbar-width: 50px;
 }
-.rules_believes .pillars::-webkit-scrollbar,
 .gallary .line_work::-webkit-scrollbar {
   width: 10px;
 }
-.rules_believes .pillars::-webkit-scrollbar-thumb,
 .gallary .line_work::-webkit-scrollbar-thumb {
   background: teal;
 }
-.rules_believes .pillars::-webkit-scrollbar-track,
 .gallary .line_work::-webkit-scrollbar-track {
   background: #000;
 }
@@ -744,6 +790,7 @@ h3 {
     display: block;
   }
 }
+
 @media screen and (max-width: 840px) {
   .h4_title {
     font-size: 30px;
@@ -778,11 +825,15 @@ h3 {
   }
 }
 @media screen and (max-width: 681px) {
+  .section__container {
+    margin-left: 2%;
+    padding: 0em;
+  }
   .gallary .line_work .images {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 660px) {
   .team_details .frame {
     width: 190px;
     height: 190px;
@@ -810,27 +861,18 @@ h3 {
   }
 }
 @media screen and (max-width: 520px) {
-  .rules_believes .pillars .p1 .data div {
-    padding: 0px;
-    padding-block: 10px;
+  .section__container .card {
+    width: 00px;
+    height: 200px;
   }
-  .rules_believes .pillars .p1 {
-    width: 100%;
-    display: block;
+  .addinfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
   }
-  .rules_believes .pillars .p1 .data {
-    width: 95%;
-    margin: 0 auto;
-    height: 100%;
-  }
-  .rules_believes .pillars .p1 .h1 {
-    width: 100%;
-    display: block;
-    font-size: 30px;
-    writing-mode: horizontal-tb;
-    word-wrap: none;
-    font-family: d2;
-    color: rgb(238, 236, 236);
+  .addinfo button {
+    width: 90%;
+    font-size: 16px;
   }
 
   .gallary .line_work .images {
@@ -838,6 +880,10 @@ h3 {
   }
 }
 @media screen and (max-width: 400px) {
+  .section__container .card {
+    width: 200px;
+    height: 200px;
+  }
   .Slider-item.main .Slider-caption {
     width: 98%;
     margin: 0 auto;
@@ -866,4 +912,7 @@ section:nth-child(0).fp-is-overflow .fp-overflow.fp-auto-height-responsive,
 .fp-is-overflow .fp-overflow.fp-auto-height,
 .fp-is-overflow > .fp-overflow {
   overflow-y: hidden !important;
+}
+#fp-nav.fp-right {
+  background-color: #0e0d0d8e;
 }

@@ -1,4 +1,5 @@
 <?php
+namespace Membership;
 class DBH
 {
     private $host = 'localhost';
@@ -9,10 +10,10 @@ class DBH
     {
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -47,8 +48,8 @@ class fetchData extends DBH
         }
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Firstname`=? AND  `Othername`=?");
-            $stmt->bindParam('1', $Firstname, PDO::PARAM_STR);
-            $stmt->bindParam('2', $Othername, PDO::PARAM_STR);
+            $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 print_r($stmt->errorInfo());
                 $stmt = null;
@@ -90,23 +91,23 @@ class fetchData extends DBH
                 if ($stmt->execute()) {
                     $unique_id = rand(time(), 1999);
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`users`(`unique_id`, `Firstname`, `Othername`, `Age`, `Position`, `contact`, `email`, `password`, `image`, `Address`, `Baptism`, `membership_start`, `username`, `gender`, `occupation`, `About`,`status`)VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                    $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $Firstname, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $Othername, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $Age, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $Position, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $contact, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $email, PDO::PARAM_STR);
-                    $stmt->bindParam('8', $password, PDO::PARAM_STR);
-                    $stmt->bindParam('9', $Image, PDO::PARAM_STR);
-                    $stmt->bindParam('10', $Address, PDO::PARAM_STR);
-                    $stmt->bindParam('11', $Baptism, PDO::PARAM_STR);
-                    $stmt->bindParam('12', $membership_start, PDO::PARAM_STR);
-                    $stmt->bindParam('13', $username, PDO::PARAM_STR);
-                    $stmt->bindParam('14', $gender, PDO::PARAM_STR);
-                    $stmt->bindParam('15', $occupation, PDO::PARAM_STR);
-                    $stmt->bindParam('16', $About, PDO::PARAM_STR);
-                    $stmt->bindParam('17', $status, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $Firstname, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $Othername, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $Age, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $Position, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $contact, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $email, \PDO::PARAM_STR);
+                    $stmt->bindParam('8', $password, \PDO::PARAM_STR);
+                    $stmt->bindParam('9', $Image, \PDO::PARAM_STR);
+                    $stmt->bindParam('10', $Address, \PDO::PARAM_STR);
+                    $stmt->bindParam('11', $Baptism, \PDO::PARAM_STR);
+                    $stmt->bindParam('12', $membership_start, \PDO::PARAM_STR);
+                    $stmt->bindParam('13', $username, \PDO::PARAM_STR);
+                    $stmt->bindParam('14', $gender, \PDO::PARAM_STR);
+                    $stmt->bindParam('15', $occupation, \PDO::PARAM_STR);
+                    $stmt->bindParam('16', $About, \PDO::PARAM_STR);
+                    $stmt->bindParam('17', $status, \PDO::PARAM_STR);
 
 
                     if (!$stmt->execute()) {
@@ -163,8 +164,8 @@ class fetchData extends DBH
         }
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Firstname`=? AND `Othername`=?");
-            $stmt->bindParam('1', $Firstname, PDO::PARAM_STR);
-            $stmt->bindParam('2', $Othername, PDO::PARAM_STR);
+            $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
@@ -212,34 +213,34 @@ class fetchData extends DBH
 
 
 
-                    $stmt->bindParam('1', $Firstname, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $Othername, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $Age, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $Position, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $contact, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $email, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $password, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $Age, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $Position, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $contact, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $email, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $password, \PDO::PARAM_STR);
                     if ($Image == '') {
-                        $stmt->bindParam('8', $Address, PDO::PARAM_STR);
-                        $stmt->bindParam('9', $Baptism, PDO::PARAM_STR);
-                        $stmt->bindParam('10', $membership_start, PDO::PARAM_STR);
-                        $stmt->bindParam('11', $username, PDO::PARAM_STR);
-                        $stmt->bindParam('12', $gender, PDO::PARAM_STR);
-                        $stmt->bindParam('13', $occupation, PDO::PARAM_STR);
-                        $stmt->bindParam('14', $About, PDO::PARAM_STR);
-                        $stmt->bindParam('15', $status, PDO::PARAM_STR);
-                        $stmt->bindParam('16', $unique_id, PDO::PARAM_STR);
+                        $stmt->bindParam('8', $Address, \PDO::PARAM_STR);
+                        $stmt->bindParam('9', $Baptism, \PDO::PARAM_STR);
+                        $stmt->bindParam('10', $membership_start, \PDO::PARAM_STR);
+                        $stmt->bindParam('11', $username, \PDO::PARAM_STR);
+                        $stmt->bindParam('12', $gender, \PDO::PARAM_STR);
+                        $stmt->bindParam('13', $occupation, \PDO::PARAM_STR);
+                        $stmt->bindParam('14', $About, \PDO::PARAM_STR);
+                        $stmt->bindParam('15', $status, \PDO::PARAM_STR);
+                        $stmt->bindParam('16', $unique_id, \PDO::PARAM_STR);
                     } else {
-                        $stmt->bindParam('8', $image, PDO::PARAM_STR);
-                        $stmt->bindParam('9', $Address, PDO::PARAM_STR);
-                        $stmt->bindParam('10', $Baptism, PDO::PARAM_STR);
-                        $stmt->bindParam('11', $membership_start, PDO::PARAM_STR);
-                        $stmt->bindParam('12', $username, PDO::PARAM_STR);
-                        $stmt->bindParam('13', $gender, PDO::PARAM_STR);
-                        $stmt->bindParam('14', $occupation, PDO::PARAM_STR);
-                        $stmt->bindParam('15', $About, PDO::PARAM_STR);
-                        $stmt->bindParam('16', $status, PDO::PARAM_STR);
-                        $stmt->bindParam('17', $unique_id, PDO::PARAM_STR);
+                        $stmt->bindParam('8', $image, \PDO::PARAM_STR);
+                        $stmt->bindParam('9', $Address, \PDO::PARAM_STR);
+                        $stmt->bindParam('10', $Baptism, \PDO::PARAM_STR);
+                        $stmt->bindParam('11', $membership_start, \PDO::PARAM_STR);
+                        $stmt->bindParam('12', $username, \PDO::PARAM_STR);
+                        $stmt->bindParam('13', $gender, \PDO::PARAM_STR);
+                        $stmt->bindParam('14', $occupation, \PDO::PARAM_STR);
+                        $stmt->bindParam('15', $About, \PDO::PARAM_STR);
+                        $stmt->bindParam('16', $status, \PDO::PARAM_STR);
+                        $stmt->bindParam('17', $unique_id, \PDO::PARAM_STR);
                     }
 
 
@@ -301,7 +302,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 if ($stmt->execute()) {
                     $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-                    $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                    $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                     if (!$stmt1->execute()) {
                         $stmt1 = null;
                         $Error = json_encode('deleting data encountered a problem');
@@ -353,7 +354,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
@@ -372,8 +373,8 @@ class fetchData extends DBH
                 $About = $data['About'];
                 $status = $data['Status'];
 
-                $objectClass = new stdClass();
-                $ExportSend = new stdClass();
+                $objectClass = new \stdClass();
+                $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->Oname = $Firstname;
                 $objectClass->Fname = $Othername;
@@ -423,6 +424,61 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+
+    protected function member_view_position($filter)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Position` like '%$filter%' ORDER BY `id` DESC limit 50");
+
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSend = new \stdClass();
+            foreach ($result as $data) {
+                $ExportSendmin = new \stdClass();
+                $image = $data['image'];
+                $id = rand(time(), 10002);
+                $ExportSendmin->image = $image;
+                $ExportSend->$id = $ExportSendmin;
+            }
+            $exportData = json_encode($ExportSend);
+        } else {
+            $exportData = json_encode('No Record Available');
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+
+    protected function member_view_pages()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` ORDER BY `id` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        $exportData = json_encode($stmt->rowCount());
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+
     protected function member_view_export()
     {
         $exportData = '';
@@ -435,7 +491,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
 
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
@@ -462,7 +518,7 @@ class fetchData extends DBH
                 $About = $data['About'];
                 $status = $data['Status'];
 
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
 
                 $ExportSend->UniqueId = $unique_id;
                 $ExportSend->status = $status;
@@ -504,11 +560,11 @@ class fetchData extends DBH
         $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` WHERE `Firstname` like ? OR `Othername` like ? ORDER BY `id` DESC");
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` WHERE `Firstname` like ? OR `Othername` like ? ORDER BY `id` DESC limit 25 OFFSET $num");
         $name = '%' . $name . '%';
-        $stmt->bindParam('1', $name, PDO::PARAM_STR);
-        $stmt->bindParam('2', $name, PDO::PARAM_STR);
+        $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+        $stmt->bindParam('2', $name, \PDO::PARAM_STR);
 
-        $stmt_pages->bindParam('1', $name, PDO::PARAM_STR);
-        $stmt_pages->bindParam('2', $name, PDO::PARAM_STR);
+        $stmt_pages->bindParam('1', $name, \PDO::PARAM_STR);
+        $stmt_pages->bindParam('2', $name, \PDO::PARAM_STR);
         if (!$stmt->execute()) {
             print_r($stmt->errorInfo());
             $stmt = null;
@@ -520,9 +576,9 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ObjMainList = new stdClass();
+            $ObjMainList = new \stdClass();
             foreach ($result as $data) {
-                $objectClass = new stdClass();
+                $objectClass = new \stdClass();
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
                 $Othername = $data['Othername'];
@@ -562,7 +618,7 @@ class fetchData extends DBH
 
 
             }
-            $MainExport = new stdClass();
+            $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ObjMainList;
             $exportData = json_encode($MainExport);

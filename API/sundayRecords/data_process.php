@@ -1,7 +1,7 @@
 <?php
 require('autoloader.php');
 if (isset($_GET['submit'])) {
-    if ($_GET['submit'] != 'delete' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter' && $_GET['submit'] != 'export') {
+    if ($_GET['APICALL'] != 'record' && $_GET['submit'] != 'delete' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter' && $_GET['submit'] != 'export') {
         $opening_prayer = $_POST['opening_prayer'];
         $praises = $_POST['praises'];
         $scripture_reading = $_POST['scripture_reading'];
@@ -94,6 +94,58 @@ if (isset($_GET['submit'])) {
                 echo json_encode(["status" => "error", "message" => $error_message]);
             }
         }
+    if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
+        try {
+            $viewDataClass = new viewData();
+            $category = $_POST['category'];
+            $details = $_POST['details'];
+            $year = $_POST['year'];
+            $result_data = $viewDataClass->church_record_upload($category, $category, $details, $year);
+            echo json_encode($result_data);
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+    }
+    if ($_GET['submit'] == 'update' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
+        try {
+            $viewDataClass = new viewData();
+            $category = $_POST['category'];
+            $details = $_POST['details'];
+            $year = $_POST['year'];
+            $id = $_POST['delete_key'];
+            $result_data = $viewDataClass->church_record_update($category, $category, $details, $id, $year);
+            echo json_encode($result_data);
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+    }
+    if ($_GET['submit'] == 'delete' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $unique_id = $data['key'];
+            $pdh = new viewData();
+
+            $resultFetch = $pdh->church_record_delete($unique_id);
+            echo json_encode(["status" => "success", "message" => $resultFetch]);
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+    }
+    if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
+        try {
+
+            $pdh = new viewData();
+
+            $resultFetch = $pdh->church_record_export();
+            echo json_encode($resultFetch);
+        } catch (Exception $e) {
+            $error_message = "Exception: " . $e->getMessage();
+            echo json_encode(["status" => "error", "message" => $error_message]);
+        }
+    }
 
 
 }

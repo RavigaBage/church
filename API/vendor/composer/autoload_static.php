@@ -7,16 +7,69 @@ namespace Composer\Autoload;
 class ComposerStaticInit53bb0cc5e273be117c1358577d6ff475
 {
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Partnership\\' => 12,
+        ),
+        'M' => 
+        array (
+            'Membership\\' => 11,
+        ),
         'H' => 
         array (
             'Hhxsv5\\SSE\\' => 11,
         ),
+        'G' => 
+        array (
+            'Gallery\\' => 8,
+        ),
+        'F' => 
+        array (
+            'Finance\\' => 8,
+        ),
+        'C' => 
+        array (
+            'ChurchApi\\' => 10,
+            'Calender\\' => 9,
+        ),
+        'A' => 
+        array (
+            'AssetProject\\' => 13,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Partnership\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/partnership',
+        ),
+        'Membership\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/membership',
+        ),
         'Hhxsv5\\SSE\\' => 
         array (
             0 => __DIR__ . '/..' . '/hhxsv5/php-sse/src',
+        ),
+        'Gallery\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Gallery',
+        ),
+        'Finance\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/finance',
+        ),
+        'ChurchApi\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/pages-api',
+        ),
+        'Calender\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/calender',
+        ),
+        'AssetProject\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Assets&projects',
         ),
     );
 

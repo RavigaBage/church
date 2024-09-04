@@ -18,8 +18,9 @@ if (isset($_SESSION['login_details'])) {
 
 if ($condition) {
     if (isset($_GET['year'])) {
-        include_once('../../API/finance/autoloader.php');
-        $newDataRequest = new viewData();
+        require '../../API/vendor/autoload.php';
+        $newDataRequest = new Finance\viewData();
+
         $year_fetch = $_GET['year'];
 
         ?>

@@ -1,7 +1,8 @@
 <?php
-require ('autoloader.php');
+require('autoload.php');
+$viewDataClass = new Calender\viewData();
 if (isset($_GET['submit'])) {
-    $viewDataClass = new viewData();
+
     if ($_GET['submit'] == 'upload' || $_GET['submit'] == 'update') {
         $EventName = $_POST['EventName'];
         $Venue = $_POST['EventLocation'];
@@ -36,11 +37,22 @@ if (isset($_GET['submit'])) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);
         }
-    } else
-        if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
-            $data = json_decode(file_get_contents("php://input"), true);
-            $id = $data['key'];
-            $requestResponse = $viewDataClass->calender_delete($id);
-            echo json_encode($requestResponse);
-        }
+    }
+
+    if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $id = $data['key'];
+        $requestResponse = $viewDataClass->calender_delete($id);
+        echo json_encode($requestResponse);
+    }
+
+    if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'filter' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $year = $data['Year'];
+        $month = $data['Month'];
+        $day = $data['Day'];
+        $requestResponse = $viewDataClass->viewList_filter($year, $month, $day);
+        echo json_encode($requestResponse);
+    }
+
 }

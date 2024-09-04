@@ -1,4 +1,5 @@
 <?php
+namespace Calender;
 class DBH
 {
     private $host = 'localhost';
@@ -9,10 +10,10 @@ class DBH
     {
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -86,19 +87,19 @@ class fetchData extends DBH
 
                 $unique_id = rand(time(), 1999);
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`calender`(`unique_id`, `EventName`, `Year`, `Month`, `Day`, `start_time`, `end_time`, `Venue`, `Theme`, `About`, `Image`, `Department`, `Status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                $stmt->bindParam('2', $EventName, PDO::PARAM_STR);
-                $stmt->bindParam('3', $Year, PDO::PARAM_STR);
-                $stmt->bindParam('4', $Month, PDO::PARAM_STR);
-                $stmt->bindParam('5', $Day, PDO::PARAM_STR);
-                $stmt->bindParam('6', $start_time, PDO::PARAM_STR);
-                $stmt->bindParam('7', $end_time, PDO::PARAM_STR);
-                $stmt->bindParam('8', $Venue, PDO::PARAM_STR);
-                $stmt->bindParam('9', $Theme, PDO::PARAM_STR);
-                $stmt->bindParam('10', $About, PDO::PARAM_STR);
-                $stmt->bindParam('11', $file_name, PDO::PARAM_STR);
-                $stmt->bindParam('12', $Department, PDO::PARAM_STR);
-                $stmt->bindParam('13', $Status, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $EventName, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $Year, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $Month, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $Day, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $start_time, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $end_time, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $Venue, \PDO::PARAM_STR);
+                $stmt->bindParam('9', $Theme, \PDO::PARAM_STR);
+                $stmt->bindParam('10', $About, \PDO::PARAM_STR);
+                $stmt->bindParam('11', $file_name, \PDO::PARAM_STR);
+                $stmt->bindParam('12', $Department, \PDO::PARAM_STR);
+                $stmt->bindParam('13', $Status, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
 
                     $stmt = null;
@@ -178,19 +179,19 @@ class fetchData extends DBH
                     }
                 }
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`calender` SET `EventName`=?,`Year`=?,`Month`=?,`Day`=?,`start_time`=?,`end_time`=?,`Venue`=?,`Theme`=?,`About`=?,`Image`=?,`Department`=?,`Status`=? WHERE `unique_id`=?");
-                $stmt->bindParam('1', $EventName, PDO::PARAM_STR);
-                $stmt->bindParam('2', $Year, PDO::PARAM_STR);
-                $stmt->bindParam('3', $Month, PDO::PARAM_STR);
-                $stmt->bindParam('4', $Day, PDO::PARAM_STR);
-                $stmt->bindParam('5', $start_time, PDO::PARAM_STR);
-                $stmt->bindParam('6', $end_time, PDO::PARAM_STR);
-                $stmt->bindParam('7', $Venue, PDO::PARAM_STR);
-                $stmt->bindParam('8', $Theme, PDO::PARAM_STR);
-                $stmt->bindParam('9', $About, PDO::PARAM_STR);
-                $stmt->bindParam('10', $file_name, PDO::PARAM_STR);
-                $stmt->bindParam('11', $Department, PDO::PARAM_STR);
-                $stmt->bindParam('12', $Status, PDO::PARAM_STR);
-                $stmt->bindParam('13', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $EventName, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $Year, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $Month, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $Day, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $start_time, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $end_time, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $Venue, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $Theme, \PDO::PARAM_STR);
+                $stmt->bindParam('9', $About, \PDO::PARAM_STR);
+                $stmt->bindParam('10', $file_name, \PDO::PARAM_STR);
+                $stmt->bindParam('11', $Department, \PDO::PARAM_STR);
+                $stmt->bindParam('12', $Status, \PDO::PARAM_STR);
+                $stmt->bindParam('13', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
@@ -237,7 +238,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`calender` where   `unique_id`=?");
-                $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
                     $Error = 'deleting data encountered a problem';
@@ -258,7 +259,7 @@ class fetchData extends DBH
             }
 
             if ($resultCheck) {
-                return $exportData;
+                return json_encode($exportData);
             } else {
                 return $resultCheck;
             }
@@ -277,10 +278,10 @@ class fetchData extends DBH
             exit($Error);
         }
         if ($stmt->rowCount() > 0) {
-            $MainClass = new stdClass();
+            $MainClass = new \stdClass();
             $result = $stmt->fetchAll();
             foreach ($result as $data) {
-                $tmpClass = new stdClass();
+                $tmpClass = new \stdClass();
                 $name = $data['EventName'];
                 $year = $data['Year'];
                 $Month = $data['Month'];
@@ -322,6 +323,104 @@ class fetchData extends DBH
         return $exportData;
 
     }
+
+    protected function calender_view_filter($year, $Month, $day)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%' AND `Month` like '%$Month%' AND `Day` like '%$day%' ORDER BY `start_time` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $MainClass = new \stdClass();
+            $result = $stmt->fetchAll();
+            foreach ($result as $data) {
+                $tmpClass = new \stdClass();
+                $name = $data['EventName'];
+                $year = $data['Year'];
+                $Month = $data['Month'];
+                $Day = $data['Day'];
+                $start = $data['start_time'];
+                $end = $data['end_time'];
+                $venue = $data['Venue'];
+                $theme = $data['Theme'];
+                $about = $data['About'];
+                $image = $data['Image'];
+                $department = $data['Department'];
+                $status = $data['Status'];
+                $unique_id = $data['unique_id'];
+
+                $tmpClass->name = $name;
+                $tmpClass->Year = $year;
+                $tmpClass->Month = $Month;
+                $tmpClass->Day = $Day;
+                $tmpClass->start = $start;
+                $tmpClass->end = $end;
+                $tmpClass->venue = $venue;
+                $tmpClass->theme = $theme;
+                $tmpClass->about = $about;
+                $tmpClass->image = $image;
+                $tmpClass->department = $department;
+                $tmpClass->status = $status;
+                $tmpClass->unique_id = $unique_id;
+                $MainClass->$unique_id = $tmpClass;
+
+            }
+
+            $exportData = json_encode($MainClass);
+        } else {
+            $resultCheck = false;
+            $exportData = '<header>Not Records Available</header>';
+        }
+
+
+        return $exportData;
+
+    }
+
+    protected function calender_view_marker($year)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%'  ORDER BY `start_time` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $MainClass = new \stdClass();
+            $result = $stmt->fetchAll();
+            foreach ($result as $data) {
+                $tmpClass = new \stdClass();
+                $year = $data['Year'];
+                $Month = $data['Month'];
+                $Day = $data['Day'];
+                $unique_id = $data['unique_id'];
+                $tmpClass->Year = $year;
+                $tmpClass->Month = $Month;
+                $tmpClass->Day = $Day;
+                $tmpClass->unique_id = $unique_id;
+                $MainClass->$unique_id = $tmpClass;
+
+            }
+
+            $exportData = json_encode($MainClass);
+        } else {
+            $resultCheck = false;
+            $exportData = '<header>Not Records Available</header>';
+        }
+
+
+        return $exportData;
+
+    }
+
     protected function history_set($name, $event, $Date, $sitename, $action)
     {
         $unique_id = rand(time(), 1002);

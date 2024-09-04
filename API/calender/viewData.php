@@ -1,4 +1,6 @@
 <?php
+namespace Calender;
+use Calender\fetchData;
 class viewData extends fetchData
 {
 
@@ -40,6 +42,29 @@ class viewData extends fetchData
     public function viewList($year)
     {
         $RecordsResult = $this->calender_view($year);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
+    public function viewList_filter($year, $Month, $day)
+    {
+        $RecordsResult = $this->calender_view_filter($year, $Month, $day);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function viewList_marker($year)
+    {
+        $RecordsResult = $this->calender_view_marker($year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

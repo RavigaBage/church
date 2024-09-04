@@ -1,4 +1,5 @@
 <?php
+namespace ChurchApi;
 date_default_timezone_set('UTC');
 $year = date('Y');
 $date = date('l j \of F Y h:i:s A');
@@ -12,10 +13,10 @@ class DBH
     {
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -31,20 +32,21 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ObjectDataMain = new stdClass();
-            $list = ['birth', 'death', 'water_baptism', 'fire_baptism'];
+            $ObjectDataMain = new \stdClass();
+            $list = ['birth', 'death', 'water_baptism', 'fire_baptism', 'soul'];
             $birth = 0;
             $death = 0;
             $water_baptism = 0;
             $fire_baptism = 0;
+            $soul = 0;
 
 
             foreach ($result as $data) {
-                $name = $data['category'];
+                $name = strtolower($data['category']);
                 if ($name == 'birth') {
                     $birth += 1;
                 } elseif ($name == 'death') {
@@ -53,6 +55,8 @@ class fetchData extends DBH
                     $water_baptism += 1;
                 } elseif ($name == 'fire_baptism') {
                     $fire_baptism += 1;
+                } elseif ($name == 'soul') {
+                    $soul += 1;
                 }
 
 
@@ -62,10 +66,11 @@ class fetchData extends DBH
             $ObjectDataMain->death = $death;
             $ObjectDataMain->water_baptism = $water_baptism;
             $ObjectDataMain->fire_baptism = $fire_baptism;
-            $exportData = $ObjectDataMain;
+            $ObjectDataMain->soul = $soul;
+            $exportData = json_encode($ObjectDataMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = json_encode('<header>Not Records Available</header>');
         }
 
         if ($resultCheck) {
@@ -74,19 +79,76 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
-    # print_r($stmt->errorInfo());
+    protected function calender_view($year)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%' ORDER BY `start_time` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $MainClass = new \stdClass();
+            $result = $stmt->fetchAll();
+            foreach ($result as $data) {
+                $tmpClass = new \stdClass();
+                $name = $data['EventName'];
+                $year = $data['Year'];
+                $Month = $data['Month'];
+                $Day = $data['Day'];
+                $start = $data['start_time'];
+                $end = $data['end_time'];
+                $venue = $data['Venue'];
+                $theme = $data['Theme'];
+                $about = $data['About'];
+                $image = $data['Image'];
+                $department = $data['Department'];
+                $status = $data['Status'];
+                $unique_id = $data['unique_id'];
+
+                $tmpClass->name = $name;
+                $tmpClass->Year = $year;
+                $tmpClass->Month = $Month;
+                $tmpClass->Day = $Day;
+                $tmpClass->start = $start;
+                $tmpClass->end = $end;
+                $tmpClass->venue = $venue;
+                $tmpClass->theme = $theme;
+                $tmpClass->about = $about;
+                $tmpClass->image = $image;
+                $tmpClass->department = $department;
+                $tmpClass->status = $status;
+                $tmpClass->unique_id = $unique_id;
+                $MainClass->$unique_id = $tmpClass;
+
+            }
+
+            $exportData = json_encode($MainClass);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('Not Records Available');
+        }
+
+
+        return $exportData;
+
+    }
     protected function call_action_view()
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` where `department` ='all' ");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` where `department` ='all'  OR   `department` = 'All users' ORDER BY `id` DESC");
         if (!$stmt->execute()) {
-
+            print_r($stmt->errorInfo());
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
+            $List = new \stdClass();
             $last_data = $stmt->rowCount();
             $result = $stmt->fetchAll();
             $Data = $result[$last_data - 1];
@@ -94,11 +156,16 @@ class fetchData extends DBH
             $Amount = $Data['amount'];
             $purpose = $Data['purpose'];
             $due_date = $Data['due_date'];
-            $exportData = $name;
+            $List->name = $name;
+            $List->amount = $Amount;
+            $List->purpose = $purpose;
+            $List->date = $due_date;
+
+            $exportData = json_encode($List);
 
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = json_encode('Not Records Available');
         }
 
         if ($resultCheck) {
@@ -115,10 +182,11 @@ class fetchData extends DBH
         if (!$stmt->execute()) {
 
             $stmt = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            $Error = 'Fetching data encountered a problem';
+            exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
+            $List = new \stdClass();
             $last_data = $stmt->rowCount();
             $result = $stmt->fetchAll();
             $Data = $result[$last_data - 1];
@@ -126,11 +194,15 @@ class fetchData extends DBH
             $message = $Data['message'];
             $file = $Data['file'];
 
-            $exportData = $name;
+            $List->name = $name;
+            $List->message = $message;
+            $List->file = $file;
+
+            $exportData = json_encode($List);
 
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = json_encode('Not Records Available');
         }
 
         if ($resultCheck) {
@@ -142,7 +214,7 @@ class fetchData extends DBH
 
     protected function project_view()
     {
-        $object_data = new stdClass();
+        $object_data = new \stdClass();
         $exportData = '';
         $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`projects` where `status` = 'complete' ");
@@ -200,13 +272,8 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%Mountain experience%' ORDER BY `id` DESC limit 20");
-        $stmt_1 = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%christmas%' ORDER BY `id` DESC limit 20");
-        $stmt_5 = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%Easter%' ORDER BY `id` DESC limit 20");
-        $stmt_2 = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%missions%' ORDER BY `id` DESC limit 20");
-        $stmt_3 = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%evangelism%' ORDER BY `id` DESC limit 20");
-        $stmt_4 = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%services%' ORDER BY `id` DESC limit 20");
-        $dataList = new stdClass();
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary`  ORDER BY RAND()limit 6");
+        $dataList = new \stdClass();
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -219,88 +286,10 @@ class fetchData extends DBH
                     $name = $row['name'];
                     array_push($Mountain, $name);
                 }
-                $dataList->Mountain = $Mountain;
+                $dataList->image = $Mountain;
             }
         }
-
-        if (!$stmt_1->execute()) {
-            $stmt_1 = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
-        } else {
-            if ($stmt_1->rowCount() > 0) {
-                $result = $stmt_1->fetchAll();
-                $christmas = [];
-                foreach ($result as $row) {
-                    $name = $row['name'];
-                    array_push($christmas, $name);
-                }
-                $dataList->christmas = $christmas;
-            }
-        }
-        if (!$stmt_2->execute()) {
-            $stmt_2 = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
-        } else {
-            if ($stmt_2->rowCount() > 0) {
-                $result = $stmt_2->fetchAll();
-                $missions = [];
-                foreach ($result as $row) {
-                    $name = $row['name'];
-                    array_push($missions, $name);
-                }
-                $dataList->missions = $missions;
-            }
-        }
-        if (!$stmt_3->execute()) {
-            $stmt_3 = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
-        } else {
-            if ($stmt_3->rowCount() > 0) {
-                $result = $stmt_3->fetchAll();
-                $evangelism = [];
-                foreach ($result as $row) {
-                    $name = $row['name'];
-                    array_push($evangelism, $name);
-                }
-                $dataList->evangelism = $evangelism;
-            }
-        }
-        if (!$stmt_4->execute()) {
-            $stmt_4 = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
-        } else {
-            if ($stmt_4->rowCount() > 0) {
-                $result = $stmt_4->fetchAll();
-                $services = [];
-                foreach ($result as $row) {
-                    $name = $row['name'];
-                    array_push($services, $name);
-                }
-                $dataList->services = $services;
-            }
-        }
-
-        if (!$stmt_5->execute()) {
-            $stmt_5 = null;
-            $Error = 'Fetching data encounted a problem';
-            exit($Error);
-        } else {
-            if ($stmt_5->rowCount() > 0) {
-                $result = $stmt_5->fetchAll();
-                $easter = [];
-                foreach ($result as $row) {
-                    $name = $row['name'];
-                    array_push($easter, $name);
-                }
-                $dataList->easter = $easter;
-            }
-        }
-
-        $exportData = $dataList;
+        $exportData = json_encode($dataList);
 
         if ($resultCheck) {
             return $exportData;
@@ -314,11 +303,11 @@ class fetchData extends DBH
         $exportData = '';
         $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` where `category` like '%active%' ORDER BY `id` DESC limit 20");
-        $dataList = new stdClass();
+        $dataList = new \stdClass();
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
-            exit($Error);
+            exit(json_encode($Error));
         } else {
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
@@ -328,18 +317,168 @@ class fetchData extends DBH
                     array_push($Mountain, $name);
                 }
                 $dataList->Mountain = $Mountain;
+            } else {
+                exit(json_encode('No Available records'));
             }
         }
 
 
 
-        $exportData = $dataList;
+        $exportData = json_encode($dataList);
 
         if ($resultCheck) {
             return $exportData;
         } else {
             return $resultCheck;
         }
+    }
+
+    protected function NextEvent_home_view()
+    {
+        $CurrentTime = new \DateTime();
+        $CurrentYear = date('Y');
+        $CurrentMonth = date('m');
+        $CurrentDay = date('d');
+        $exportList = new \stdClass();
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year` ='$CurrentYear' AND `Month`='$CurrentMonth' and `Day` ='$CurrentDay' ORDER BY `id` DESC limit 20");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+
+            foreach ($result as $row) {
+                $time = $row['start_time'];
+                $time_trim = explode(' ', $time);
+                $focus = $time_trim[0];
+                if ($time_trim[0] == 'pm') {
+                    $new = explode(':', $focus);
+                    $focusF = intval($new[0]) + 12;
+                    $focus = strval($focusF) . ':' . $new[1];
+                }
+                $checkTime = new \DateTime($focus);
+                if ($CurrentTime > $checkTime) {
+                    $exportList->image = $row['Image'];
+                    $exportList->About = $row['About'];
+                    $exportList->Start_time = $row['start_time'];
+                    $exportList->End_time = $row['end_time'];
+                    $exportList->Event_name = $row['EventName'];
+                    break;
+                }
+            }
+        } else {
+            //condition 2
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year` ='$CurrentYear' AND `Month`='$CurrentMonth' and `Day` > '$CurrentDay' ORDER BY `id` DESC limit 20");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encounted a problem';
+                exit(json_encode($Error));
+            }
+
+            if ($stmt->rowCount() > 0) {
+                $result = $stmt->fetchAll();
+                foreach ($result as $row) {
+                    $exportList->image = $row['Image'];
+                    $exportList->About = $row['About'];
+                    $exportList->Start_time = $row['start_time'];
+                    $exportList->End_time = $row['end_time'];
+                    $exportList->Event_name = $row['EventName'];
+                    break;
+                }
+            } else {
+                //condition 3
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year` ='$CurrentYear' AND `Month` >'$CurrentMonth' and `Day` <= '$CurrentDay' ORDER BY `Month` ASC");
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit(json_encode($Error));
+                }
+
+                if ($stmt->rowCount() > 0) {
+                    $result = $stmt->fetchAll();
+                    foreach ($result as $row) {
+                        $exportList->image = $row['Image'];
+                        $exportList->About = $row['About'];
+                        $exportList->Start_time = $row['start_time'];
+                        $exportList->End_time = $row['end_time'];
+                        $exportList->Event_name = $row['EventName'];
+                        break;
+                    }
+                } else {
+
+                    $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year`='$CurrentYear' AND `Month`>$CurrentMonth ORDER BY `Month` ASC");
+                    if (!$stmt->execute()) {
+                        $stmt = null;
+                        $Error = 'Fetching data encounted a problem';
+                        exit(json_encode($Error));
+                    }
+
+                    if ($stmt->rowCount() > 0) {
+                        $result = $stmt->fetchAll();
+                        foreach ($result as $row) {
+                            $exportList->image = $row['Image'];
+                            $exportList->About = $row['About'];
+                            $exportList->Start_time = $row['start_time'];
+                            $exportList->End_time = $row['end_time'];
+                            $exportList->Event_name = $row['EventName'];
+                            break;
+                        }
+                    } else {
+                        //condition 4
+                        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year` > '$CurrentYear'  ORDER BY `Month` ASC");
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = 'Fetching data encounted a problem';
+                            exit(json_encode($Error));
+                        }
+
+                        if ($stmt->rowCount() > 0) {
+                            $result = $stmt->fetchAll();
+                            foreach ($result as $row) {
+                                $exportList->image = $row['Image'];
+                                $exportList->About = $row['About'];
+                                $exportList->Start_time = $row['start_time'];
+                                $exportList->End_time = $row['end_time'];
+                                $exportList->Event_name = $row['EventName'];
+                                break;
+                            }
+                        } else {
+                            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `Year` = '$CurrentYear' AND `Month` > '$CurrentMonth'  ORDER BY `Month` ASC");
+                            if (!$stmt->execute()) {
+                                $stmt = null;
+                                $Error = 'Fetching data encounted a problem';
+                                exit(json_encode($Error));
+                            }
+
+                            if ($stmt->rowCount() > 0) {
+                                $result = $stmt->fetchAll();
+
+                                foreach ($result as $row) {
+                                    $exportList->image = $row['Image'];
+                                    $exportList->About = $row['About'];
+                                    $exportList->Start_time = $row['start_time'];
+                                    $exportList->End_time = $row['end_time'];
+                                    $exportList->Event_name = $row['EventName'];
+
+                                    break;
+                                }
+                            } else {
+                                exit(json_encode('Available Data not found'));
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        return json_encode($exportList);
+
+
     }
 }
 ?>

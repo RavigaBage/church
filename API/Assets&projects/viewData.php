@@ -1,4 +1,6 @@
 <?php
+namespace AssetProject;
+use AssetProject\fetchData;
 class viewData extends fetchData
 {
 
@@ -125,6 +127,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function project_showcase()
+    {
+        $RecordsResult = $this->projects_viewShowcase();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function Project_viewListFilter($num)
     {
         $RecordsResult = $this->projects_viewFilter($num);
@@ -135,6 +147,41 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+    public function Project_viewListFilterComplete()
+    {
+        $RecordsResult = $this->projects_viewFilterComplete();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function Project_viewListFilterProgress()
+    {
+        $RecordsResult = $this->projects_viewFilterProgress();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function Project_viewListFilterCurrent()
+    {
+        $RecordsResult = $this->projects_viewFilterCurrent();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
 
     public function Project_viewSearchMain($name, $nk)
     {
@@ -173,6 +220,16 @@ class viewData extends fetchData
     public function DataHistory($name, $event, $Date, $sitename, $action)
     {
         $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function GetLatestStatus()
+    {
+        $RecordsResult = $this->GetLatest();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

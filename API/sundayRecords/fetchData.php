@@ -1,4 +1,5 @@
 <?php
+session_start();
 class DBH
 {
     private $host = 'localhost';
@@ -37,7 +38,6 @@ class fetchData extends DBH
         $input_list = array($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $date);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -90,11 +90,10 @@ class fetchData extends DBH
                 if (json_decode($historySet) != 'Success') {
                     $exportData = 'success';
                 }
-
-
-                $exportData = json_encode(["status" => "success", "message" => 'Data entry was a success Page will refresh to display new data', "id" => $unique_id]);
-                $resultValidate = true;
-                exit($exportData);
+                $export = new stdClass();
+                $export->Id = $unique_id;
+                $export->message = 'Upload was a success';
+                exit(json_encode($export));
             }
 
         } else {
@@ -102,11 +101,7 @@ class fetchData extends DBH
             $resultValidate = true;
             exit($exportData);
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+
     }
 
     protected function Sunday_update_data($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $date, $id)
@@ -360,6 +355,47 @@ class fetchData extends DBH
         return $exportData;
 
     }
+    protected function church_record_exportData()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` ORDER BY `id` DESC");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = json_encode('Fetching data encounted a problem');
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $exportMain = new stdClass();
+            $date = date('Y-m-d H:i:s');
+            $namer = $_SESSION['login_details'];
+            $historySet = $this->history_set($namer, "records  Data Export", $date, "records  page dashboard Admin", "User Exported a records  data");
+            if (json_decode($historySet) != 'Success') {
+                $exportData = 'success';
+            }
+            foreach ($result as $data) {
+                $newClass = new stdClass();
+                $id = $this->validate($data['unique_id']);
+                $newClass->name = $this->validate($data['category']);
+                $newClass->details = $this->validate($data['details']);
+                $newClass->date = $this->validate($data['date']);
+                $newClass->record = $this->validate($data['record']);
+                $newClass->year = $this->validate($data['year']);
+                $newClass->admin = $this->validate($data['admin']);
+                $newClass->id = $this->validate($data['unique_id']);
+                $exportMain->$id = $newClass;
+            }
+            $exportData = json_encode($exportMain);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('Not Records Available');
+        }
+        return $exportData;
+
+    }
+
 
     protected function RecordsFilter($date)
     {
@@ -583,6 +619,197 @@ class fetchData extends DBH
                     return json_encode('Success');
                 }
             }
+        }
+    }
+
+    protected function church_record_upload_data($category, $record, $details, $year)
+    {
+
+        $input_list = array($category, $record, $details, $year);
+        $clean = true;
+        $date = date('Y-m-d');
+        foreach ($input_list as $input) {
+            $data = $this->validate($input);
+            if ($data == 'test pass failed') {
+                $Error = 'validating data encountered a problem, All fields are required !';
+                $clean = false;
+                exit(json_encode($Error));
+            }
+        }
+        if ($clean) {
+            $namer = $_SESSION['login_details'];
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer' ORDER BY `id` DESC");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encounted a problem';
+                exit(json_encode($Error));
+            } else {
+                if ($stmt->rowCount() > 0) {
+                    $data = $stmt->fetchAll();
+                    $admin = $data[0]['Firstname'] . $data[0]['Othername'];
+                    $unique_id = rand(time(), 10029);
+                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`records`(`unique_id`, `category`, `record`, `details`, `date`, `admin`, `year`)VALUES (?,?,?,?,?,?,?)");
+                    $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                    $stmt->bindParam('2', $category, PDO::PARAM_STR);
+                    $stmt->bindParam('3', $record, PDO::PARAM_STR);
+                    $stmt->bindParam('4', $details, PDO::PARAM_STR);
+                    $stmt->bindParam('5', $date, PDO::PARAM_STR);
+                    $stmt->bindParam('6', $admin, PDO::PARAM_STR);
+                    $stmt->bindParam('7', $year, PDO::PARAM_STR);
+
+                    if (!$stmt->execute()) {
+                        $stmt = null;
+                        $Error = 'Fetching data encountered a problems';
+                        exit(json_encode($Error));
+                    } else {
+                        $export = new stdClass();
+                        $export->Id = $unique_id;
+                        $export->message = 'Upload was a success';
+                        exit(json_encode($export));
+                    }
+                }
+
+            }
+
+        }
+    }
+
+
+    protected function church_record_update_data($category, $record, $details, $id, $year)
+    {
+        $input_list = array($category, $record, $details, $id, $year);
+        $clean = true;
+        $exportData = 0;
+        $resultValidate = true;
+        foreach ($input_list as $input) {
+            $data = $this->validate($input);
+            if ($data == 'test pass failed') {
+                $Error = 'validating data encountered a problem, All fields are required !';
+                $clean = false;
+                exit(json_encode($Error));
+            }
+        }
+        if ($clean) {
+            $namer = $_SESSION['login_details'];
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer' ORDER BY `id` DESC");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encounted a problem';
+                exit(json_encode($Error));
+            } else {
+                $date = date('Y-m-d');
+                if ($stmt->rowCount() > 0) {
+                    $data = $stmt->fetchAll();
+
+                    $admin = $data[0]['Firstname'] . $data[0]['Othername'];
+                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`records` set `category`=?,`record`=?,`details`=?,`date`=?,`admin`=?,`year`=? WHERE  `unique_id` = ?");
+
+                    $stmt->bindParam('1', $category, PDO::PARAM_STR);
+                    $stmt->bindParam('2', $record, PDO::PARAM_STR);
+                    $stmt->bindParam('3', $details, PDO::PARAM_STR);
+                    $stmt->bindParam('4', $date, PDO::PARAM_STR);
+                    $stmt->bindParam('5', $admin, PDO::PARAM_STR);
+                    $stmt->bindParam('6', $year, PDO::PARAM_STR);
+                    $stmt->bindParam('7', $id, PDO::PARAM_STR);
+                    if (!$stmt->execute()) {
+                        print_r($stmt->errorInfo());
+                        $stmt = null;
+                        $Error = 'Fetching data encountered a problems';
+                        exit(json_encode($Error));
+                    } else {
+
+                        exit(json_encode('Update was a success'));
+                    }
+
+                }
+            }
+        }
+
+    }
+
+
+    protected function church_record_delete_data($name)
+    {
+        $exportData = 0;
+        $input_list = array($name);
+        $clean = true;
+        foreach ($input_list as $input) {
+            $data = $this->validate($input);
+            if ($data == 'test pass failed') {
+                $Error = 'validating data encountered a problem, All fields are required !';
+                $clean = false;
+                exit(json_encode($Error));
+            }
+        }
+        if ($clean) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `unique_id` =?");
+            $stmt->bindParam('1', $name, PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encountered a problem';
+                exit(json_encode($Error));
+            }
+            if ($stmt->rowCount() > 0) {
+                if ($stmt->execute()) {
+                    $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`records` where `unique_id`=?");
+                    $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                    if (!$stmt1->execute()) {
+                        $stmt1 = null;
+                        $Error = 'deleting data encountered a problem';
+                        exit(json_encode($Error));
+                    } else {
+                        exit(json_encode('Item Deleted Successfully'));
+                    }
+                } else {
+                    $stmt = null;
+                    $Error = 'deleting data encountered a problem';
+                    exit(json_encode($Error));
+                }
+
+
+            } else {
+                exit(json_encode('No match for search query'));
+            }
+
+
+
+        }
+    }
+
+    protected function church_record_view($year)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `year` like '%$year%' ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ObjectDataMain = new stdClass();
+
+            foreach ($result as $row) {
+                $newClass = new stdClass();
+                $newClass->name = $row['category'];
+                $newClass->details = $row['details'];
+                $newClass->date = $row['date'];
+                $newClass->year = $row['year'];
+                $newClass->id = $row['unique_id'];
+                $unique_id = rand(time(), 2203);
+                $ObjectDataMain->$unique_id = $newClass;
+            }
+            $exportData = json_encode($ObjectDataMain);
+        } else {
+            $resultCheck = false;
+            $exportData = json_encode('Not Records Available');
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
         }
     }
 

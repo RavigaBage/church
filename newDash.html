@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashstyle.css" />
+    <script src="pages/scripts/apexcharts-bundle/dist/apexcharts.js" type="text/javascript"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <main>
+        <aside></aside>
+        <div class="container">
+            <div class="grid_container">
+                <div class="upper_grid">
+                    <header class="title">Overview</header>
+                    <div class="cover">
+                        <div class="event_slider">
+                            <div class="events">
+                                <div class="item">
+                                    <div class="image">
+                                        <img src="images/blog-2.jpg" alt="" />
+                                    </div>
+                                    <div class="overlay"></div>
+                                    <div class="details">
+                                        <header>Box Exchange</header>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda omnis
+                                            inventore odio, non officia suscipit nesciunt blanditiis.</p>
+                                        <p>2023-04-10</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cover_title">
+                                <h1>Upcoming Events</h1>
+                            </div>
+                        </div>
+                        <div class="tithe_event" id="charts"></div>
+                        <div class="projects_section">
+                            <div class="membership_status">
+                                <img src="images/security.gif" />
+
+                            </div>
+                            <div class="project_status">
+                                <div class="coverlay">
+                                    <div class="innerlay">
+                                        <h1>40%</h1>
+                                        <p>projects</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="transactions">
+                    <header class="title">Transactions</header>
+                    <div class="container_list">
+                        <div class="item">
+                            <div class="cover_main">
+                                <div class="acc_name">
+                                    <div class="logo"><img src="images/card chip.png" alt="logo" /></div>
+                                    <h1>Electricity</h1>
+                                </div>
+                                <div class="date">
+                                    <span>Date</span>
+                                    <p>28 August</p>
+                                </div>
+                                <div class="time">
+                                    <span>Time</span>
+                                    <p>08:00</p>
+                                </div>
+                                <div class="amount">
+                                    <span>Amount</span>
+                                    <p>Ȼ 54.10</p>
+                                </div>
+                                <div class="status">
+                                    <div class="status_check">
+                                        <p>Invoice</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="cover_main">
+                                <div class="acc_name">
+                                    <div class="logo"><img src="images/card chip.png" alt="logo" /></div>
+                                    <h1>7 eleven</h1>
+                                </div>
+                                <div class="date">
+                                    <span>Date</span>
+                                    <p>28 August</p>
+                                </div>
+                                <div class="time">
+                                    <span>Time</span>
+                                    <p>08:00</p>
+                                </div>
+                                <div class="amount">
+                                    <span>Amount</span>
+                                    <p>Ȼ 54.10</p>
+                                </div>
+                                <div class="status">
+                                    <div class="status_check">
+                                        <p>Invoice</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="cover_main">
+                                <div class="acc_name">
+                                    <div class="logo"><img src="images/tesla.png" alt="logo" /></div>
+                                    <h1>Uniqlo</h1>
+                                </div>
+                                <div class="date">
+                                    <span>Date</span>
+                                    <p>28 August</p>
+                                </div>
+                                <div class="time">
+                                    <span>Time</span>
+                                    <p>08:00</p>
+                                </div>
+                                <div class="amount">
+                                    <span>Amount</span>
+                                    <p>Ȼ 54.10</p>
+                                </div>
+                                <div class="status">
+                                    <div class="status_check">
+                                        <p>Invoice</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="cover_main">
+                                <div class="acc_name">
+                                    <div class="logo"><img src="images/uniliver.png" alt="logo" /></div>
+                                    <h1>Empire XXi</h1>
+                                </div>
+                                <div class="date">
+                                    <span>Date</span>
+                                    <p>28 August</p>
+                                </div>
+                                <div class="time">
+                                    <span>Time</span>
+                                    <p>08:00</p>
+                                </div>
+                                <div class="amount">
+                                    <span>Amount</span>
+                                    <p>Ȼ 54.10</p>
+                                </div>
+                                <div class="status">
+                                    <div class="status_check">
+                                        <p>Invoice</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wallet">
+                <div class="display_wallet">
+                    <div class="title">
+                        <b>Wallet</b>
+                    </div>
+                    <div class="content">
+                        <div class="main">
+                            <div class="card">
+                                <div class="header">
+                                    <img src="images/visa.png" alt="card1-1">
+
+                                    <img src="images/card chip.png" class="right" alt="card-chip">
+                                </div>
+                                <div class="middle">
+                                    <span>Active balance</span>
+                                    <h1>Ȼ 192.012</h1>
+                                </div>
+
+                                <div class="bottom">
+                                    <div class="header">
+                                        <p>OmBsic Bank Ghana</p>
+
+                                        <b>5/10.24</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overlay">
+                            <b>+</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="display">
+                    <div class="header">
+                        <b>Partners</b>
+                        <b>99</b>
+                    </div>
+                    <div class="content">
+                        <p>The partnership program has generated a total of <b>$1209</b> since january 2024</p>
+                    </div>
+                </div>
+                <div class="members">
+                    <div class="header">
+                        <b>membership</b>
+                        <b>982</b>
+                    </div>
+                    <div class="content">
+                        <img src="images/blog-1.jpg" alt="">
+                        <img src="images/blog-1.jpg" alt="">
+                        <img src="images/blog-1.jpg" alt="">
+                        <img src="images/blog-1.jpg" alt="">
+                        <img src="images/blog-1.jpg" alt="">
+                    </div>
+                </div>
+                <div class="others">
+                    <div class="header">
+                        <b>Recent</b>
+                    </div>
+                    <div class="content">
+                        <div class="item">
+                            <div class="image">
+                                <img src="images/blog-2.jpg" alt="">
+                            </div>
+                            <div class="details">
+                                <p><b>Maria Lim</b></p>
+                                <p>Teaching assistant</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="image">
+                                <img src="images/blog-2.jpg" alt="">
+                            </div>
+                            <div class="details">
+                                <p><b>Robert Rodrizgo</b></p>
+                                <p>Teaching assistant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        var _seed = 42;
+        Math.random = function () {
+            _seed = _seed * 16807 % 2147483647;
+            return (_seed - 1) / 2147483646;
+        };
+        var generateDayWiseTimeSeries = function (baseval, count, yrange) {
+            var i = 0;
+            var series = [];
+            while (i < count) {
+                var x = baseval;
+                var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+                series.push([x, y]);
+                baseval += 86400000;
+                i++;
+            }
+            return series;
+        }
+        var options = {
+            series: [{
+                name: "Desktops",
+                data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+            }],
+            chart: {
+                height: 250,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            title: {
+                text: 'Product Trends by Month',
+                align: 'left'
+            },
+            grid: {
+                row: {
+                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                },
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#charts"), options);
+        chart.render();
+
+    </script>
+</body>
+
+</html>

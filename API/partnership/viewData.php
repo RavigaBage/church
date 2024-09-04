@@ -1,4 +1,8 @@
 <?php
+namespace Partnership;
+
+use Partnership\fetchData;
+
 class viewData extends fetchData
 {
 
@@ -23,8 +27,6 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-
-
     public function ministries_delete($name)
     {
         $RecordsResult = $this->Partnership_delete_data($name);
@@ -92,6 +94,28 @@ class viewData extends fetchData
     public function DataHistory($name, $event, $Date, $sitename, $action)
     {
         $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function HomeFetch($date)
+    {
+        $RecordsResult = $this->Partnership_view_individual_record_total($date);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
+    }
+    public function partnership_view_individual_record_upload($name, $partnership, $date, $amount)
+    {
+        $RecordsResult = $this->Partnership_upload_data_ini($name, $partnership, $date, $amount);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

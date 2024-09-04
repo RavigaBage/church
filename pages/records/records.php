@@ -15,7 +15,7 @@ if (isset($_SESSION['login_details'])) {
     $login_details = $_SESSION['login_details'];
     if (!isset($_SESSION['access_entryLog'])) {
         $date = date('Y-m-d H:i:s');
-        $newquest = $viewDataClass->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
+        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
         $decode = json_decode($newquest);
         if ($decode == 'Success') {
             $condition = true;
@@ -30,20 +30,12 @@ if (isset($_SESSION['login_details'])) {
 
 if ($condition) {
     ?>
-    <div class="notifyBox">
-        <p>
-            Items delete successfully
-        </p>
-    </div>
-
     <div class="filter_wrapper relative">
         <div style="height:40px;width:100%" class="flex">
             <div class="direction flex">
                 <p>Dashboard</p>
                 <span> - </span>
-                <p>membership</p>
-                <span> - </span>
-                <p>filter(20years)</p>
+                <p class="location_date">membership</p>
             </div>
             <div class="options flex opt_left">
                 <div class="item_opt flex filterBtn">
@@ -70,23 +62,6 @@ if ($condition) {
                     </svg>
                     <p>Share</p>
                 </div>
-                <div class="item_opt flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#5f6368">
-                        <path
-                            d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z" />
-                    </svg>
-                    <p>Print</p>
-                </div>
-
-                <div class="item_opt flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
-                        <path
-                            d="m105-233-65-47 200-320 120 140 160-260 109 163q-23 1-43.5 5.5T545-539l-22-33-152 247-121-141-145 233ZM863-40 738-165q-20 14-44.5 21t-50.5 7q-75 0-127.5-52.5T463-317q0-75 52.5-127.5T643-497q75 0 127.5 52.5T823-317q0 26-7 50.5T795-221L920-97l-57 57ZM643-217q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm89-320q-19-8-39.5-13t-42.5-6l205-324 65 47-188 296Z" />
-                    </svg>
-                    <a style="text-decoration:none;" target="_blank" href="finance/budgetAnalysis.html">chart</a>
-                </div>
-
 
                 <div class="item_opt flex" id="ExportBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -112,46 +87,45 @@ if ($condition) {
             </div>
         </form>
     </div>
-
-
-
-    <div class="profile_main">
-        <header>SUNDAY SERVICE PROGRAMME DATA</header>
-        <div class="grid_sx tithebook">
-            <div class="profile">
-                <div class="tithe_list ancc_list">
-                    <?php
-                    $data = json_decode($newDataRequest->View_List($year));
-                    if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
-                        echo "<header class='danger'>Not Records Available</header>";
-                    } else {
-                        foreach ($data as $item) {
-                            $open_prayer = $item->open_prayer;
-                            $praise = $item->praise;
-                            $scripture_read = $item->scripture_read;
-                            $scripture = $item->scripture;
-                            $hymn = $item->hymn;
-                            $hymn_new = $item->hymn_new;
-                            $hymn_title = $item->hymn_title;
-                            $worship = $item->worship;
-                            $testimonies = $item->testimonies;
-                            $song_thanksgivning = $item->song_thanksgivning;
-                            $sermon_prayer = $item->sermon_prayer;
-                            $sermon_from = $item->sermon_from;
-                            $scipture_preacher = $item->scipture_preacher;
-                            $preacher_duration = $item->preacher_duration;
-                            $alter_call = $item->alter_call;
-                            $tithe_offering = $item->tithe_offering;
-                            $special_appeal = $item->special_appeal;
-                            $welcome_visitors = $item->welcome_visitors;
-                            $annc = $item->annc;
-                            $closing_prayer = $item->closing_prayer;
-                            $Benediction = $item->Benediction;
-                            $mc = $item->mc;
-                            $total_attendance = $item->total_attendance;
-                            $date = $item->date;
-                            $id = $item->id;
-                            echo '                     <div class="annc_item">
+    <div class="main_container">
+        <div class="ui_controlller">
+            <div class="profile_main ">
+                <header>SUNDAY SERVICE PROGRAMME DATA</header>
+                <div class="grid_sx tithebook">
+                    <div class="profile">
+                        <div class="tithe_list ancc_list">
+                            <?php
+                            $data = json_decode($newDataRequest->View_List($year));
+                            if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
+                                echo "<header class='danger'>Not Records Available</header>";
+                            } else {
+                                foreach ($data as $item) {
+                                    $open_prayer = $item->open_prayer;
+                                    $praise = $item->praise;
+                                    $scripture_read = $item->scripture_read;
+                                    $scripture = $item->scripture;
+                                    $hymn = $item->hymn;
+                                    $hymn_new = $item->hymn_new;
+                                    $hymn_title = $item->hymn_title;
+                                    $worship = $item->worship;
+                                    $testimonies = $item->testimonies;
+                                    $song_thanksgivning = $item->song_thanksgivning;
+                                    $sermon_prayer = $item->sermon_prayer;
+                                    $sermon_from = $item->sermon_from;
+                                    $scipture_preacher = $item->scipture_preacher;
+                                    $preacher_duration = $item->preacher_duration;
+                                    $alter_call = $item->alter_call;
+                                    $tithe_offering = $item->tithe_offering;
+                                    $special_appeal = $item->special_appeal;
+                                    $welcome_visitors = $item->welcome_visitors;
+                                    $annc = $item->annc;
+                                    $closing_prayer = $item->closing_prayer;
+                                    $Benediction = $item->Benediction;
+                                    $mc = $item->mc;
+                                    $total_attendance = $item->total_attendance;
+                                    $date = $item->date;
+                                    $id = $item->id;
+                                    echo '  <div class="annc_item list_mode">
                     <div class="flex button">
                         <div class=" flex title">
                             <h1>Sunday Record ' . $sermon_from . '</h1>
@@ -299,202 +273,477 @@ if ($condition) {
                             </div>
                         </div>
                 </div>';
-                        }
-                    }
-                    ?>
-                    <div class="annc_item" hidden id="template">
-                        <div class="flex button">
-                            <div class=" flex title">
-                                <h1>Sunday </h1>
-                                <div class="flex button"><i class="fas fa-date"></i>2023,04,12</div>
+                                }
+                            }
+                            ?>
+                            <div class="annc_item" hidden id="template">
+                                <div class="flex button">
+                                    <div class=" flex title">
+                                        <h1>new Sunday edit to save </h1>
+                                        <div class="flex button"><i class="fas fa-date"></i>2023,04,12</div>
+                                    </div>
+                                </div>
+
+                                <div class="div_content">
+                                    <details>
+                                        <form>
+                                            <input name="delete_key" type="hidden" value='' />
+                                            <div class="Activity_record">
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Opening Prayer led By</label>
+                                                        <input type="text" name="opening_prayer"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Praises By:</label>
+                                                        <input type="text" name="praises" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <header>Scripture reading</header>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Scripture Reading By</label>
+                                                        <input type="text" name="scripture_reading"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Scripture read:</label>
+                                                        <input type="text" name="scripture" placeholder=".............." />
+                                                    </div>
+                                                </div>
+
+                                                <header>Hymn</header>
+                                                <div class="cate_view_e">
+                                                    <div class="field">
+                                                        <label>Opening Hymn No</label>
+                                                        <input type="text" name="opening_Hymn"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>New:</label>
+                                                        <input type="text" name="Hymn_new" placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Title:</label>
+                                                        <input type="text" name="Hymn_title" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Call to worship</label>
+                                                    <input type="text" name="worship" placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Testimonies</label>
+                                                    <input type="text" name="testimonies" placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Song Ministration & Thanksgiving Offering:</label>
+                                                    <input type="text" name="song_thanksgving_offering"
+                                                        placeholder=".............." />
+                                                </div>
+
+                                                <header>Sermon</header>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Sermon & Prayer By:</label>
+                                                        <input type="text" name="sermon_prayer"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>From:</label>
+                                                        <input type="text" name="sermon_from"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Scripture from preacher:</label>
+                                                        <input type="text" name="scripture_preacher"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Time Duratoin for the preacher:</label>
+                                                        <input type="text" name="peacher_duration"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Alter Call By:</label>
+                                                        <input type="text" name="alter_call" placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Tithe and Offering</label>
+                                                        <input type="text" name="tithe_offering"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Special Appeal</label>
+                                                    <input type="text" name="special_appeal" placeholder=".............." />
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Welcome of visitors</label>
+                                                        <input type="text" name="welcome_visitors"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Announcement</label>
+                                                        <input type="text" name="Announcement"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <header>Closing..</header>
+                                                <div class="field">
+                                                    <label>Closing Prayer</label>
+                                                    <input type="text" name="closing_prayer" placeholder=".............." />
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Benediction</label>
+                                                        <input type="text" name="Benediction"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Mc</label>
+                                                        <input type="text" name="MC" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Total Attendance</label>
+                                                    <input type="text" name="Total_attendance"
+                                                        placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Date</label>
+                                                    <input type="date" name="date" placeholder=".............." />
+                                                </div>
+                                                <button>Record message</button>
+                                            </div>
+                                        </form>
+                                    </details>
+                                </div>
+                                <div class=" flex options title">
+                                    <div class="edit flex Update_item">
+                                        <i class="fas fa-edit Update_item"></i>
+                                        <p>Edit</p>
+                                    </div>
+
+
+                                    <div class="edit flex">
+                                        <i class="fas fa-trash delete_item"></i>
+                                        <p>Remove</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile_main records_data">
+                <header>SUNDAY SERVICE PROGRAMME DATA</header>
+                <div class="grid_sx tithebook">
+                    <div class="profile records_main">
+                        <div class="annc_item" hidden id="Recordtemplate">
+                            <div class="flex button">
+                                <div class=" flex title">
+                                    <h1>Church Record</h1>
+                                    <div class="flex button"><i class="fas fa-date"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="div_content">
+                                <details>
+                                    <form>
+                                        <input name="delete_key" type="hidden" value=' ' />
+                                        <div class="Activity_record">
+                                            <div class="field">
+                                                <label>Category</label>
+                                                <select name="category">
+                                                    <option>Birth</option>
+                                                    <option>Death</option>
+                                                    <option>water baptism</option>
+                                                    <option>fire baptism</option>
+                                                    <option>wedding</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label>Year</label>
+                                                <select name="year" value="">
+                                                    <option>2024</option>
+                                                    <option>2023</option>
+                                                    <option>2022</option>
+                                                    <option>2021</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="field_e">
+                                                <label>Details</label>
+                                                <textarea name="details" value=''></textarea>
+                                            </div>
+                                            <button>Record message</button>
+                                        </div>
+                                    </form>
+                                </details>
+                            </div>
+                            <div class=" flex options title">
+                                <div class="edit flex Update_item">
+                                    <i class="fas fa-edit Update_item"></i>
+                                    <p>Edit</p>
+                                </div>
+
+                                <div class="edit flex">
+                                    <i class="fas fa-trash delete_item"></i>
+                                    <p>Remove</p>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="div_content">
-                            <details>
-                                <form>
-                                    <div class="Activity_record">
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Opening Prayer led By</label>
-                                                <input type="text" name="opening_prayer" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Praises By:</label>
-                                                <input type="text" name="praises" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <header>Scripture reading</header>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Scripture Reading By</label>
-                                                <input type="text" name="scripture_reading" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Scripture read:</label>
-                                                <input type="text" name="scripture" placeholder=".............." />
-                                            </div>
-                                        </div>
-
-                                        <header>Hymn</header>
-                                        <div class="cate_view_e">
-                                            <div class="field">
-                                                <label>Opening Hymn No</label>
-                                                <input type="text" name="opening_Hymn" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>New:</label>
-                                                <input type="text" name="Hymn_new" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Title:</label>
-                                                <input type="text" name="Hymn_title" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <label>Call to worship</label>
-                                            <input type="text" name="worship" placeholder=".............." />
-                                        </div>
-                                        <div class="field">
-                                            <label>Testimonies</label>
-                                            <input type="text" name="testimonies" placeholder=".............." />
-                                        </div>
-                                        <div class="field">
-                                            <label>Song Ministration & Thanksgiving Offering:</label>
-                                            <input type="text" name="song_thanksgving_offering"
-                                                placeholder=".............." />
-                                        </div>
-
-                                        <header>Sermon</header>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Sermon & Prayer By:</label>
-                                                <input type="text" name="sermon_prayer" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>From:</label>
-                                                <input type="text" name="sermon_from" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Scripture from preacher:</label>
-                                                <input type="text" name="scripture_preacher" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Time Duratoin for the preacher:</label>
-                                                <input type="text" name="peacher_duration" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Alter Call By:</label>
-                                                <input type="text" name="alter_call" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Tithe and Offering</label>
-                                                <input type="text" name="tithe_offering" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <label>Special Appeal</label>
-                                            <input type="text" name="special_appeal" placeholder=".............." />
-                                        </div>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Welcome of visitors</label>
-                                                <input type="text" name="welcome_visitors" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Announcement</label>
-                                                <input type="text" name="Announcement" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <header>Closing..</header>
-                                        <div class="field">
-                                            <label>Closing Prayer</label>
-                                            <input type="text" name="closing_prayer" placeholder=".............." />
-                                        </div>
-                                        <div class="cate_view">
-                                            <div class="field">
-                                                <label>Benediction</label>
-                                                <input type="text" name="Benediction" placeholder=".............." />
-                                            </div>
-                                            <div class="field">
-                                                <label>Mc</label>
-                                                <input type="text" name="MC" placeholder=".............." />
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <label>Total Attendance</label>
-                                            <input type="text" name="Total_attendance" placeholder=".............." />
-                                        </div>
-                                        <div class="field">
-                                            <label>Date</label>
-                                            <input type="date" name="date" placeholder=".............." />
-                                        </div>
-                                        <button>Record message</button>
-                                    </div>
-                                </form>
-                            </details>
+                        <div class="tithe_list ancc_list">
+                            <?php
+                            $data = json_decode($newDataRequest->church_record_viewList($year));
+                            if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
+                                echo "<header class='danger'>Not Records Available</header>";
+                            } else {
+                                foreach ($data as $item) {
+                                    $name = $item->name;
+                                    $details = $item->details;
+                                    $date = $item->date;
+                                    $year = $item->year;
+                                    $id = $item->id;
+                                    echo
+                                        ' <div class="annc_item list_mode">
+                    <div class="flex button">
+                        <div class=" flex title">
+                            <h1>Church Record' . $name . '</h1>
+                            <div class="flex button"><i class="fas fa-date"></i>' . $date . '</div>
                         </div>
+                    </div>
+    
+                    <div class="div_content">
+                        <details>
+                        <form form-id=' . $id . '>
+                        <input name="delete_key" type="hidden" value=' . $id . ' />
+                            <div class="Activity_record">
+                            <div class="field">
+                            <label>Category</label>
+                                <select name="category">
+                             <option>Birth</option>
+                              <option>Death</option>
+                               <option>water baptism</option>
+                                <option>fire baptism</option>
+                                 <option>wedding</option>
+                             </select>
+                            </div>
+                            <div class="field">
+                                                <label>Year of record</label>
+                                                 <select name="year" value="' . $year . '">
+                             <option>2024</option>
+                              <option>2023</option>
+                               <option>2022</option>
+                                <option>2021</option>
+                             </select>
+                                            </div>
+
+                             <div class="field_e">
+                                <label>Details</label>
+                                 <textarea name="details">' . $details . '</textarea>
+                            </div>
+                             <button>Record message</button>
+                            </div>
+                            </form>
+                        </details>
+                    </div>
                         <div class=" flex options title">
                             <div class="edit flex Update_item">
                                 <i class="fas fa-edit Update_item"></i>
                                 <p>Edit</p>
                             </div>
-
-
+    
                             <div class="edit flex">
                                 <i class="fas fa-trash delete_item"></i>
                                 <p>Remove</p>
                             </div>
                         </div>
+                </div>';
+                                }
+                            }
+                            ?>
+                            <div class="annc_item" hidden id="template">
+                                <div class="flex button">
+                                    <div class=" flex title">
+                                        <h1>Sunday </h1>
+                                        <div class="flex button"><i class="fas fa-date"></i>2023,04,12</div>
+                                    </div>
+                                </div>
+
+                                <div class="div_content">
+                                    <details>
+                                        <form>
+                                            <div class="Activity_record">
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Opening Prayer led By</label>
+                                                        <input type="text" name="opening_prayer"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Praises By:</label>
+                                                        <input type="text" name="praises" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <header>Scripture reading</header>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Scripture Reading By</label>
+                                                        <input type="text" name="scripture_reading"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Scripture read:</label>
+                                                        <input type="text" name="scripture" placeholder=".............." />
+                                                    </div>
+                                                </div>
+
+                                                <header>Hymn</header>
+                                                <div class="cate_view_e">
+                                                    <div class="field">
+                                                        <label>Opening Hymn No</label>
+                                                        <input type="text" name="opening_Hymn"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>New:</label>
+                                                        <input type="text" name="Hymn_new" placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Title:</label>
+                                                        <input type="text" name="Hymn_title" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Call to worship</label>
+                                                    <input type="text" name="worship" placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Testimonies</label>
+                                                    <input type="text" name="testimonies" placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Song Ministration & Thanksgiving Offering:</label>
+                                                    <input type="text" name="song_thanksgving_offering"
+                                                        placeholder=".............." />
+                                                </div>
+
+                                                <header>Sermon</header>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Sermon & Prayer By:</label>
+                                                        <input type="text" name="sermon_prayer"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>From:</label>
+                                                        <input type="text" name="sermon_from"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Scripture from preacher:</label>
+                                                        <input type="text" name="scripture_preacher"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Time Duratoin for the preacher:</label>
+                                                        <input type="text" name="peacher_duration"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Alter Call By:</label>
+                                                        <input type="text" name="alter_call" placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Tithe and Offering</label>
+                                                        <input type="text" name="tithe_offering"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Special Appeal</label>
+                                                    <input type="text" name="special_appeal" placeholder=".............." />
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Welcome of visitors</label>
+                                                        <input type="text" name="welcome_visitors"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Announcement</label>
+                                                        <input type="text" name="Announcement"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <header>Closing..</header>
+                                                <div class="field">
+                                                    <label>Closing Prayer</label>
+                                                    <input type="text" name="closing_prayer" placeholder=".............." />
+                                                </div>
+                                                <div class="cate_view">
+                                                    <div class="field">
+                                                        <label>Benediction</label>
+                                                        <input type="text" name="Benediction"
+                                                            placeholder=".............." />
+                                                    </div>
+                                                    <div class="field">
+                                                        <label>Mc</label>
+                                                        <input type="text" name="MC" placeholder=".............." />
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label>Total Attendance</label>
+                                                    <input type="text" name="Total_attendance"
+                                                        placeholder=".............." />
+                                                </div>
+                                                <div class="field">
+                                                    <label>Date</label>
+                                                    <input type="date" name="date" placeholder=".............." />
+                                                </div>
+                                                <button>Record message</button>
+                                            </div>
+                                        </form>
+                                    </details>
+                                </div>
+                                <div class=" flex options title">
+                                    <div class="edit flex Update_item">
+                                        <i class="fas fa-edit Update_item"></i>
+                                        <p>Edit</p>
+                                    </div>
+
+
+                                    <div class="edit flex">
+                                        <i class="fas fa-trash delete_item"></i>
+                                        <p>Remove</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
-    <div class="event_menu_add">
-        <header>Add to records (2024)</header>
-        <div class="flex title">
-            <div class="item">
-                <p><span>23</span> births</p>
-            </div>
-            <div class="item">
-                <p><span>3</span> Deaths</p>
-            </div>
-            <div class="item">
-                <p><span>12</span> water baptism</p>
-            </div>
-            <div class="item">
-                <p><span>11</span> fire baptism</p>
-            </div>
-            <div class="item">
-                <p><span>23</span> births</p>
-            </div>
-        </div>
-        <div class="container_event">
-            <div class="field">
-                <label>Select category</label>
-                <select>
-                    <option>new Birth</option>
-                    <option>death</option>
-                    <option>water_baptism</option>
-                    <option>fire_baptism</option>
-                </select>
-            </div>
-            <div class="field_e">
-                <label>Details</label>
-                <textarea></textarea>
-            </div>
-            <div class="field">
-                <button>submit data</button>
-            </div>
-
-        </div>
+    <div class="event_menu_add"
+        style="height:300px; width:500px; padding:10px;text-wrap:wrap;display:grid;place-items:center;">
+        <header class="danger">Validation failed</header>
     </div>
 
 

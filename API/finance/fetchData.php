@@ -1,4 +1,5 @@
 <?php
+namespace Finance;
 date_default_timezone_set('UTC');
 
 class DBH
@@ -11,10 +12,10 @@ class DBH
     {
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -1182,10 +1183,10 @@ class fetchData extends DBH
 
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $account = $this->validate($data['account']);
                 $amount = $this->validate($data['Amount']);
                 $date = $this->validate($data['Date']);
@@ -1214,7 +1215,7 @@ class fetchData extends DBH
                 $exportname = $id . $amount;
                 $ExportSendMain->$exportname = $ExportSend;
             }
-            $MainSendPages = new stdClass();
+            $MainSendPages = new \stdClass();
             $MainSendPages->pages = $total_pages;
             $MainSendPages->result = $ExportSendMain;
             $exportData = json_encode($MainSendPages);
@@ -1240,7 +1241,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
             $historySet = $this->history_set($namer, "Transaction Data Export", $date, "Transaction page dashboard Admin", "User Exported Transaction data ");
@@ -1248,8 +1249,8 @@ class fetchData extends DBH
                 $exportData = 'success';
             }
             foreach ($result as $data) {
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $account = $this->validate($data['account']);
                 $amount = $this->validate($data['Amount']);
                 $date = $this->validate($data['Date']);
@@ -1809,12 +1810,12 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ClassMain = new stdClass();
+            $ClassMain = new \stdClass();
             foreach ($result as $data) {
                 $firstname = $data['Firstname'];
                 $Othername = $data['Othername'];
                 $unique_id = $data['unique_id'];
-                $Class = new stdClass();
+                $Class = new \stdClass();
                 $Class->name = $firstname . ' ' . $Othername;
                 $Class->id = $unique_id;
                 $ClassMain->$unique_id = $Class;
@@ -1903,13 +1904,13 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $id = rand(1123, time());
                 $amount = $data['Total_amount'];
                 $modified = $data['last_modified'];
                 $name = $data['account_name'];
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
                 $exportname = $id;
                 $ExportSend->amount = $amount;
                 $ExportSend->modified = $modified;
@@ -1934,7 +1935,7 @@ class fetchData extends DBH
     protected function Budget_data_list()
     {
         $resultCheck = true;
-        $exportData = new stdClass();
+        $exportData = new \stdClass();
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`budget`  ORDER BY `id` DESC");
         if (!$stmt->execute()) {
 
@@ -1966,15 +1967,15 @@ class fetchData extends DBH
     }
     protected function Budget_list($year)
     {
-        $exportData = new stdClass();
+        $exportData = new \stdClass();
         $resultCheck = true;
-        $income_Class = new stdClass();
-        $Offertory_Class = new stdClass();
-        $tithe_Class = new stdClass();
-        $Ultilities_Class = new stdClass();
-        $Housing_Class = new stdClass();
-        $paycheck_Class = new stdClass();
-        $Others_Class = new stdClass();
+        $income_Class = new \stdClass();
+        $Offertory_Class = new \stdClass();
+        $tithe_Class = new \stdClass();
+        $Ultilities_Class = new \stdClass();
+        $Housing_Class = new \stdClass();
+        $paycheck_Class = new \stdClass();
+        $Others_Class = new \stdClass();
         $Other_income = 0;
         $offertory_income = 0;
         $tithe_income = 0;
@@ -2116,12 +2117,12 @@ class fetchData extends DBH
             }
 
         }
-        $IncomeMain = new stdClass();
+        $IncomeMain = new \stdClass();
         $IncomeMain->income = $income_Class;
         $IncomeMain->offertory = $Offertory_Class;
         $IncomeMain->tithe = $tithe_Class;
 
-        $ExpensesMain = new stdClass();
+        $ExpensesMain = new \stdClass();
         $ExpensesMain->Ultilities = $Ultilities_Class;
         $ExpensesMain->Housing = $Housing_Class;
         $ExpensesMain->paycheck = $paycheck_Class;
@@ -2181,7 +2182,7 @@ class fetchData extends DBH
 
     public function Budget_list_category_filter($year, $category)
     {
-        $exportData = new stdClass();
+        $exportData = new \stdClass();
         $resultCheck = true;
 
         $Other_income = 0;
@@ -2199,7 +2200,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
                 foreach ($result as $data) {
-                    $Data = new stdClass();
+                    $Data = new \stdClass();
                     $category = $data['category'];
                     $type = $data['type'];
                     $details = $data['details'];
@@ -2249,10 +2250,10 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
-                $Data = new stdClass();
-                $ExportSend = new stdClass();
+                $Data = new \stdClass();
+                $ExportSend = new \stdClass();
                 $category = $data['category'];
                 $type = $data['type'];
                 $details = $data['details'];
@@ -2316,10 +2317,10 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
-                $Data = new stdClass();
-                $ExportSend = new stdClass();
+                $Data = new \stdClass();
+                $ExportSend = new \stdClass();
                 $category = $data['category'];
                 $type = $data['type'];
                 $details = $data['details'];
@@ -2391,10 +2392,10 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
-                $Data = new stdClass();
-                $ExportSend = new stdClass();
+                $Data = new \stdClass();
+                $ExportSend = new \stdClass();
                 $category = $this->validate($data['category']);
                 $type = $this->validate($data['type']);
                 $details = $this->validate($data['details']);
@@ -2433,7 +2434,7 @@ class fetchData extends DBH
         } else {
             exit(json_encode("no record found"));
         }
-        $MainExport = new stdClass();
+        $MainExport = new \stdClass();
         $MainExport->pages = $total_pages;
         $MainExport->result = $ExportSendMain;
         $exportData = json_encode($MainExport);
@@ -2448,12 +2449,12 @@ class fetchData extends DBH
 
     public function Budget_list_filter($year)
     {
-        $exportData = new stdClass();
+        $exportData = new \stdClass();
         $resultCheck = true;
-        $Grand_Other_income = new stdClass();
-        $Grand_offertory_income = new stdClass();
-        $Grand_tithe_income = new stdClass();
-        $Grand_Expenses_total = new stdClass();
+        $Grand_Other_income = new \stdClass();
+        $Grand_offertory_income = new \stdClass();
+        $Grand_tithe_income = new \stdClass();
+        $Grand_Expenses_total = new \stdClass();
 
         $Other_income = 0;
         $offertory_income = 0;
@@ -2613,7 +2614,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
-                $ExportSendMain = new stdClass();
+                $ExportSendMain = new \stdClass();
                 foreach ($result as $data) {
                     $namer = $data['user'];
                     $Medium = $data['Medium'];
@@ -2621,7 +2622,7 @@ class fetchData extends DBH
                     $amount = $data['Amount'];
                     $id = $data['user'];
 
-                    $ExportSend = new stdClass();
+                    $ExportSend = new \stdClass();
 
                     $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer'");
                     if (!$stmt->execute()) {
@@ -2641,7 +2642,7 @@ class fetchData extends DBH
                             $contact = $value['contact'];
                         }
                     }
-                    $ObjectInfo = new stdClass();
+                    $ObjectInfo = new \stdClass();
                     $ObjectInfo->Formname = $name;
                     $ObjectInfo->Medium = $Medium;
                     $ObjectInfo->name = $Name;
@@ -2699,7 +2700,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
-                $ExportSendMain = new stdClass();
+                $ExportSendMain = new \stdClass();
                 foreach ($result as $data) {
                     $namer = $data['user'];
                     $Medium = $data['Medium'];
@@ -2707,7 +2708,7 @@ class fetchData extends DBH
                     $amount = $data['Amount'];
                     $id = $data['user'];
 
-                    $ExportSend = new stdClass();
+                    $ExportSend = new \stdClass();
 
                     $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Firstname` like '%$searchname%' and `unique_id`='$namer' or `Othername` like '%$searchname%' and `unique_id`='$namer'");
                     if (!$stmt->execute()) {
@@ -2727,7 +2728,7 @@ class fetchData extends DBH
                             $contact = $value['contact'];
 
 
-                            $ObjectInfo = new stdClass();
+                            $ObjectInfo = new \stdClass();
                             $ObjectInfo->Formname = $name;
                             $ObjectInfo->Medium = $Medium;
                             $ObjectInfo->name = $Name;
@@ -2786,7 +2787,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['name']);
                 $amount = $this->validate($data['amount']);
@@ -2796,8 +2797,8 @@ class fetchData extends DBH
                 $purpose = $this->validate($data['purpose']);
                 $department = $this->validate($data['department']);
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->name = $name;
                 $ObjectInfo->amount = $amount;
                 $ObjectInfo->date = $date;
@@ -2849,7 +2850,7 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['name']);
                 $amount = $this->validate($data['amount']);
@@ -2859,8 +2860,8 @@ class fetchData extends DBH
                 $purpose = $this->validate($data['purpose']);
                 $department = $this->validate($data['department']);
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->name = $name;
                 $ObjectInfo->amount = $amount;
                 $ObjectInfo->date = $date;
@@ -2881,7 +2882,7 @@ class fetchData extends DBH
 
                 $ExportSendMain->$exportname = $ExportSend;
             }
-            $MainExport = new stdClass();
+            $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ExportSendMain;
             $exportData = json_encode($MainExport);
@@ -2909,7 +2910,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['event']);
                 $amount = $this->validate($data['amount']);
@@ -2920,8 +2921,8 @@ class fetchData extends DBH
                 $Month = $this->validate($data['month']);
                 $department = $this->validate($data['year']);
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->name = $name;
                 $ObjectInfo->amount = $amount;
                 $ObjectInfo->date = $date;
@@ -3006,7 +3007,7 @@ class fetchData extends DBH
 
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $account = $data['account'];
                 $amount = $data['Amount'];
@@ -3016,8 +3017,8 @@ class fetchData extends DBH
                 $category = $data['Category'];
                 $Authorize = $data['Authorize'];
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->account = $account;
                 $ObjectInfo->amount = $amount;
                 $ObjectInfo->Date = $date;
@@ -3064,7 +3065,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $account = $data['account_name'];
 
@@ -3086,7 +3087,7 @@ class fetchData extends DBH
                         $category = $data['category'];
                         $date = $data['date'];
 
-                        $ExportSend = new stdClass();
+                        $ExportSend = new \stdClass();
                         $ExportSend->description = $description;
                         $ExportSend->amount = $amount;
                         $ExportSend->balance = $balance;
@@ -3130,7 +3131,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['event']);
                 $amount = $this->validate($data['amount']);
@@ -3138,8 +3139,8 @@ class fetchData extends DBH
                 $Month = $this->validate($data['month']);
                 $purpose = $this->validate($data['purpose']);
                 $id = $this->validate($data['unique_id']);
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->name = $name;
                 $ObjectInfo->amount = $amount;
                 $ObjectInfo->date = $date;
@@ -3207,7 +3208,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $namer = $data['unique_id'];
                 $name = $data['name'];
@@ -3236,8 +3237,8 @@ class fetchData extends DBH
                     }
                 }
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->Name = $namer;
                 $ObjectInfo->Amount = $amount;
                 $ObjectInfo->Date = $Date;
@@ -3285,7 +3286,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
             $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported tithe  data");
@@ -3311,7 +3312,7 @@ class fetchData extends DBH
                 $gender = "Guest";
                 $contact = "Guest";
                 $Email = "-";
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
                 if ($stmt->rowCount() > 0) {
                     $row2 = $stmt->fetchAll();
                     foreach ($row2 as $value) {
@@ -3365,7 +3366,7 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $namer = $data['unique_id'];
                 $name = $data['name'];
@@ -3394,8 +3395,8 @@ class fetchData extends DBH
                     }
                 }
 
-                $ObjectInfo = new stdClass();
-                $ExportSend = new stdClass();
+                $ObjectInfo = new \stdClass();
+                $ExportSend = new \stdClass();
                 $ObjectInfo->Name = $namer;
                 $ObjectInfo->Amount = $amount;
                 $ObjectInfo->Date = $Date;
@@ -3417,7 +3418,7 @@ class fetchData extends DBH
                 $ExportSend->Obj = $ObjectData;
                 $ExportSendMain->$exportname = $ExportSend;
             }
-            $MainExport = new stdClass();
+            $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ExportSendMain;
             $exportData = json_encode($MainExport);
@@ -3516,7 +3517,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
             $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported a Offertory  data");
@@ -3527,7 +3528,7 @@ class fetchData extends DBH
                 $name = $this->validate($data['event']);
                 $amount = $this->validate($data['amount']);
                 $date = $this->validate($data['date']);
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
                 $ExportSend->name = $name;
                 $ExportSend->amount = $amount;
                 $ExportSend->date = $date;
@@ -3558,7 +3559,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
 
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
@@ -3572,7 +3573,7 @@ class fetchData extends DBH
                 $amount = $this->validate($data['amount']);
                 $date_data = $this->validate($data['date']);
 
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
 
                 $ExportSend->amount = $amount;
                 $ExportSend->name = $name;

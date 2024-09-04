@@ -1,9 +1,12 @@
-define(["Access", "projects", "finance", "calender", "xlsx"], function (
+define(["jQuery", "Access", "projects", "finance", "calender", "xlsx", "slick", 'slickAnimation'], function (
+  jQuery,
   timer,
   asset,
   Finance,
   calender,
-  XLSX
+  XLSX,
+  slick,
+  slickAnimation
 ) {
   const ContentDom = document.querySelector(".content_main");
   const SkeletonDom_list = document.querySelector(".skeleton_loader.list");
@@ -18,6 +21,9 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
   const NavigationBar = document.querySelector(".navigation_content");
   const searchInput = document.querySelector("#searchInput");
   const searchBtn = document.querySelector("#searchBtn");
+  const get_current_date = document.querySelector(".get_current_date");
+  var MainFormDel = "";
+  var formDataDel = "";
   let SearchTrigger = false;
   let DomManipulationElement;
   let validateKey;
@@ -26,7 +32,6 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
   let currentPageNum = 1;
   var location;
   searchBtn.addEventListener("click", function () {
-
     if (ArrayTables.includes(location)) {
       DomManipulationElement = SkeletonDom_table;
     } else {
@@ -85,6 +90,11 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
       title: "Homepage screen | Router sequence",
       description: "hero",
     },
+    Gallery: {
+      template: "gallery/gallery.php",
+      title: "Homepage screen | Router sequence",
+      description: "hero",
+    },
     Access_token: {
       template: "Access_token.php",
       title: "Access token | Router sequence",
@@ -102,11 +112,6 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
     },
     Appearance: {
       template: "Appearance/Homeview.php",
-      title: "project | All uploaded projects are currently being tracked",
-      description: "hero",
-    },
-    Gallery: {
-      template: "../pages/Gallery.txt",
       title: "project | All uploaded projects are currently being tracked",
       description: "hero",
     },
@@ -180,6 +185,80 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
 
     try {
       if (!loader_status) {
+
+        if (document.querySelector('.location_date')) {
+          document.querySelector('.location_date').innerText = location;
+        }
+        if (location == '/') {
+          var _seed = 42;
+          Math.random = function () {
+            _seed = _seed * 16807 % 2147483647;
+            return (_seed - 1) / 2147483646;
+          };
+          titheData = JSON.parse(document.querySelector('#chartData').innerText);
+          if (titheData) {
+            titheData_num = [];
+            for (const key in titheData) {
+              const element = titheData[key];
+              titheData_num.push(element);
+            }
+            var options = {
+              series: [{
+                name: "Desktops",
+                data: titheData_num
+              }],
+              chart: {
+                height: 290,
+                type: 'line',
+                zoom: {
+                  enabled: false
+                }
+              },
+              dataLabels: {
+                enabled: false
+              },
+              stroke: {
+                curve: 'straight'
+              },
+              title: {
+                text: 'Tithe payment Trends by Month',
+                align: 'left',
+                fill: '#000'
+              },
+              grid: {
+                row: {
+                  colors: ['#f3f3f3', 'transparent'],
+                  opacity: 0.5
+                },
+              },
+              xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              }
+            };
+            var chart = new ApexCharts(document.querySelector("#charts_data"), options);
+            chart.render();
+          }
+          $("#sliderMain")
+            .slick({
+              autoplay: false,
+              speed: 800,
+              lazyload: "progressive",
+              arrows: false,
+              dots: false,
+              autoplay: true,
+              // variableWidth: true,
+              responsive: [
+                {
+                  breakpoint: 992,
+                  settings: {
+                    dots: true,
+                    arrows: false,
+                  },
+                },
+              ],
+            })
+
+        }
         if (location == "Access_token") {
           const mainDiv = document.querySelector(".timer_set");
           const HourEle = mainDiv.querySelector(".hour");
@@ -1859,7 +1938,8 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
           location == "Partnership" ||
           location == "Transaction" ||
           location == "Expenses" ||
-          location == "Assets"
+          location == "Assets" ||
+          location == "Gallery"
         ) {
           setTimeout(function () {
             const AddEventBtn = document.querySelector(".add_event");
@@ -1914,6 +1994,8 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
                     ) {
                       validateKey = target.getAttribute("data-id");
                       dn_message.classList.add("active");
+                      console.log(MainFormDel, formDataDel);
+
                     }
                   }
                 }
@@ -3349,13 +3431,16 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
           });
         }
         if (location == "records") {
+          let RecordMenu = true;
+          TemplateSet = true;
+          TemplateSetRecord = false;
           const AddEventBtn_far = document.querySelector(".add_event.far");
           const FilterBtn = document.querySelector(".filterBtn");
           const RecordsDivs = document.querySelectorAll(".annc_item");
           var OptionElements = document.querySelectorAll("i.delete_item");
           const AddEventBtn = document.querySelector(".add_event");
+          const mainContainer = document.querySelector(".main_container");
           const AddEventMenu = document.querySelector(".event_menu_add");
-          const notifyBox = document.querySelector(".notifyBox");
           const Export_variables = document.querySelector('#ExportBtn');
           const Export_variables_Dialogue = document.querySelector('.export_dialogue');
           const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
@@ -3370,14 +3455,25 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
             Export_variables_Dialogue.classList.add("active");
           };
           Export_variables_Dialogue_Btn.addEventListener('click', async function () {
-            APIDOCS =
-              "../API/sundayRecords/data_process.php?APICALL=true&&user=true&&submit=export";
-            ExportData('records', 'excel', APIDOCS)
+            APIDOCS = "";
+            if (RecordMenu) {
+              APIDOCS =
+                "../API/sundayRecords/data_process.php?APICALL=true&&user=true&&submit=export";
+            } else {
+              APIDOCS =
+                "../API/sundayRecords/data_process.php?APICALL=record&&user=true&&submit=export";
+            }
+            if (APIDOCS != "") {
+              ExportData('records', 'excel', APIDOCS)
+            }
+
           })
           AddEventBtn.addEventListener("click", function (e) {
             APIDOCS =
               "../API/sundayRecords/data_process.php?APICALL=true&&user=true&&submit=true";
-            AddEventMenu.classList.add("active");
+            mainContainer.classList.add("active");
+            RecordMenu = false;
+            DetectFunction()
           });
           var FilterUI = document.querySelector(".notification_list_filter");
           var FilterUIList = document.querySelectorAll(".notification_list_filter .item");
@@ -3439,12 +3535,6 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
                 AddEventMenu.classList.remove("active");
               }
             }
-
-            if (!notifyBox.contains(target)) {
-              if (notifyBox.classList.contains("active")) {
-                notifyBox.classList.remove("active");
-              }
-            }
           });
           RecordsDivs.forEach((element) => {
             var MainData = element.querySelector("i.Update_item");
@@ -3467,29 +3557,12 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
             }
           });
           AddEventBtn_far.addEventListener("click", function () {
-            const Template = document.querySelector("#template");
-            const Div = document.createElement("div");
-            const newClone = Template.cloneNode(true);
-            newClone.setAttribute("id", "newClone");
-            newClone.removeAttribute("hidden");
-            var EventUpdateButton = newClone.querySelector("i.Update_item");
-            const SubmitForm = newClone.querySelector("form");
-            SubmitForm.addEventListener("submit", function (e) {
-              e.preventDefault();
-              if (SubmitForm.hasAttribute("form-id")) {
-                PHPREQUEST("update", SubmitForm);
-              } else {
-                PHPREQUEST("upload", SubmitForm);
-              }
-            });
-            EventUpdateButton.addEventListener("click", function () {
-              newClone
-                .querySelector(".Activity_record")
-                .classList.toggle("edit");
-              EventUpdateButton.parentElement.classList.toggle("active");
-            });
-            Div.append(newClone);
-            document.querySelector(".ancc_list").prepend(Div);
+            RecordMenu = true;
+            mainContainer.classList.remove("active");
+            RecordMenu = true;
+            DetectFunction()
+
+
           });
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
@@ -3504,6 +3577,49 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
               }, 100);
             });
           });
+          function DetectFunction() {
+            var Template;
+            var ContainerMain;
+            if (RecordMenu) {
+              ContainerMain = document.querySelector('.profile_main .ancc_list');
+              Template = document.querySelector("#template");
+            } else {
+              ContainerMain = document.querySelector('.profile.records_main .ancc_list');
+              Template = document.querySelector("#Recordtemplate");
+
+            }
+            console.log(TemplateSet, TemplateSetRecord, RecordMenu);
+            if (RecordMenu && TemplateSet || !RecordMenu && !TemplateSetRecord) {
+              const Div = document.createElement("div");
+              const newClone = Template.cloneNode(true);
+              newClone.setAttribute("id", "newClone");
+              newClone.removeAttribute("hidden");
+              var EventUpdateButton = newClone.querySelector("i.Update_item");
+              const SubmitForm = newClone.querySelector("form");
+              SubmitForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (SubmitForm.hasAttribute("form-id")) {
+                  PHPREQUEST("update", SubmitForm);
+                } else {
+                  PHPREQUEST("upload", SubmitForm);
+                }
+              });
+              EventUpdateButton.addEventListener("click", function () {
+                newClone
+                  .querySelector(".Activity_record")
+                  .classList.toggle("edit");
+                EventUpdateButton.parentElement.classList.toggle("active");
+              });
+              Div.append(newClone);
+              ContainerMain.prepend(Div);
+              if (RecordMenu && TemplateSet) {
+                TemplateSet = false;
+              }
+              if (!RecordMenu && !TemplateSetRecord) {
+                TemplateSetRecord = true;
+              }
+            }
+          }
           function UpdateItemFunction(value) {
             // newObject = value.getAttribute("data-information");
             // newObject = JSON.parse(newObject);
@@ -3529,13 +3645,18 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
             //   "../API/partnership/data_process.php?APICALL=true&&user=true&&submit=update_file";
           }
           function DeleteItemFunction(value, validateKey, MainForm) {
+            console.log(value, validateKey, MainForm);
+            let API;
             if (value == "true" && validateKey) {
-              let API =
-                "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=delete";
+              if (!RecordMenu) {
+                API = "../API/SundayRecords/data_process.php?APICALL=record&&user=true&&submit=delete";
+              } else {
+                API =
+                  "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=delete";
+              }
               PHPREQUESTDEL(API, validateKey, MainForm);
             }
           }
-
           async function FilterOptionsFun(APIDOCS, validateKey) {
             let data;
 
@@ -3575,15 +3696,24 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
 
           async function PHPREQUEST(value, SubmitForm) {
             let APIDOCS;
-            let formMain = new FormData(SubmitForm);
-            console.log(value);
-            if (value == "update") {
-              APIDOCS =
-                "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=update";
-            } else if (value == "upload") {
-              APIDOCS =
-                "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=upload";
+            if (RecordMenu) {
+              if (value == "update") {
+                APIDOCS =
+                  "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=update";
+              } else if (value == "upload") {
+                APIDOCS =
+                  "../API/SundayRecords/data_process.php?APICALL=true&&user=true&&submit=upload";
+              }
+            } else {
+              if (value == "update") {
+                APIDOCS =
+                  "../API/SundayRecords/data_process.php?APICALL=record&&user=true&&submit=update";
+              } else if (value == "upload") {
+                APIDOCS =
+                  "../API/SundayRecords/data_process.php?APICALL=record&&user=true&&submit=upload";
+              }
             }
+
             let data;
             try {
               const formMain = new FormData(SubmitForm);
@@ -3599,14 +3729,29 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
                 if (data) {
                   if (value == "upload") {
                     if (
-                      data["message"] ==
-                      "Data entry was a success Page will refresh to display new data"
+                      data["message"] || data ==
+                      "Data entry was a success Page will refresh to display new data" || "Upload was a success"
                     ) {
-                      SubmitForm.setAttribute("form-id", data["id"]);
-                      notifyBox.classList.add("active");
-                      notifyBox.querySelector("p").innerText = data["message"];
+                      SubmitForm.setAttribute("form-id", data["Id"]);
+                      SubmitForm.querySelector('input[name="delete_key"]').value = data["Id"];
+                      ParentElementR = SubmitForm.parentElement.parentElement.parentElement;
+                      ParentElementR.querySelector('.edit.flex').classList.remove('active');
+                      if (!RecordMenu) {
+                        ParentElementR.querySelector('.flex.title h1').innerText += SubmitForm.querySelector('select[name="category"]').value;
+                      }
+                      ParentElementR.classList.add('list_mode');
                     }
                   }
+                  AddEventMenu.classList.add('active');
+                  AddEventMenu.querySelector('header').innerText = data['message'] || data;
+                  if (RecordMenu) {
+                    TemplateSet = true;
+                  }
+                  if (!RecordMenu) {
+                    TemplateSetRecord = false;
+                  }
+
+
                 }
               } else {
                 console.log("cannot find endpoint");
@@ -3620,7 +3765,6 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
             let data;
 
             try {
-              console.log(MainForm);
               dataSend = {
                 key: validateKey,
               };
@@ -3637,12 +3781,13 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
               if (Request.status === 200) {
                 data = await Request.json(data);
                 if (data) {
-                  if ((data["message"] = "Item Deleted Successfully")) {
-                    notifyBox.classList.add("active");
-                    notifyBox.querySelector("p").innerText = data["message"];
+                  if (data["message"] || data == "Item Deleted Successfully") {
                     MainForm.classList.add("none");
                     dn_message.classList.remove("active");
+                    dn_message.classList.remove("delete");
                   }
+                  AddEventMenu.classList.add('active');
+                  AddEventMenu.querySelector('header').innerText = data['message'] || data;
                 }
               } else {
                 console.log("cannot find endpoint");
@@ -4212,33 +4357,46 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
         if (location == "records") {
           window.addEventListener("click", function (e) {
             var target = e.target;
+
+            if (target.classList.contains('delete_item')) {
+              MainFormDel = target.parentElement.parentElement.parentElement;
+              formDataDel =
+                target.parentElement.parentElement.parentElement.querySelector(
+                  "form"
+                );
+            }
+
             if (target.classList.contains("Update_item")) {
               UpdateItemFunction(target);
             }
             if (target.classList.contains("delete_item")) {
               dn_message.classList.add("active");
             }
-            confirmsBtns.forEach((element) => {
-              element.addEventListener("click", (e) => {
-                if (element.getAttribute("data-confirm") == "true") {
-                  MainForm = target.parentElement.parentElement.parentElement;
-                  formData =
-                    target.parentElement.parentElement.parentElement.querySelector(
-                      "form"
-                    );
 
-                  if (formData.hasAttribute("form-id")) {
-                    validateKey = formData.getAttribute("form-id");
+
+
+            confirmsBtns.forEach((element) => {
+
+              if (element.contains(target)) {
+
+                if (element.getAttribute("data-confirm") == "true") {
+                  if (MainFormDel != "" && formDataDel != "") {
+                    if (formDataDel.hasAttribute("form-id")) {
+                      validateKey = formDataDel.getAttribute("form-id");
+                    }
+                    if (validateKey != "") {
+                      DeleteItemFunction(
+                        element.getAttribute("data-confirm"),
+                        validateKey,
+                        MainFormDel
+                      );
+
+                    }
                   }
-                  if (validateKey != "") {
-                    DeleteItemFunction(
-                      element.getAttribute("data-confirm"),
-                      validateKey,
-                      MainForm
-                    );
-                  }
+
                 }
-              });
+
+              }
             });
           });
         }
@@ -4957,9 +5115,12 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
           })
         }
         if (location == "Partnership") {
+          var OptionElement_r = document.querySelectorAll(".option");
           var OptionElements = document.querySelectorAll(".btn_record");
           const Partnership_record = document.querySelector(".series_version");
           const AddEventMenu = document.querySelector(".event_menu_add");
+          const AddEventMenuIndi = document.querySelector('.event_menu_add.indi')
+          const AddEventMenuIndiBtn = document.querySelector('.event_menu_add.indi button');
           const FilterBtn = document.querySelector(".filterBtn");
           const Export_variables = document.querySelector('#ExportBtn');
           const Export_variables_Dialogue = document.querySelector('.export_dialogue');
@@ -5063,7 +5224,12 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
 
           AddEventBtn.addEventListener("click", function (e) {
             APIDOCS =
-              "../API/partnership/data_process.php?APICALL=true&&user=true&&submit=true";
+              "../API/partnership/data_process.php?APICALL=true&&user=true&&submit=upload";
+          });
+          AddEventMenuIndiBtn.addEventListener("click", function (e) {
+            APIDOCS =
+              "../API/partnership/data_process.php?APICALL=true&&user=true&&submit=upload_ind";
+            PHPREQUESTIND(APIDOCS);
           });
           function DestructureJson(element) {
             newObject = JSON.parse(
@@ -5124,6 +5290,39 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
                 DestructureJson(element);
               }
             });
+            if (
+              AddEventMenuIndi.classList.contains("active") &&
+              !AddEventMenuIndiBtn.contains(target)
+            ) {
+              if (!AddEventMenuIndi.contains(target)) {
+                AddEventMenuIndi.classList.remove("active");
+              }
+            }
+            OptionElement_r.forEach((element) => {
+              var ElementOptions = element.querySelector(".opt_element");
+              if (ElementOptions != null) {
+                if (
+                  ElementOptions.classList.contains("active") &&
+                  !element.contains(target)
+                ) {
+                  if (!ElementOptions.contains(target)) {
+                  }
+                } else {
+
+                  if (
+                    target.classList.contains("add_item") &&
+                    element.contains(target)
+                  ) {
+
+                    AddEventMenuIndi.classList.add('active');
+                    AddEventMenuIndi.querySelector('input[name="delete_key"]').value = target.getAttribute("data-id");
+
+                  }
+
+                }
+              }
+            });
+
 
             if (!target.classList.contains("btn_record")) {
               if (
@@ -5133,6 +5332,7 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
                 Partnership_record.classList.remove("active");
               }
             }
+
           });
 
           function UpdateItemFunction(value) {
@@ -5175,6 +5375,29 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
               PHPREQUESTDEL(API, validateKey);
             }
           }
+          async function PHPREQUESTIND(APIDOCS) {
+            let data;
+            try {
+              const formMain = new FormData(AddEventMenuIndi.querySelector('form'));
+              controller = new AbortController();
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: formMain,
+              });
+
+              if (Request.status === 200) {
+                data = await Request.json();
+                if (data) {
+                  ResponseView.innerText = data;
+                }
+              } else {
+                console.log("cannot find endpoint");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
           async function PHPREQUEST(APIDOCS) {
             console.log(APIDOCS);
             let data;
@@ -5235,6 +5458,10 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
             e.preventDefault();
 
             PHPREQUEST(APIDOCS);
+          });
+          AddEventMenuIndi.querySelector('form').addEventListener("submit", async function (e) {
+            AddEventMenuIndi.querySelector(".error_information").innerText = "loading...";
+            e.preventDefault();
           });
           const searchSystem = debounce(async (APIDOCS, value) => {
             let data;
@@ -5802,6 +6029,285 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
           })
 
         }
+        if (location == "Gallery") {
+          let APIDOCS;
+          const AddEventBtn = document.querySelector(".add_event");
+          const SubmitForm = document.querySelector(".event_menu_add form");
+          // const SubmitSearchForm = document.querySelector("#searchInput");
+          // const SubmitSearchbutton = document.querySelector("#searchBtn");
+          const ResponseView = document.querySelector(".error_information");
+          const FilterBtn = document.querySelector(".filterBtn");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../API/membership/data_process.php?APICALL=true&&user=true&&submit=export";
+            ExportData('MembershipExport', 'excel', APIDOCS)
+          })
+          const imageCompound = document.querySelector(
+            '.event_menu_add input[name="imageFile"]'
+          );
+          window.addEventListener('click', function (e) {
+            var target = e.target;
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+            if (target.classList.contains('fa-times')) {
+              if (target.hasAttribute('dterm')) {
+                Outnum = target.getAttribute('num');
+                console.log(document.querySelector('.cate_view input[type="file"]').file);
+              }
+            }
+          })
+          confirmsBtns.forEach((element) => {
+            element.addEventListener("click", (e) => {
+              if (element.getAttribute("data-confirm") == "true") {
+                console.log(document.querySelector(".delete_item"));
+
+                if (validateKey != "") {
+                  DeleteItemFunction(
+                    element.getAttribute("data-confirm"),
+                    validateKey
+                  );
+                }
+              }
+            });
+          });
+          SubmitForm.addEventListener("submit", async function (e) {
+            ResponseView.innerText = "loading...";
+            e.preventDefault();
+            PHPREQUEST(APIDOCS);
+          });
+
+          // SubmitSearchbutton.addEventListener("click", function (e) {
+          //   APIDOCS = "../API/membership/data_process.php?APICALL=true&&user=true&&submit=search_file";
+          //   if (searchInput.value != " " && searchInput.value != "") {
+          //     searchSystem(APIDOCS, searchInput.value);
+          //   }
+          // })
+
+          AddEventBtn.addEventListener("click", function (e) {
+            APIDOCS =
+              "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=true";
+
+            if (!imageCompound.hasAttribute("required")) {
+              imageCompound.setAttribute("required", "true");
+            }
+          });
+          document.querySelector('.cate_view input[type="file"]').addEventListener('change', function (e) {
+            Target = e.target;
+            const ImageView = document.querySelector('.image_view');
+            total = Target.files.length;
+            for (let index = 0; index < total; index++) {
+              if (Target.files[index]) {
+                reader = new FileReader();
+                reader.onload = (e) => {
+                  template = `<div class="item">
+                        <img src="${e.target.result}" alt="" />
+                        <i class="fas fa-times" dterm="true" dnum=${index}></i>
+                       </div>`;
+                  ImageView.innerHTML += template;
+                }
+                reader.readAsDataURL(Target.files[index]);
+              }
+            }
+          })
+          function UpdateItemFunction(value) {
+            const AddEventMenu = document.querySelector(".event_menu_add");
+            newObject = value.getAttribute("data-information");
+            newObject = JSON.parse(newObject);
+
+            document.querySelector(
+              '.event_menu_add input[name="event_name"]'
+            ).value = newObject["Eventname"];
+
+            document.querySelector(
+              '.event_menu_add input[name="date"]'
+            ).value = newObject["date_uploaded"];
+            document.querySelector(
+              '.event_menu_add select[name="category"]'
+            ).value = newObject["category"];
+
+            document.querySelector(
+              '.event_menu_add input[name="delete_key"]'
+            ).value = newObject["UniqueId"];
+            AddEventMenu.classList.add("active");
+            APIDOCS =
+              "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=update_file";
+          }
+          function DeleteItemFunction(value, validateKey) {
+            if (value == "true") {
+              let API =
+                "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=delete_file";
+              PHPREQUESTDEL(API, validateKey);
+            }
+          }
+          async function PHPREQUEST(APIDOCS) {
+            console.log(APIDOCS);
+            let data;
+            try {
+              const formMain = new FormData(SubmitForm);
+              formMain.append(
+                "file",
+                document.querySelector('.event_menu_add input[type="file"]')
+                  .files[0]
+              );
+              controller = new AbortController();
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: formMain,
+              });
+
+              if (Request.status === 200) {
+                data = await Request.json();
+                console.log('waiting');
+                if (data) {
+                  ResponseView.innerText = data;
+                }
+              } else {
+                console.log("cannot find endpoint");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
+          async function PHPREQUESTDEL(APIDOCS, validateKey) {
+            let data;
+            try {
+              dataSend = {
+                key: validateKey,
+              };
+              controller = new AbortController();
+              const signal = controller.signal;
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: JSON.stringify(dataSend),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              if (Request.status === 200) {
+                data = await Request.json(data);
+                if (data) {
+                  // if(data == 'Item Deleted Successfully'){
+
+                  // }
+                  ResponseView.innerHTML = "";
+                }
+              } else {
+                console.log("cannot find endpoint");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          // const searchSystem = debounce(async (APIDOCS, value) => {
+          //   let data;
+          //   try {
+          //     loader_progress.classList.add("active");
+          //     ContentDom.classList.add("load");
+          //     DomManipulationElement.classList.add("load");
+          //     dn_message.querySelector("p").innerText = "...processing request";
+          //     dataSend = {
+          //       key: value,
+          //       numData: numoffset,
+          //     };
+          //     controller = new AbortController();
+          //     const signal = controller.signal;
+          //     const Request = await fetch(APIDOCS, {
+          //       method: "POST",
+          //       body: JSON.stringify(dataSend),
+          //       headers: {
+          //         "Content-Type": "application/json",
+          //       },
+          //     });
+          //     data = await Request.json(data);
+          //     if (Request.status === 200) {
+          //       if (data) {
+          //         if (data != 'No Records Available' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+          //           let ObjectDataFrame = JSON.parse(data);
+          //           Template = document.querySelector('.membership_table tbody');
+          //           CloneObject = document.querySelector('.CloneSearch').cloneNode(true);
+
+          //           Template.innerHTML = "";
+          //           ObjectDataFrame = ObjectDataFrame['result'];
+
+          //           for (const key in ObjectDataFrame) {
+          //             unique_id = ObjectDataFrame[key]['UniqueId'];
+          //             Firstname = ObjectDataFrame[key]['Firstname'];
+          //             Othername = ObjectDataFrame[key]['Othername'];
+          //             Age = ObjectDataFrame[key]['birth'];
+          //             Position = ObjectDataFrame[key]['Position'];
+          //             contact = ObjectDataFrame[key]['contact'];
+          //             email = ObjectDataFrame[key]['email'];
+          //             image = ObjectDataFrame[key]['image'];
+          //             Address = ObjectDataFrame[key]['Address'];
+          //             Baptism = ObjectDataFrame[key]['Baptism'];
+          //             membership_start = ObjectDataFrame[key]['membership_start'];
+          //             username = ObjectDataFrame[key]['username'];
+          //             gender = ObjectDataFrame[key]['gender'];
+          //             occupation = ObjectDataFrame[key]['occupation'];
+          //             About = ObjectDataFrame[key]['About'];
+          //             ObjectData = ObjectDataFrame[key]['Obj'];
+          //             statusr = ObjectDataFrame[key]['status'];
+
+          //             if (CloneObject != '') {
+          //               const ElementDivCone = document.createElement('tr');
+          //               CloneObject.querySelector('.Clonemeail').innerText = email;
+          //               CloneObject.querySelector('.Clonename').innerText = `${Firstname}   -   ${Othername} `;
+          //               CloneObject.querySelector('.Cloneage').innerText = Age;
+          //               CloneObject.querySelector('.Cloneimage').setAttribute('src', `../API/Images_folder/users/${image}`);
+          //               CloneObject.querySelector('.Clonegender').innerText = gender;
+          //               CloneObject.querySelector('.Cloneaddress').innerText = Address;
+          //               CloneObject.querySelector('.Clonegender').innerText = gender;
+          //               CloneObject.querySelector('.Clonebaptism').innerText = Baptism;
+          //               CloneObject.querySelector('.Cloneoccupation').innerText = occupation;
+          //               CloneObject.querySelector('.opt_element p.up').setAttribute('data-information', ObjectData);
+          //               CloneObject.querySelector('.opt_element p.up').setAttribute('data-id', unique_id);
+          //               CloneObject.querySelector('.opt_element p.dp').setAttribute('data-id', unique_id);
+          //               ElementDivCone.innerHTML = CloneObject.innerHTML;
+          //               Template.append(ElementDivCone);
+          //               OptionElements = document.querySelectorAll(".option");
+          //               const element = ElementDivCone.querySelector('.option');
+          //               console.log(ElementDivCone);
+          //               element.addEventListener("click", function () {
+          //                 var ElementOptions = element.querySelector(".opt_element");
+          //                 ElementOptions.classList.add("active");
+          //               });
+          //             }
+
+
+          //           }
+          //           if (ObjectDataFrame['pages'] > 25) {
+          //             ConvertPages = ObjectDataFrame['pages'];
+          //             RestructurePages(ConvertPages);
+          //           }
+          //         }
+          //       }
+          //     } else {
+          //       console.log("cannot find endpoint");
+          //     }
+          //     loader_progress.classList.remove("active");
+          //     ContentDom.classList.remove("load");
+          //     DomManipulationElement.classList.remove("load");
+          //   } catch (error) {
+          //     console.error(error);
+          //   }
+          // })
+
+        }
       }
     } catch (error) {
       console.error(error);
@@ -5916,7 +6422,8 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
       document.querySelector("li.expand").classList.add("active");
       document.querySelector("li.expand .tabs a").classList.add('active');
     }
-    SearchOutList = ['Access_token', 'Transaction', 'Budget', 'Expenses', 'Assets', 'FinanceAccount', 'records', 'Department', 'History', 'calender'];
+
+    SearchOutList = ['Gallery', 'Appearance', '', '/', 'Access_token', 'Transaction', 'Budget', 'Expenses', 'Assets', 'FinanceAccount', 'records', 'Department', 'History', 'calender'];
     if (SearchOutList.includes(location)) {
       NavigationBar.classList.add('search_out')
     } else {
@@ -6139,5 +6646,6 @@ define(["Access", "projects", "finance", "calender", "xlsx"], function (
       }, delay)
     }
   }
-
+  var Laravel = new Date();
+  get_current_date.innerText = Laravel.toDateString();
 });

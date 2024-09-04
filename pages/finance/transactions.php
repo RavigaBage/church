@@ -1,6 +1,6 @@
 <?php
-include_once('../../API/finance/autoloader.php');
-$newDataRequest = new viewData();
+require '../../API/vendor/autoload.php';
+$newDataRequest = new Finance\viewData();
 session_start();
 if (isset($_GET['page'])) {
     $num = $_GET['page'];
@@ -33,9 +33,7 @@ if ($condition) {
             <div class="direction flex">
                 <p>Dashboard</p>
                 <span> - </span>
-                <p>membership</p>
-                <span> - </span>
-                <p>filter(20years)</p>
+                <p class="location_date">membership</p>
             </div>
             <div class="options flex opt_left">
 
@@ -145,15 +143,15 @@ if ($condition) {
                         echo "<header class='danger'>AN ERROR OCCURED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
                     } else {
                         echo "<thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>status</th>
-                        <th>Authorize</th>
-                        <th>Amount</th>
-                        <th>category</th>
-                        <th>...</th>
-                    </tr>
-                   </thead><tbody>";
+                            <tr>
+                                <th>Account</th>
+                                <th>status</th>
+                                <th>Authorize</th>
+                                <th>Amount</th>
+                                <th>category</th>
+                                <th>...</th>
+                            </tr>
+                        </thead><tbody>";
                         $data_New = json_decode($data);
                         foreach ($data_New as $item) {
                             $account = $item->account;

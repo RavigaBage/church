@@ -63,6 +63,59 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function church_record_upload($category, $record, $details, $year)
+    {
+        $RecordsResult = $this->church_record_upload_data($category, $record, $details, $year);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function church_record_update($category, $record, $details, $id, $year)
+    {
+        $RecordsResult = $this->church_record_update_data($category, $record, $details, $id, $year);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
+    public function church_record_delete($name)
+    {
+        $RecordsResult = $this->church_record_delete_data($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function church_record_viewList($year)
+    {
+        $RecordsResult = $this->church_record_view($year);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function church_record_export()
+    {
+        $RecordsResult = $this->church_record_exportData();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function DataHistory($name, $event, $Date, $sitename, $action)
     {
         $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);

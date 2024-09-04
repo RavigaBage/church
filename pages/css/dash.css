@@ -103,9 +103,9 @@
   display: none;
 }
 
-text {
+/* text {
   fill: var(--light);
-}
+} */
 .edit.flex.Update_item.active,
 .success {
   color: rgb(0, 255, 0);
@@ -1143,6 +1143,8 @@ table#chart,
   padding: 8px;
   display: flex;
   align-items: center;
+  font-size: 16px;
+  text-transform: lowercase;
 }
 .out_btn div,
 .in_btn div {
@@ -1564,15 +1566,18 @@ tbody td.option .opt_element p:hover {
 .annc_item {
   cursor: pointer;
   margin-bottom: 10px;
-  border-radius: var(--radius7);
   padding: 10px;
 }
+
 .annc_item#template {
   display: none;
 }
 .annc_item:not(.check) {
   border-top: 5px solid var(--crimson);
   box-shadow: 0px 0px 4px 0px var(--fadeWhite);
+}
+.annc_item.list_mode {
+  border-top: 5px solid var(--green);
 }
 .annc_item .img_details {
   width: 100%;
@@ -1628,7 +1633,7 @@ tbody td.option .opt_element p:hover {
   font-size: 22px;
   padding-inline: 20px;
 }
-.transaction_search_menu .filter_option {
+noti .transaction_search_menu .filter_option {
   width: 150px;
   height: 40px;
   display: flex;
@@ -2663,6 +2668,24 @@ strong span {
 .filter_content .filter_content_space .item_passage:hover,
 .export_content .filter_content_space .item_passage:hover {
   background-color: #00000085;
+}
+.main_container {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+.main_container .ui_controlller {
+  width: 200%;
+  height: 100%;
+  display: flex;
+  transform: translateX(0%);
+  transition: all 0.3s ease;
+}
+.main_container.active .ui_controlller {
+  transform: translateX(-50%);
+}
+.main_container .profile_main {
+  width: 100%;
 }
 @keyframes animateStar {
   0% {

@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once('../../API/finance/autoloader.php');
-$newDataRequest = new viewData();
+require '../../API/vendor/autoload.php';
+$newDataRequest = new Finance\viewData();
 if (isset($_GET['data_page'])) {
     $num = $_GET['data_page'];
 } else {
@@ -34,7 +34,7 @@ if ($condition) {
                 $data = json_decode($newDataRequest->Accounts_list_Card());
                 if ($data != "" || $data != "Fetch data encountered an error") {
                     foreach ($data as $item) {
-                        $amount = $item->amount;
+                        $amount = number_format(($item->amount), 2, '.', ',');
                         $modified = $item->modified;
                         $name = $item->name;
 

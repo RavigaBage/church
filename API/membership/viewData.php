@@ -1,4 +1,7 @@
 <?php
+namespace Membership;
+
+use Membership\fetchData;
 class viewData extends fetchData
 {
 
@@ -43,6 +46,28 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function PositionList($filter)
+    {
+        $RecordsResult = $this->member_view_position($filter);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function viewpages()
+    {
+        $RecordsResult = $this->member_view_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function member_export()
     {
         $RecordsResult = $this->member_view_export();

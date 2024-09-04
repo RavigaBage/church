@@ -1,4 +1,5 @@
 <?php
+namespace Partnership;
 class DBH
 {
     private $host = 'localhost';
@@ -9,10 +10,10 @@ class DBH
     {
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -60,14 +61,14 @@ class fetchData extends DBH
                 $unique_id = rand(time(), 1999);
 
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`partnership`(`unique_id`, `Name`, `partnership`, `date`, `status`, `Email`, `partnership_type`, `period`)VALUES (?,?,?,?,?,?,?,?)");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                $stmt->bindParam('2', $name, PDO::PARAM_STR);
-                $stmt->bindParam('3', $partnership, PDO::PARAM_STR);
-                $stmt->bindParam('4', $date, PDO::PARAM_STR);
-                $stmt->bindParam('5', $status, PDO::PARAM_STR);
-                $stmt->bindParam('6', $email, PDO::PARAM_STR);
-                $stmt->bindParam('7', $type, PDO::PARAM_STR);
-                $stmt->bindParam('8', $period, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $partnership, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $status, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $email, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $type, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $period, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problems');
@@ -120,14 +121,14 @@ class fetchData extends DBH
             } else {
                 if ($stmt->execute()) {
                     $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`partnership` set  `Name`=?,`partnership`=?,`date`=?,`status`=?,`Email`=?,`partnership_type`=?,`period`=? where `unique_id` = ?");
-                    $stmt->bindParam('1', $name, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $partnership, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $date, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $status, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $email, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $type, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $period, PDO::PARAM_STR);
-                    $stmt->bindParam('8', $unique_id, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $partnership, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $status, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $email, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $type, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $period, \PDO::PARAM_STR);
+                    $stmt->bindParam('8', $unique_id, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = json_encode('Fetching data encountered a problems');
@@ -167,7 +168,7 @@ class fetchData extends DBH
         $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` WHERE  `partnership_type` = ? ORDER BY `id` DESC");
         $option = "Children ministry";
-        $stmt->bindParam('1', $option, PDO::PARAM_STR);
+        $stmt->bindParam('1', $option, \PDO::PARAM_STR);
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -175,7 +176,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['Name']);
                 $Partnership = $this->validate($data['partnership']);
@@ -195,11 +196,11 @@ class fetchData extends DBH
                     $Error = 'Fetching user ' . $name . ' partner records  encountered a problem';
                     exit($Error);
                 }
-                $objectClassRecord = new stdClass();
+                $objectClassRecord = new \stdClass();
                 if ($stmt_record->rowCount() > 0) {
                     $result = $stmt_record->fetchAll();
                     foreach ($result as $dfile) {
-                        $IndRecord = new stdClass();
+                        $IndRecord = new \stdClass();
                         $date = $dfile['date'];
                         $amount = $dfile['amount'];
                         $id = $dfile['id'];
@@ -215,8 +216,8 @@ class fetchData extends DBH
 
                 $ObjectDataIndividual = json_encode($objectClassRecord);
 
-                $objectClass = new stdClass();
-                $ExportSend = new stdClass();
+                $objectClass = new \stdClass();
+                $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->partnership = $Partnership;
@@ -272,7 +273,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 /////////////////////drop table
                 $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`partnership` where   `unique_id`=?");
-                $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
                     $Error = json_encode('deleting data encountered a problem');
@@ -319,7 +320,7 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['Name']);
                 $Partnership = $this->validate($data['partnership']);
@@ -337,11 +338,11 @@ class fetchData extends DBH
                     $Error = 'Fetching user ' . $name . ' partner records  encountered a problem';
                     exit($Error);
                 }
-                $objectClassRecord = new stdClass();
+                $objectClassRecord = new \stdClass();
                 if ($stmt_record->rowCount() > 0) {
                     $result = $stmt_record->fetchAll();
                     foreach ($result as $dfile) {
-                        $IndRecord = new stdClass();
+                        $IndRecord = new \stdClass();
                         $date = $dfile['date'];
                         $amount = $dfile['amount'];
                         $id = $dfile['id'];
@@ -357,8 +358,8 @@ class fetchData extends DBH
 
                 $ObjectDataIndividual = json_encode($objectClassRecord);
 
-                $objectClass = new stdClass();
-                $ExportSend = new stdClass();
+                $objectClass = new \stdClass();
+                $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->partnership = $Partnership;
@@ -382,7 +383,7 @@ class fetchData extends DBH
                 $ExportSendMain->$unique_id = $ExportSend;
 
             }
-            $MainExport = new stdClass();
+            $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ExportSendMain;
             $exportData = json_encode($MainExport);
@@ -406,7 +407,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['Name']);
                 $Partnership = $this->validate($data['partnership']);
@@ -416,7 +417,7 @@ class fetchData extends DBH
                 $Period = $this->validate($data['period']);
                 $unique_id = $this->validate($data['unique_id']);
                 $status = $this->validate($data['status']);
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
 
                 $ExportSend->UniqueId = $unique_id;
                 $ExportSend->name = $name;
@@ -453,7 +454,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['Name']);
                 $Partnership = $this->validate($data['partnership']);
@@ -471,11 +472,11 @@ class fetchData extends DBH
                     $Error = 'Fetching user ' . $name . ' partner records  encountered a problem';
                     exit($Error);
                 }
-                $objectClassRecord = new stdClass();
+                $objectClassRecord = new \stdClass();
                 if ($stmt_record->rowCount() > 0) {
                     $result = $stmt_record->fetchAll();
                     foreach ($result as $dfile) {
-                        $IndRecord = new stdClass();
+                        $IndRecord = new \stdClass();
                         $date = $dfile['date'];
                         $amount = $dfile['amount'];
                         $id = $dfile['id'];
@@ -491,8 +492,8 @@ class fetchData extends DBH
 
                 $ObjectDataIndividual = json_encode($objectClassRecord);
 
-                $objectClass = new stdClass();
-                $ExportSend = new stdClass();
+                $objectClass = new \stdClass();
+                $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->partnership = $Partnership;
@@ -540,7 +541,7 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             /////////////////////drop table
             $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`partnership_records` where  `id`=?");
-            $stmt1->bindParam('1', $id, PDO::PARAM_STR);
+            $stmt1->bindParam('1', $id, \PDO::PARAM_STR);
             if (!$stmt1->execute()) {
                 $stmt1 = null;
                 $Error = json_encode('deleting data encountered a problem');
@@ -551,6 +552,90 @@ class fetchData extends DBH
             }
         } else {
             $resultCheck = false;
+            $exportData = json_encode('Not Records Available');
+        }
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+    protected function Partnership_upload_data_ini($name, $partnership, $date, $amount)
+    {
+        $input_list = array($name, $partnership, $date, $amount);
+        $clean = true;
+        $exportData = 0;
+        $resultValidate = true;
+        foreach ($input_list as $input) {
+            $data = $this->validate($input);
+            if ($data == 'test pass failed') {
+                $Error = json_encode('validating data encountered a problem, All fields are required !');
+                $clean = false;
+                exit($Error);
+            }
+        }
+        if ($clean) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership_records` where `partnership`='$partnership' AND `date`='$date' AND `amount`='$amount' AND `unique_id`='$name'");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = json_encode('Fetching data encountered a problem');
+                exit($Error);
+            }
+            if ($stmt->rowCount() > 0) {
+                print_r($name . $partnership . $date . $amount);
+                $exportData = json_encode("Data name already exist");
+                $resultValidate = false;
+                exit($exportData);
+            } else {
+                $unique_id = rand(time(), 1999);
+
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`partnership_records`( `unique_id`, `partnership`, `amount`, `date`)VALUES (?,?,?,?)");
+                $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $amount, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $partnership, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = json_encode('Fetching data encountered a problems');
+                    exit($Error);
+                } else {
+                    $date = date('Y-m-d H:i:s');
+                    $namer = $_SESSION['login_details'];
+                    $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
+                    if (json_decode($historySet) != 'Success') {
+                        $exportData = 'success';
+                    }
+                    exit(json_encode('Upload was a success'));
+                }
+            }
+
+
+        }
+        if ($resultValidate) {
+            return $exportData;
+        } else {
+            return $resultValidate;
+        }
+    }
+
+    protected function Partnership_view_individual_record_total($date)
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership_records` where `date` like'%$date%'");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $total = 100;
+            foreach ($result as $row) {
+                $total += $row['amount'];
+            }
+        } else {
             $exportData = json_encode('Not Records Available');
         }
 

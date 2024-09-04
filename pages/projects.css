@@ -1,3 +1,7 @@
+@font-face {
+  font-family: redHart;
+  src: url("../font/RedHatText-VariableFont_wght.ttf");
+}
 * {
   margin: 0px;
   padding: 0px;
@@ -8,6 +12,7 @@ body {
   color: #fff;
   perspective: 1000px;
   perspective-origin: 50% 10em;
+  font-family: redHart;
 }
 a {
   text-decoration: none;
@@ -434,6 +439,13 @@ a {
   }
 }
 @media screen and (max-width: 425px) {
+  .About {
+    padding: 5px 5px;
+  }
+  .title h1,
+  .header h1 {
+    font-size: 23px;
+  }
   .hero_page .text_data {
     max-width: 400px;
     height: auto;

@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once('../../API/Assets&projects/autoloader.php');
-$newDataRequest = new viewData();
+require '../../API/vendor/autoload.php';
+$newDataRequest = new AssetProject\viewData();
 $val = 1;
 $year = "";
 if (isset($_GET['year'])) {
@@ -35,9 +35,7 @@ if ($condition) {
             <div class="direction flex">
                 <p>Dashboard</p>
                 <span> - </span>
-                <p>membership</p>
-                <span> - </span>
-                <p>filter(20years)</p>
+                <p class="location_date">membership</p>
             </div>
             <div class="options flex opt_left">
                 <div class="item_opt flex filterBtn">

@@ -2,5 +2,18 @@
     "require": {
         "react/async": "^3.2",
         "react/http": "^1.10"
+    },
+    "autoload":{
+        "psr-4":{
+            "Finance\\": "finance/",
+            "Membership\\": "membership/",
+            "Partnership\\": "partnership/",
+            "AssetProject\\": "Assets&projects/",
+            "Calender\\": "calender/",
+            "Gallery\\":"Gallery/",
+            "ChurchApi\\":"pages-api"
+            
+        }
     }
+    
 }

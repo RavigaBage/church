@@ -3,6 +3,7 @@ var current = document.querySelector(".current");
 var monthsListVal = document.querySelectorAll(".monthsList");
 var DataToSort = document.querySelectorAll(".hiddenData");
 var Name = document.querySelector(".monthName");
+var CalendaData = document.querySelector("#months_data").getAttribute('data_calenderData');
 var now = new Date();
 var year = now.getFullYear();
 var currentDay = now.getDay();
@@ -16,6 +17,8 @@ let Value_date = "";
 current.setAttribute("datavalue", year);
 current.innerHTML = year;
 const dataDates = [];
+
+
 function main() {
   for (const element of DataToSort) {
     Value = element.value;
@@ -119,7 +122,24 @@ function calender(monthValue, yearValue, dayValue) {
     ) {
       calenda.innerHTML += `<p class='sortData active' title="today">${i}</p>`;
     } else {
-      calenda.innerHTML += `<p class="sortData" >${i}</p>`;
+      Cdata = JSON.parse(CalendaData);
+      if (Cdata) {
+        pass = false;
+        for (const key in Cdata) {
+          const element = Cdata[key];
+          if (i === parseInt(element['Day']) &&
+            yearValue_f === parseInt(element['Year']) &&
+            monthValue_f === parseInt(element['Month'])) {
+            pass = true;
+            calenda.innerHTML += `<p class="sortData CalenderEvent" data_year="${yearValue_f}" data_month="${monthValue_f}" data_day="${i}">${i}</p>`;
+          }
+        }
+        if (!pass) {
+          calenda.innerHTML += `<p class="sortData" >${i}</p>`;
+        }
+
+      }
+
     }
   }
 
@@ -152,12 +172,12 @@ function EventList_Marking(monthValue, yearValue, dayValue) {
         DataSort[m].setAttribute(
           "data-value",
           element.events +
-            "/" +
-            element._Year +
-            "/" +
-            element.Month +
-            "/" +
-            element.Day
+          "/" +
+          element._Year +
+          "/" +
+          element.Month +
+          "/" +
+          element.Day
         );
       }
     }
@@ -288,3 +308,62 @@ function getData(e) {
 }
 
 calender(currentMonth, year, day);
+
+window.addEventListener('click', function (e) {
+  target = e.target;
+  if (target.classList.contains('CalenderEvent')) {
+    year = target.getAttribute('data_year');
+    month = target.getAttribute('data_month');
+    day = target.getAttribute('data_day');
+    PHPREQUEST(year, month, day);
+  }
+
+})
+
+async function PHPREQUEST(year, month, day) {
+  try {
+    APIDOCS = "../API/calender/data_process.php?APICALL=true&&user=true&&submit=filter";
+    dataSend = {
+      Year: year,
+      Month: month,
+      Day: day
+    }
+    const Request = await fetch(APIDOCS, {
+      method: "POST",
+      body: JSON.stringify(dataSend),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (Request.status === 200) {
+      let ContainerMain = document.querySelector('#eventDataView');
+      ContainerMain.innerHTML = 'loading data pls wait';
+      let data = await Request.json(dataSend);
+      if (data) {
+        ParseD = JSON.parse(data);
+        for (const key in ParseD) {
+          const element = ParseD[key];
+          let dateStr = element['Year'] + '-' + element['Month'] + '-' + element['Day']
+            ; template = `<h1>${element['name']}</h1>
+                            <div class="eventsDetails">
+                                <div class="head">${new Date(dateStr).toDateString()}</div>
+                                <p>${element['about']}</p>
+                                <div class="image">
+                                    <img src="../API/Images_folder/${element['image']}" alt="" />
+                                </div>
+                            </div>`;
+          ContainerMain.innerHTML = template;
+
+        }
+
+      }
+    } else {
+      console.log("cannot find endpoint");
+    }
+  } catch (errors) {
+    console.log(errors);
+  }
+
+
+}

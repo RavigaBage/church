@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('../../API/membership/autoloader.php');
-$viewDataClass = new viewData();
+require '../../API/vendor/autoload.php';
+$viewDataClass = new Membership\viewData();
 $val = 1;
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
@@ -30,9 +30,7 @@ if ($condition) {
             <div class="direction flex">
                 <p>Dashboard</p>
                 <span> - </span>
-                <p>membership</p>
-                <span> - </span>
-                <p>filter(20years)</p>
+                <p class="location_date">membership</p>
             </div>
             <div class="options flex opt_left">
                 <div class="item_opt flex">

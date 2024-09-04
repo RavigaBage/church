@@ -6,5 +6,12 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Partnership\\' => array($baseDir . '/partnership'),
+    'Membership\\' => array($baseDir . '/membership'),
     'Hhxsv5\\SSE\\' => array($vendorDir . '/hhxsv5/php-sse/src'),
+    'Gallery\\' => array($baseDir . '/Gallery'),
+    'Finance\\' => array($baseDir . '/finance'),
+    'ChurchApi\\' => array($baseDir . '/pages-api'),
+    'Calender\\' => array($baseDir . '/calender'),
+    'AssetProject\\' => array($baseDir . '/Assets&projects'),
 );

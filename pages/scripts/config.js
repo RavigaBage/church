@@ -9,6 +9,9 @@ requirejs.config({
     finance: "finance",
     calender: "calender",
     convertDocx: "convert_html_to_docx.js",
-    xlsx: "xlsx.full.min"
+    xlsx: "xlsx.full.min",
+    slick: "slick.min",
+    slickAnimation: "slick-animation.min",
+    jQuery: "jquery"
   },
 });

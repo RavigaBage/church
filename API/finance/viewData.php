@@ -1,4 +1,6 @@
 <?php
+namespace Finance;
+use Finance\fetchData;
 class viewData extends fetchData
 {
     public function Account_load_Records($name, $created, $amount)
@@ -330,7 +332,6 @@ class viewData extends fetchData
         }
     }
 
-
     public function BudgetDataList()
     {
         $RecordsResult = $this->Budget_data_list();
@@ -393,8 +394,6 @@ class viewData extends fetchData
             return "$RecordsResult";
         }
     }
-
-
 
 
     #to fix
@@ -536,6 +535,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
     public function Trans_Pages()
     {
         $RecordsResult = $this->Transaction_pages();

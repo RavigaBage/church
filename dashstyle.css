@@ -1,0 +1,343 @@
+body {
+  width: 100%;
+  height: 100vh;
+}
+header {
+  font-size: 20px;
+  font-weight: bolder;
+}
+main {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 14% 86%;
+}
+header.title {
+  margin-top: 3px;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  border: 1px solid #000;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 10px;
+}
+.grid_container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 45% 55%;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.upper_grid {
+  width: 100%;
+  height: 100%;
+}
+.upper_grid .cover {
+  width: 100%;
+  height: calc(100% - 30px);
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1.5fr 1.4fr 0.8fr;
+  gap: 20px;
+}
+.upper_grid .cover div {
+  border-radius: 16px;
+}
+.upper_grid .cover .event_slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+  color: #fff;
+}
+.upper_grid .cover .event_slider .events {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.upper_grid .cover .event_slider .cover_title {
+  position: absolute;
+  bottom: 0;
+  right: 2%;
+  font-size: 15px;
+}
+.upper_grid .cover .event_slider .cover_title h1 {
+  font-size: 18px;
+}
+
+.upper_grid .cover .event_slider .events .item {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.upper_grid .cover .event_slider .events .item .image {
+  width: 100%;
+  height: 100%;
+}
+.upper_grid .cover .event_slider .events .item .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.upper_grid .cover .event_slider .events .item .overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(245deg, #20049c5e, #60076e52);
+  z-index: 1;
+}
+.upper_grid .cover .event_slider .events .item .details {
+  position: absolute;
+  bottom: 8%;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  padding: 5px;
+}
+.upper_grid .cover .event_slider .events .item .details header {
+  font-size: 35px;
+  font-weight: 700;
+}
+.upper_grid .cover .event_slider .events .item .details p {
+  font-size: 18px;
+  font-weight: 400;
+  max-width: 80%;
+}
+
+.projects_section {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.membership_status {
+  background-color: #ddd;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.membership_status img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.project_status {
+  display: grid;
+  place-items: center;
+  background-color: #ddd;
+}
+.project_status .coverlay {
+  width: 100px;
+  height: 100px;
+  border-radius: 50% !important;
+  background: conic-gradient(#2ae604 40%, rgb(0, 10, 0) 160deg);
+  display: grid;
+  place-items: center;
+}
+.project_status .innerlay {
+  width: 90px;
+  height: 90px;
+  border-radius: 50% !important;
+  color: #fff;
+  background-color: crimson;
+  text-align: center;
+  display: grid;
+  place-items: center;
+}
+.project_status .innerlay h1 {
+  font-size: 25px;
+  margin-bottom: 0px;
+}
+.project_status .innerlay p {
+  font-size: 18px;
+  margin-top: 0px;
+}
+
+.transactions .container_list {
+  width: 100%;
+}
+.transactions .container_list .item {
+  width: calc(100% - 30px);
+  border-radius: 10px;
+  margin: 10px auto;
+  padding: 10px;
+  cursor: pointer;
+}
+.transactions .container_list .item .cover_main {
+  width: 100%;
+  height: 50px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 5px;
+}
+.transactions .container_list .item .cover_main .acc_name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.transactions .container_list .item .cover_main .acc_name img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.transactions .container_list .item .cover_main .acc_name h1 {
+  font-size: 20px;
+  margin-left: 10px;
+}
+.transactions .container_list .item .cover_main p {
+  margin-top: 2px;
+  font-size: 20px;
+}
+.transactions .container_list .item .cover_main .status {
+  display: grid;
+  place-items: center;
+}
+.transactions .container_list .item .cover_main .status_check {
+  width: 60%;
+  height: 35px;
+  border-radius: 16px;
+  border: 2px solid #000;
+  display: grid;
+  place-items: center;
+  text-transform: lowercase;
+}
+.transactions .container_list .item:hover {
+  background-color: #ddd;
+}
+.transactions .container_list .item:hover .cover_main .status_check {
+  background-color: rgb(4, 117, 182);
+  color: #fff;
+}
+.transactions .container_list .item .cover_main .status_check p {
+  margin: 0px;
+}
+.wallet {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 3fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.wallet .display_wallet .content {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 20px);
+  overflow-y: hidden;
+}
+.wallet .display_wallet .content .main .card {
+  background-color: crimson;
+  position: absolute;
+  width: 80%;
+  left: 2%;
+  bottom: 3%;
+  height: 99%;
+  border-radius: 16px;
+  z-index: 1;
+  box-shadow: 0px 0px 4px 0px #222121a2;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+}
+.wallet .display_wallet .content .main .card .header {
+  width: 90%;
+  margin: 20px auto;
+}
+.wallet .display_wallet .content .main .card .header img {
+  height: 30px;
+  border-radius: 10px;
+  transform: scale(1.1);
+}
+.wallet .display_wallet .content .main .card .middle {
+  width: 90%;
+  margin: 0px auto;
+}
+.wallet .display_wallet .content .main .card .middle span {
+  color: #ddd;
+  font-size: 20px;
+}
+.wallet .display_wallet .content .main .card .middle h1 {
+  margin-block: 5px;
+  color: #fff;
+  font-size: 40px;
+}
+.wallet .display_wallet .content .main .card .bottom {
+  color: #fff;
+  font-size: 18px;
+}
+.wallet .display_wallet .content .overlay {
+  background-color: rgb(15, 15, 15);
+  width: 75%;
+  height: 80%;
+  border-radius: 16px;
+  margin-top: 15px;
+  margin-left: 20px;
+  color: #fff;
+  padding: 10px;
+  transform: rotate(10deg);
+}
+.wallet .display_wallet .content .overlay b {
+  float: right;
+  font-size: 25px;
+}
+.wallet .header {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wallet .members,
+.wallet .others {
+  width: calc(100% - 20px);
+  margin: 0px auto;
+}
+.wallet .members .content {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+.wallet .members .content img,
+.wallet .others .content .item img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.wallet .others .content .item {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  gap: 10px;
+  border-radius: 10px;
+  background-color: #ddd;
+  margin-block: 10px;
+  place-items: center;
+}
+.wallet .others .content .item img {
+  width: 45px;
+  height: 45px;
+}
+.wallet .others .content .item .image {
+  display: grid;
+  place-items: center;
+}
+
+.wallet .others .content .item .image,
+.wallet .others .content .item .details {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+.wallet .others .content .item .details p {
+  margin-block: 5px;
+}
+
+.wallet .others .content .item .details p:nth-child(2) {
+  margin-block: 0px;
+}

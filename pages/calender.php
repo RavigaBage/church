@@ -1,7 +1,8 @@
 <?php
 session_start();
-include_once('../API/calender/autoloader.php');
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new Calender\viewData();
+
 $year = date('Y');
 $data = "";
 $data = $newDataRequest->viewList($year);

@@ -1,6 +1,6 @@
 <?php
-include_once('../../API/finance/autoloader.php');
-$newDataRequest = new viewData();
+require '../../API/vendor/autoload.php';
+$newDataRequest = new Finance\viewData();
 if (isset($_GET['data_page'])) {
     $num = $_GET['data_page'];
 } else {

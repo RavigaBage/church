@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once('../../API/finance/autoloader.php');
-$newDataRequest = new viewData();
+require '../../API/vendor/autoload.php';
+$newDataRequest = new Finance\viewData();
 $year = date('Y');
 if (isset($_GET['year'])) {
     $year = $_GET['year'];
@@ -36,9 +36,7 @@ if ($condition) {
             <div class="direction flex">
                 <p>Dashboard</p>
                 <span> - </span>
-                <p>membership</p>
-                <span> - </span>
-                <p>filter(20years)</p>
+                <p class="location_date">membership</p>
             </div>
             <div class="options flex opt_left">
                 <div class="item_opt flex filterBtn">
