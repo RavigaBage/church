@@ -1,6 +1,3 @@
-Here’s a detailed and inclusive README template for your church website repository, which includes both a management system and a public website view:
-
----
 
 # Church Website and Management System
 
