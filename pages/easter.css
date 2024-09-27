@@ -1,0 +1,237 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --index: calc(1vw + 1vh);
+  --text: #e7e7e0;
+  --transition: transform 0.75s cubic-bezier(0.075, 0.5, 0, 1);
+}
+
+@font-face {
+  font-family: raleway_f;
+
+  src: url(./fonts/raleway-regular.woff2);
+}
+
+@font-face {
+  font-family: raleway_f;
+
+  src: url(./fonts/raleway-black.woff2);
+
+  font-weight: 900;
+}
+
+#easter {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  overflow: hidden;
+}
+
+#easter .main-header {
+  position: relative;
+}
+.leafimg {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 9;
+  width: 100px;
+}
+
+#easter .main-header::after {
+  content: "";
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: calc(var(--index) * 10);
+  background-image: url(images/easter/img/ground.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  bottom: calc(var(--index) * -4.5);
+}
+
+#easter .layers {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+#easter .layer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  z-index: 2;
+  transition: var(--transition);
+}
+
+#easter .base {
+  transform: translate3d(0, calc(var(--scrollTop) / 1.6), 0);
+  z-index: 0;
+  background-image: url("images/easter/img/layer-base.png");
+}
+
+#easter .middle {
+  transform: translate3d(0, calc(var(--scrollTop) / 2.5), 0);
+  background-image: url("images/easter/img/layer-middle.png");
+}
+
+#easter .front {
+  transform: translate3d(0, calc(var(--scrollTop) / 5.7), 0);
+  background-image: url("images/easter/img/layer-front.png");
+}
+
+#easter .layer-header {
+  z-index: 1;
+  transform: translate3d(0, calc(var(--scrollTop) / 2), 0);
+  transition: var(--transition);
+  will-change: transform;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: var(--text);
+  text-shadow: 0 0 15px #9d822b;
+}
+
+#easter .title {
+  font-size: calc(var(--index) * 1.05);
+  letter-spacing: calc(var(--index) / 2.25);
+  /* use the slide-in animation for 1 second */
+}
+
+#easter .subtitle {
+  font-size: calc(var(--index) * 2.775);
+  letter-spacing: calc(var(--index) / 3.5);
+  margin-top: calc(var(--index) * -0.5);
+  margin-left: calc(var(--index) * -3.2);
+  transform: translateX(-100%);
+  /* move the element all the way to the left */
+  animation: slide-in 10s forwards;
+}
+
+@keyframes slide-in {
+  to {
+    transform: translateX(0);
+    /* move the element to the center */
+  }
+}
+
+#easter .article {
+  --article-transform: translate3d(0, calc(var(--scrollTop) / -7.5), 0);
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+  top: -1px;
+  z-index: 10;
+  background-image: url("images/easter/img/dungeon.jpg");
+}
+
+#easter .header {
+  text-transform: uppercase;
+  font-size: calc(var(--index) * 1.8);
+  font-weight: 800;
+  letter-spacing: calc(var(--index) / 7.5);
+  transform: var(--article-transform);
+  transition: var(--transition);
+  will-change: transform;
+}
+
+#easter .content {
+  will-change: transform;
+}
+
+#easter .footer {
+  position: absolute;
+  bottom: calc(var(--index) * 1.5);
+  opacity: 0.45;
+  font-size: calc(var(--index) * 0.75);
+  letter-spacing: calc(var(--index) / 37.5);
+}
+
+@media (min-width: 640px) {
+  .sm\:container {
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .sm\:container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .sm\:container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sm\:container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .sm\:container {
+      max-width: 1280px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .sm\:container {
+      max-width: 1536px;
+    }
+  }
+}
+
+.hover\:font-bold:hover {
+  font-weight: 700;
+}
+
+.before\:hover\:text-center:hover::before {
+  content: var(--tw-content);
+  text-align: center;
+}
+
+.hover\:before\:text-center:hover::before {
+  content: var(--tw-content);
+  text-align: center;
+}
+
+.focus\:hover\:text-center:hover:focus {
+  text-align: center;
+}
+
+.hover\:focus\:text-center:focus:hover {
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .sm\:underline {
+    text-decoration-line: underline;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  @media (min-width: 1024px) {
+    .dark\:lg\:hover\:\[paint-order\:markers\]:hover {
+      paint-order: markers;
+    }
+  }
+}

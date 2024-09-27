@@ -1,5 +1,4 @@
 <?php
-date_default_timezone_set('UTC');
 $year = date('Y');
 $date = date('l j \of F Y h:i:s A');
 class DBH
@@ -40,7 +39,6 @@ class fetchData extends DBH
 
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -84,16 +82,10 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problems';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
-                $resultValidate = true;
-                exit('Upload was a success');
+                $exportData = 'Upload was a success';
             }
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
     protected function Activity_update_data($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $id)
@@ -144,23 +136,11 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problems';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
-                $resultValidate = true;
-                exit('Upload was a success');
+                $exportData = 'Upload was a success';
             }
 
-
-
-
-
-
-
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
 
@@ -193,7 +173,6 @@ class fetchData extends DBH
                         $Error = 'deleting data encountered a problem';
                         exit($Error);
                     } else {
-                        $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
                 } else {
@@ -207,18 +186,13 @@ class fetchData extends DBH
                 exit('No match for search query');
             }
 
-            if ($resultCheck) {
-                return $exportData;
-            } else {
-                return $resultCheck;
-            }
+            return $exportData;
 
         }
     }
     protected function Activity_view()
     {
         $exportData = '';
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
 
@@ -227,53 +201,21 @@ class fetchData extends DBH
             exit($Error);
         }
         if ($stmt->rowCount() > 0) {
-            print_r($stmt->errorInfo());
             $result = $stmt->fetchAll();
+            $ObjectClass = new \stdClass();
             foreach ($result as $data) {
                 $open_prayer = $data[`opening prayer`];
                 $praise = $data[`praises`];
-                $script_reading = $data[`scripture reading`];
-                $scripture = $data[`scripture`];
-                $opening_hymn = $data[`opening_Hymn`];
-                $hymn_new = $data[`Hymn_new`];
-                $hymn_title = $data[`Hymn_title`];
-                $worship = $data[`worship`];
-                $testimonies = $data[`testimonies`];
-                $song_thanksgiving = $data[`song_thanksgving_offering`];
-                $sermon_prayer = $data[`sermon_prayer`];
-                $sermon_from = $data[`sermon_from`];
-                $scripture_preacher = $data[`scripture_preacher`];
-                $peacher_duration = $data[`peacher_duration`];
-                $alter_call = $data[`alter_call`];
-                $tithe_offering = $data[`tithe_offering`];
-                $special_appeal = $data[`special_appeal`];
-                $welcome_visitors = $data[`welcome_visitors`];
-                $Announcement = $data[`Announcement`];
-                $closing_prayer = $data[`closing_prayer`];
-                $Benediction = $data[`Benediction`];
-                $welcome_visitors = $data[`MC`];
-                $Attendance = $data[`Total_attendance`];
-                $date = $data[`date`];
-
-                $item = '<li onclick="status(this)" data-value="' . $open_prayer . '"><i class="fas fa-toggle-off"></i></li>';
-
-                $exportData .= '
-                <ul class="main six">
-                                    <li><input type="checkbox" value=""/>' . $praise . '</li>
-                                    
-                                </ul>';
-
+                $ObjectClass->Open_prayer = $open_prayer;
+                $ObjectClass->praise = $praise;
             }
+            $exportData = json_encode($ObjectClass);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $exportData;
-        }
+        return $exportData;
     }
 
 
@@ -284,7 +226,6 @@ class fetchData extends DBH
         $input_list = array($category, $record, $details, $admin, $year);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -294,8 +235,6 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-
-
             $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`records`( `category`, `record`, `details`, `date`, `admin`, `year`)VALUES (?,?,?,?,?,?)");
             $stmt->bindParam('1', $category, PDO::PARAM_STR);
             $stmt->bindParam('2', $record, PDO::PARAM_STR);
@@ -309,24 +248,11 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problems';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
-                $resultValidate = true;
-                exit('Upload was a success');
+                $exportData = 'Upload was a success';
             }
 
-
-
-
-
-
-
-
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
 
@@ -335,7 +261,6 @@ class fetchData extends DBH
         $input_list = array($category, $record, $details, $id, $admin, $year);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -360,24 +285,10 @@ class fetchData extends DBH
                 $Error = 'Fetching data encountered a problems';
                 exit($Error);
             } else {
-                $exportData = 'Data entry was a success Page will refresh to display new data';
-                $resultValidate = true;
-                exit('Upload was a success');
+                $exportData = 'Upload was a success';
             }
-
-
-
-
-
-
-
-
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
 
@@ -425,11 +336,7 @@ class fetchData extends DBH
                 exit('No match for search query');
             }
 
-            if ($resultCheck) {
-                return $exportData;
-            } else {
-                return $resultCheck;
-            }
+            return $exportData;
 
         }
     }
@@ -466,7 +373,6 @@ class fetchData extends DBH
                     $fire_baptism += 1;
                 }
 
-
             }
 
             $ObjectDataMain->birth = $birth;
@@ -476,14 +382,9 @@ class fetchData extends DBH
             $exportData = $ObjectDataMain;
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
-
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+        return $exportData;
     }
 
 }

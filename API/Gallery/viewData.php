@@ -5,9 +5,9 @@ use Gallery\fetchData;
 class viewData extends fetchData
 {
 
-    public function gallery_upload($Event_name, $Image_name, $upload_date, $category, $Image, $Image_type, $Image_tmp_name)
+    public function gallery_upload($Event_name, $Image_name, $upload_date, $category, $ImageName, $Image_type, $Image_tmp_name)
     {
-        $RecordsResult = $this->gallery_upload_data($Event_name, $Image_name, $upload_date, $category, $Image, $Image_type, $Image_tmp_name);
+        $RecordsResult = $this->gallery_upload_data($Event_name, $Image_name, $upload_date, $category, $ImageName, $Image_type, $Image_tmp_name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -16,9 +16,9 @@ class viewData extends fetchData
         }
     }
 
-    public function gallery_update($Event_name, $Image_name, $upload_date, $category, $Image, $Image_type, $Image_tmp_name, $unique_id)
+    public function gallery_update($Event_name, $Image_name, $upload_date, $category, $ImageName, $Image_type, $Image_tmp_name, $unique_id)
     {
-        $RecordsResult = $this->gallery_update_data($Event_name, $Image_name, $upload_date, $category, $Image, $Image_type, $Image_tmp_name, $unique_id);
+        $RecordsResult = $this->gallery_update_data($Event_name, $Image_name, $upload_date, $category, $ImageName, $Image_type, $Image_tmp_name, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -39,6 +39,16 @@ class viewData extends fetchData
     public function viewList($num)
     {
         $RecordsResult = $this->gallery_view($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function liveUpdate($key, $limit)
+    {
+        $RecordsResult = $this->liveUpdateData($key, $limit);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

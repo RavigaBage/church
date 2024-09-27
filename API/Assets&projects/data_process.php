@@ -1,7 +1,10 @@
 <?php
-require('autoloader.php');
+
+require('autoload.php');
+$viewDataClass = new AssetProject\viewData;
+session_start();
 if (isset($_GET['submit'])) {
-    if ($_GET['submit'] != 'delete_file' && $_GET['user'] == 'true') {
+    if ($_GET['submit'] != 'delete_file' && $_GET['user'] == 'true' && $_GET['submit'] != 'fetchlatest') {
         $Name = $_POST['name'];
         $Acquisition = $_POST['source'];
         $Location = $_POST['location'];
@@ -30,9 +33,8 @@ if (isset($_GET['submit'])) {
             $Image_tmp_name = $_FILES['imageFile']['tmp_name'];
 
 
-            $viewDataClass = new viewData();
             $result_data = $viewDataClass->projects_upload($name, $description, $start_date, $end_date, $team, $status, $Image_name, $Image_type, $Image_tmp_name, $target, $current);
-            json_encode(["status" => "result", "result" => $result_data]);
+            echo json_encode($result_data);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);
@@ -58,9 +60,8 @@ if (isset($_GET['submit'])) {
 
 
 
-            $viewDataClass = new viewData();
             $result_data = $viewDataClass->projects_update($name, $description, $start_date, $end_date, $team, $status, $Image_name, $Image_type, $Image_tmp_name, $target, $current, $unique_id);
-            json_encode(["status" => "result", "result" => $result_data]);
+            echo json_encode($result_data);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);
@@ -69,10 +70,9 @@ if (isset($_GET['submit'])) {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             $unique_id = $data['key'];
-            $pdh = new viewData();
 
-            $resultFetch = $pdh->projects_delete($unique_id);
-            echo json_encode(["status" => "success", "message" => $resultFetch]);
+            $resultFetch = $viewDataClass->projects_delete($unique_id);
+            echo json_encode($resultFetch);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
             echo json_encode(["status" => "error", "message" => $error_message]);
@@ -82,21 +82,18 @@ if (isset($_GET['submit'])) {
         $data = json_decode(file_get_contents("php://input"), true);
         $name = $data['key'];
         $nk = $data['numData'];
-        $pdh = new viewData();
 
-        $resultFetch = $pdh->Project_viewSearchMain($name, $nk);
+        $resultFetch = $viewDataClass->Project_viewSearchMain($name, $nk);
         echo json_encode($resultFetch);
 
     } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'projects') {
 
-        $pdh = new viewData();
-        $resultFetch = $pdh->Project_viewExport();
+        $resultFetch = $viewDataClass->Project_viewExport();
         echo json_encode($resultFetch);
 
     } else if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'assets') {
 
-        $pdh = new viewData();
-        $resultFetch = $pdh->Asset_viewExport();
+        $resultFetch = $viewDataClass->Asset_viewExport();
         echo json_encode($resultFetch);
 
     } else
@@ -108,10 +105,9 @@ if (isset($_GET['submit'])) {
                 $Image_type = $_FILES['imageFile']['type'];
                 $Image_tmp_name = $_FILES['imageFile']['tmp_name'];
                 $size = $_FILES['imageFile']['size'];
-                $pdh = new viewData();
 
-                $resultFetch = $pdh->Assets_upload($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image_name, $Image_type, $Image_tmp_name, $About);
-                echo json_encode(["status" => "errors", "message" => $resultFetch]);
+                $resultFetch = $viewDataClass->Assets_upload($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image_name, $Image_type, $Image_tmp_name, $About);
+                echo json_encode($resultFetch);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
                 echo json_encode(["status" => "error", "message" => $error_message]);
@@ -123,22 +119,42 @@ if (isset($_GET['submit'])) {
                 $Image_type = $_FILES['imageFile']['type'];
                 $Image_tmp_name = $_FILES['imageFile']['tmp_name'];
                 $unique_id = $_POST['delete_key'];
-                $pdh = new viewData();
 
-                $resultFetch = $pdh->Assets_update($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $Image_name, $Image_type, $Image_tmp_name, $About, $unique_id);
-                echo json_encode(["status" => "errors", "message" => $resultFetch]);
+                $resultFetch = $viewDataClass->Assets_update($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $Image_name, $Image_type, $Image_tmp_name, $About, $unique_id);
+                echo json_encode($resultFetch);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
-                echo json_encode(["status" => "error", "message" => $error_message]);
+                echo json_encode($error_message);
             }
         } else if ($_GET['submit'] == 'delete_file' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
             try {
                 $data = json_decode(file_get_contents("php://input"), true);
                 $unique_id = $data['key'];
-                $pdh = new viewData();
 
-                $resultFetch = $pdh->Assets_delete($unique_id);
-                echo json_encode(["status" => "success", "message" => $resultFetch]);
+                $resultFetch = $viewDataClass->Assets_delete($unique_id);
+                echo json_encode($resultFetch);
+            } catch (Exception $e) {
+                $error_message = "Exception: " . $e->getMessage();
+                echo json_encode(["status" => "error", "message" => $error_message]);
+            }
+        } else if ($_GET['submit'] == 'fetchlatest' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
+            try {
+                $data = json_decode(file_get_contents("php://input"), true);
+                $num = $data['key'];
+
+                $resultFetch = $viewDataClass->Assets_liveUpdate($num);
+                echo json_encode($resultFetch);
+            } catch (Exception $e) {
+                $error_message = "Exception: " . $e->getMessage();
+                echo json_encode(["status" => "error", "message" => $error_message]);
+            }
+        } else if ($_GET['submit'] == 'fetchlatest' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'projects') {
+            try {
+                $data = json_decode(file_get_contents("php://input"), true);
+                $num = $data['key'];
+
+                $resultFetch = $viewDataClass->Projects_liveUpdate($num);
+                echo json_encode($resultFetch);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
                 echo json_encode(["status" => "error", "message" => $error_message]);
@@ -147,4 +163,8 @@ if (isset($_GET['submit'])) {
             $error_message = "Exception: Unauthorized access";
             echo json_encode(["status" => "error", "message" => $error_message]);
         }
+
+
+
+
 }

@@ -4,20 +4,27 @@ const cloud_2 = document.querySelector(".cloud_2");
 const moon = document.querySelector(".moon");
 const trees = document.querySelector(".tree");
 const mountains = document.querySelector(".mountain");
-const toggle = document.querySelector(".menu_toggle");
+
 const menuDiv = document.querySelector(".navigation");
-var sendUp = document.querySelector(".send_up");
+const ChristmasPage = document.querySelector("#christmas_theme");
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker
+//       .register('service-worker.js')
+//       .then((reg) => console.log('Service Worker: Registered (Scope: ' + reg.scope + ')'))
+//       .catch((err) => console.log('Service Worker: Error:', err));
+//   });
+// }
 
 window.addEventListener("scroll", function (e) {
   percentageY = this.scrollY / 5;
   TextVal.style.bottom = percentageY + "%";
+  mountains.style.bottom = -1 * percentageY + "%";
   cloud_2.style.right = percentageY + "%";
   cloud_1.style.left = percentageY + "%";
-});
+  ChristmasPage.style.setProperty('--scroll', (percentageY / 3) + "px");
+  console.log(mountains);
 
-toggle.addEventListener("click", function (e) {
-  toggle.classList.toggle("active");
-  menuDiv.classList.toggle("active");
 });
 
 document.addEventListener("scroll", function () {
@@ -26,11 +33,4 @@ document.addEventListener("scroll", function () {
   } else {
     sendUp.classList.remove("active");
   }
-});
-var rootElement = document.documentElement;
-sendUp.addEventListener("click", function () {
-  rootElement.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
 });

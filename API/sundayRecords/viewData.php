@@ -32,9 +32,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function View_List($year)
+    public function View_List($year, $num)
     {
-        $RecordsResult = $this->Sunday_view($year);
+        $RecordsResult = $this->Sunday_view($year, $num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -96,9 +96,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function church_record_viewList($year)
+    public function church_record_viewList($year, $num)
     {
-        $RecordsResult = $this->church_record_view($year);
+        $RecordsResult = $this->church_record_view($year, $num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -122,6 +122,27 @@ class viewData extends fetchData
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function SundayPages()
+    {
+        $RecordsResult = $this->Sunday_Pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function RecordPages()
+    {
+        $RecordsResult = $this->Record_Pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $RecordsResult;
         } else {
             return $RecordsResult;
         }

@@ -15,6 +15,7 @@ if ($data != "Fetching data encounted a problem" || $data != "No records availab
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../icons/css/all.css" />
         <link rel="stylesheet" href="projects.css" />
+        <script type="module" src="../node_modules/@google/model-viewer/dist/model-viewer.js"></script>
         <title>Zoe projects page</title>
         <style>
             * {

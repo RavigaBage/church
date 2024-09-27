@@ -74,5 +74,50 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function DepartmentMembers($reciever){
+        $RecordsResult = $this->ministry_members($reciever);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function DepartmentMembersView(){
+        $RecordsResult = $this->ministry_member_view();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function AddDepartmentMembers($unique_id,$Dp_Key){
+        $RecordsResult = $this->AddDepartmentMembers_view($unique_id,$Dp_Key);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function  RemoveDepartmentMembers($unique_id,$Dp_Key){
+        $RecordsResult = $this->RemoveDepartmentMembers_view($unique_id,$Dp_Key);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function ViewDepartmentMembers($name){
+        $RecordsResult = $this->DepartmentMembers_view($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
 }

@@ -32,100 +32,138 @@ class fetchData extends DBH
         }
         return $data;
     }
+    public function calender_time_clean($start, $end)
+    {
+        $exploadData = explode('(', $start);
+        $exploadDataE = explode('(', $end);
+        $finalReturnStart = "";
+        $finalReturnEnd = "";
+
+        if (count($exploadData) > 0) {
+            $startReturn1 = $exploadData[0];
+            if (strpos($startReturn1, 'am')) {
+                $exploadData = explode('am', $startReturn1);
+                $finalReturnStart = $exploadData[0] . ' ' . 'am';
+            }
+            if (strpos($startReturn1, 'pm')) {
+                $exploadData = explode('pm', $startReturn1);
+                $finalReturnStart = $exploadData[0] . ' ' . 'pm';
+            }
+
+        }
+
+        if (count($exploadDataE) > 0) {
+            $startReturn1 = $exploadDataE[0];
+            if (strpos($startReturn1, 'am')) {
+                $exploadDataE = explode('am', $startReturn1);
+                $finalReturnEnd = $exploadDataE[0] . ' ' . 'am';
+            }
+            if (strpos($startReturn1, 'pm')) {
+                $exploadDataE = explode('pm', $startReturn1);
+                $finalReturnEnd = $exploadDataE[0] . ' ' . 'pm';
+            }
+
+        }
+
+        return [$finalReturnStart, $finalReturnEnd];
+
+    }
     protected function calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name)
     {
+        $cleanData = $this->calender_time_clean($start_time, $end_time);
+        if (count($cleanData) == 2) {
+            $start_time = $cleanData[0];
+            $end_time = $cleanData[1];
 
-        $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status);
-        $clean = true;
-        $exportData = 0;
-        $resultValidate = true;
-        foreach ($input_list as $input) {
-            $data = $this->validate($input);
-            if ($data == 'test pass failed') {
-                $Error = 'validating data encountered a problem, All fields are required !';
-                $clean = false;
-                exit(json_encode($Error));
+            $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status);
+            $clean = true;
+            $exportData = 0;
+            $resultValidate = true;
+            foreach ($input_list as $input) {
+                $data = $this->validate($input);
+                if ($data == 'test pass failed') {
+                    $Error = 'validating data encountered a problem, All fields are required !';
+                    $clean = false;
+                    exit(json_encode($Error));
+                }
             }
-        }
-        if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `EventName`='$EventName' AND `Year` = '$Year' AND `Month` = '$Month' AND `Day` = '$Day' AND `start_time` = '$start_time'");
-            if (!$stmt->execute()) {
-                $stmt = null;
-                $Error = 'Fetching data encountered a problem';
-                exit(json_encode($Error));
-            }
-            if ($stmt->rowCount() > 0) {
-                $Error = "Data name already exist";
-                $resultValidate = false;
-                exit(json_encode($Error));
-            } else {
-
-                if ($file_name == '') {
-                    $file_name = '';
+            if ($clean) {
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` where `EventName`='$EventName' AND `Year` = '$Year' AND `Month` = '$Month' AND `Day` = '$Day' AND `start_time` = '$start_time'");
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = 'Fetching data encountered a problem';
+                    exit(json_encode($Error));
+                }
+                if ($stmt->rowCount() > 0) {
+                    $Error = "Data name already exist";
+                    $resultValidate = false;
+                    exit(json_encode($Error));
                 } else {
-                    $explodes = explode('.', $file_name);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $file_name;
-                            $target4 = "../images/calenda/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $unique_id = rand(time(), 3002);
-                                $file_name = $target4;
+
+                    if ($file_name == '') {
+                        $file_name = '';
+                    } else {
+                        $explodes = explode('.', $file_name);
+                        $explode_end = end($explodes);
+                        $Extensions = array('jpg', 'png', 'jpeg');
+                        if (in_array($explode_end, $Extensions)) {
+                            $types = ["image/jpg", "image/png", "image/jpeg"];
+                            if (in_array($Image_type, $types)) {
+                                $filename4 = time() . $file_name;
+                                $target4 = "../images/calenda/$filename4";
+                                if (move_uploaded_file($Image_tmp_name, $target4)) {
+                                    $unique_id = rand(time(), 3002);
+                                    $file_name = $target4;
+                                } else {
+                                    exit(json_encode("An error occurred while processing image, try again"));
+                                }
                             } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
+                                exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
                             }
                         } else {
                             exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
                         }
+                    }
+
+                    $unique_id = rand(time(), 1999);
+                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`calender`(`unique_id`, `EventName`, `Year`, `Month`, `Day`, `start_time`, `end_time`, `Venue`, `Theme`, `About`, `Image`, `Department`, `Status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $EventName, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $Year, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $Month, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $Day, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $start_time, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $end_time, \PDO::PARAM_STR);
+                    $stmt->bindParam('8', $Venue, \PDO::PARAM_STR);
+                    $stmt->bindParam('9', $Theme, \PDO::PARAM_STR);
+                    $stmt->bindParam('10', $About, \PDO::PARAM_STR);
+                    $stmt->bindParam('11', $file_name, \PDO::PARAM_STR);
+                    $stmt->bindParam('12', $Department, \PDO::PARAM_STR);
+                    $stmt->bindParam('13', $Status, \PDO::PARAM_STR);
+                    if (!$stmt->execute()) {
+
+                        $stmt = null;
+                        $Error = 'Fetching data encountered a problems';
+                        exit(json_encode($Error));
                     } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
-                $unique_id = rand(time(), 1999);
-                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`calender`(`unique_id`, `EventName`, `Year`, `Month`, `Day`, `start_time`, `end_time`, `Venue`, `Theme`, `About`, `Image`, `Department`, `Status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
-                $stmt->bindParam('2', $EventName, \PDO::PARAM_STR);
-                $stmt->bindParam('3', $Year, \PDO::PARAM_STR);
-                $stmt->bindParam('4', $Month, \PDO::PARAM_STR);
-                $stmt->bindParam('5', $Day, \PDO::PARAM_STR);
-                $stmt->bindParam('6', $start_time, \PDO::PARAM_STR);
-                $stmt->bindParam('7', $end_time, \PDO::PARAM_STR);
-                $stmt->bindParam('8', $Venue, \PDO::PARAM_STR);
-                $stmt->bindParam('9', $Theme, \PDO::PARAM_STR);
-                $stmt->bindParam('10', $About, \PDO::PARAM_STR);
-                $stmt->bindParam('11', $file_name, \PDO::PARAM_STR);
-                $stmt->bindParam('12', $Department, \PDO::PARAM_STR);
-                $stmt->bindParam('13', $Status, \PDO::PARAM_STR);
-                if (!$stmt->execute()) {
-
-                    $stmt = null;
-                    $Error = 'Fetching data encountered a problems';
-                    exit(json_encode($Error));
-                } else {
-                    $date = date('Y-m-d H:i:s');
-                    $namer = $_SESSION['login_details'];
-                    $historySet = $this->history_set($namer, "Calender  Data Upload", $date, "Calender  page dashboard Admin", "User Uploaded a data");
-                    if (json_decode($historySet) != 'Success') {
+                        $date = date('Y-m-d H:i:s');
+                        $namer = $_SESSION['login_details'];
+                        $historySet = $this->history_set($namer, "Calender  Data Upload", $date, "Calender  page dashboard Admin", "User Uploaded a data");
+                        if (json_decode($historySet) != 'Success') {
+                            $exportData = 'success';
+                        }
                         $exportData = 'success';
+                        $resultValidate = true;
                     }
 
-                    $exportData = json_encode('success');
-                    $resultValidate = true;
                 }
+
 
             }
-
-
-        }
-        if ($resultValidate) {
-            return $exportData;
         } else {
-            return $resultValidate;
+            exit('invalid data sent');
         }
+        return json_encode($exportData);
     }
 
     protected function calender_update_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $file_name, $Image_type, $Image_tmp_name, $unique_id)
@@ -133,7 +171,6 @@ class fetchData extends DBH
         $input_list = array($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $unique_id);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -166,8 +203,7 @@ class fetchData extends DBH
                             $filename4 = time() . $file_name;
                             $target4 = "../images/calenda/$filename4";
                             if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $unique_id = rand(time(), 3002);
-                                $file_name = $target4;
+                                $file_name = $filename4;
                             } else {
                                 exit(json_encode("An error occurred while processing image, try again"));
                             }
@@ -204,16 +240,13 @@ class fetchData extends DBH
                         $exportData = 'success';
                     }
 
-                    $exportData = $EventName;
+                    $exportData = "Update was a success";
                     $resultValidate = true;
                 }
             }
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
+
     }
 
     protected function calender_delete_data($name)
@@ -250,19 +283,13 @@ class fetchData extends DBH
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
                     }
-                    $resultCheck = true;
                     $exportData = 'success';
                 }
             } else {
                 exit(json_encode('Data has already been deleted. if data is still in display, refresh
                 the page to incorporate changes'));
             }
-
-            if ($resultCheck) {
-                return json_encode($exportData);
-            } else {
-                return $resultCheck;
-            }
+            return json_encode($exportData);
 
         }
     }
@@ -316,7 +343,7 @@ class fetchData extends DBH
             $exportData = json_encode($MainClass);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
 
 
@@ -327,7 +354,6 @@ class fetchData extends DBH
     protected function calender_view_filter($year, $Month, $day)
     {
         $exportData = '';
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%' AND `Month` like '%$Month%' AND `Day` like '%$day%' ORDER BY `start_time` DESC");
 
         if (!$stmt->execute()) {
@@ -373,11 +399,8 @@ class fetchData extends DBH
 
             $exportData = json_encode($MainClass);
         } else {
-            $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
-
-
         return $exportData;
 
     }
@@ -385,7 +408,6 @@ class fetchData extends DBH
     protected function calender_view_marker($year)
     {
         $exportData = '';
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`calender` WHERE `Year` like '%$year%'  ORDER BY `start_time` DESC");
 
         if (!$stmt->execute()) {
@@ -412,11 +434,8 @@ class fetchData extends DBH
 
             $exportData = json_encode($MainClass);
         } else {
-            $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
-
-
         return $exportData;
 
     }

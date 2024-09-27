@@ -1,7 +1,7 @@
 <?php
-require('autoloader.php');
-$pdh = new viewData();
-
+require '../vendor/autoload.php';
+session_start();
+$pdh = new Finance\ViewData;
 if (isset($_GET['submit'])) {
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
         $Account = $_POST['event'];
@@ -67,10 +67,23 @@ if (isset($_GET['submit'])) {
         $requestResponse = $pdh->DeleteRecords($id);
         echo json_encode($requestResponse);
     }
+
+    if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'fetchlatest' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['key'];
+        $requestResponse = $pdh->ListDataDuesLiveUpdate($num);
+        echo json_encode($requestResponse);
+    }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'filter' && $_GET['user'] == 'offertory') {
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['year'];
         $requestResponse = $pdh->ListOffertorySearch($id);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'fetchlatest' && $_GET['user'] == 'offertory') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['key'];
+        $requestResponse = $pdh->ListOffertoryLiveUpdate($num);
         echo json_encode($requestResponse);
     }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'search' && $_GET['user'] == 'event') {
@@ -157,7 +170,6 @@ if (isset($_GET['submit'])) {
     }
 
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-
         $account = $_POST['account'];
         $category = $_POST['category'];
         $amount = $_POST['amount'];
@@ -186,6 +198,12 @@ if (isset($_GET['submit'])) {
         $id = $data['key'];
 
         $requestResponse = $pdh->TransactionDelete($id);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'fetchlatest' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['key'];
+        $requestResponse = $pdh->TransactionLiveUpdate($num);
         echo json_encode($requestResponse);
     }
 
@@ -235,10 +253,15 @@ if (isset($_GET['submit'])) {
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['key'];
-        $date = $data['date'];
         $year = date('Y');
 
         $requestResponse = $pdh->BudgetDeleteList($year, $id);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'fetchlatest' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['key'];
+        $requestResponse = $pdh->ExpensesLiveUpdate($num);
         echo json_encode($requestResponse);
     }
 
@@ -263,7 +286,6 @@ if (isset($_GET['submit'])) {
 
 
     if ($_GET['APICALL'] == 'tithe' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-
         $amount = $_POST['amount'];
         $details = $_POST['details'];
         $recorded_by = "Admin";
@@ -297,6 +319,20 @@ if (isset($_GET['submit'])) {
         $id = $data['key'];
 
         $requestResponse = $pdh->DeleteTithes($id);
+        echo json_encode($requestResponse);
+    }
+
+    if ($_GET['APICALL'] == 'tithe' && $_GET['submit'] == 'fetchlatest' && $_GET['user'] == 'true') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $num = $data['key'];
+        $requestResponse = $pdh->TitheLiveUpdate($num);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'account' && $_GET['submit'] == 'true' && $_GET['user'] == 'true') {
+        $name = $_POST['account'];
+        $created = $_POST['date'];
+        $amount = $_POST['amount'];
+        $requestResponse = $pdh-> Account_load_Records($name, $created, $amount);
         echo json_encode($requestResponse);
     }
 

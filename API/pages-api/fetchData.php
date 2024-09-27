@@ -1,6 +1,5 @@
 <?php
 namespace ChurchApi;
-date_default_timezone_set('UTC');
 $year = date('Y');
 $date = date('l j \of F Y h:i:s A');
 class DBH
@@ -289,6 +288,39 @@ class fetchData extends DBH
                 $dataList->image = $Mountain;
             }
         }
+        $exportData = json_encode($dataList);
+
+        if ($resultCheck) {
+            return $exportData;
+        } else {
+            return $resultCheck;
+        }
+    }
+
+    protected function theme_home_view()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`theme` where `status`='active' limit 1");
+        $dataList = "";
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        } else {
+            if ($stmt->rowCount() > 0) {
+                $result = $stmt->fetchAll();
+                foreach ($result as $row) {
+                    $name = $row['name'];
+                    $dataList = $name;
+                }
+            } else {
+                exit(json_encode('No Available records'));
+            }
+        }
+
+
+
         $exportData = json_encode($dataList);
 
         if ($resultCheck) {

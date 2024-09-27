@@ -12,6 +12,7 @@ $CallToAction = "";
 $NextUp = "";
 $ShowData = "";
 $calenderData = "";
+
 $records = $newDataRequest->church_record_viewList();
 $gallery = $newDataRequest->gallery_home_viewList();
 $annc = $newDataRequest->announcement_viewList();
@@ -19,6 +20,9 @@ $Call_to_action = $newDataRequest->call_action_viewList();
 $Event = $newDataRequest->eventData();
 $Showcast = $newDataRequest->gallery_viewList();
 $calender = $newDataRequest->calender_data($year);
+$theme = $newDataRequest->theme_viewList();
+
+$data_theme = json_decode($theme);
 
 if ($records != "Fetching data encounted a problem" || $records != "No records available'" || $records != "Error Occurred") {
     try {
@@ -64,13 +68,33 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preload" href="parallax.css" as="style">
+        <link rel="preload" href="parallaxfooter.css" as="style">
+        <link rel="preload" href="../icons/css/all.css" as="style">
+        <link rel="preload" as="style" href="../library/js/swiper/package/swiper-bundle.css" />
+
         <link rel="stylesheet" href="parallax.css">
         <link rel="stylesheet" href="parallaxfooter.css">
+        <link rel="stylesheet" href="easter.css">
         <link rel="stylesheet" href="../icons/css/all.css">
-        <title>parallax effect</title>
+        <link rel="stylesheet" href="../library/js/swiper/package/swiper-bundle.css" />
+
+        <script src="../js/calenda.js" defer></script>
+        <?php
+        if ($data_theme != "Fetching data_theme encounted a problem" || $data_theme != "No records available'" || $data_theme != "Error Occurred") {
+            if ($data_theme == 'christmas_theme') {
+                echo '<script src="para.js" defer></script>';
+            }
+        }
+        ?>
+        <title>Zoe worship centre</title>
     </head>
 
-    <body>
+    <body class="<?php
+    if ($data_theme != "Fetching data_theme encounted a problem" || $data_theme != "No records available'" || $data_theme != "Error Occurred") {
+        echo $data_theme;
+    }
+    ?>">
         <div class="navigation">
 
             <div class="nav_logo">
@@ -83,22 +107,23 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         <p>Library</p>
                     </div>
                 </a>
-                <a href="Gallery.html">
+                <a href="Gallery.php">
                     <div class="item_list">
                         <p>Gallery</p>
                     </div>
                 </a>
-                <a href="projects.html">
+                <a href="testProject.php">
                     <div class="item_list">
                         <p>Projects</p>
                     </div>
                 </a>
-                <a href="partnership/index.html">
+                </a>
+                <a href="partnership/index.php">
                     <div class="item_list">
                         <p>Partnership</p>
                     </div>
                 </a>
-                <a href="leadership.html">
+                <a href="leadership.php">
                     <div class="item_list">
                         <p>Leadership</p>
                     </div>
@@ -130,19 +155,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                     <img class="cloud_2" src="../images/cloud.png" alt="cloud" />
                 </div>
                 <div class="full_page_down">
-                    <img src="../images/blog-1.jpg" alt="" />
-                    <img src="../images/blog-2.jpg" alt="" />
-                    <img src="../images/blog-3.jpg" alt="" />
-                    <img src="../images/g-img-1.jpg" alt="" />
-                    <img src="../images/g-img-8.jpg" alt="" />
-                    <div class="christmas_txt">
-                        <img src="../images/home.png" alt="" />
-                    </div>
-                    <img src="../images/g-img-4.jpg" alt="" />
-                    <img src="../images/g-img-5.jpg" alt="" />
-                    <img src="../images/g-img-6.jpg" alt="" />
-                    <img src="../images/g-img-7.jpg" alt="" />
-                    <img src="../images/g-img-9.jpg" alt="" />
+                    <img src="../images/home.png" alt="" />
                 </div>
             </section>
             <section class="web_content">
@@ -150,11 +163,15 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                     <div class="content">
                         <div class="text">
                             <h1>THE APOSTOLIC CHURCH - GHANA</h1>
-                            <p>Zoe Worship centre - Galalia</p>
+                            <p>Zoe Worship centre - Galelia</p>
                         </div>
                         <div class="motto">
-                            <p style="text-align:center">MOTTO 2024 : ZEPHANIAH 3:4B</p>
-                            <p>THE LORD THY GOD IN THE MIDST OF THEE IS MIGHTY </p>
+                            <?php
+                            if ($data_theme != 'christmas_theme') {
+                                echo ' <p style="text-align:center">MOTTO 2024 : ZEPHANIAH 3:4B</p>
+                                <p>THE LORD THY GOD IN THE MIDST OF THEE IS MIGHTY </p>';
+                            }
+                            ?>
                         </div>
                         <div class="slider">
                             <ul class="totally" id="autoWidth3">
@@ -162,8 +179,8 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                     <div class="total">
                                         <label>New Souls</label>
                                         <div class="Number one">
-                                            <p class="totalMen count" data-target="<?php echo $Souls; ?>">
-                                                <?php echo $Souls; ?>
+                                            <p class="totalMen count" data-target="<?php {{echo $Souls;}} ?>">
+                                                <?php {{echo $Souls;}} ?>
                                             </p>
                                         </div>
                                     </div>
@@ -173,8 +190,8 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                     <div class="total">
                                         <label>Births</label>
                                         <div class="Number two">
-                                            <p class="totalWomen count" data-target="<?php echo $BirthNum; ?>">
-                                                <?php echo $BirthNum; ?>
+                                            <p class="totalWomen count" data-target="<?php {{echo $BirthNum;}} ?>">
+                                                <?php {{echo $BirthNum;}} ?>
                                             </p>
                                         </div>
                                     </div>
@@ -183,8 +200,8 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                     <div class="total">
                                         <label>Death</label>
                                         <div class="Number three">
-                                            <p class="totalYouth count" data-target="<?php echo $DeathNum; ?>">
-                                                <?php echo $DeathNum; ?>
+                                            <p class="totalYouth count" data-target="<?php {{echo $DeathNum;}} ?>">
+                                                <?php {{echo $DeathNum;}} ?>
                                             </p>
                                         </div>
                                     </div>
@@ -193,8 +210,8 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                     <div class="total">
                                         <label>Baptism</label>
                                         <div class="Number four">
-                                            <p class="totalKids count" data-target="<?php echo $WaterNum; ?>">
-                                                <?php echo $WaterNum; ?>
+                                            <p class="totalKids count" data-target="<?php {{echo $WaterNum;}} ?>">
+                                                <?php {{echo $WaterNum;}} ?>
                                             </p>
                                         </div>
                                     </div>
@@ -204,8 +221,8 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                     <div class="total Kids">
                                         <label>HolySpirit</label>
                                         <div class="Number">
-                                            <p class="totalKids count" data-target="<?php echo $FireNum; ?>">
-                                                <?php echo $FireNum; ?>
+                                            <p class="totalKids count" data-target="<?php {{echo $FireNum;}} ?>">
+                                                <?php {{echo $FireNum;}} ?>
                                             </p>
                                         </div>
                                     </div>
@@ -216,30 +233,28 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                     </div>
 
                 </div>
-
-                <div class="service_display">
-                    <div class="head">
-                        <p>2ND NOVEMBER 2022</p>
+                <div class="section__container">
+                    <div class="header">
+                        <p>Recent Activity</p>
                     </div>
-                    <div class="text">
-                        <div class="info" data-aos='fade-left'>
-                            <div class="slider">
-                                <?php
-                                if (count($images_array) > 0) {
-                                    foreach ($images_array as $image) {
-                                        echo '<div class="slide" id="slick">
-                                        <div><img src="../API/Images_folder/gallery/' . $image . '" alt="" /></div>
-                                    </div>';
-                                    }
 
+                    <div class="testimonials__grid">
+                        <div class="swiper_class">
+                            <div class="swiper-wrapper">
+                                <?php
+                                $data = json_decode($gallery);
+                                if ($data != 'Error occured' || $data != 'fetching encounterd an error' || $data != 'no records available') {
+                                    foreach ($data as $file) {
+                                        foreach ($file as $img) {
+                                            {{echo ' <div class="swiper-slide card">
+                                            <img loading="lazy" data-src="../API/images_folder
+                                            /gallery/' . $img . '" alt="user" />
+                                            </div>';}}
+                                        }
+                                    }
                                 }
                                 ?>
                             </div>
-                        </div>
-                        <div class="inner">
-                            <h1>SUNDAY SERVICE</h1>
-
-                            <button>Check Gallery</button>
                         </div>
                     </div>
                     <div class="social">
@@ -250,23 +265,28 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                             <li><i class="fab fa-youtube"></i> Youtube</li>
                         </ul>
                     </div>
-
                 </div>
 
                 <div class="upcoming_header">
                     <h1>Next up on our Schedules</h1>
-                    <div class="line"></div>
+                    <div class="line">
+                        <?php
+                        if ($data_theme == 'christmas_theme') {
+                            {{echo '<img src="../images/gift1.png" alt="gift1" />';}}
+                        }
+                        ?>
+                    </div>
                 </div>
 
                 <div class="workshop">
                     <?php
                     if (is_object($decoded_event)) {
-                        echo "<img src='../API/Images/calenda/images/" . $decoded_event->image . "' alt='' />
+                        {{echo "<img src='../API/Images/calenda/images/" . $decoded_event->image . "' alt='' />
                     <div class='info'>
                         <h1>" . $decoded_event->Event_name . "</h1>
                         <p>" . $decoded_event->About . ", this event is set to start at " . $decoded_event->Start_time . " and hopefully end at " . $decoded_event->End_time . "</p>
                         
-                    </div>";
+                    </div>";}}
                     }
                     ?>
                 </div>
@@ -281,7 +301,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         if (is_object($ShowData)) {
                             $Data = $ShowData->image;
                             if (is_array($Data)) {
-                                echo '<div class="gallery_layout">
+                                {{echo '<div class="gallery_layout">
                             <div class="img col1">
                                 <img src="../API/Images_folder/gallery/' . $Data[0] . '" alt="" />
                             </div>
@@ -298,7 +318,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                             <div class="img xxl">
                                 <img src="../API/Images_folder/gallery/' . $Data[5] . '" alt="" />
                             </div>
-                             </div>';
+                             </div>';}}
                             }
                         }
                     } catch (\Throwable $th) {
@@ -310,7 +330,13 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                 </div>
                 <div class="upcoming_header">
                     <h1>CALENDAR ACTIVITIES</h1>
-                    <div class="line"></div>
+                    <div class="line">
+                        <?php
+                        if ($data_theme == 'christmas_theme') {
+                            {{echo '<img src="../images/gift2.png" alt="gift1" />';}}
+                        }
+                        ?>
+                    </div>
                 </div>
                 <div class="data_reminder">
                     <p>We have successfully mapped out the church's calenda for the year, to help you plan your events
@@ -322,7 +348,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                     <div class="wrapper">
                         <i class="fas fa-list trigger_set" onclick="indicator(this);"></i>
                         <div class="months" id="months_data"
-                            data_calenderData='<?php print_r(json_encode($calenderData)); ?>'>
+                            data_calenderData='<?php {{print_r(json_encode($calenderData));}} ?>'>
                             <div class="main">
                                 <h1>Months</h1>
                                 <ul>
@@ -392,28 +418,61 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
 
                 <div class="upcoming_header">
                     <h1>Call to action</h1>
-                    <div class="line"></div>
+                    <div class="line">
+                        <?php
+                        if ($data_theme == 'christmas_theme') {
+                            {{echo '<img src="../images/gift3.png" alt="gift1" />';}}
+                        }
+                        ?>
+                    </div>
                 </div>
 
                 <div class="workshop">
                     <img src="images/bg (2).jpeg" alt="" />
                     <?php
                     if (is_object($CallToAction)) {
-                        echo "<div class='info'>
+                        {{echo "<div class='info'>
                         <h1>" . $CallToAction->name . " contribution</h1>
                         <p>" . $CallToAction->purpose . ", all members are expected to contribute " . $CallToAction->amount . ",
                         contribution due date is expected on " . $CallToAction->date . "</p>
-                    </div>";
+                    </div>";}}
                     }
                     ?>
                 </div>
 
                 <div class="upcoming_header">
-                    <h1>CHECK OUT THE LIBRARY</h1>
-                    <div class="line"></div>
+                    <h1>SERMONS</h1>
+                    <div class="line">
+                        <?php
+                        if ($data_theme == 'christmas_theme') {
+                            {{echo '<img src="../images/gift4.png" alt="gift1" />';}}
+                        }
+                        ?>
+
+                    </div>
                 </div>
                 <div class="slider_custome">
+                    <video class="main" autoplay muted controls>
+                        <source src="../sermons/sermon2.mp4" type="video/mp4">
+                        <source>
+                        <source src="../sermons/sermon2.mkv" type="video/makarov">
+                        <source>
+                    </video>
                     <ul>
+                        <li>
+                            <div class="item">
+                                <video loop="true" muted autoplay>
+                                    <source src="../sermons/sermon1.mp4" type="video/mp4">
+                                    <source>
+                                    <source src="../sermons/sermon1.mkv" type="video/makarov">
+                                    <source>
+                                </video>
+                                <div class="text">
+                                    <h1>Elevation Church</h1>
+                                </div>
+                            </div>
+
+                        </li>
                         <li>
                             <div class="item">
                                 <img src="images/bg (1).jpeg" alt="" />
@@ -425,10 +484,14 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         </li>
                         <li>
                             <div class="item">
-                                <img src="images/bg (1).jpeg" alt="" />
-
-                                <div class="name">
-                                    <p>Inheritance in the kingdom</p>
+                                <video loop="true" muted autoplay>
+                                    <source src="../sermons/sermon2.mp4" type="video/mp4">
+                                    <source>
+                                    <source src="../sermons/sermon2.mkv" type="video/makarov">
+                                    <source>
+                                </video>
+                                <div class="text">
+                                    <h1>Paul Washer</h1>
                                 </div>
                             </div>
                         </li>
@@ -450,34 +513,187 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         </source> -->
                     <?php
                     if (is_object($decoded_annc)) {
-                        echo '
-                    <img src="../API/images/annc/' . $decoded_annc->file . '" alt="" />
-                    <div class="info">
-                        <h1>' . $decoded_annc->name . '</h1>
-                        <p>' . $decoded_annc->message . '</p>
-                    </div>';
+                        {{echo '
+            <img src="../API/images/annc/' . $decoded_annc->file . '" alt="" />
+            <div class="info">
+                <h1>' . $decoded_annc->name . '</h1>
+                <p>' . $decoded_annc->message . '</p>
+            </div>';}}
                     } else {
-                        echo "<header>Announcement data is not yet available</header>";
+                        {{echo "<header>Announcement data is not yet available</header>";}}
                     }
                     ?>
                 </div>
 
 
             </section>
+            <section id="easter">
+                <div class="wrapper">
+                    <img src="images/easter/leaf.png" alt="leave img" class="leafimg" />
+
+                    <div class="content">
+
+                        <div class="main-header">
+                            <div class="layers">
+                                <div class="layer-header">
+                                    <div class="title">EASTER CELEBRATION</div>
+                                    <div class="subtitle">HAPPY EASTER !!</div>
+                                </div>
+                                <div class="layer base"></div>
+                                <div class="layer middle"></div>
+                                <div class="layer front"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="article">
+                            <div>
+                                <h2 class="header">
+                                    Death could not hold him, Our lord God Jesus christ has risen
+                                </h2>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+            <a href="../login/?userlogin"><div class="user_icon">
+                <i class="fas fa-users"></i>
+            </div></a>
+
             <div class="send_up">
                 <i class="fas fa-arrow-up"></i>
             </div>
 
         </main>
+        <footer>
+            <div class="container">
+                <div class="brand">
+                    <header>ZOE WORSHIP CENTRE</header>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="links">
+                    <ul>
+                        <li>Home</li>
+                        <li>Projects</li>
+                        <li>Partnership</li>
+                        <li>leaders</li>
+                        <li>library</li>
+                    </ul>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis optio soluta sunt
+                        corrupti
+                        necessitatibus, reprehenderit aperiam sint, labore, voluptate aliquid earum. Sapiente quos
+                        quam
+                        ducimus asperiores nam voluptas iste perferendis?</p>
+                </div>
+                <div class="contact">
+                    <div class="field">
+                        <h2>Contact</h2>
+                        <ul>
+                            <li><span>Email :</span></li>
+                            <li>zoeworshipcentrechurch@gmail.com</li>
+                            <li><span>WhatsApp :</span></li>
+                            <li>(+233) - 553 838 464</li>
+                            <li><span>Caller :</span></li>
+                            <li>(+001) - 5534 838 4649</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <?php
+            if ($data_theme == 'christmas_theme') {
+                {{echo '<img src="../images/gift5.png" alt="gift1" />';}}
+            }
+            ?>
+        </footer>
+        <script src="../library/js/swiper/package/swiper-bundle.min.js"></script>
 
-        <script src="para.js" defer></script>
-        <script src="../js/calenda.js"></script>
+        <script>
+            const toggle = document.querySelector(".menu_toggle");
+            var sendUp = document.querySelector(".send_up");
+            toggle.addEventListener("click", function (e) {
+                toggle.classList.toggle("active");
+                menuDiv.classList.toggle("active");
+            });
+            var rootElement = document.documentElement;
+            sendUp.addEventListener("click", function () {
+                rootElement.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+            });
+
+            var swiper = new Swiper(".swiper_class", {
+                effect: "coverflow",
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: "auto",
+                pagnation: {
+                    el: '.swiper-pagination',
+                },
+                coverflowEffect: {
+                    rotate: 0,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 2,
+                    slideShadows: true,
+                },
+                loop: true,
+                autoplay: {
+                    delay: 2000,
+                    disableOnInteraction: false,
+                },
+            });
+            const images = document.querySelectorAll('img');
+            const preloadImage = (img) => {
+                const src = img.getAttribute('data-src');
+                if (!src) return;
+                img.src = src;
+            };
+
+            const imgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    preloadImage(entry.target);
+                    observer.unobserve(entry.target);
+                });
+            });
+
+            images.forEach(image => {
+                imgObserver.observe(image);
+            });
+        </script>
+        <?php
+        if ($data_theme != "Fetching data encountered a problem" || $data_theme != "No records available'" || $data_theme != "Error Occurred") {
+            if ($data_theme == 'easter') {
+                echo '<script>
+            window.addEventListener("scroll", e => {
+                console.log(this.scrollY);
+                if (this.scrollY > 650) {
+                    document.documentElement.style.setProperty("--scrollTop", `${this.scrollY - 650}px`)
+                } else {
+                    document.documentElement.style.setProperty("--scrollTop", `0px`)
+                }
+            });
+
+        </script>';
+            }
+        }
+        ?>
     </body>
 
     </html>
     <?php
 } else {
-    echo "<header>We did not find enough data to display for you. Please revisit again. 
-    hopefully data will be available for your consumption</header>";
+    {{echo "<header>We did not find enough data to display for you. Please revisit again. 
+    hopefully data will be available for your consumption</header>";}}
 }
 ?>

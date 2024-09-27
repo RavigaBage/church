@@ -11,7 +11,7 @@ class viewData extends fetchData
         $RecordsResult = $this->Partnership_upload_data($name, $partnership, $date, $status, $email, $type, $period);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
-            return $RecordsResult;
+            return $Error;
         } else {
             return $RecordsResult;
         }
@@ -80,9 +80,31 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function viewList()
+    public function viewList($num)
     {
-        $RecordsResult = $this->Partnership_view();
+        $RecordsResult = $this->Partnership_view($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function partnership_liveUpdate($num)
+    {
+        $RecordsResult = $this->Partnership_liveUpdate_fetch($num);
+
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+
+            return $RecordsResult;
+        }
+    }
+    public function partner_pages()
+    {
+        $RecordsResult = $this->partnerPages();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

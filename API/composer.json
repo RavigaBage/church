@@ -1,7 +1,13 @@
 {
     "require": {
         "react/async": "^3.2",
-        "react/http": "^1.10"
+        "react/http": "^1.10",
+        "symfony/rate-limiter": "^5.4",
+        "gilbitron/easycsrf": "^1.5",
+        "firebase/php-jwt": "^6.10",
+        "bandwidth-throttle/token-bucket": "^2.0",
+        "predis/predis": "^2.2"
+        
     },
     "autoload":{
         "psr-4":{
@@ -11,7 +17,8 @@
             "AssetProject\\": "Assets&projects/",
             "Calender\\": "calender/",
             "Gallery\\":"Gallery/",
-            "ChurchApi\\":"pages-api"
+            "ChurchApi\\":"pages-api",
+            "Login\\":"login/"
             
         }
     }

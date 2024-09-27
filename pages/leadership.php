@@ -100,10 +100,18 @@ if ($data != "Fetching data encountered a problem" || $data != "No records avail
                             <p class="movies_tip">About us, we are here to serve God and partake in his ministry</p>
                             <div class="team_details">
                                 <div class="frame tilt_left">
-                                    <img src="leader_default/_MG_8972.JPG" alt="" />
+                                    <img src="../API/Images_folder/users/pexels-chloekalaartist-1043473.jpg" alt="" />
+                                    <div class="details_box">
+                                        <h1><b></b>K.B Akotia mensah</b></h1>
+                                        <p>Holds the position of <b>Apostle</b></p>
+                                    </div>
                                 </div>
                                 <div class="frame tilt_right">
-                                    <img src="leader_default/_MG_8974.JPG" alt="" />
+                                    <img src="../API/Images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
+                                    <div class="details_box">
+                                        <h1><b></b>Oslo mantey</b></h1>
+                                        <p>Holds the position of <b>Elder</b></p>
+                                    </div>
                                 </div>
                                 <div class="frame">
                                     <img src="leader_default/_MG_8896.JPG" alt="" />

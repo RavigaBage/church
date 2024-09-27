@@ -104,9 +104,9 @@ class viewData extends fetchData
         $RecordsResult = $this->Tithe_Records($unique_id, $Medium_payment, $description, $amount, $date, $month, $year);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
-            return json_encode($Error);
+            return $Error;
         } else {
-            return json_encode($RecordsResult);
+            return $RecordsResult;
         }
     }
     public function UpdateTithes($unique_id, $Medium_payment, $description, $amount, $Date, $month, $year)
@@ -331,6 +331,26 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function CreateBudget($name)
+    {
+        $RecordsResult = $this->Budget_create_data($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function CheckBudget($name)
+    {
+        $RecordsResult = $this->Budget_check_data($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function BudgetDataList()
     {
@@ -504,6 +524,56 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function ListDataDuesLiveUpdate($num)
+    {
+        $RecordsResult = $this->list_Info_Dues_liveUpdate($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function TransactionLiveUpdate($num)
+    {
+        $RecordsResult = $this->Transaction_liveUpdate($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function TitheLiveUpdate($num)
+    {
+        $RecordsResult = $this->Tithe_liveUpdate($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function ExpensesLiveUpdate($num)
+    {
+        $RecordsResult = $this->Expenses_liveUpdate($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function ListOffertoryLiveUpdate($num)
+    {
+        $RecordsResult = $this->list_Info_Offertory_liveUpdate($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function ListDataDuesSearch($key, $nk)
     {
         $RecordsResult = $this->listSearch_Info_Dues($key, $nk);
@@ -525,9 +595,30 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function OffertoryPages()
+    {
+        $RecordsResult = $this->Offertory_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function DuesPages()
     {
         $RecordsResult = $this->Dues_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function TithePages()
+    {
+        $RecordsResult = $this->list_tithe_pages();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -599,9 +690,19 @@ class viewData extends fetchData
         }
     }
 
-    public function Accounts_list_Data()
+    public function Accounts_list_Data($num)
     {
-        $RecordsResult = $this->AccountListData();
+        $RecordsResult = $this->AccountListData($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function AccountPages()
+    {
+        $RecordsResult = $this->AccountListPages();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

@@ -8,7 +8,9 @@ class viewData extends fetchData
     {
         $RecordsResult = $this->Assets_upload_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image_name, $Image_type, $Image_tmp_name, $About);
 
-        return json_encode(strval($RecordsResult));
+
+        return $RecordsResult;
+
 
     }
 
@@ -22,7 +24,19 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function Projects_liveUpdate($num)
+    {
+        $RecordsResult = $this->projects_viewLiveUpdate($num);
+        return $RecordsResult;
 
+    }
+
+    public function Assets_liveUpdate($num)
+    {
+        $RecordsResult = $this->AviewLiveUpdate($num);
+        return $RecordsResult;
+
+    }
 
     public function Assets_delete($name)
     {

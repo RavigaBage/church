@@ -1,5 +1,4 @@
 <?php
-session_start();
 class DBH
 {
     private $host = 'localhost';
@@ -98,7 +97,6 @@ class fetchData extends DBH
 
         } else {
             $exportData = json_encode('Unknown error, please try again');
-            $resultValidate = true;
             exit($exportData);
         }
 
@@ -109,7 +107,6 @@ class fetchData extends DBH
         $input_list = array($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $date, $id);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -158,9 +155,7 @@ class fetchData extends DBH
                     $stmt->bindParam('24', $date, PDO::PARAM_STR);
                     $stmt->bindParam('25', $id, PDO::PARAM_STR);
                     if (!$stmt->execute()) {
-                        print_r($stmt->errorInfo());
                         $stmt = null;
-
                         $Error = json_encode('Fetching data encountered a problems');
                         exit($Error);
                     } else {
@@ -170,11 +165,8 @@ class fetchData extends DBH
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-
-
                         $exportData = json_encode('Data entry was a success Page will refresh to display new data');
                         $resultValidate = true;
-                        exit($exportData);
                     }
                 } else {
                     $stmt = null;
@@ -184,13 +176,8 @@ class fetchData extends DBH
 
             }
 
-
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
     protected function Sunday_delete_data($name)
@@ -228,27 +215,28 @@ class fetchData extends DBH
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
                     }
-
-                    $resultCheck = true;
                     $exportData = 'Item Deleted Successfully';
                 }
             } else {
                 exit('No match for search query');
             }
 
-            if ($resultCheck) {
-                return $exportData;
-            } else {
-                return $resultCheck;
-            }
+            return $exportData;
 
         }
     }
-    protected function Sunday_view($year)
+    protected function Sunday_view($year, $num)
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` where `date` like '%$year%' ORDER BY `id` DESC");
+        $nk = $num - 1 * 40;
+        if ($num == '1') {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` where `date` like '%$year%' ORDER BY `id` DESC limit 40 ");
+
+        } else {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` where `date` like '%$year%' ORDER BY `id` DESC limit 40 OFFSET $nk");
+
+        }
 
         if (!$stmt->execute()) {
             $stmt = null;
@@ -776,11 +764,15 @@ class fetchData extends DBH
         }
     }
 
-    protected function church_record_view($year)
+    protected function church_record_view($year, $num)
     {
         $exportData = '';
-        $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `year` like '%$year%' ORDER BY `id` DESC");
+        $nk = $num - 1 * 40;
+        if ($num = '1') {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `year` like '%$year%' ORDER BY `id` DESC limit 40");
+        } else {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `year` like '%$year%' ORDER BY `id` DESC limit 40 OFFSET $nk");
+        }
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -805,9 +797,46 @@ class fetchData extends DBH
             $resultCheck = false;
             $exportData = json_encode('Not Records Available');
         }
+        return $exportData;
+    }
+
+
+    protected function Record_pages()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` ORDER BY `id` DESC ");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+
+        $exportData = $stmt->rowCount() > 0;
 
         if ($resultCheck) {
-            return $exportData;
+            return json_encode($exportData);
+        } else {
+            return $resultCheck;
+        }
+    }
+    protected function Sunday_pages()
+    {
+        $exportData = '';
+        $resultCheck = true;
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` ORDER BY `id` DESC ");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+
+        $exportData = $stmt->rowCount() > 0;
+
+        if ($resultCheck) {
+            return json_encode($exportData);
         } else {
             return $resultCheck;
         }

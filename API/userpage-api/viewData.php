@@ -18,9 +18,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Notification_viewList($unique_id)
+    public function NotificationSet($unique_id)
     {
-        $RecordsResult = $this->notification($unique_id);
+        $RecordsResult = $this->user_notification_status($unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -28,9 +28,50 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function transactionList_view($unique_id)
+
+    public function NotificationStatus($unique_id)
     {
-        $RecordsResult = $this->transactionList($unique_id);
+        $RecordsResult = $this->notification_status($unique_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Notification_viewList($unique_id, $num)
+    {
+        $RecordsResult = $this->notification($unique_id, $num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Notification_viewList_pages()
+    {
+        $RecordsResult = $this->notification_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function transactionList_view_pages()
+    {
+        $RecordsResult = $this->transactionList_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function transactionList_view($unique_id, $num)
+    {
+        $RecordsResult = $this->transactionList($unique_id, $num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -134,6 +175,21 @@ class viewData extends fetchData
         } else {
             return $RecordsResult;
         }
+    }
+    public function DataHistory($name, $event, $Date, $sitename, $action)
+    {
+        $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function password_update_request($unique_id, $passkey)
+    {
+        $RecordsResult = $this->password_update($unique_id, $passkey);
+        return $RecordsResult;
     }
 
 }

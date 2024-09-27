@@ -43,6 +43,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function annc_liveUpdate($num)
+    {
+        $RecordsResult = $this->annc_liveUpdate_data($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function annc_SearchRequest($name, $nk)
     {
         $RecordsResult = $this->annc_search($name, $nk);
@@ -66,9 +76,9 @@ class viewData extends fetchData
         }
     }
 
-    public function viewList()
+    public function viewList($num)
     {
-        $RecordsResult = $this->annc_view();
+        $RecordsResult = $this->annc_view($num);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -76,6 +86,18 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
+    public function anncPages()
+    {
+        $RecordsResult = $this->annc_pages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
     public function getdepartment_name()
     {
         $RecordsResult = $this->department_list();
@@ -121,6 +143,16 @@ class viewData extends fetchData
     public function getoken()
     {
         $RecordsResult = $this->tokenCheck();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function ministries_viewList()
+    {
+        $RecordsResult = $this->ministries_view();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;

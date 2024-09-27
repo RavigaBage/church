@@ -1,5 +1,4 @@
 <?php
-session_start();
 class DBH
 {
     private $host = 'localhost';
@@ -31,7 +30,16 @@ class fetchData extends DBH
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
+            $data = strip_tags($data);
         }
+        return $data;
+    }
+    public function cleanStringData($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        $data = strip_tags($data);
         return $data;
     }
     protected function annc_upload_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name)
@@ -39,7 +47,6 @@ class fetchData extends DBH
         $input_list = array($name, $receiver, $message, $date);
         $clean = true;
         $exportData = 0;
-        $resultValidate = true;
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
@@ -51,6 +58,7 @@ class fetchData extends DBH
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title`='$name'");
             if (!$stmt->execute()) {
+
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
                 exit($Error);
@@ -110,27 +118,20 @@ class fetchData extends DBH
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-                        $exportData = json_encode('Data entry was a success Page will refresh to display new data');
+                        $exportData = 'success';
                         $resultValidate = true;
                     }
                 } else {
                     $stmt = null;
-                    $Error = json_encode('Fetching data encountered a problem');
+                    $Error = json_encode('Error Occurred whiles fetching data');
                     exit($Error);
                 }
-
-
-
 
             }
 
 
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
 
     protected function annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $unique_id)
@@ -163,6 +164,9 @@ class fetchData extends DBH
                 $title = $fetchAll[0]['title'];
 
                 if ($stmt->execute()) {
+                    $result = $stmt->fetchAll();
+                    $Oldname = $result[0]['title'];
+
                     if ($file_name == '') {
                         $file_name = '';
                     } else {
@@ -175,8 +179,7 @@ class fetchData extends DBH
                                 $filename4 = time() . $file_name;
                                 $target4 = "../images/annc/$filename4";
                                 if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                    $unique_id = rand(time(), 3002);
-                                    $file_name = $target4;
+                                    $file_name = $filename4;
                                 } else {
                                     exit(json_encode("An error occurred while processing image, try again"));
                                 }
@@ -188,14 +191,22 @@ class fetchData extends DBH
                         }
                     }
                     $stmt = "";
+                    $clearance = true;
+                    if ($Oldname != $name) {
+                        $clearance = false;
+                    }
+                    if (!$clearance) {
+                        $stmt = $this->data_connect()->prepare("RENAME TABLE `zoeannouncement`.`$title` TO `zoeannouncement`.`$name`");
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = json_encode('Fetching data encountered w a problem');
+                            exit($Error);
+                        } else {
+                            $clearance = true;
+                        }
+                    }
+                    if ($clearance) {
 
-                    $stmt = $this->data_connect()->prepare("RENAME TABLE `zoeannouncement`.`$title` TO `zoeannouncement`.`$name`");
-                    if (!$stmt->execute()) {
-                        print_r($stmt->errorInfo());
-                        $stmt = null;
-                        $Error = json_encode('Fetching data encountered w a problem');
-                        exit($Error);
-                    } else {
                         if ($file_name == "") {
                             $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET    `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',    `status`='active' WHERE `unique_id`='$unique_id'");
                         } else {
@@ -213,10 +224,11 @@ class fetchData extends DBH
                             if (json_decode($historySet) != 'Success') {
                                 $exportData = 'success';
                             }
-                            $exportData = 'Announcement session has been updated successfully';
+                            $exportData = 'Update success';
                             $resultValidate = true;
                         }
                     }
+
                 } else {
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problem');
@@ -230,11 +242,7 @@ class fetchData extends DBH
 
 
         }
-        if ($resultValidate) {
-            return $exportData;
-        } else {
-            return $resultValidate;
-        }
+        return $exportData;
     }
     protected function ass_delete_data($name)
     {
@@ -276,7 +284,6 @@ class fetchData extends DBH
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-
                         $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
@@ -291,11 +298,7 @@ class fetchData extends DBH
                 exit(json_encode('No match for search query'));
             }
 
-            if ($resultCheck) {
-                return json_encode($exportData);
-            } else {
-                return $resultCheck;
-            }
+            return $exportData;
 
         }
     }
@@ -341,29 +344,19 @@ class fetchData extends DBH
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
                     }
-
-                    $resultCheck = true;
                     $exportData = 'Item changed Successfully';
                 }
-
-
-
             } else {
                 exit(json_encode('No match for search query'));
             }
 
-            if ($resultCheck) {
-                return $exportData;
-            } else {
-                return $resultCheck;
-            }
+            return $exportData;
 
         }
     }
     protected function annc_search($name, $nk)
     {
         $exportData = '';
-        $resultCheck = true;
         $num = 25 * $nk;
         $total_pages = 0;
         $stmt_pages = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title` like '%$name%' ORDER BY `date` DESC");
@@ -418,17 +411,12 @@ class fetchData extends DBH
             $exportData = 'No Records Available';
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+        return $exportData;
     }
 
     protected function themeStatus($id)
     {
         $exportData = "";
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`theme` where `id`='$id'");
         if (!$stmt->execute()) {
             $stmt = null;
@@ -439,19 +427,21 @@ class fetchData extends DBH
             $result = $stmt->fetchAll();
             foreach ($result as $row) {
                 $status = $row['status'];
+                $condition = false;
                 if ($status == 'active') {
-                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET status = 'unactive' WHERE `id`='$id'");
+                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'unactive' WHERE `id`='$id'");
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encounted a problem';
                         exit($Error);
                     } else {
                         $exportData = 'success';
+                        $condition = true;
                     }
 
                 } else {
                     if ($status == 'unactive') {
-                        $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET status = 'active' WHERE `id`='$id'");
+                        $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'active' WHERE `id`='$id'");
                         if (!$stmt->execute()) {
                             $stmt = null;
                             $Error = 'Fetching data encounted a problem';
@@ -462,9 +452,25 @@ class fetchData extends DBH
                             $historySet = $this->history_set($name, "Theme status change", $date, "Appearance page dashboard Admin", "User change the Status of a theme");
                             if (json_decode($historySet) == 'Success') {
                                 $exportData = 'success';
-                            } else {
-                                $exportData = 'success';
                             }
+                            $exportData = 'success';
+                            $condition = true;
+
+                        }
+                    }
+                }
+            }
+            if ($condition) {
+                for ($i = 0; $i < 3; $i++) {
+                    if (($i + 1) != $id) {
+                        $num = $i + 1;
+                        $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'unactive' WHERE `id`='$num'");
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = 'Fetching data encountered a problem';
+                            exit($Error);
+                        } else {
+                            $exportData = 'success';
                         }
                     }
                 }
@@ -474,18 +480,57 @@ class fetchData extends DBH
             $resultCheck = false;
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+        return $exportData;
     }
-
-    protected function annc_view()
+    protected function ministries_view()
     {
         $exportData = '';
-        $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `date` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`department` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encountered a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new stdClass();
+            foreach ($result as $data) {
+                $name = $data['name'];
+                $members = $data['members'];
+                $message = $data['About'];
+                $unique_id = $data['unique_id'];
+                if (strlen($message) > 100) {
+                    $message = substr($message, 0, 100) . "....";
+                }
+
+                $objectClass = new stdClass();
+                $objectClass->UniqueId = $unique_id;
+                $objectClass->name = $name;
+                $objectClass->members = $members;
+                $objectClass->about = $message;
+
+                $ExportSendMain->$unique_id = $objectClass;
+            }
+            $exportData = json_encode($ExportSendMain);
+        } else {
+            $resultCheck = false;
+            $exportData = 'No Records Available';
+        }
+
+        return $exportData;
+    }
+
+    protected function annc_view($num)
+    {
+        $exportData = '';
+        $nk = $num - 1 * 40;
+        if ($num == '1') {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `date` DESC limit 40");
+
+        } else {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `date` DESC limit 40 OFFSET $nk");
+
+        }
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -521,10 +566,70 @@ class fetchData extends DBH
             $exportData = 'No Records Available';
         }
 
-        if ($resultCheck) {
-            return $exportData;
+        return $exportData;
+    }
+    protected function annc_liveUpdate_data($num)
+    {
+        $exportData = '';
+        if (empty($num)) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `id` DESC limit 1");
+
         } else {
-            return $resultCheck;
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `unique_id`='$num' ORDER BY `id` DESC limit 1 ");
+
+        }
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ObjData = new stdClass();
+            foreach ($result as $data) {
+                $name = $this->cleanStringData($data['title']);
+                $receiver = $this->cleanStringData($data['Reciever']);
+                $message = $this->cleanStringData($data['message']);
+                $date = $this->cleanStringData($data['date']);
+                $unique_id = $this->cleanStringData($data['unique_id']);
+                $item = rand(time(), 1292);
+                $DataName = $unique_id . $item;
+                $file = $this->cleanStringData($data['file']);
+                $status = $this->cleanStringData($data['status']);
+
+                $DataName = new stdClass();
+                $DataName->Id = $unique_id;
+                $DataName->name = $name;
+                $DataName->receiver = $receiver;
+                $DataName->message = $message;
+                $DataName->date = $date;
+                $DataName->file = $file;
+                $DataName->status = $status;
+                $ObjData->$item = $DataName;
+            }
+            $exportData = json_encode($ObjData);
+        } else {
+            exit(json_encode('No Records Available'));
+        }
+
+
+        return $exportData;
+    }
+    protected function annc_pages()
+    {
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` ORDER BY `id` DESC");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit($Error);
+        }
+
+        if ($stmt->rowCount() > 0) {
+            $count = $stmt->rowCount();
+            return $count;
+
+        } else {
+            return 'Error';
         }
     }
     protected function department_list()
@@ -540,23 +645,21 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $item = '';
+            $ObjectClass = new \stdClass();
             foreach ($result as $data) {
+                $unique_id = rand(time(), 1322);
                 $Name = $data['name'];
-                $item .= '<option>' . $Name . '</option>';
+                $ObjectClass->$unique_id = $Name;
             }
-            $exportData = $item;
+            $exportData = json_encode($ObjectClass);
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+        return $exportData;
     }
     protected function token($pass, $new, $timer, $date)
     {
         $exportData = "";
-        $resultCheck = true;
+        $pass = hash('sha256',$pass);
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`permission` where `status` like '%Active%'");
         if (!$stmt->execute()) {
             $stmt = null;
@@ -612,21 +715,15 @@ class fetchData extends DBH
                 $Error = json_encode('Fetching data encounted a problem');
                 exit($Error);
             } else {
-                $exportData = "success";
+                $exportData = 'success';
             }
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+        return $this->validate($exportData);
     }
     protected function tokenCheck()
     {
-
         $exportData = "";
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`permission` where `status` like '%Active%'");
         if (!$stmt->execute()) {
             $stmt = null;
@@ -645,32 +742,29 @@ class fetchData extends DBH
                 } else {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
-                    exit(json_encode($Error));
+                    exit($Error);
                 }
 
             } else {
                 $exportData = $num;
             }
         } else {
-            $exportData = 'empty';
+            $exportData = 'No Records Available';
 
         }
+        
 
-        if ($resultCheck) {
-            return json_encode($exportData);
-        } else {
-            return $resultCheck;
-        }
+        return json_encode($exportData);
     }
 
     protected function History($num)
     {
         $exportData = "";
-        $resultCheck = true;
+        $nk = $num - 1 * 40;
         if ($num == '1') {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`history` ORDER BY `id` DESC limit 50");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`history` ORDER BY `id` DESC limit 40");
         } else {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`history` ORDER BY `id` DESC limit 50 OFFSET $num");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`history` ORDER BY `id` DESC limit 40 OFFSET $nk");
         }
         if (!$stmt->execute()) {
             $stmt = null;
@@ -710,11 +804,8 @@ class fetchData extends DBH
             exit(json_encode("no data found"));
         }
 
-        if ($resultCheck) {
-            return $exportData;
-        } else {
-            return $resultCheck;
-        }
+
+        return $exportData;
     }
     protected function History_pages()
     {
@@ -754,6 +845,8 @@ class fetchData extends DBH
                 } else {
                     return json_encode('Success');
                 }
+            }else{
+                echo 'Admin is a fake';
             }
         }
     }

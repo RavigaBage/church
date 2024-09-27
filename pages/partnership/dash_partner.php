@@ -137,17 +137,25 @@ if ($condition) {
                         <path
                             d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
                     </svg>
-                    <div class='opt_element'>
-                        <p data-id="" class='delete_item dp'>Delete item <i></i></p>
-                        <p class='Update_item up' data-id="  " data-information=''>Update
+                    <div class='opt_element' style="height: 130px;">
+                        <p data-id="" delete_item="" class='delete_item dp'>Delete item <i></i></p>
+                        <p class='Update_item up' data-id="" Update_item="" data-information=''>Update
                             item
                             <i></i>
+                        </p>
+                        <p class='add_item' data-id="  ">Add item<i></i>
                         </p>
                     </div>
                 </td>
             </tr>
         </table>
     </div>
+    <div class="info_information event_menu_add"
+        style="height:300px; width:500px; padding:10px;text-wrap:wrap;display:grid;place-items:center;">
+        <header class="danger"></header>
+    </div>
+
+
     <div class="assets_page">
         <div class="content_pages">
             <div class="content_page_event">
@@ -164,67 +172,69 @@ if ($condition) {
                             </tr>
                         </thead>
 
-
                         <tbody>
                             <?php
-                            $date = "";
                             if ($type == "") {
-                                $data = json_decode($viewDataClass->viewList());
+                                $data = $viewDataClass->viewList($val);
                             } else {
-                                $data = json_decode($viewDataClass->ministries_filter($type));
+                                $data = $viewDataClass->ministries_filter($type);
                             }
+                            if ($data != '' || $data != 'No Records available' || $data != " " || $data != 'Error Occurred') {
+                                $data = json_decode($data);
+                                foreach ($data as $item) {
+                                    $unique_id = $item->UniqueId;
+                                    $name = $item->name;
+                                    $Partnership = $item->partnership;
+                                    $date = $item->date;
+                                    $Email = $item->Email;
+                                    $Type = $item->Type;
+                                    $Period = $item->Period;
+                                    $status = $item->status;
+                                    $ObjectData = $item->Obj;
+                                    $ObjectDataIndividual = $item->IObj;
 
-                            foreach ($data as $item) {
-                                $unique_id = $item->UniqueId;
-                                $name = $item->name;
-                                $Partnership = $item->partnership;
-                                $date = $item->date;
-                                $Email = $item->Email;
-                                $Type = $item->Type;
-                                $Period = $item->Period;
-                                $status = $item->status;
-                                $ObjectData = $item->Obj;
-                                $ObjectDataIndividual = $item->IObj;
+                                    if ($status == 'active') {
+                                        $item = "<div class='in_btn btn_record'>
+                                    <div></div>Active
+                                </div>";
+                                    } else {
+                                        $item = "<div class='out_btn btn_record'>
+                                    <div></div>Inactive
+                                </div>";
+                                    }
 
-                                if ($status == 'active') {
-                                    $item = "<div class='in_btn btn_record'>
-                                <div></div>Active
-                            </div>";
-                                } else {
-                                    $item = "<div class='out_btn btn_record'>
-                                <div></div>Inactive
-                            </div>";
-                                }
-
-                                echo "
-                            <tr>
-                                        <td>
-                                            <div class='details'>
-                                                
-                                                <div class='text'>
-                                                    <p>" . $name . "</p>
-                                                    <p>" . $date . "</p>
+                                    echo "
+                                <tr>
+                                            <td>
+                                                <div class='details'>
+                                                    
+                                                    <div class='text'>
+                                                        <p>" . $name . "</p>
+                                                        <p>" . $date . "</p>
+                                                    </div>
+                
                                                 </div>
-            
-                                            </div>
-                                        </td>
-                                        <td class='td_action'><p>" . $Email . "</p></td>
-                                        <td class='td_action'><p>" . $Type . "</p></td>
-                                        <td class='td_action'><p>" . $Period . "</p></td>
-            
-                                        <td data-information='" . $ObjectDataIndividual . "'>" . $item . "</td>
-                                        <td class='option'>
-                                            <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
-                                                <path
-                                                    d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
-                                            </svg>
-                                            <div class='opt_element' style='height: 130px;'>
-                                            <p data-id=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
-                                            <p class='Update_item' data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
-                                            <p data-id=" . $unique_id . " class='add_item'>Add data<i></i></p>
-                                            </div>
-                                        </td>
-                                    </tr>";
+                                            </td>
+                                            <td class='td_action'><p>" . $Email . "</p></td>
+                                            <td class='td_action'><p>" . $Type . "</p></td>
+                                            <td class='td_action'><p>" . $Period . "</p></td>
+                
+                                            <td data-information='" . $ObjectDataIndividual . "'>" . $item . "</td>
+                                            <td class='option'>
+                                                <svg xmlns='http://www.w3.org/2000/svg' height='48' viewBox='0 -960 960 960' width='48'>
+                                                    <path
+                                                        d='M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z' />
+                                                </svg>
+                                                <div class='opt_element' style='height: 130px;'>
+                                                <p data-id=" . $unique_id . " delete_item=" . $unique_id . " class='delete_item'>Delete item <i></i></p>
+                                                <p class='Update_item' Update_item=" . $unique_id . " data-id=" . $unique_id . " data-information='" . $ObjectData . "'>Update item <i></i></p>
+                                                <p data-id=" . $unique_id . " class='add_item'>Add data<i></i></p>
+                                                </div>
+                                            </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo '<header class="danger">No Records Available</header>';
                             }
                             ?>
                         </tbody>
@@ -233,7 +243,7 @@ if ($condition) {
                 </div>
             </div>
         </div>
-        <div class="event_menu_add main">
+        <div class="event_menu_add main form_data">
             <form>
                 <header>Partnership form</header>
                 <p class="error_information"></p>
@@ -321,6 +331,87 @@ if ($condition) {
             <i>+</i>
             <p>New</p>
         </div>
+
+        <div class="page_sys">
+            <?php
+            if (isset($_SESSION['total_pages_partner'])) {
+                $total = $_SESSION['total_pages_partner'];
+            } else {
+                $total = $viewDataClass->partner_pages();
+                $_SESSION['total_pages_partner'] = $total;
+            }
+            if ($total != 'Error Occurred') {
+                ?>
+                <header>
+
+                    <?php
+                    $total_raw = $total / 40;
+                    $total = ceil($total / 40);
+                    if ($total_raw > 1) {
+                        echo 'Pages:';
+                        ?>
+
+
+                        <div class="pages">
+                            <?php
+                            $loop = $total_raw;
+                            $num = 2;
+                            $start = 1;
+                            $original_1 = $total;
+                            if ($total > 6) {
+                                $original_1 = 7;
+                                if ($num >= 6) {
+
+                                    if ($num >= 6 && $num <= ($total - 6)) {
+                                        $multiplier = floor($num / 6);
+                                        echo $multiplier;
+                                        if ($multiplier <= 1) {
+                                            $constant = 1;
+                                        } else {
+                                            $constant = $multiplier + 1;
+                                        }
+                                        $start = 6 * $constant;
+                                        $original_1 = $start + 6;
+                                    } else {
+                                        $start = $total - 6;
+                                        $original_1 = $total - 1;
+                                    }
+                                }
+                                for ($i = $start; $i < ($original_1); $i++) {
+                                    $class = "";
+                                    if ($i == $num) {
+                                        $class = 'active';
+                                    }
+                                    echo '<div class="' . $class . '">' . $i . '</div>';
+                                }
+                            } else {
+                                for ($i = $start; $i < ($original_1); $i++) {
+                                    $class = "";
+                                    if ($i == $num) {
+                                        $class = 'active';
+                                    }
+                                    echo '<div class="' . $class . '">' . $i . '</div>';
+                                }
+                            }
+                            if ($total_raw > 6) {
+                                $final = $total - 1;
+                            } else {
+                                $final = $total;
+                            }
+                            if ($loop >= 6 && $original_1 < ($total - 2)) {
+                                echo '<span>......</span><div>' . $final . '</div>';
+                            } else {
+                                echo '<div>' . $final . '</div>';
+                            }
+                            ?>
+                        </div>
+                    </header>
+                    <?php
+                    }
+            }
+            ?>
+        </div>
+
     </div>
     <?php
 } else {

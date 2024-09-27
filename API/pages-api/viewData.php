@@ -70,6 +70,18 @@ class viewData extends fetchData
         }
     }
 
+    public function theme_viewList()
+    {
+        $RecordsResult = $this->theme_home_view();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
     public function church_record_viewList()
     {
         $RecordsResult = $this->church_record_view();

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="gateway.css" />
+    <title>Payment gateway</title>
+</head>
+
+<body>
+    <main>
+        <b>Loading......</b>
+        <header>Zoe payment gateway</header>
+        <div class="container">
+            <div class="form">
+                <form>
+                    <div class="form-group">
+                        <label>Select a mode of payment</label>
+                        <select>
+                            <option value="mtn">Mtn Mobile payment</option>
+                            <option value="telecel">Telecel Mobile payment</option>
+                            <option value="tigo">Airtel/Tigo payment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Enter your account name</label>
+                        <input type="text" class="name form-control"
+                            placeholder="This is usually the name used in registering the account" />
+                    </div>
+                    <div class="form-group">
+                        <label>Enter your account number</label>
+                        <input type="text" class="number form-control" placeholder="Enter your account number" />
+                    </div>
+                    <div class="form-group">
+                        <label>Enter Amount</label>
+                        <input type="text" class="amount form-control" placeholder="Enter your account number" />
+                    </div>
+
+                </form>
+            </div>
+            <div class="card">
+                <div class="card_holder">
+                    <div class="card_img">
+                        <img src="../images/visa.png" />
+                    </div>
+                    <div class="details">
+                        <summary>
+                            <label>Account Name</label>
+                            <p id="acc_name">Jonathan cleavland</p>
+
+                        </summary>
+                        <summary>
+                            <label>details</label>
+                            <p>Tithe payment</p>
+
+                        </summary>
+                        <summary>
+                            <label>Amount</label>
+                            <p id="acc_amount">$ - 40</p>
+                        </summary>
+                        <span>You have a total if <b id="total">40</b> excluding taxes and vat</span>
+                    </div>
+                </div>
+                <button>Pay</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        var AccountName = document.getElementById('acc_name');
+        var AccountAmount = document.getElementById('acc_amount');
+
+        var Options = document.querySelector('.form-group select');
+        var OptionsName = document.querySelector('.form-group input.name');
+        var OptionsAmount = document.querySelector('.form-group input.amount');
+        var OptionsTotal = document.querySelector('#total');
+        var Optionsbutton = document.querySelector('button');
+        Options.addEventListener('change', function () {
+            document.querySelector('.card_img img').src = '../images/' + Options.value + 'card.png';
+        })
+        Optionsbutton.addEventListener('click', function () {
+            const FormScroll = document.querySelector('html')
+            FormScroll.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        })
+        function debounce(cb, delay = 1000) {
+            let timeout
+
+            return (...args) => {
+                clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    cb(...args)
+                }, delay)
+            }
+        }
+        OptionsName.addEventListener('input', debounce(function () {
+            AccountName.innerText = OptionsName.value;
+        }));
+        OptionsAmount.addEventListener('input', debounce(function () {
+            AccountAmount.innerText = '$ - ' + OptionsAmount.value;
+            OptionsTotal.innerText = OptionsTotal.value;
+        }));
+    </script>
+</body>
+
+</html>
