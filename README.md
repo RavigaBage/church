@@ -1,4 +1,4 @@
-#working progress
+#working progress incomplete readme
 # Church Website and Management System
 
 Welcome to the **Church Website and Management System** repository. This project is a comprehensive solution designed for churches, offering both a public-facing website and a management system for efficient administration.
@@ -33,23 +33,23 @@ This project combines a website for visitors and an administrative system to man
 - **Notifications**: Send emails or SMS to members about upcoming events or other news.
 
 ## Demo
-[Insert link to live demo if available]
+not yet available
 
 ## Technologies
 - **Frontend**: HTML, CSS, JavaScript (with RequireJS)
 - **Backend**: PHP (OOP), MySQL
 - **Version Control**: Git
 - **Deployment**: GitHub integration with automated server pulls
-- **Additional Libraries**: [List of libraries if applicable]
+- **Additional Libraries**: will be updated soon
 
 ## Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/RavigaBage/church
     ```
 2. Navigate to the project directory:
     ```bash
-    cd your-repo-name
+    https://github.com/RavigaBage/church
     ```
 3. Install dependencies for the frontend:
     - Ensure you have a web server running with PHP (such as XAMPP, WAMP, or similar).
@@ -69,7 +69,7 @@ This project combines a website for visitors and an administrative system to man
 
 ### Management System:
 - Access the management system by visiting `http://localhost/your-repo-name/admin`.
-- Login with admin credentials (default credentials provided in the documentation).
+- Login with admin credentials (default credentials provided in the documentation). 
 - Manage members, events, donations, and more using the intuitive admin dashboard.
 
 ## Contributing
