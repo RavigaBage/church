@@ -11,23 +11,26 @@ if (isset($_GET['data_page'])) {
 } else {
     $num = 1;
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['Budget_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $newDataRequest->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard budget", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['Budget_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
 
@@ -93,202 +96,202 @@ if ($condition) {
             <div class="records_table ">
                 <?php
                 $data = $newDataRequest->BudgetList($year_fetch);
-                if($data != 'Error occured' || $data != ' ' || $data != 'Fetching data encountered a problem'){
-                $DecodedData = json_decode($data);
-                
-                $income = $DecodedData->INCOME->income;
-                $offertory = $DecodedData->INCOME->offertory;
-                $tithe = $DecodedData->INCOME->tithe;
+                if ($data != 'Error occured' || $data != ' ' || $data != 'Fetching data encountered a problem') {
+                    $DecodedData = json_decode($data);
+
+                    $income = $DecodedData->INCOME->income;
+                    $offertory = $DecodedData->INCOME->offertory;
+                    $tithe = $DecodedData->INCOME->tithe;
 
 
-                $Ultilities = $DecodedData->EXPENSES->Ultilities;
-                $Housing = $DecodedData->EXPENSES->Housing;
-                $paycheck = $DecodedData->EXPENSES->paycheck;
-                $Others = $DecodedData->EXPENSES->Others;
+                    $Ultilities = $DecodedData->EXPENSES->Ultilities;
+                    $Housing = $DecodedData->EXPENSES->Housing;
+                    $paycheck = $DecodedData->EXPENSES->paycheck;
+                    $Others = $DecodedData->EXPENSES->Others;
 
-                ?>
-                <table class="budget">
-                    <thead>
-                        <tr class="income_deep">
-                            <th>Income</th>
-                            <th>Jan</th>
-                            <th>Feb</th>
-                            <th>Mar</th>
-                            <th>Apr</th>
-                            <th>May</th>
-                            <th>Jun</th>
-                            <th>Jul</th>
-                            <th>Aug</th>
-                            <th>Sep</th>
-                            <th>Oct</th>
-                            <th>Nov</th>
-                            <th>Dec</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                    ?>
+                    <table class="budget">
+                        <thead>
+                            <tr class="income_deep">
+                                <th>Income</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
 
-                        function declareName($tableValue)
-                        {
-                            if ($tableValue == "0" || $tableValue == 0) {
-                                $tableValue = "-";
+                            function declareName($tableValue)
+                            {
+                                if ($tableValue == "0" || $tableValue == 0) {
+                                    $tableValue = "-";
+                                }
+                                return $tableValue;
                             }
-                            return $tableValue;
-                        }
-                        echo "<tr class='income'>
+                            echo "<tr class='income'>
                       <td>Offertory</td>";
-                        foreach ($offertory as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($offertory as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
 
-                        echo "<tr class='income'>
+                            echo "<tr class='income'>
                                             <td>Tithes</td>";
-                        foreach ($tithe as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($tithe as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
-                        echo "<tr class='income'>
+                            echo "<tr class='income'>
                                             <td>Other sources</td>";
-                        foreach ($income as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($income as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
 
 
 
-                        $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        echo "<tr class='neutral'>
+                            $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            echo "<tr class='neutral'>
                                             <td>Total</td>";
-                        foreach ($Months as $month) {
-                            $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
-                                intval($income->$month);
-                            $TotalIncome = declareName($TotalIncome);
-                            echo "<td>" . $TotalIncome . "</td>";
-                        }
-                        echo "</tr>";
-                        ?>
+                            foreach ($Months as $month) {
+                                $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
+                                    intval($income->$month);
+                                $TotalIncome = declareName($TotalIncome);
+                                echo "<td>" . $TotalIncome . "</td>";
+                            }
+                            echo "</tr>";
+                            ?>
 
-                    </tbody>
+                        </tbody>
 
-                </table>
-                <table class="budget">
-                    <thead>
-                        <tr class="expenses_deep">
-                            <th>expense</th>
-                            <th>Jan</th>
-                            <th>Feb</th>
-                            <th>Mar</th>
-                            <th>Apr</th>
-                            <th>May</th>
-                            <th>Jun</th>
-                            <th>Jul</th>
-                            <th>Aug</th>
-                            <th>Sep</th>
-                            <th>Oct</th>
-                            <th>Nov</th>
-                            <th>Dec</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        echo "<tr class='expenses'>
+                    </table>
+                    <table class="budget">
+                        <thead>
+                            <tr class="expenses_deep">
+                                <th>expense</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            echo "<tr class='expenses'>
                                             <td>Ultilities</td>";
-                        foreach ($Ultilities as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
-                        echo "<tr class='expenses'>
+                            foreach ($Ultilities as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
+                            echo "<tr class='expenses'>
                                             <td>Housing</td>";
-                        foreach ($Housing as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($Housing as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
-                        echo "<tr class='expenses'>
+                            echo "<tr class='expenses'>
                                             <td>Paychecks</td>";
-                        foreach ($paycheck as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($paycheck as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
-                        echo "<tr class='expenses'>
+                            echo "<tr class='expenses'>
                                             <td>Others</td>";
-                        foreach ($Others as $tableValue) {
-                            $tableValue = declareName($tableValue);
-                            echo "<td>" . $tableValue . "</td>";
-                        }
-                        echo "</tr>";
+                            foreach ($Others as $tableValue) {
+                                $tableValue = declareName($tableValue);
+                                echo "<td>" . $tableValue . "</td>";
+                            }
+                            echo "</tr>";
 
 
 
 
-                        $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        echo "<tr class='neutral'>
+                            $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            echo "<tr class='neutral'>
                                             <td>Total</td>";
-                        foreach ($Months as $month) {
-                            $TotalIncome = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
-                            $TotalIncome = declareName($TotalIncome);
-                            echo "<td>" . $TotalIncome . "</td>";
-                        }
-                        echo "</tr>";
-                        ?>
+                            foreach ($Months as $month) {
+                                $TotalIncome = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
+                                $TotalIncome = declareName($TotalIncome);
+                                echo "<td>" . $TotalIncome . "</td>";
+                            }
+                            echo "</tr>";
+                            ?>
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
 
-                <table class="budget">
-                    <thead>
-                        <tr class="record_deep">
-                            <th>SAVINGS</th>
-                            <th>Jan</th>
-                            <th>Feb</th>
-                            <th>Mar</th>
-                            <th>Apr</th>
-                            <th>May</th>
-                            <th>Jun</th>
-                            <th>Jul</th>
-                            <th>Aug</th>
-                            <th>Sep</th>
-                            <th>Oct</th>
-                            <th>Nov</th>
-                            <th>Dec</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        echo "<tr class='record'>
+                    <table class="budget">
+                        <thead>
+                            <tr class="record_deep">
+                                <th>SAVINGS</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            echo "<tr class='record'>
                                             <td>Total</td>";
-                        foreach ($Months as $month) {
-                            $TotalExpenses = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
+                            foreach ($Months as $month) {
+                                $TotalExpenses = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
 
 
 
-                            $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
-                                intval($income->$month);
+                                $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
+                                    intval($income->$month);
 
-                            $Savings = declareName(intval($TotalIncome) - intval($TotalExpenses));
-                            echo "<td>" . $Savings . "</td>";
-                        }
-                        echo "</tr>";
-                        ?>
+                                $Savings = declareName(intval($TotalIncome) - intval($TotalExpenses));
+                                echo "<td>" . $Savings . "</td>";
+                            }
+                            echo "</tr>";
+                            ?>
 
-                    </tbody>
+                        </tbody>
 
-                </table>
-                <?php
-                }else{
+                    </table>
+                    <?php
+                } else {
                     echo '<header>An error occured whiles analysing your data</header>';
                 }
                 ?>
@@ -296,7 +299,7 @@ if ($condition) {
         </div>
     </div>
     <?php
-}  else {
+} else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

@@ -1,43 +1,13 @@
 <?php
+namespace Library;
+
+use Library\fetchData;
+
 class viewData extends fetchData
 {
-
-    public function Activity_upload($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance)
+    public function libraryCover($FILES, $REQUEST)
     {
-        $RecordsResult = $this->Activity_upload_data($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $RecordsResult;
-        } else {
-            return $RecordsResult;
-        }
-    }
-
-    public function Activity_update($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $id)
-    {
-        $RecordsResult = $this->Activity_update_data($opening_prayer, $praises, $scripture_reading, $scripture, $opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $Total_attendance, $id);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $RecordsResult;
-        } else {
-            return $RecordsResult;
-        }
-    }
-
-
-    public function Activity_delete($name)
-    {
-        $RecordsResult = $this->Activity_delete_data($name);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $Error;
-        } else {
-            return $RecordsResult;
-        }
-    }
-    public function viewList()
-    {
-        $RecordsResult = $this->Activity_view();
+        $RecordsResult = $this->Uploader($FILES, $REQUEST);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -47,34 +17,9 @@ class viewData extends fetchData
     }
 
 
-
-
-    public function church_record_upload($category, $record, $details, $admin, $year)
+    public function library_upload($name, $author, $date, $status, $source, $category, $FILES, $REQUEST)
     {
-        $RecordsResult = $this->church_record_upload_data($category, $record, $details, $admin, $year);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $RecordsResult;
-        } else {
-            return $RecordsResult;
-        }
-    }
-
-    public function church_record_update($category, $record, $details, $id, $admin, $year)
-    {
-        $RecordsResult = $this->church_record_update_data($category, $record, $details, $id, $admin, $year);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $RecordsResult;
-        } else {
-            return $RecordsResult;
-        }
-    }
-
-
-    public function church_record_delete($name)
-    {
-        $RecordsResult = $this->church_record_delete_data($name);
+        $RecordsResult = $this->library_upload_data($name, $author, $date, $status, $source, $category, $FILES, $REQUEST);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -82,9 +27,10 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function church_record_viewList()
+
+    public function Library_update($name, $author, $date, $status, $source, $category, $unique_id, $FILES, $REQUEST)
     {
-        $RecordsResult = $this->church_record_view();
+        $RecordsResult = $this->library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $FILES, $REQUEST);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -92,6 +38,122 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function Library_delete($name)
+    {
+        $RecordsResult = $this->Library_delete_data($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
+    public function Library_filter($name)
+    {
+        $RecordsResult = $this->Library_filter_data($name);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Library_export()
+    {
+        $RecordsResult = $this->library_filter_export();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
+    public function Library_filterSearch($name, $nk)
+    {
+        $RecordsResult = $this->Library_filter_dataSearch($name, $nk);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function Library_delete_inidividual($id)
+    {
+        $RecordsResult = $this->Library_view_individual_record($id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function viewList($num)
+    {
+        $RecordsResult = $this->library_view($num);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Library_liveUpdate($num)
+    {
+        $RecordsResult = $this->Library_liveUpdate_fetch($num);
+
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+
+            return $RecordsResult;
+        }
+    }
+    public function partner_pages()
+    {
+        $RecordsResult = $this->partnerPages();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function DataHistory($name, $event, $Date, $sitename, $action)
+    {
+        $RecordsResult = $this->history_set($name, $event, $Date, $sitename, $action);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function HomeFetch($date)
+    {
+        $RecordsResult = $this->Partnership_view_individual_record_total($date);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
+    }
+    public function Library_view_individual_record_upload($name, $date, $filename, $source)
+    {
+        $RecordsResult = $this->Library_upload_data_ini($name, $date, $filename, $source);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 }

@@ -1,7 +1,8 @@
 <?php
-include_once('../API/userpage-api/autoloader.php');
 session_start();
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new UserApi\viewData();
+
 $year = date('Y');
 $unique_id = $_SESSION['unique_id'];
 ?>

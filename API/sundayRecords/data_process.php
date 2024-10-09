@@ -1,5 +1,7 @@
 <?php
-require('autoloader.php');
+require '../vendor/autoload.php';
+$pdh = new Records\ViewData;
+
 if (isset($_GET['submit'])) {
     if ($_GET['APICALL'] != 'record' && $_GET['submit'] != 'delete' && $_GET['submit'] != 'delete_ini' && $_GET['submit'] != 'filter' && $_GET['submit'] != 'export') {
         $opening_prayer = $_POST['opening_prayer'];
@@ -29,8 +31,8 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
         try {
-            $viewDataClass = new viewData();
-            $result_data = $viewDataClass->sunday_export();
+
+            $result_data = $pdh->sunday_export();
             echo json_encode($result_data);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
@@ -39,8 +41,8 @@ if (isset($_GET['submit'])) {
     } else
         if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
             try {
-                $viewDataClass = new viewData();
-                $result_data = $viewDataClass->sunday_upload($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date)
+
+                $result_data = $pdh->sunday_upload($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date)
                 ;
                 json_encode(["status" => "result", "result" => $result_data]);
             } catch (Exception $e) {
@@ -50,8 +52,8 @@ if (isset($_GET['submit'])) {
         } else if ($_GET['submit'] == 'update' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
             try {
                 $unique_id = $_POST['delete_key'];
-                $viewDataClass = new viewData();
-                $result_data = $viewDataClass->sunday_update($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date, $unique_id);
+
+                $result_data = $pdh->sunday_update($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date, $unique_id);
                 json_encode(["status" => "result", "result" => $result_data]);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
@@ -96,11 +98,11 @@ if (isset($_GET['submit'])) {
         }
     if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
         try {
-            $viewDataClass = new viewData();
+
             $category = $_POST['category'];
             $details = $_POST['details'];
             $year = $_POST['year'];
-            $result_data = $viewDataClass->church_record_upload($category, $category, $details, $year);
+            $result_data = $pdh->church_record_upload($category, $category, $details, $year);
             echo json_encode($result_data);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();
@@ -109,12 +111,12 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['submit'] == 'update' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
         try {
-            $viewDataClass = new viewData();
+
             $category = $_POST['category'];
             $details = $_POST['details'];
             $year = $_POST['year'];
             $id = $_POST['delete_key'];
-            $result_data = $viewDataClass->church_record_update($category, $category, $details, $id, $year);
+            $result_data = $pdh->church_record_update($category, $category, $details, $id, $year);
             echo json_encode($result_data);
         } catch (Exception $e) {
             $error_message = "Exception: " . $e->getMessage();

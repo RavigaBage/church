@@ -79,13 +79,10 @@ if ($data != "Fetching data encounted a problem" || $data != "No records availab
                 left: calc(50% + 440px);
             }
 
-            /* here n = 0, 1, 2, 3,... */
             .slide .item:nth-child(n + 6) {
                 left: calc(50% + 660px);
                 opacity: 0;
             }
-
-
 
             .item .content {
                 position: absolute;
@@ -98,11 +95,9 @@ if ($data != "Fetching data encounted a problem" || $data != "No records availab
                 display: none;
             }
 
-
             .slide .item:nth-child(2) .content {
                 display: block;
             }
-
 
             .content .name {
                 font-size: 40px;
@@ -141,8 +136,6 @@ if ($data != "Fetching data encounted a problem" || $data != "No records availab
                     filter: blur(0);
                 }
             }
-
-
 
             .button {
                 width: 100%;

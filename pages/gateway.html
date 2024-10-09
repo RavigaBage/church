@@ -10,7 +10,7 @@
 
 <body>
     <main>
-        <b>Loading......</b>
+        <div class="errorInfo">Loading......</div>
         <header>Zoe payment gateway</header>
         <div class="container">
             <div class="form">
@@ -59,7 +59,7 @@
                             <label>Amount</label>
                             <p id="acc_amount">$ - 40</p>
                         </summary>
-                        <span>You have a total if <b id="total">40</b> excluding taxes and vat</span>
+                        <span>You have a total of <b id="total">40</b> excluding taxes and vat</span>
                     </div>
                 </div>
                 <button>Pay</button>
@@ -100,7 +100,7 @@
         }));
         OptionsAmount.addEventListener('input', debounce(function () {
             AccountAmount.innerText = '$ - ' + OptionsAmount.value;
-            OptionsTotal.innerText = OptionsTotal.value;
+            OptionsTotal.innerText = OptionsAmount.value;
         }));
     </script>
 </body>

@@ -1,4 +1,5 @@
 <?php
+namespace notification;
 class viewData extends fetchData
 {
 

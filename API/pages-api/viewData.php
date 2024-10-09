@@ -24,6 +24,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function EventList()
+    {
+        $RecordsResult = $this->NextEvent_viewList();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function announcement_viewList()
     {
@@ -103,6 +113,61 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function library_viewList()
+    {
+        $RecordsResult = $this->library_view();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function library_viewList_collection()
+    {
+        $RecordsResult = $this->library_view_collection();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function library_viewList_vid($vid_id)
+    {
+        $RecordsResult = $this->library_vid_fetch($vid_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+    public function library_viewList_vid_similar($vid_id)
+    {
+        $RecordsResult = $this->library_vid_fetch_similar($vid_id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function library_vid_search($key)
+    {
+        $RecordsResult = $this->library_vid_simple_search($key);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
+
 
 
 }

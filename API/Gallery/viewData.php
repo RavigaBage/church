@@ -88,6 +88,18 @@ class viewData extends fetchData
         }
 
     }
+    public function gallery_view_images_list($count, $filter)
+    {
+        $RecordsResult = $this->gallery_view_images($count, $filter);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
+    }
+
     public function gallery_view_sort_eventData($name)
     {
         $RecordsResult = $this->gallery_view_sort_event($name);

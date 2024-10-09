@@ -1,8 +1,8 @@
 <?php
 $image = 0;
 session_start();
-include_once('../API/userpage-api/autoloader.php');
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new UserApi\viewData();
 $num = 1;
 if (isset($_GET['pages'])) {
     $numPages = $_GET['pages'];
@@ -105,7 +105,7 @@ $unique_id = $_SESSION['unique_id'];
                         ' . ($amount - $paidAmount) . ' to pay </p>
                         <p>Total amount - <b>' . $amount . '</b>. Paid amount- <b>' . $paidAmount . '</b></p>
                     </div>
-                   <button>Pay</button>
+                  <a href="../pages/gateway.html?welfare"> <button>Pay</button></a>
 
                 </div>';
                         }
@@ -213,7 +213,7 @@ $unique_id = $_SESSION['unique_id'];
                         <p><?php echo number_format(((100 * $paid / $totalVal) / 10) * 10, 1) ?></p>
                     </div>
                     <div class="flex item uncheck welfare">
-                        <button>Add welfare</button>
+                        <a href="../pages/gateway.html?welfare"><button>Add welfare</button></a>
                     </div>
 
                 </div>

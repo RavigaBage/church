@@ -1,18 +1,25 @@
 <?php
+namespace Records;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -51,31 +58,31 @@ class fetchData extends DBH
 
             $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`sunday_records`(`unique_id`,`opening_prayer`, `praises`, `scripture_reading`, `scripture`, `opening_Hymn`, `Hymn_new`, `Hymn_title`, `worship`, `testimonies`, `song_thanksgving_offering`, `sermon_prayer`, `sermon_from`, `scripture_preacher`, `peacher_duration`, `alter_call`, `tithe_offering`, `special_appeal`, `welcome_visitors`, `Announcement`, `closing_prayer`, `Benediction`, `MC`, `Total_attendance`, `date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-            $stmt->bindParam('2', $opening_prayer, PDO::PARAM_STR);
-            $stmt->bindParam('3', $praises, PDO::PARAM_STR);
-            $stmt->bindParam('4', $scripture_reading, PDO::PARAM_STR);
-            $stmt->bindParam('5', $scripture, PDO::PARAM_STR);
-            $stmt->bindParam('6', $opening_Hymn, PDO::PARAM_STR);
-            $stmt->bindParam('7', $Hymn_new, PDO::PARAM_STR);
-            $stmt->bindParam('8', $Hymn_title, PDO::PARAM_STR);
-            $stmt->bindParam('9', $worship, PDO::PARAM_STR);
-            $stmt->bindParam('10', $testimonies, PDO::PARAM_STR);
-            $stmt->bindParam('11', $song_thanksgving_offering, PDO::PARAM_STR);
-            $stmt->bindParam('12', $sermon_prayer, PDO::PARAM_STR);
-            $stmt->bindParam('13', $sermon_from, PDO::PARAM_STR);
-            $stmt->bindParam('14', $scripture_preacher, PDO::PARAM_STR);
-            $stmt->bindParam('15', $peacher_duration, PDO::PARAM_STR);
-            $stmt->bindParam('16', $alter_call, PDO::PARAM_STR);
-            $stmt->bindParam('17', $tithe_offering, PDO::PARAM_STR);
-            $stmt->bindParam('18', $special_appeal, PDO::PARAM_STR);
-            $stmt->bindParam('19', $welcome_visitors, PDO::PARAM_STR);
-            $stmt->bindParam('20', $Announcement, PDO::PARAM_STR);
-            $stmt->bindParam('21', $closing_prayer, PDO::PARAM_STR);
-            $stmt->bindParam('22', $Benediction, PDO::PARAM_STR);
-            $stmt->bindParam('23', $MC, PDO::PARAM_STR);
-            $stmt->bindParam('24', $Total_attendance, PDO::PARAM_STR);
-            $stmt->bindParam('25', $date, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $opening_prayer, \PDO::PARAM_STR);
+            $stmt->bindParam('3', $praises, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $scripture_reading, \PDO::PARAM_STR);
+            $stmt->bindParam('5', $scripture, \PDO::PARAM_STR);
+            $stmt->bindParam('6', $opening_Hymn, \PDO::PARAM_STR);
+            $stmt->bindParam('7', $Hymn_new, \PDO::PARAM_STR);
+            $stmt->bindParam('8', $Hymn_title, \PDO::PARAM_STR);
+            $stmt->bindParam('9', $worship, \PDO::PARAM_STR);
+            $stmt->bindParam('10', $testimonies, \PDO::PARAM_STR);
+            $stmt->bindParam('11', $song_thanksgving_offering, \PDO::PARAM_STR);
+            $stmt->bindParam('12', $sermon_prayer, \PDO::PARAM_STR);
+            $stmt->bindParam('13', $sermon_from, \PDO::PARAM_STR);
+            $stmt->bindParam('14', $scripture_preacher, \PDO::PARAM_STR);
+            $stmt->bindParam('15', $peacher_duration, \PDO::PARAM_STR);
+            $stmt->bindParam('16', $alter_call, \PDO::PARAM_STR);
+            $stmt->bindParam('17', $tithe_offering, \PDO::PARAM_STR);
+            $stmt->bindParam('18', $special_appeal, \PDO::PARAM_STR);
+            $stmt->bindParam('19', $welcome_visitors, \PDO::PARAM_STR);
+            $stmt->bindParam('20', $Announcement, \PDO::PARAM_STR);
+            $stmt->bindParam('21', $closing_prayer, \PDO::PARAM_STR);
+            $stmt->bindParam('22', $Benediction, \PDO::PARAM_STR);
+            $stmt->bindParam('23', $MC, \PDO::PARAM_STR);
+            $stmt->bindParam('24', $Total_attendance, \PDO::PARAM_STR);
+            $stmt->bindParam('25', $date, \PDO::PARAM_STR);
 
 
             if (!$stmt->execute()) {
@@ -89,7 +96,7 @@ class fetchData extends DBH
                 if (json_decode($historySet) != 'Success') {
                     $exportData = 'success';
                 }
-                $export = new stdClass();
+                $export = new \stdClass();
                 $export->Id = $unique_id;
                 $export->message = 'Upload was a success';
                 exit(json_encode($export));
@@ -129,31 +136,31 @@ class fetchData extends DBH
             } else {
                 if ($stmt->execute()) {
                     $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`sunday_records` set  `opening_prayer`=?,`praises`=?,`scripture_reading`=?,`scripture`=?,`opening_Hymn`=?,`Hymn_new`=?,`Hymn_title`=?,`worship`=?,`testimonies`=?,`song_thanksgving_offering`=?,`sermon_prayer`=?,`sermon_from`=?,`scripture_preacher`=?,`peacher_duration`=?,`alter_call`=?,`tithe_offering`=?,`special_appeal`=?,`welcome_visitors`=?,`Announcement`=?,`closing_prayer`=?,`Benediction`=?,`MC`=?,`Total_attendance`=?,`date`=? where `unique_id` = ?");
-                    $stmt->bindParam('1', $opening_prayer, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $praises, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $scripture_reading, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $scripture, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $opening_Hymn, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $Hymn_new, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $Hymn_title, PDO::PARAM_STR);
-                    $stmt->bindParam('8', $worship, PDO::PARAM_STR);
-                    $stmt->bindParam('9', $testimonies, PDO::PARAM_STR);
-                    $stmt->bindParam('10', $song_thanksgving_offering, PDO::PARAM_STR);
-                    $stmt->bindParam('11', $sermon_prayer, PDO::PARAM_STR);
-                    $stmt->bindParam('12', $sermon_from, PDO::PARAM_STR);
-                    $stmt->bindParam('13', $scripture_preacher, PDO::PARAM_STR);
-                    $stmt->bindParam('14', $peacher_duration, PDO::PARAM_STR);
-                    $stmt->bindParam('15', $alter_call, PDO::PARAM_STR);
-                    $stmt->bindParam('16', $tithe_offering, PDO::PARAM_STR);
-                    $stmt->bindParam('17', $special_appeal, PDO::PARAM_STR);
-                    $stmt->bindParam('18', $welcome_visitors, PDO::PARAM_STR);
-                    $stmt->bindParam('19', $Announcement, PDO::PARAM_STR);
-                    $stmt->bindParam('20', $closing_prayer, PDO::PARAM_STR);
-                    $stmt->bindParam('21', $Benediction, PDO::PARAM_STR);
-                    $stmt->bindParam('22', $MC, PDO::PARAM_STR);
-                    $stmt->bindParam('23', $Total_attendance, PDO::PARAM_STR);
-                    $stmt->bindParam('24', $date, PDO::PARAM_STR);
-                    $stmt->bindParam('25', $id, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $opening_prayer, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $praises, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $scripture_reading, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $scripture, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $opening_Hymn, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $Hymn_new, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $Hymn_title, \PDO::PARAM_STR);
+                    $stmt->bindParam('8', $worship, \PDO::PARAM_STR);
+                    $stmt->bindParam('9', $testimonies, \PDO::PARAM_STR);
+                    $stmt->bindParam('10', $song_thanksgving_offering, \PDO::PARAM_STR);
+                    $stmt->bindParam('11', $sermon_prayer, \PDO::PARAM_STR);
+                    $stmt->bindParam('12', $sermon_from, \PDO::PARAM_STR);
+                    $stmt->bindParam('13', $scripture_preacher, \PDO::PARAM_STR);
+                    $stmt->bindParam('14', $peacher_duration, \PDO::PARAM_STR);
+                    $stmt->bindParam('15', $alter_call, \PDO::PARAM_STR);
+                    $stmt->bindParam('16', $tithe_offering, \PDO::PARAM_STR);
+                    $stmt->bindParam('17', $special_appeal, \PDO::PARAM_STR);
+                    $stmt->bindParam('18', $welcome_visitors, \PDO::PARAM_STR);
+                    $stmt->bindParam('19', $Announcement, \PDO::PARAM_STR);
+                    $stmt->bindParam('20', $closing_prayer, \PDO::PARAM_STR);
+                    $stmt->bindParam('21', $Benediction, \PDO::PARAM_STR);
+                    $stmt->bindParam('22', $MC, \PDO::PARAM_STR);
+                    $stmt->bindParam('23', $Total_attendance, \PDO::PARAM_STR);
+                    $stmt->bindParam('24', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('25', $id, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = json_encode('Fetching data encountered a problems');
@@ -203,7 +210,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 /////////////////////drop table
                 $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`sunday_records` where `unique_id`=?");
-                $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
                     $Error = 'deleting data encountered a problem';
@@ -245,10 +252,10 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $exportMain = new stdClass();
+            $exportMain = new \stdClass();
             foreach ($result as $data) {
                 $id = $data['unique_id'];
-                $export_item = new stdClass();
+                $export_item = new \stdClass();
                 $export_item->open_prayer = $data['opening_prayer'];
                 $export_item->praise = $data['praises'];
                 $export_item->scripture_read = $data['scripture_reading'];
@@ -297,7 +304,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $exportMain = new stdClass();
+            $exportMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
             $historySet = $this->history_set($namer, "Sunday records  Data Export", $date, "Sunday records  page dashboard Admin", "User Exported a Sunday records  data");
@@ -307,7 +314,7 @@ class fetchData extends DBH
 
             foreach ($result as $data) {
                 $id = $data['unique_id'];
-                $export_item = new stdClass();
+                $export_item = new \stdClass();
                 $export_item->open_prayer = $data['opening_prayer'];
                 $export_item->praise = $data['praises'];
                 $export_item->scripture_read = $data['scripture_reading'];
@@ -356,7 +363,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $exportMain = new stdClass();
+            $exportMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
             $historySet = $this->history_set($namer, "records  Data Export", $date, "records  page dashboard Admin", "User Exported a records  data");
@@ -364,7 +371,7 @@ class fetchData extends DBH
                 $exportData = 'success';
             }
             foreach ($result as $data) {
-                $newClass = new stdClass();
+                $newClass = new \stdClass();
                 $id = $this->validate($data['unique_id']);
                 $newClass->name = $this->validate($data['category']);
                 $newClass->details = $this->validate($data['details']);
@@ -637,20 +644,20 @@ class fetchData extends DBH
                     $admin = $data[0]['Firstname'] . $data[0]['Othername'];
                     $unique_id = rand(time(), 10029);
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`records`(`unique_id`, `category`, `record`, `details`, `date`, `admin`, `year`)VALUES (?,?,?,?,?,?,?)");
-                    $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $category, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $record, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $details, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $date, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $admin, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $year, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $category, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $record, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $details, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $admin, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $year, \PDO::PARAM_STR);
 
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problems';
                         exit(json_encode($Error));
                     } else {
-                        $export = new stdClass();
+                        $export = new \stdClass();
                         $export->Id = $unique_id;
                         $export->message = 'Upload was a success';
                         exit(json_encode($export));
@@ -692,13 +699,13 @@ class fetchData extends DBH
                     $admin = $data[0]['Firstname'] . $data[0]['Othername'];
                     $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`records` set `category`=?,`record`=?,`details`=?,`date`=?,`admin`=?,`year`=? WHERE  `unique_id` = ?");
 
-                    $stmt->bindParam('1', $category, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $record, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $details, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $date, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $admin, PDO::PARAM_STR);
-                    $stmt->bindParam('6', $year, PDO::PARAM_STR);
-                    $stmt->bindParam('7', $id, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $category, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $record, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $details, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $admin, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $year, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $id, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
                         print_r($stmt->errorInfo());
                         $stmt = null;
@@ -731,7 +738,7 @@ class fetchData extends DBH
         }
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` where `unique_id` =?");
-            $stmt->bindParam('1', $name, PDO::PARAM_STR);
+            $stmt->bindParam('1', $name, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -740,7 +747,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 if ($stmt->execute()) {
                     $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`records` where `unique_id`=?");
-                    $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                    $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                     if (!$stmt1->execute()) {
                         $stmt1 = null;
                         $Error = 'deleting data encountered a problem';
@@ -780,10 +787,10 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ObjectDataMain = new stdClass();
+            $ObjectDataMain = new \stdClass();
 
             foreach ($result as $row) {
-                $newClass = new stdClass();
+                $newClass = new \stdClass();
                 $newClass->name = $row['category'];
                 $newClass->details = $row['details'];
                 $newClass->date = $row['date'];
@@ -804,7 +811,6 @@ class fetchData extends DBH
     protected function Record_pages()
     {
         $exportData = '';
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`records` ORDER BY `id` DESC ");
 
         if (!$stmt->execute()) {
@@ -812,19 +818,13 @@ class fetchData extends DBH
             $Error = 'Fetching data encounted a problem';
             exit(json_encode($Error));
         }
+        $exportData = $stmt->rowCount();
 
-        $exportData = $stmt->rowCount() > 0;
-
-        if ($resultCheck) {
-            return json_encode($exportData);
-        } else {
-            return $resultCheck;
-        }
+        return json_encode($exportData);
     }
     protected function Sunday_pages()
     {
         $exportData = '';
-        $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`sunday_records` ORDER BY `id` DESC ");
 
         if (!$stmt->execute()) {
@@ -833,13 +833,9 @@ class fetchData extends DBH
             exit(json_encode($Error));
         }
 
-        $exportData = $stmt->rowCount() > 0;
+        $exportData = $stmt->rowCount();
+        return json_encode($exportData);
 
-        if ($resultCheck) {
-            return json_encode($exportData);
-        } else {
-            return $resultCheck;
-        }
     }
 
 

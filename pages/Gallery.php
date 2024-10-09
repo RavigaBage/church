@@ -3,6 +3,7 @@ require '../API/vendor/autoload.php';
 session_start();
 $viewDataClass = new Gallery\viewData();
 $condition = false;
+
 if (isset($_SESSION['unique_id'])) {
     $login_details = $_SESSION['unique_id'];
     if (!isset($_SESSION['gallery_entryLog'])) {
@@ -21,8 +22,20 @@ if (isset($_SESSION['unique_id'])) {
 }
 
 if ($condition) {
-    $data = $viewDataClass->gallery_view_sort_view();
+    $count = 0;
+    if (!isset($_SESSION['loadCounter'])) {
+        $_SESSION['loadCounter'] = 0;
+    }
+    $count = $_SESSION['loadCounter'];
+    $filter = 'null';
+    if (isset($_GET['filter_var'])) {
+        $filter = $_GET['filter_var'];
+    }
+    $data = $viewDataClass->gallery_view_sort_view($count, $filter);
     if ($data != "Fetching data encounted a problem" || $data != "No records available'" || $data != "Error Occurred") {
+        // if (empty($_SESSION['gallery_csrf'])) {
+        //     $_SESSION['gallery_csrf'] = bin2hex(random_bytes(32));
+        // }
         $decoded = json_decode($data);
 
         ?>
@@ -39,175 +52,243 @@ if ($condition) {
 
         <body>
             <main>
-                <nav>
-                    <div class="menu_toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="18"
-                            viewBox="0 0 448 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
-                            <path
-                                d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
-                        </svg>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="18"
-                            viewBox="0 0 352 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) -->
-                            <path
-                                d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" />
-                        </svg>
-                    </div>
-                </nav>
+                <div class="hero_page">
+                    <div class="container">
 
-                <div class="line_right">
-                    <div class="menu_name">
-                        <p>Event section</p>
-                    </div>
-                    <div class="line"></div>
-                </div>
-
-                <div data-aos="zoom-out" class="hero_section">
-                    <div class="title">
-                        <h2>Zoe Memories</h2>
-                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae quasi sit atque nesciunt non
-                            nihil delectus libero necessitatibus corrupti explicabo veniam dignissimos id ullam officia, debitis
-                            odio sapiente fugiat dolores necessitatibus corrupti explicabo veniam dignissimos id ullam officia,
-                            debitis
-                            odio sapiente fugiat dolores.</p>
-                    </div>
-                    <div class="nav_ele">
-                        <?php
-                        foreach ($decoded as $item) {
-                            $Event_name = $item->Event_name;
-                            echo '<a href="#' . $Event_name . '">
-                        <div class="item_list">
-                            <p>' . $Event_name . '</p>
-                        </div>
-                        </a>';
-                        }
-                        ?>
-                    </div>
-                </div>
-                <section id="Event" class="event_section">
-                    <div class="section_title">
-                        <p>Event section</p>
-                    </div>
-                    <div class="gallery_layout">
-                        <div class="img col1" data-aos="zoom-in-up">
-                            <img src="gallery/x1.jpeg" alt="" />
-                        </div>
-                        <div class="img col1" data-aos="zoom-in-right">
-                            <img src="gallery/x2.jpg" alt="" />
-                        </div>
-                        <div class="img col1" data-aos="zoom-in-left">
-                            <img src="gallery/x3.jpg" alt="" />
-                        </div>
-                        <div class="img col2 main">
-                            <div class="grid_complex">
-                                <img src="gallery/xxL.jpg" data-aos="zoom-out" alt="" />
-                                <img src="gallery/xw.jpg" data-aos="zoom-out-down" alt="" />
-                                <img src="gallery/xw2.jpg" data-aos="zoom-out-right" alt="" />
+                        <div class="slide">
+                            <div class="item" style="background-image: url(images/p1.jpg);">
+                                <div class="content">
+                                    <div class="name">' . $name . '</div>
+                                    <div class="des">' . $description . '</div>
+                                </div>
                             </div>
+                            <div class="item" style="background-image: url(images/p1.jpg);">
+                                <div class="content">
+                                    <div class="name">Switzerland</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+                            <div class="item" style="background-image: url(images/p2.jpg);">
+                                <div class="content">
+                                    <div class="name">Finland</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+                            <div class="item" style="background-image: url(images/p3.jpg);">
+                                <div class="content">
+                                    <div class="name">Iceland</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+                            <div class="item" style="background-image: url(images/p2.jpg);">
+                                <div class="content">
+                                    <div class="name">Australia</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+                            <div class="item" style="background-image: url(images/p1.jpg);">
+                                <div class="content">
+                                    <div class="name">Netherland</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+                            <div class="item" style="background-image: url(images/p3.jpg);">
+                                <div class="content">
+                                    <div class="name">Ireland</div>
+                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
+                                    <button>See More</button>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="img col2">
-                            <img src="gallery/x4.jpg" data-aos="fade-up" alt="" />
-                        </div>
-                        <div class="img xxl">
-                            <img src="gallery/xxL.jpg" data-aos="fade-down" alt="" />
-                        </div>
-                    </div>
 
-                    </div>
-
-                </section>
-                <?php
-                foreach ($decoded as $item) {
-                    $viewDataClass = new Gallery\viewData();
-                    $Event_name = $item->Event_name;
-                    $data = $viewDataClass->gallery_view_sort_eventData($Event_name);
-                    if ($data != "Fetching data encounted a problem" || $data != "No records available'" || $data != "Error Occurred") {
-                        $decoded = json_decode($data);
-                        echo '<section id="' . $Event_name . '">
-                    <div class="section_title">
-                        <p>' . $Event_name . '</p>
-                    </div><div class="gallery">';
-
-                        foreach ($decoded as $item) {
-                            $Event_name = $item->Event_name;
-                            echo '<img data-aos="zoom-in-up" src="../API/Images_folder/gallery/' . $Event_name . '" alt="" />';
-                        }
-                        echo '</div></section>';
-                    }
-                }
-                ?>
-
-            </main>
-            <footer>
-                <div class="container">
-                    <div class="brand">
-                        <header>ZOE WORSHIP CENTRE</header>
-                        <ul>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
-                    </div>
-                    <div class="links">
-                        <ul>
-                            <li>Home</li>
-                            <li>Projects</li>
-                            <li>Partnership</li>
-                            <li>leaders</li>
-                            <li>library</li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis optio soluta sunt
-                            corrupti
-                            necessitatibus, reprehenderit aperiam sint, labore, voluptate aliquid earum. Sapiente quos
-                            quam
-                            ducimus asperiores nam voluptas iste perferendis?</p>
-                    </div>
-                    <div class="contact">
-                        <div class="field">
-                            <h2>Contact</h2>
-                            <ul>
-                                <li><span>Email :</span></li>
-                                <li>zoeworshipcentrechurch@gmail.com</li>
-                                <li><span>WhatsApp :</span></li>
-                                <li>(+233) - 553 838 464</li>
-                                <li><span>Caller :</span></li>
-                                <li>(+001) - 5534 838 4649</li>
-                            </ul>
+                        <div class="button">
+                            <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
-            </footer>
+                <div class="filter_page">
+                    <input hidden id="loadCounter" data-filter="<?php echo $filter; ?>" value="0" />
+                    <div class="intro">
+                        <h1 class="hello">
+                            Zoe Gallery
+                        </h1>
+                        <form>
+                            <div class="filter_icon"></div>
+                            <select>
+                                <?php
+                                foreach ($decoded as $item) {
+                                    $Event_name = $item->Event_name;
+                                    echo '<option>' . $Event_name . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <div class="grid_content">
+                    <ul class="image_class">
+                        <li class="card">
+                            <img src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
+                            <div class="details">
+                                <p>Romano conto</p>
+                                <div class="download">
+                                    |^
+                                </div>
+                            </div>
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-stefanstefancik-91227.jpg" alt="" />
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-stefanstefancik-91227.jpg" alt="" />
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-creationhill-1681010.jpg" alt="" />
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-khalidgarcia-1144170.jpg" alt="" />
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-creationhill-1681010.jpg" alt="" />
+                        </li>
+                        <li class="card"><img data-src="../API/images_folder/users/pexels-bertellifotografia-573299.jpg"
+                                alt="" />
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="loader">
+                    loading.....
+                </div>
+                <div class="viewer">
+                    <div class="details">
+                        <p>Sunday service post 123</p>
+                        <div class="download">
+                            |v
+                        </div>
+                        <div class="times">
+                            X
+                        </div>
+                    </div>
+                    <img src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
+
+                </div>
+            </main>
             <script src="../js/aos.js"></script>
             <script>
                 AOS.init();
-                const toggle = document.querySelector(".menu_toggle");
-                const menuDiv = document.querySelector(".nav_ele");
-                const LinksA = document.querySelectorAll('.nav_ele a');
-                toggle.addEventListener("click", function (e) {
-                    toggle.classList.toggle("active");
-                    menuDiv.classList.toggle("active");
-                });
-                LinksA.forEach(element => {
-                    element.addEventListener("click", function (e) {
-                        toggle.classList.remove("active");
-                        menuDiv.classList.remove("active");
-                    })
-                });
+                const LoadCounter = document.querySelector('#loadCounter');
+                const ImageClassLoader = document.querySelector('.image_class');
+                let next = document.querySelector(' .next');
+                let prev = document.querySelector('.prev');
+                let exitView = document.querySelector('.viewer .times');
+                let Viewer = document.querySelector('.viewer');
+                let Cards = document.querySelectorAll('.card .details .download');
+                var Elements = document.querySelectorAll("li img");
+                var formSelector = document.querySelector('form select');
+                const BodyElement = document.documentElement;
+                const Bodyloader = document.querySelector('.loader');
+                formSelector.addEventListener('change', function (e) {
+                    location.href = 'gallery.php?filter_var=' + formSelector.value;
+                })
 
-                const Elements = document.querySelectorAll("section");
-                const Indicator = document.querySelector('.line_right .menu_name p')
+                window.addEventListener('scroll', async function (e) {
+                    if ((window.scrollY + window.innerHeight) == BodyElement.scrollHeight) {
+                        APIDOCS = "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=load";
+
+                        //make request
+                        try {
+                            Bodyloader.classList.add('active');
+                            bodyData = {
+                                num: LoadCounter.value,
+                                filter: LoadCounter.getAttribute('data-filter')
+                            }
+                            var fetchRequest = await fetch(APIDOCS, {
+                                method: "POST",
+                                body: JSON.stringify(bodyData),
+                                headers: {
+                                    "Content-type": "application/JSON"
+                                }
+                            });
+                            if (fetchRequest.status == 200) {
+                                var Response = await fetchRequest.json();
+                                if (typeof Response == 'object') {
+                                    for (const key in Response) {
+                                        const element = Response[key];
+                                        template = `<li class="card">
+                                                                                                                                                                        <img  data-src="../API/Images_folder/gallery/${element['name']}" alt="" />
+                                                                                                                                                                        <div class="details">
+                                                                                                                                                                            <p>${element['Event_name']}</p>
+                                                                                                                                                                            <div class="download">
+                                                                                                                                                                                |^
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </li>`
+                                            ;
+                                        ImageClassLoader.innerHTML += template;
+                                        Cards = document.querySelectorAll('.card .details .download');
+
+                                    }
+                                    Elements = document.querySelectorAll("li img");
+                                    Elements.forEach((el) => observer.observe(el));
+
+                                    LoadCounter.value = parseInt(LoadCounter.value) + 1;
+                                    console.log(LoadCounter.value);
+                                } else {
+                                    console.log(Response);
+                                }
+
+
+                            }
+                            Bodyloader.classList.add('active');
+
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                })
+
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
-                            SectionName = entry.target.getAttribute("id");
-                            Indicator.innerText = `${SectionName} section`;
+                            if (!entry.target.hasAttribute('src') && entry.target.hasAttribute('data-src') && !entry.target.classList.contains('srcLoad')) {
+                                SectionName = entry.target.getAttribute("data-src");
+                                entry.target.setAttribute('src', SectionName);
+                                entry.target.classList.add('srcLoad');
+                                console.log('here');
+
+                            }
 
                         }
                     });
                 });
                 Elements.forEach((el) => observer.observe(el));
+
+                exitView.addEventListener('click', function () {
+                    Viewer.classList.remove('active');
+                });
+                window.addEventListener('click', function (e) {
+                    target = e.target;
+                    Cards.forEach(element => {
+                        if (element == target) {
+                            ParentElement = element.parentElement.parentElement;
+                            Viewer.querySelector('img').setAttribute('src', ParentElement.querySelector('img').getAttribute('src'));
+                            Viewer.classList.add('active');
+                        }
+                    });
+                })
+
+                next.addEventListener('click', function () {
+                    let items = document.querySelectorAll('.item');
+                    document.querySelector('.slide').appendChild(items[0]);
+                });
+                prev.addEventListener('click', function () {
+                    let items = document.querySelectorAll('.item');
+                    document.querySelector('.slide').prepend(items[items.length - 1]);
+                });
 
             </script>
         </body>

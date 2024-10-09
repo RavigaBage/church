@@ -69,6 +69,11 @@
   padding: 10px;
   border: 1px solid #ddd;
 }
+.tag {
+  background-color: #ddd;
+  border-radius: 5px;
+  padding: 4px;
+}
 .left_arrow,
 .right_arrow {
   padding: 5px;
@@ -1759,7 +1764,7 @@ tbody td.option .opt_element p:hover {
   border: 1px solid yellow;
   border-radius: 5px;
 }
-.page_sys header .pages div:hover,
+ui .page_sys header .pages div:hover,
 .page_sys header .pages div.active {
   border: 1px solid rgba(255, 255, 255, 0.87);
   background: yellow;

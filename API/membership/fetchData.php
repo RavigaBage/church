@@ -1,16 +1,22 @@
 <?php
 namespace Membership;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
-            $dsm = 'mysql:host=' . $this->host . ';charset=utf8';
-            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $dsm = 'mysql:host=' . $this->host;
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
         } catch (\PDOException $e) {
@@ -398,7 +404,7 @@ class fetchData extends DBH
         }
 
         if (!$stmt->execute()) {
-            print_r($stmt->errorInfo());
+
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
             exit(json_encode($Error));
@@ -407,22 +413,22 @@ class fetchData extends DBH
             $result = $stmt->fetchAll();
             $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
-                $unique_id = $data['unique_id'];
-                $Firstname = $data['Firstname'];
-                $Othername = $data['Othername'];
-                $Age = $data['Age'];
-                $Position = $data['Position'];
-                $contact = $data['contact'];
-                $email = $data['email'];
-                $image = $data['image'];
-                $Address = $data['Address'];
-                $Baptism = $data['Baptism'];
-                $membership_start = $data['membership_start'];
-                $username = $data['username'];
-                $gender = $data['gender'];
-                $occupation = $data['occupation'];
-                $About = $data['About'];
-                $status = $data['Status'];
+                $unique_id = $this->cleanStringData($data['unique_id']);
+                $Firstname = $this->cleanStringData($data['Firstname']);
+                $Othername = $this->cleanStringData($data['Othername']);
+                $Age = $this->cleanStringData($data['Age']);
+                $Position = $this->cleanStringData($data['Position']);
+                $contact = $this->cleanStringData($data['contact']);
+                $email = $this->cleanStringData($data['email']);
+                $image = $this->cleanStringData($data['image']);
+                $Address = $this->cleanStringData($data['Address']);
+                $Baptism = $this->cleanStringData($data['Baptism']);
+                $membership_start = $this->cleanStringData($data['membership_start']);
+                $username = $this->cleanStringData($data['username']);
+                $gender = $this->cleanStringData($data['gender']);
+                $occupation = $this->cleanStringData($data['occupation']);
+                $About = $this->cleanStringData($data['About']);
+                $status = $this->cleanStringData($data['Status']);
 
                 $objectClass = new \stdClass();
                 $ExportSend = new \stdClass();
@@ -461,13 +467,13 @@ class fetchData extends DBH
                 $ExportSend->About = $About;
                 $ExportSend->Obj = $ObjectData;
 
-                $ExportSendMain->$unique_id = $ExportSend;
+                $ExportSendMain->$unique_id = json_encode($ExportSend);
             }
             $exportData = json_encode($ExportSendMain);
         } else {
-            $resultCheck = false;
             $exportData = json_encode('No Record Available');
         }
+
 
         return $exportData;
 
@@ -488,7 +494,7 @@ class fetchData extends DBH
             $ExportSend = new \stdClass();
             foreach ($result as $data) {
                 $ExportSendmin = new \stdClass();
-                $image = $data['image'];
+                $image = $this->cleanStringData($data['image']);
                 $id = rand(time(), 10002);
                 $ExportSendmin->image = $image;
                 $ExportSend->$id = $ExportSendmin;
@@ -538,22 +544,22 @@ class fetchData extends DBH
             }
 
             foreach ($result as $data) {
-                $unique_id = $data['unique_id'];
-                $Firstname = $data['Firstname'];
-                $Othername = $data['Othername'];
-                $Age = $data['Age'];
-                $Position = $data['Position'];
-                $contact = $data['contact'];
-                $email = $data['email'];
-                $image = $data['image'];
-                $Address = $data['Address'];
-                $Baptism = $data['Baptism'];
-                $membership_start = $data['membership_start'];
-                $username = $data['username'];
-                $gender = $data['gender'];
-                $occupation = $data['occupation'];
-                $About = $data['About'];
-                $status = $data['Status'];
+                $unique_id = $this->cleanStringData($data['unique_id']);
+                $Firstname = $this->cleanStringData($data['Firstname']);
+                $Othername = $this->cleanStringData($data['Othername']);
+                $Age = $this->cleanStringData($data['Age']);
+                $Position = $this->cleanStringData($data['Position']);
+                $contact = $this->cleanStringData($data['contact']);
+                $email = $this->cleanStringData($data['email']);
+                $image = $this->cleanStringData($data['image']);
+                $Address = $this->cleanStringData($data['Address']);
+                $Baptism = $this->cleanStringData($data['Baptism']);
+                $membership_start = $this->cleanStringData($data['membership_start']);
+                $username = $this->cleanStringData($data['username']);
+                $gender = $this->cleanStringData($data['gender']);
+                $occupation = $this->cleanStringData($data['occupation']);
+                $About = $this->cleanStringData($data['About']);
+                $status = $this->cleanStringData($data['Status']);
 
                 $ExportSend = new \stdClass();
 
@@ -611,21 +617,21 @@ class fetchData extends DBH
             $ObjMainList = new \stdClass();
             foreach ($result as $data) {
                 $objectClass = new \stdClass();
-                $unique_id = $data['unique_id'];
-                $Firstname = $data['Firstname'];
-                $Othername = $data['Othername'];
-                $Age = $data['Age'];
-                $Position = $data['Position'];
-                $contact = $data['contact'];
-                $email = $data['email'];
-                $image = $data['image'];
-                $Address = $data['Address'];
-                $Baptism = $data['Baptism'];
-                $membership_start = $data['membership_start'];
-                $username = $data['username'];
-                $gender = $data['gender'];
-                $occupation = $data['occupation'];
-                $About = $data['About'];
+                $unique_id = $this->cleanStringData($data['unique_id']);
+                $Firstname = $this->cleanStringData($data['Firstname']);
+                $Othername = $this->cleanStringData($data['Othername']);
+                $Age = $this->cleanStringData($data['Age']);
+                $Position = $this->cleanStringData($data['Position']);
+                $contact = $this->cleanStringData($data['contact']);
+                $email = $this->cleanStringData($data['email']);
+                $image = $this->cleanStringData($data['image']);
+                $Address = $this->cleanStringData($data['Address']);
+                $Baptism = $this->cleanStringData($data['Baptism']);
+                $membership_start = $this->cleanStringData($data['membership_start']);
+                $username = $this->cleanStringData($data['username']);
+                $gender = $this->cleanStringData($data['gender']);
+                $occupation = $this->cleanStringData($data['occupation']);
+                $About = $this->cleanStringData($data['About']);
 
 
                 $objectClass->UniqueId = $unique_id;
@@ -747,7 +753,7 @@ class fetchData extends DBH
         } else {
             if ($stmt->rowCount() > 0) {
                 $data = $stmt->fetchAll();
-                $Username = $data[0]['Firstname'] . $data[0]['Othername'];
+                $Username = $this->cleanStringData($data[0]['Firstname']) . $this->cleanStringData($data[0]['Othername']);
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES ('$unique_id','$Username','$event','$Date','$sitename','$action')");
                 if (!$stmt->execute()) {
                     print_r($stmt->errorInfo());

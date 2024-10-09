@@ -1,4 +1,5 @@
 <?php
+namespace Records;
 class viewData extends fetchData
 {
 

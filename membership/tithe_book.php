@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once('../API/userpage-api/autoloader.php');
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new UserApi\viewData();
 $year = date('Y');
 if (isset($_GET['page'])) {
     $num = $_GET['page'];
@@ -11,7 +11,7 @@ if (isset($_GET['page'])) {
 $unique_id = $_SESSION['unique_id'];
 ?>
 <div class="profile_main">
-    <header>Tithe Status <button>Add tithe</button></header>
+    <header>Tithe Status <a href="../pages/gateway.html?tithe" target="_blank"><button>Add tithe</button></header></a>
     <div class="grid_sx tithebook">
         <div class="profile">
             <div class="tithe_list">

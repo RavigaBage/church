@@ -11,6 +11,7 @@ requirejs.config({
     xlsx: "xlsx.full.min",
     slick: "slick.min",
     slickAnimation: "slick-animation.min",
-    jQuery: "jquery"
+    jQuery: "jquery",
+    emailjs: "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
   },
 });

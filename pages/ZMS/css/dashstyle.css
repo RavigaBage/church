@@ -10,6 +10,7 @@
   --statusChecker: rgb(4, 117, 182);
   --StColor: #222121a2;
   --overlay_btn: rgb(0, 10, 0);
+  --dashimg: 35px;
 }
 header.title {
   margin-top: 3px;
@@ -245,13 +246,13 @@ header.title {
 .wallet .display_wallet .content_dash {
   position: relative;
   width: 100%;
-  height: calc(100% - 20px);
+  height: calc(100% - 70px);
   overflow: hidden;
 }
 .wallet .display_wallet .content_dash .main .card {
   background-color: var(--crimson);
   position: absolute;
-  width: 80%;
+  width: 85%;
   left: 2%;
   bottom: 1%;
   height: 99%;
@@ -276,12 +277,12 @@ header.title {
 }
 .wallet .display_wallet .content_dash .main .card .middle span {
   color: var(--dimWhite);
-  font-size: 20px;
+  font-size: 18px;
 }
 .wallet .display_wallet .content_dash .main .card .middle h1 {
-  margin-block: 5px;
+  margin-block: 3px;
   color: var(--white);
-  font-size: 40px;
+  font-size: 35px;
 }
 .wallet .display_wallet .content_dash .main .card .bottom {
   color: var(--white);
@@ -317,13 +318,41 @@ header.title {
 .wallet .members .content_dash {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  position: relative;
+  width: 100%;
+  height: calc(100% - 30px);
 }
 .wallet .members .content_dash img,
 .wallet .others .content_dash .item img {
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   object-fit: cover;
+}
+.wallet .members .content_dash img {
+  position: absolute;
+  z-index: 9;
+  bottom: 0;
+  border: 2px solid rgb(181, 184, 184);
+}
+.wallet .members .content_dash img:nth-child(1) {
+  left: 0;
+}
+.wallet .members .content_dash img:nth-child(2) {
+  left: var(--dashimg);
+  z-index: 10;
+}
+.wallet .members .content_dash img:nth-child(3) {
+  left: calc(var(--dashimg) * 2);
+  z-index: 11;
+}
+.wallet .members .content_dash img:nth-child(4) {
+  left: calc(var(--dashimg) * 3);
+  z-index: 12;
+}
+.wallet .members .content_dash img:nth-child(5) {
+  left: calc(var(--dashimg) * 4);
+  z-index: 13;
 }
 
 .wallet .others .content_dash .item {

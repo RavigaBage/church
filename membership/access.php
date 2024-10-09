@@ -7,8 +7,8 @@ if (isset($_SESSION['userImage'])) {
     $image = "";
 }
 
-include_once('../API/userpage-api/autoloader.php');
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new UserApi\viewData();
 $year = date('Y');
 $unique_id = $_SESSION['unique_id'];
 ?>
@@ -24,10 +24,10 @@ $unique_id = $_SESSION['unique_id'];
             <div class="personal_details">
                 <?php
                 $data = json_decode($newDataRequest->ministries_viewList($unique_id));
-                if ($data == "" || $data == 'Error Occurred' || $data == 'No Records Available') {
-                    echo "<header class='danger'>AN ERROR OCCURED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
+                if (!is_object($data)) {
+                    echo "<header class='danger'>You are currently not enrolled in any ministerial position or group position</header>";
                 } else {
-
+                    print_r($data);
                     foreach ($data as $item) {
                         $name = $item->name;
                         $membership = $item->membership;
@@ -63,7 +63,7 @@ $unique_id = $_SESSION['unique_id'];
         <div class="status">
             <header>
                 <p>This page, list the various departments / ministries you belong to, including your influence or
-                    position in the ministr.
+                    position in the ministry.
                 </p>
             </header>
         </div>

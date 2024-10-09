@@ -1,28 +1,31 @@
 <?php
-include_once('../../../API/notifications & token & history/autoloader.php');
 session_start();
-$newDataRequest = new viewData();
+require '../../../API/vendor/autoload.php';
+$viewDataClass = new notification\viewData();
 $val = 1;
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['History_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $viewDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard history", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['History_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
 
@@ -44,7 +47,7 @@ if ($condition) {
                     <tbody>
 
                         <?php
-                        $data = json_decode($newDataRequest->getHistory($val));
+                        $data = json_decode($viewDataClass->getHistory($val));
                         if ($data != "" || $data != "Fetching data encountered a problem" || $data != "no data found") {
                             foreach ($data as $item) {
                                 $name = $item->name;
@@ -83,7 +86,7 @@ if ($condition) {
         if (isset($_SESSION['total_pages_history'])) {
             $total = $_SESSION['total_pages_history'];
         } else {
-            $total = $newDataRequest->HistoryPages();
+            $total = $viewDataClass->HistoryPages();
             $_SESSION['total_pages_history'] = $total;
         }
         if ($total != 'Error Occurred') {
@@ -158,7 +161,7 @@ if ($condition) {
         ?>
     </div>
     <?php
-}  else {
+} else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

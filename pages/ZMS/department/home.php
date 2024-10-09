@@ -1,28 +1,31 @@
 <?php
 session_start();
-include('../../../API/ministriesData & theme/autoloader.php');
-$viewDataClass = new viewData();
+require '../../../API/vendor/autoload.php';
+$viewDataClass = new Ministry\viewData();
 $val = 1;
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $viewDataClass->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['DepartmentLog'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $viewDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard department", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['DepartmentLog'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
     <div class="info_information event_menu_add"
@@ -80,20 +83,20 @@ if ($condition) {
     <div class="menu event">
         <?php
         $data = json_decode($viewDataClass->viewList());
-        if($data != 'Error occured' || $data != 'Fetching data encountered a problem' || $data != ""){
+        if ($data != 'Error occured' || $data != 'Fetching data encountered a problem' || $data != "") {
 
-        
-        foreach ($data as $item) {
-            $unique_id = $item->UniqueId;
-            $name = $item->name;
-            $members = $item->members;
-            $message = $item->about;
-            $date = $item->date;
-            $manager = $item->manager;
-            $status = $item->status;
-            $ObjectData = $item->Obj;
-            echo "
-        <div class='item' data-id='" . $unique_id . "' data-name='".$name."'>
+
+            foreach ($data as $item) {
+                $unique_id = $item->UniqueId;
+                $name = $item->name;
+                $members = $item->members;
+                $message = $item->about;
+                $date = $item->date;
+                $manager = $item->manager;
+                $status = $item->status;
+                $ObjectData = $item->Obj;
+                echo "
+        <div class='item' data-id='" . $unique_id . "' data-name='" . $name . "'>
         <div class='details' style='width:calc(100% - 30px)'>
             <p>" . $name . " <span style='margin-left:10px;width:fit-content;text-align:center;font-size:13px;'>" . $message . "</span> </p>
             <p>You edited . " . $date . "</p>
@@ -109,27 +112,27 @@ if ($condition) {
     </div>
     </div>
     </div>";
-}
-        }else{
+            }
+        } else {
             echo '<header>We cannot find any data available</header>';
         }
         ?>
     </div>
 
     <div class="ministry_data">
-            <header>Ministry Data</header>
-            <p class="error_information" style="color:crimson;text-align:center;"></p>
-            <div class="container_event" style="width:100%;height:calc(100% - 120px);overflow:auto;">
-                <div class="members">
-                    <table></table>
-                </div>
-                <header>Select new member</header>
-                <div class="new_members">
-                    <?php
-                    $data  = $viewDataClass->DepartmentMembersView();
-                    if($data != 'Error occured' || $data != 'Fetching data encountered a problem' || $data != ""){
-                        $data_v  = json_decode($data);
-                        echo '<table>
+        <header>Ministry Data</header>
+        <p class="error_information" style="color:crimson;text-align:center;"></p>
+        <div class="container_event" style="width:100%;height:calc(100% - 120px);overflow:auto;">
+            <div class="members">
+                <table></table>
+            </div>
+            <header>Select new member</header>
+            <div class="new_members">
+                <?php
+                $data = $viewDataClass->DepartmentMembersView();
+                if ($data != 'Error occured' || $data != 'Fetching data encountered a problem' || $data != "") {
+                    $data_v = json_decode($data);
+                    echo '<table>
                         <thead>
                         <tr>
                         <th></th>
@@ -138,77 +141,77 @@ if ($condition) {
                         </tr>
                         <thead>
                         <tbody>';
-                        foreach ($data_v as $value) {
-                           $firstname = $value->Fname;
-                           $Othername = $value->Oname;
-                           $id = $value->UniqueId;
-                           echo '<tr>
-                           <td><input type="checkbox" value="'.$id.'" /></td>
-                           <td>'.$firstname.'</td>
-                            <td>'.$Othername.'</td>
+                    foreach ($data_v as $value) {
+                        $firstname = $value->Fname;
+                        $Othername = $value->Oname;
+                        $id = $value->UniqueId;
+                        echo '<tr>
+                           <td><input type="checkbox" value="' . $id . '" /></td>
+                           <td>' . $firstname . '</td>
+                            <td>' . $Othername . '</td>
                            </tr>';
-                        }
-                        echo '</tbody></table>';
                     }
-                    ?>
-                </div>        
+                    echo '</tbody></table>';
+                }
+                ?>
             </div>
-            <div class="dp_buttons">
-                    <button class="remove_new">Remove</button>
-                    <button class="add_new">Add Record</button>
-                </button>
-    <div class="event_menu_add form_data">
-        <form>
-            <header>Records book for ministries</header>
-            <p class="error_information" style="color:crimson;text-align:center;"></p>
-            <div class="container_event">
-                <div class="field">
-                    <label>Name</label>
-                    <input name="name" required placeholder="Add name" />
-                </div>
-                <div class="cate_view">
-                    <div class="field">
-                        <label>manager</label>
-                        <input name="manager" required type="text" value="">
-                    </div>
-                    <div class="field">
-                        <label>total participants</label>
-                        <input name="members" required type="text" value="">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>status</label>
-                    <select name="status" required>
-                        <option>select</option>
-                        <option>active</option>
-                        <option>inactive</option>
-                        <option>in progress</option>
-                    </select>
-                </div>
+        </div>
+        <div class="dp_buttons">
+            <button class="remove_new">Remove</button>
+            <button class="add_new">Add Record</button>
+            </button>
+            <div class="event_menu_add form_data">
+                <form>
+                    <header>Records book for ministries</header>
+                    <p class="error_information" style="color:crimson;text-align:center;"></p>
+                    <div class="container_event">
+                        <div class="field">
+                            <label>Name</label>
+                            <input name="name" required placeholder="Add name" />
+                        </div>
+                        <div class="cate_view">
+                            <div class="field">
+                                <label>manager</label>
+                                <input name="manager" required type="text" value="">
+                            </div>
+                            <div class="field">
+                                <label>total participants</label>
+                                <input name="members" required type="text" value="">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>status</label>
+                            <select name="status" required>
+                                <option>select</option>
+                                <option>active</option>
+                                <option>inactive</option>
+                                <option>in progress</option>
+                            </select>
+                        </div>
 
-                <div class="field">
-                    <label>record date</label>
-                    <input name="date" type="date" required value="">
-                </div>
+                        <div class="field">
+                            <label>record date</label>
+                            <input name="date" type="date" required value="">
+                        </div>
 
-                <div class="field_e">
-                    <label>record description</label>
-                    <textarea name="about" required></textarea>
-                </div>
-                <input name="delete_key" type="text" hidden />
-                <button>Add record</button>
-        </form>
-    </div>
-    </div>
+                        <div class="field_e">
+                            <label>record description</label>
+                            <textarea name="about" required></textarea>
+                        </div>
+                        <input name="delete_key" type="text" hidden />
+                        <button>Add record</button>
+                </form>
+            </div>
+        </div>
 
-    <div class="add_event" data-menu="event">
-        <i>+</i>
-        <p>New</p>
-    </div>
+        <div class="add_event" data-menu="event">
+            <i>+</i>
+            <p>New</p>
+        </div>
 
 
-    <?php
-}  else {
+        <?php
+} else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

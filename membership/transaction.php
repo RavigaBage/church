@@ -7,8 +7,8 @@ if (isset($_SESSION['userImage'])) {
     $image = "";
 }
 
-include_once('../API/userpage-api/autoloader.php');
-$newDataRequest = new viewData();
+require '../API/vendor/autoload.php';
+$newDataRequest = new UserApi\viewData();
 $year = date('Y');
 $unique_id = $_SESSION['unique_id'];
 ?>
@@ -27,7 +27,7 @@ $unique_id = $_SESSION['unique_id'];
                 <?php
                 $data = json_decode($newDataRequest->paymentList_view($unique_id));
                 if ($data == "" || $data == 'Error Occurred' || $data == 'No Records Available') {
-                    echo "<header class='danger'>AN ERROR OCCURED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
+                    echo "<header class='danger'>No records of transactions has been recorded in your name yet</header>";
                 } else {
                     echo '<table>
                     <thead>

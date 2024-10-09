@@ -1,4 +1,5 @@
 <?php
+namespace Ministry;
 class viewData extends fetchData
 {
 
@@ -74,7 +75,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function DepartmentMembers($reciever){
+    public function DepartmentMembers($reciever)
+    {
         $RecordsResult = $this->ministry_members($reciever);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -83,7 +85,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function DepartmentMembersView(){
+    public function DepartmentMembersView()
+    {
         $RecordsResult = $this->ministry_member_view();
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -92,8 +95,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function AddDepartmentMembers($unique_id,$Dp_Key){
-        $RecordsResult = $this->AddDepartmentMembers_view($unique_id,$Dp_Key);
+    public function AddDepartmentMembers($unique_id, $Dp_Key)
+    {
+        $RecordsResult = $this->AddDepartmentMembers_view($unique_id, $Dp_Key);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -101,8 +105,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function  RemoveDepartmentMembers($unique_id,$Dp_Key){
-        $RecordsResult = $this->RemoveDepartmentMembers_view($unique_id,$Dp_Key);
+    public function RemoveDepartmentMembers($unique_id, $Dp_Key)
+    {
+        $RecordsResult = $this->RemoveDepartmentMembers_view($unique_id, $Dp_Key);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -110,7 +115,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function ViewDepartmentMembers($name){
+    public function ViewDepartmentMembers($name)
+    {
         $RecordsResult = $this->DepartmentMembers_view($name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';

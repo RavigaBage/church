@@ -1,16 +1,22 @@
 <?php
 namespace Partnership;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
-            $dsm = 'mysql:host=' . $this->host . ';charset=utf8';
-            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $dsm = 'mysql:host=' . $this->host;
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
         } catch (\PDOException $e) {
@@ -355,12 +361,11 @@ class fetchData extends DBH
                 $ExportSend->Obj = $ObjectData;
                 $ExportSend->IObj = $ObjectDataIndividual;
                 $ExportSendMain->$unique_id = $ExportSend;
-
             }
             $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ExportSendMain;
-            $exportData = json_encode($MainExport);
+            $exportData = $MainExport;
         } else {
             $exportData = 'No Record available';
         }
@@ -411,7 +416,6 @@ class fetchData extends DBH
 
         return $exportData;
     }
-
     protected function Partnership_view($num)
     {
 
@@ -591,8 +595,6 @@ class fetchData extends DBH
         return $exportData;
 
     }
-
-
     protected function partnerPages()
     {
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` ORDER BY `id` DESC");
@@ -605,9 +607,6 @@ class fetchData extends DBH
         return $stmt->rowCount();
 
     }
-
-
-
     protected function Partnership_view_individual_record($id)
     {
         $exportData = '';
@@ -738,6 +737,4 @@ class fetchData extends DBH
             }
         }
     }
-
-
 }

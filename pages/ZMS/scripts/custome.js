@@ -5,14 +5,15 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
   projects,
   Finance,
   Ca_data,
-  slick
+  slick,
+  // emailjs
 ) {
   //   if ('serviceWorker' in navigator) {
   //     window.addEventListener('load', () => {
   //         navigator.serviceWorker
   //             .register('script/service-worker.js')
-  //             .then((reg) => console.log('Service Worker: Registered (Scope: ' + reg.scope + ')'))
-  //             .catch((err) => console.log('Service Worker: Error:', err));
+  //             .then((reg) => console.error('Service Worker: Registered (Scope: ' + reg.scope + ')'))
+  //             .catch((err) => console.error('Service Worker: Error:', err));
   //     });
   // }
   const ContentDom = document.querySelector(".content_main");
@@ -29,6 +30,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
   const searchInput = document.querySelector("#searchInput");
   const searchBtn = document.querySelector("#searchBtn");
   const get_current_date = document.querySelector(".get_current_date");
+  const LogOutButton = document.querySelector("#LogOut");
   var MainFormDel = "";
   var formDataDel = "";
   let SearchTrigger = false;
@@ -38,6 +40,12 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
   let numoffset = 0;
   let currentPageNum = 1;
   var location;
+  // (function () {
+  //   // https://dashboard.emailjs.com/admin/account
+  //   emailjs.init({
+  //     publicKey: "RtfFLq0ZUtE5gn-AE",
+  //   });
+  // })();
   searchBtn.addEventListener("click", function () {
     if (ArrayTables.includes(location)) {
       DomManipulationElement = SkeletonDom_table;
@@ -83,7 +91,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
       description: "hero",
     },
     Library: {
-      template: "library/library.txt",
+      template: "library/library.php",
       title: "Library screen | Router sequence",
       description: "hero",
     },
@@ -184,7 +192,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
       .then((response) => response.text())
       .catch((error) => {
         loader_status = true;
-        console.log(error);
+        console.error(error);
       });
     if (html) {
       document.querySelector(".content_main").innerHTML = html;
@@ -297,8 +305,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 if (Request.status === 200) {
                   let data = await Request.json(dataSend);
                   if (data) {
-                      const Fetchresult = data;
-                    result  = Fetchresult.replace(/"/g,'');
+                    const Fetchresult = data;
+                    result = Fetchresult.replace(/"/g, '');
                     if (result == "success") {
                       var timerSet = document.querySelector(".token");
                       var TokenHeader = document.querySelector(
@@ -310,7 +318,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     }
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
                 }
               } catch (error) {
                 console.error(error);
@@ -334,11 +342,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           }
           const CopyMain = document.querySelector(".tokenData .copyt");
           const CopyMainValue = document.querySelector(".tokenData .data_main");
-          CopyMain.addEventListener('click',function(){
+          CopyMain.addEventListener('click', function () {
             value = CopyMainValue.innerHTML;
-            navigator.clipboard.writeText(CopyMainValue.innerText).then((result)=>{
-                alert('Key has been copied to your clipboard');
-            }).catch((error)=>{
+            navigator.clipboard.writeText(CopyMainValue.innerText).then((result) => {
+              alert('Key has been copied to your clipboard');
+            }).catch((error) => {
               alert('failed to copy to clipboard');
             })
           })
@@ -402,8 +410,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           let month = DateFetch.getMonth();
           let Current = DateFetch.getDate();
           let Current_Day = DateFetch.getDay();
-          let monthNew = 0;
-          let monthOld = 0;
+
           let Time_position = "";
           let Left_position = "";
           let last = 1;
@@ -417,11 +424,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           let FilterYear = year;
           let tempMonth = false;
           let tempYear = false;
-          let lastChecker = "";
           let firstVal = "";
           let workingMonth = DateFetch.getMonth();
           let stringData = "upload";
-          let filterStatus = false;
           GridCells = [
             "gridrowO",
             "gridrowT",
@@ -526,7 +531,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               getWeeks(FilterMonth, FilterYear, 1);
               setMonthData();
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           });
           MenuArrowLeft.addEventListener("click", function () {
@@ -580,7 +585,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               });
             }
           });
-          console.log(Ca_data);
+          console.error(Ca_data);
           Ca_data.calender(month, year, Current);
           function ResizeElement(val, origin) {
             try {
@@ -655,7 +660,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   HtmlVal;
               }
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           }
           selectorOptions.forEach((element) => {
@@ -831,8 +836,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 } else {
                   PrevMonth = DaysOfMonth[month - 1];
                 }
-
-                console.log(PrevMonth);
                 weekObj.push(PrevMonth - (value - (i + 1)));
               }
             }
@@ -934,37 +937,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
 
               }
-              console.log(weekObj);
+              ;
               last = weekObj[weekObj.length - 1];
               firstVal = weekObj[0];
               if (weekObj.includes(day)) {
-                // if (parseInt(weekObj) == 1) {
-                //   weekObj = [];
-                //   if (workingMonth == 0) {
-                //     PrevMonth = DaysOfMonth[11];
-                //   } else {
-                //     PrevMonth = DaysOfMonth[workingMonth - 1];
-                //   }
-                //   MonthFirstDay = TrialDate.getDay();
-                //   currentNum = 1;
-
-                //   for (let i = 0; i < 7; i++) {
-                //     if (MonthFirstDay == 0) {
-                //       weekObj.push(PrevMonth);
-                //       MonthFirstDay = null;
-                //     } else if (MonthFirstDay > 0) {
-                //       weekObj.push(PrevMonth - MonthFirstDay);
-                //       MonthFirstDay--;
-                //       lastChecker = PrevMonth - MonthFirstDay;
-                //       last = PrevMonth - MonthFirstDay;
-                //     } else {
-                //       weekObj.push(currentNum);
-                //       last = currentNum;
-                //       currentNum++;
-                //     }
-                //   }
-                // }
-                console.log(weekObj);
+                ;
                 DisplayWeekResult(weekObj);
               } else {
                 weekObj = [];
@@ -995,7 +972,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           function getPrevWeek(year_t, month_t, day) {
             m = 0;
             tempChange = 0;
-            console.log(day)
+
             for (let i = 1; i < 8; i++) {
               figure = day - i;
               if (figure > 0) {
@@ -1030,9 +1007,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             firstVal = weekObj[0];
 
             if (direction == false) {
-              console.log(weekObjTemp)
+
               if (weekObjTemp.includes(1)) {
-                console.log(weekObjTemp.includes(1))
+
                 if (workingMonth - 1 < 0) {
                   workingMonth = 11;
                   year--;
@@ -1171,7 +1148,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                           let constant = 40;
 
 
-                          console.log(ZoneDivide, ZoneDivideEnd);
+                          console.error(ZoneDivide, ZoneDivideEnd);
 
                           if (ZoneDivide[ZoneDivide.length - 1] == 'am') {
                             ElementTopHeight = constant * valueCalc;
@@ -1328,7 +1305,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               }
             } catch (error) {
-              console.log("An error occurred pls start the process again", error);
+              console.error("An error occurred pls start the process again", error);
             }
           }
           function CalculateTime(customElementsTemp, value) {
@@ -1381,7 +1358,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 return customElementsTemp;
               }
             } catch (error) {
-              console.log(error)
+              console.error(error)
             }
           }
           function DayInformation(Year, Month, Day) {
@@ -1400,7 +1377,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               DayInfo.querySelector("p").innerText = `${DaysLater[TrialDate.getDay()]
                 }, ${monthNames[parseInt(Month)]}, ${Year}`;
             } catch (error) {
-              console.log(error)
+              console.error(error)
             }
           }
 
@@ -1425,7 +1402,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   });
                 }
               } catch (error) {
-                console.log(error);
+                console.error(error);
               }
             });
           });
@@ -1503,7 +1480,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               });
             } catch (error) {
-              console.log(error)
+              console.error(error)
             }
 
           });
@@ -1573,7 +1550,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               });
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           }
           function changeTabMenu(tabOrder) {
@@ -1600,7 +1577,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               });
             } catch (error) {
-              console.log(error)
+              console.error(error)
             }
           }
           function UpdateItemFunction(value) {
@@ -1637,7 +1614,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               }
             } catch (error) {
-              console.log(error)
+              console.error(error)
             }
           }
           async function FilterOptionsFun(APIDOCS, validateKey) {
@@ -1646,7 +1623,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -1668,7 +1645,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -1693,13 +1670,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 });
                 if (IndexData != false) {
                   TargetData = HeaderSelector[IndexData].querySelector('span');
-                  console.log(TargetData);
                   if (TargetData.hasAttribute('data_year') && TargetData.hasAttribute('data_month')) {
                     year = parseInt(TargetData.getAttribute('data_year'));
                     month = parseInt(TargetData.getAttribute('data_month'));
                     DayVal = parseInt(TargetData.innerText);
-
-                    console.log(year, month, DayVal);
                     let APIDOCS;
                     if (value == "update") {
                       APIDOCS =
@@ -1747,8 +1721,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     return 'Error occurred';
                   }
                 }
-              } else {
-                console.log(currentSpan);
               }
 
             } catch (error) {
@@ -1761,7 +1733,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -1776,7 +1748,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   return data;
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -1814,7 +1786,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 element
               );
               element.addEventListener('click', function () {
-                console.log('click');
                 FetchData(year, workingMonth, element.innerText);
               })
             });
@@ -1895,7 +1866,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               newObject = newObject.concat(TimeEveningList);
 
-              console.log(newObject)
+
               newObject.forEach((element) => {
                 const element_data = element;
                 SchedulesTemplate = `<div class="item ${element_data["department"]}" data-time="${element_data["start"]}">
@@ -1934,7 +1905,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           location == "Expenses" ||
           location == "Assets" ||
           location == "Gallery" ||
-          location == "FinanceAccount"
+          location == "FinanceAccount" ||
+          location == 'Library'
         ) {
           setTimeout(function () {
             const AddEventBtn = document.querySelector(".add_event");
@@ -1968,18 +1940,18 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               }
               OptionElements.forEach((element) => {
                 var ElementOptions = element.querySelector(".opt_element");
-               
+
                 if (ElementOptions != null) {
                   if (
                     ElementOptions.classList.contains("active") &&
                     !element.contains(target)
                   ) {
-                    
+
                     if (!ElementOptions.contains(target)) {
                       ElementOptions.classList.remove("active");
                     }
                   } else {
-                    
+
                     if (
                       target.classList.contains("Update_item") &&
                       element.contains(target)
@@ -2052,7 +2024,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: id,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -2074,7 +2046,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -2163,7 +2135,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               ExportDataName = Export_variables_Dialogue.querySelector('input[name="export_name"]').value;
               if (Export_variables_Dialogue.querySelector('select[name="data_type"]').value == '1') {
                 template = "<ul>";
-                console.log(bodyDisplay.querySelectorAll('.details p'));
                 bodyDisplay.querySelectorAll('.details p').forEach(element => {
                   template += `<li>${element.innerHTML}</li>`;
                 });
@@ -2176,7 +2147,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 if (pageCondition) {
                   if (pageCondition.innerText == " " || pageCondition.innerText == '') {
                     template = "<ul>";
-                    console.log(bodyDisplay.querySelectorAll('.details p'));
                     bodyDisplay.querySelectorAll('.details p').forEach(element => {
                       template += `<li>${element.innerHTML}</li>`;
                     });
@@ -2223,7 +2193,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                         }
                       }
                     } else {
-                      console.log("Cannot iniate Download");
+                      console.error("Cannot initiate Download");
                     }
                   } catch (error) {
                     console.error(error);
@@ -2333,7 +2303,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 data = await Request.json();
                 if (data) {
                   loaderBtn.innerText = data;
-                  console.log(data);
+
                   if (data == 'success' || data == 'update success') {
                     requestData = data;
                     if (!validateKey) {
@@ -2353,7 +2323,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                 }
               } else {
-                console.log("invalid link directory");
+                console.error("invalid link directory");
               }
             } catch (error) {
               console.error(error);
@@ -2366,7 +2336,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -2377,7 +2347,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data == 'Item Deleted Successfully') {
                   if (ElementEngage) {
                     ElementEngage.classList.add('hide');
@@ -2387,7 +2357,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 dn_message.querySelector("p").innerText = data;
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
               validateKey = "";
             } catch (error) {
@@ -2411,7 +2381,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 year: document.querySelector('select[name="yearfilter"]').value
               };
 
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -2430,7 +2400,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     bodyDisplay = document.querySelector('.menu.event .container_item');
                   }
                   setTimeout(() => {
-                    if (data == 'Ferching data encountered' ||data == "" || data == 'Error Occurred' || data == 'Not Records Available') {
+                    if (data == 'Ferching data encountered' || data == "" || data == 'Error Occurred' || data == 'Not Records Available') {
                       bodyDisplay.innerHTML = "<header class='danger'>AN ERROR OCCURRED CANNOT FIND DATA CONTENTS FOR THIS SESSION</header>";
                     } else {
                       bodyDisplay.innerHTML = "";
@@ -2484,7 +2454,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }, 200);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
               loader_progress.classList.remove("active");
               ContentDom.classList.remove("load");
@@ -2510,7 +2480,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data != 'No Records Available' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
                   let ObjectDataFrame = JSON.parse(data);
                   Template = "";
@@ -2522,7 +2492,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     Template = document.querySelector('.menu.event .container_item');
                     CloneObject = document.querySelector('.menu.event').querySelector('.cloneSearch .item').cloneNode(true);
                   }
-                  console.log(data);
                   for (const key in ObjectDataFrame) {
                     Amount = ObjectDataFrame[key]['amount'];
                     Name = ObjectDataFrame[key]['name'];
@@ -2567,7 +2536,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -2677,7 +2646,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     validateKey = element
                       .querySelector(".opt_element p")
                       .getAttribute("Update_item");
-                    
+
                     ElementEngage = element.parentElement;
                     UpdateItemFunction(target, ActivityMenu);
                   }
@@ -2705,10 +2674,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             //     targetMain.classList.add('active');
             //   }
 
-            //   console.log(targetMain);
+            //   console.error(targetMain);
             // }
             // if (target.classList.contains('option')) {
-            //   console.log(target);
+            //   console.error(target);
             // }
           });
 
@@ -2782,7 +2751,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -2844,7 +2813,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
               loader_progress.classList.remove("active");
               ContentDom.classList.remove("load");
@@ -2946,7 +2915,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             let data;
             try {
               const formMain = new FormData(AddEventMenuForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -2964,14 +2933,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   PHPLIVEUPDATE(APIDOCS, validateKey)
                 }
               } else {
-                console.log("invalid link directory");
+                console.error("invalid link directory");
               }
             } catch (error) {
               console.error(error);
             }
           }
           async function PHPREQUESTDEL(APIDOCS, validateKey) {
-          ResponseView.innerText = "";
+            ResponseView.innerText = "";
             let data;
             try {
               ResponseView.classList.add('active');
@@ -2996,7 +2965,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   ResponseView.innerText = data;
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3021,7 +2990,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 numData: numoffset
               };
 
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -3046,11 +3015,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       if (dataDecode['pages'] > 40) {
                         ConvertPages = dataDecode['pages'];
                         RestructurePages(ConvertPages);
-                      }else{
+                      } else {
                         document.querySelector(".page_sys").classList.add('hide');
                       }
                       dataDecode = dataDecode['result'];
-                      if(Object.keys(dataDecode).length > 0){
+                      if (Object.keys(dataDecode).length > 0) {
                         for (const key in dataDecode) {
                           account = dataDecode[key]["account"];
                           amount = dataDecode[key]["amount"];
@@ -3060,7 +3029,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                           Status = dataDecode[key]["Status"];
                           id = dataDecode[key]["id"];
                           ObjectData = dataDecode[key]["obj"];
-  
+
                           if (Status == 'terminated') {
                             item = "<div class='out_btn'><div></div>" + Status + "</div>";
                           } else
@@ -3069,7 +3038,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                             } else {
                               item = "<div class='in_btn'><div></div>" + Status + "</div>";
                             }
-  
+
                           template = `<tr>
                                 <td><div class='details'>
   
@@ -3098,10 +3067,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                                 </td>
                             </tr>`;
                           bodyDisplay.innerHTML += template;
-  
-  
+
+
                         }
-                        SearchTrigger = true; 
+                        SearchTrigger = true;
                         var OptionElement_r = document.querySelectorAll(".option");
                         OptionElements = document.querySelectorAll(".delete.option");
                         OptionElement_r.forEach((element) => {
@@ -3120,7 +3089,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }, 200);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3202,7 +3171,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3215,14 +3184,13 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             if (ConditionFeilds(formCondiions) != false) {
               PHPREQUEST(APIDOCS);
             } else {
-              console.log(loaderBtn);
               loaderBtn.innerText = "All feilds are required";
             }
           };
 
           window.addEventListener("click", function (e) {
             var target = e.target;
-            
+
             OptionElements.forEach((element) => {
               var ElementOptions = element.querySelector(".opt_element");
               if (ElementOptions != null) {
@@ -3241,17 +3209,17 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     setTimeout(() => {
                       UpdateItemFunction(target);
                     }, 100);
-                  }else
-                  if (
-                    target.hasAttribute("delete_item") &&
-                    element.contains(target)
-                  ) {
-                    dn_message.classList.add("active");
-                    ElementOptions.classList.remove("active");
-                    validateKey = element
-                      .querySelector(".opt_element p")
-                      .getAttribute("Update_item");
-                  }
+                  } else
+                    if (
+                      target.hasAttribute("delete_item") &&
+                      element.contains(target)
+                    ) {
+                      dn_message.classList.add("active");
+                      ElementOptions.classList.remove("active");
+                      validateKey = element
+                        .querySelector(".opt_element p")
+                        .getAttribute("Update_item");
+                    }
                 }
               }
             });
@@ -3278,7 +3246,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             AddEventMenu.classList.add('active');
             newObject = target.getAttribute("data-information");
             newObject = JSON.parse(newObject);
-            if(typeof newObject == 'object'){
+            if (typeof newObject == 'object') {
               document.querySelector(
                 '.event_menu_add.form_data select[name="account"]'
               ).value = newObject["account"];
@@ -3288,7 +3256,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               document.querySelector(
                 '.event_menu_add.form_data input[name="authorize"]'
               ).value = newObject["Authorize"];
-  
+
               document.querySelector('.event_menu_add.form_data input[name="date"]').value =
                 newObject["Date"];
               document.querySelector(
@@ -3301,9 +3269,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               APIDOCS =
                 "../../API/finance/data_process.php?APICALL=transaction&&user=true&&submit=update";
 
-                AddEventMenu.classList.add("active");
+              AddEventMenu.classList.add("active");
             }
-            
+
           }
           function DeleteItemFunction(value) {
             if (value == "true") {
@@ -3415,7 +3383,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 year: document.querySelector('select[name="yearfilter"]').value,
                 numData: numoffset
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -3491,7 +3459,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }, 200);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3503,7 +3471,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             loaderBtn.classList.add("active");
             try {
               const formMain = new FormData(AddEventMenuForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -3523,7 +3491,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   loaderBtn.innerText = data;
                 }
               } else {
-                console.log("invalid link directory");
+                console.error("invalid link directory");
               }
             } catch (error) {
               console.error(error);
@@ -3547,7 +3515,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data) {
                   if (data == 'Item Deleted Successfully') {
                     MainFormDel.classList.add('none')
@@ -3556,7 +3524,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3609,7 +3577,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                         Template.innerHTML = "";
                       }
                       Template.prepend(CloneObject);
-                      console.log(MainFormDel, ElementEngage);
                       if (requestData == 'Update success') {
                         ElementEngage.classList.add('none');
                         validateKey = '';
@@ -3627,7 +3594,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -3890,7 +3857,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               Template = document.querySelector("#Recordtemplate");
 
             }
-            console.log(TemplateSet, TemplateSetRecord, RecordMenu);
             if (RecordMenu && TemplateSet || !RecordMenu && !TemplateSetRecord) {
               const Div = document.createElement("div");
               const newClone = Template.cloneNode(true);
@@ -3947,7 +3913,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             //   "../../API/partnership/data_process.php?APICALL=true&&user=true&&submit=update_file";
           }
           function DeleteItemFunction(value, validateKey, MainForm) {
-            console.log(value, validateKey, MainForm);
             let API;
             if (value == "true" && validateKey) {
               if (!RecordMenu) {
@@ -3966,7 +3931,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -3988,7 +3953,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4018,7 +3983,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             let data;
             try {
               const formMain = new FormData(SubmitForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -4054,7 +4019,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4068,7 +4033,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -4089,7 +4054,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   AddEventMenu.querySelector('header').innerText = data['message'] || data;
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4191,7 +4156,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             loaderBtn.innerText = " ";
             try {
               const formMain = new FormData(AddEventMenuForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -4199,11 +4164,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json();
-                
+
                 requestData = data;
                 loaderBtn.innerText = data;
                 if (data == 'success' || data == 'Update success') {
-                  
+
                   APIDOCS =
                     "../../API/finance/data_process.php?APICALL=tithe&&user=true&&submit=fetchlatest";
                   if (!validateKey) {
@@ -4213,7 +4178,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   PHPLIVEUPDATE(APIDOCS, validateKey)
                 }
               } else {
-                console.log("invalid link directory");
+                console.error("invalid link directory");
               }
             } catch (error) {
               console.error(error);
@@ -4229,7 +4194,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   '.event_menu_add input[name="Date"]'
                 ).value,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -4247,7 +4212,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4270,7 +4235,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                console.log(data);
+
                 if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
                   let ObjectDataFrame = JSON.parse(data);
                   Template = document.querySelector('.records_table table tbody');
@@ -4286,7 +4251,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     contact = ObjectDataFrame[key]['contact'];
                     Email = ObjectDataFrame[key]['Email'];
                     ObjectData = ObjectDataFrame[key]['Obj'];
-                    console.log(ObjectDataFrame);
+
                     const CloneObject = document.querySelector('.CloneSearch tr').cloneNode(true);
                     if (CloneObject != '') {
                       const ElementDivCone = document.createElement('tr');
@@ -4314,7 +4279,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       element.addEventListener("click", function () {
                         var ElementOptions = element.querySelector(".opt_element");
                         ElementOptions.classList.add("active");
-                        console.log(data);
+
                       });
                     }
                   }
@@ -4322,7 +4287,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4378,7 +4343,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     validateKey = element
                       .querySelector(".opt_element p")
                       .getAttribute("Update_item");
-                    console.log(validateKey);
+
                     dn_message.classList.add("active");
                     ElementOptions.classList.remove("active");
                   }
@@ -4433,7 +4398,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               AddEventMenu.classList.add("active");
             }, 100)
 
-            console.log('Ecentre');
           }
           function DeleteItemFunction(value) {
             if (value == "true") {
@@ -4454,7 +4418,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -4518,7 +4482,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
                 }
                 loader_progress.classList.remove("active");
                 ContentDom.classList.remove("load");
@@ -4722,7 +4686,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 document.querySelector('.event_menu_add input[type="file"]')
                   .files[0]
               );
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -4742,7 +4706,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4757,7 +4721,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -4773,7 +4737,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   loaderView.innerText = data;
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4814,7 +4778,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     ObjectData = ObjectDataFrame[key]['Obj'];
 
                     if (CloneObject != '') {
-                      console.log(CloneObject);
+
                       const ElementDivCone = document.createElement('tr');
                       CloneObject.querySelector('.Clonename').innerText = Name;
                       CloneObject.querySelector('.Cloneitem').innerText = Items;
@@ -4829,7 +4793,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       if (requestData == 'Update success') {
                         MainFormDel.classList.add('none');
                       }
-                      console.log(ElementDivCone, Template);
+                      console.error(ElementDivCone, Template);
                       Template.prepend(ElementDivCone);
                       OptionElements = document.querySelectorAll(".option");
                       const element = ElementDivCone.querySelector('.option');
@@ -4845,7 +4809,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -4920,7 +4884,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           });
           SubmitForm.addEventListener("submit", async function (e) {
             APIDOCS =
-            "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=true";
+              "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=true";
             ResponseView.innerText = "loading...";
             e.preventDefault();
             PHPREQUEST(APIDOCS);
@@ -4965,7 +4929,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               }
 
               if (Id != "") {
-                console.log(Change_status);
+                console.error(Change_status);
                 APIDOCS =
                   "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=status";
                 if (PHPREQUESTSTATUS(APIDOCS, Change_status, Id)) {
@@ -5026,17 +4990,17 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             });
           });
 
-          async function  EmailSend(reciever_id){
+          async function EmailSend(reciever_id) {
             const ElementReciever = reciever_id;
             const Checkbox = document.querySelector('.event_menu_add.form_data input[type="checkbox"]');
-            if(ElementReciever !== null){
-              if(Checkbox .checked){
+            if (ElementReciever !== null) {
+              if (Checkbox.checked) {
                 dataSendKey = {
                   key: ElementReciever.value,
                 };
                 try {
                   APIDOCS =
-                  "../../API/ministriesData & theme/data_process.php?APICALL=true&&user=true&&submit=list";
+                    "../../API/ministriesData & theme/data_process.php?APICALL=true&&user=true&&submit=list";
                   const Request = await fetch(APIDOCS, {
                     method: "POST",
                     body: JSON.stringify(dataSendKey),
@@ -5044,21 +5008,28 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       "Content-Type": "application/json",
                     }
                   });
-    
+
                   if (Request.status === 200) {
                     data = await Request.json();
                     loaderBtn.innerText = data;
-                    console.log(data['status'] == 'success',);
                     if (data == 'success' || data == 'Update success' || data['status'] == 'success') {
-                      console.log(typeof data['data']);
-                      if(typeof data['data'] == 'object'){
+
+                      if (typeof data['data'] == 'object') {
                         loaderBtn.innerText = 'Announcement data was uploaded successfully. please wait, as we send the emails accordingly';
                         EmailList = data['data'];
-                        ///Email function goes in here
+                        for (item in EmailList) {
+                          emailjs.sendForm('service_sffdk0b', 'template_jihe9xi', this, { recipientEmail: item })
+                            .then(() => {
+                              console.error('SUCCESS!');
+                            }, (error) => {
+                              console.error('FAILED...', error);
+                            });
+                        }
+
                       }
                     }
                   } else {
-                    console.log("cannot find endpoint");
+                    console.error("cannot find endpoint");
                   }
                 } catch (error) {
                   console.error(error);
@@ -5085,7 +5056,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           //     }
 
           //     if (Id != "") {
-          //       console.log(Change_status);
+          //       console.error(Change_status);
           //       APIDOCS =
           //         "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=status";
           //       if (PHPREQUESTSTATUS(APIDOCS, Change_status, Id)) {
@@ -5120,7 +5091,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=update";
           }
           function DeleteItemFunction(value, validateKey) {
-            console.log(value, validateKey);
+
             if (value == "true") {
               let API =
                 "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=delete_file";
@@ -5132,7 +5103,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             try {
               loaderBtn.classList.add('active');
               const formMain = new FormData(SubmitForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -5155,7 +5126,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   );
                   EmailSend(RecieverId);
                 }
-              } 
+              }
             } catch (error) {
               console.error(error);
             }
@@ -5167,7 +5138,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key_Data: key,
                 IdData: Id,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -5201,7 +5172,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -5212,14 +5183,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data == 'Item Deleted Successfully') {
                   ElementEngage.classList.add('none')
                   ResponseView.innerText = "Delete was a success";
                   validateKey = '';
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -5285,7 +5256,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       Template.prepend(ElementDivCone);
 
                       if (requestData == 'Update success') {
-                        console.log(ElementEngage);
+
                         ElementEngage.classList.add('none');
                         validateKey = '';
                       }
@@ -5296,7 +5267,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -5313,7 +5284,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -5433,7 +5404,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
               loader_progress.classList.remove("active");
               ContentDom.classList.remove("load");
@@ -5555,8 +5526,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
-                console.log(document.querySelector(".delete_item"));
-
                 if (validateKey != "") {
                   DeleteItemFunction(
                     element.getAttribute("data-confirm"),
@@ -5616,7 +5585,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           })
 
           function DeleteItemFunction(value, validateKey) {
-            console.log(value, validateKey);
+
             if (value == "true") {
               let API =
                 "../../API/Assets&projects/data_process.php?APICALL=true&&user=projects&&submit=delete_file";
@@ -5637,7 +5606,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 document.querySelector('.event_menu_add input[type="file"]')
                   .files[0]
               );
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -5656,7 +5625,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   PHPLIVEUPDATE(APIDOCS, validateKey);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -5735,7 +5704,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -5751,7 +5720,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -5767,7 +5736,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   MainFormDel.classList.add('none');
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -5789,7 +5758,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -5862,7 +5831,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
                 }
                 loader_progress.classList.remove("active");
                 ContentDom.classList.remove("load");
@@ -5909,8 +5878,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
-                console.log(document.querySelector(".delete_item"));
-
                 if (validateKey != "") {
                   DeleteItemFunction(
                     element.getAttribute("data-confirm"),
@@ -6025,6 +5992,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             if (target.tagName == "I") {
               if (target.hasAttribute("data-cn")) {
                 if (target.hasAttribute("data-id")) {
+                  ElementEngage = target.parentElement.parentElement;
                   validateKey = target.getAttribute("data-id");
                   Partnership_record.classList.remove("active");
                   dn_message.classList.add("active");
@@ -6080,7 +6048,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     validateKey = element
                       .querySelector(".opt_element p")
                       .getAttribute("Update_item");
-                    console.log(validateKey);
+
                     dn_message.classList.add("active");
                     ElementOptions.classList.remove("active");
                   }
@@ -6159,7 +6127,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json();
-                
+
                 if (data == "Upload was a success") {
                   APIDOCS =
                     "../../API/partnership/data_process.php?APICALL=true&&user=true&&submit=fetchlatest";
@@ -6169,7 +6137,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6180,14 +6148,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             let data;
             try {
               const formMain = new FormData(SubmitForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
               });
               if (Request.status === 200) {
                 data = await Request.json();
-                
+
                 requestData = data;
                 if (data == 'success' || data == 'Update success') {
                   loaderBtn.innerText = data;
@@ -6199,7 +6167,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   PHPLIVEUPDATE(APIDOCS, validateKey);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6214,7 +6182,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -6225,14 +6193,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data == 'Item Deleted Successfully') {
                   ElementEngage.classList.add('none')
                   ResponseView.innerText = "Delete was a success";
                   validateKey = '';
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6258,7 +6226,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
                   let ObjectDataFrame = JSON.parse(data);
                   Template = document.querySelector('.records_table table tbody');
-                  console.log(ObjectDataFrame);
+
                   for (const key in ObjectDataFrame) {
                     unique_id = ObjectDataFrame[key]['UniqueId'];
                     namer = ObjectDataFrame[key]['name'];
@@ -6269,7 +6237,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     Period = ObjectDataFrame[key]['Period'];
                     statusi = ObjectDataFrame[key]['status'];
                     ///fix the problem, clean sent data to capture date;
-                    console.log(JSON.stringify(ObjectDataFrame[key]['Obj']));
+
                     ObjectData = ObjectDataFrame[key]['Obj'];
                     ObjectDataIndividual = ObjectDataFrame[key]['IObj'];
                     const CloneObject = document.querySelector('.CloneSearch tr').cloneNode(true);
@@ -6322,7 +6290,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6349,7 +6317,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -6360,8 +6328,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               data = await Request.json(data);
               if (Request.status === 200) {
                 if (data) {
-                  if (data != 'No Records Available' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
-                    let ObjectDataFrame = JSON.parse(data);
+                  if (typeof data == 'object') {
+                    let ObjectDataFrame = data;
                     Template = "";
                     Template = document.querySelector('.records_table table tbody');
                     Template.innerHTML = "";
@@ -6428,9 +6396,610 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                       RestructurePages(ConvertPages);
                     }
 
+                  } else {
+                    ResponseView.classList.add('active');
+                    ResponseView.innerText = data;
+                    document.querySelector('.skeleton_loader').classList.remove('load');
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
+                }
+                loader_progress.classList.remove("active");
+                ContentDom.classList.remove("load");
+                DomManipulationElement.classList.remove("load");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+
+          })
+        }
+        if (location == "Library") {
+          let requestData;
+          let ElementEngage;
+          DeleteItemI = [];
+          let tagVal = "";
+          let UploadFlow = true;
+          let Exclusion = false;
+          var OptionElement_r = document.querySelectorAll(".option");
+          var OptionElements = document.querySelectorAll(".btn_record");
+          const loaderBtn = document.querySelector(".event_menu_add.form_data .error_information");
+          const Partnership_record = document.querySelector(".series_version");
+          const AddEventMenu = document.querySelector(".event_menu_add.form_data");
+          const AddEventMenuIndi = document.querySelector('.event_menu_add.indi')
+          const AddEventMenuIndiBtn = document.querySelector('.event_menu_add.indi button');
+          const ResponseView = document.querySelector(".info_information.event_menu_add");
+          const FilterBtn = document.querySelector(".filterBtn");
+          const Export_variables = document.querySelector('#ExportBtn');
+          const Export_variables_Dialogue = document.querySelector('.export_dialogue');
+          const Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
+          const Export_variables_Dialogue_Form = Export_variables_Dialogue.querySelector("form");
+          const FileChange = document.querySelector('input[name="upload_cover"]');
+          Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          })
+          Export_variables.onclick = function () {
+            Export_variables_Dialogue.classList.add("active");
+          };
+          FileChange.addEventListener('change', function (e) {
+            fileSize = e.target.files[0]['size'];
+
+            if (fileSize > 1024 * 1024) {
+
+              alert('File size too big, upload a less bigger file size');
+              UploadFlow = false;
+            } else {
+              UploadFlow = true;
+            }
+          })
+          Export_variables_Dialogue_Btn.addEventListener('click', async function () {
+            APIDOCS =
+              "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=export";
+            ExportData('LibraryExport', 'excel', APIDOCS)
+          })
+          let APIDOCS;
+          let confirmKey = true;
+          const AddEventBtn = document.querySelector(".add_event");
+          const SubmitForm = document.querySelector(
+            ".event_menu_add.main form"
+          );
+          confirmsBtns.forEach((element) => {
+            element.addEventListener("click", (e) => {
+              if (element.getAttribute("data-confirm") == "true") {
+                console.error(document.querySelector(".delete_item"));
+
+                if (validateKey != "") {
+                  DeleteItemFunction(
+                    element.getAttribute("data-confirm"),
+                    validateKey
+                  );
+                }
+              }
+            });
+          });
+          var FilterUI = document.querySelector(".notification_list_filter");
+          var FilterUIList = document.querySelectorAll(".notification_list_filter .item");
+          FilterUIList.forEach(element => {
+            element.addEventListener('click', function () {
+              setTimeout(() => {
+                value = element.innerText;
+                FilterUI.classList.remove("active");
+                let DomManipulationElement;
+                const route = Urlroutes[location] || Urlroutes[404];
+                if (route) {
+                  let request = route.template + "?type=" + value;
+                  if (ArrayTables.includes(location)) {
+                    DomManipulationElement = SkeletonDom_table;
+                  } else {
+                    DomManipulationElement = SkeletonDom_list;
+                  }
+                  loader_progress.classList.add("active");
+
+                  ContentDom.classList.add("load");
+                  DomManipulationElement.classList.add("load");
+                  setTimeout(() => {
+                    ProgressLoader(true);
+                  }, 100);
+
+                  locationHandler(request, location).then((data) => {
+                    loader_progress.classList.remove("active");
+                    DomManipulationElement.classList.remove("load");
+                    ContentDom.classList.remove("load");
+                    setTimeout(() => {
+                      ProgressLoader(false);
+                    }, 100);
+                  });
+                }
+              }, 100);
+            })
+          });
+          searchBtn.addEventListener("click", e => {
+            APIDOCS =
+              "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=filter";
+            if (searchInput.value != " " && searchInput.value != "") {
+              searchSystem(APIDOCS, searchInput.value);
+            }
+
+          })
+
+          AddEventBtn.addEventListener("click", function (e) {
+            APIDOCS =
+              "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=upload";
+          });
+          AddEventMenuIndiBtn.addEventListener("click", function (e) {
+            APIDOCS =
+              "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=upload_ind";
+            PHPREQUESTIND(APIDOCS);
+          });
+          function DestructureJson(element) {
+            newObject = JSON.parse(
+              element.parentElement.getAttribute("data-information")
+            );
+            Partnership_record.classList.add('active');
+            const PartnerContainer =
+              Partnership_record.querySelector(".menu.event");
+            if (Object.keys(newObject).length > 0) {
+
+              PartnerContainer.innerHTML = "";
+              for (const iletrate in newObject) {
+                let val = newObject[iletrate]["id"].trim();
+                if (!DeleteItemI.includes(val)) {
+                  dataVal = newObject[iletrate]["date"];
+                  PartnerContainer.innerHTML += `<div class="item"><div class="details">
+                <p>${newObject[iletrate]["filename"]}</p>
+                <p> source . ${newObject[iletrate]["source"]}</p>
+            </div>
+            <div class="option"><i class="fas fa-trash" data-cn="trash" data-id="${newObject[iletrate]["id"].trim()
+                    }"></i><div>
+            </div>`;
+                }
+
+              }
+            } else {
+              PartnerContainer.innerHTML = `<div class="item"><div class="details">
+                <p>No Records Available</p>
+            </div></div>`;
+            }
+          }
+
+          window.addEventListener("click", function (e) {
+            var target = e.target;
+            var FilterUI = document.querySelector(".notification_list_filter");
+            // if (!FilterBtn.contains(target) && !FilterUI.contains(target)) {
+            //   if (FilterUI.classList.contains("active")) {
+            //     FilterUI.classList.remove("active");
+            //   }
+            // } else {
+            //   FilterUI.classList.add("active");
+            // }
+            if (Export_variables_Dialogue.classList.contains('active') && !Export_variables.contains(target)) {
+              if (!Export_variables_Dialogue.contains(target)) {
+                Export_variables_Dialogue.classList.remove('active')
+              }
+            }
+            setTimeout(() => {
+              if (!ResponseView.contains(target) && !target.classList.contains('btn_confirm')) {
+                if (ResponseView.classList.contains('active')) {
+                  ResponseView.classList.remove('active');
+                }
+              }
+            }, 100)
+            if (
+              AddEventMenuIndi.classList.contains("active") &&
+              !AddEventMenuIndiBtn.contains(target)
+            ) {
+              if (!AddEventMenuIndi.contains(target)) {
+                AddEventMenuIndi.classList.remove("active");
+              }
+            }
+
+            if (!target.classList.contains("btn_record")) {
+              if (
+                Partnership_record.classList.contains("active") &&
+                !Partnership_record.contains(target)
+              ) {
+                Partnership_record.classList.remove("active");
+              }
+            }
+            if (target.tagName == "I") {
+              if (target.hasAttribute("data-cn")) {
+                if (target.hasAttribute("data-id")) {
+                  ElementEngage = target.parentElement.parentElement;
+                  validateKey = target.getAttribute("data-id");
+                  Partnership_record.classList.remove("active");
+                  dn_message.classList.add("active");
+                  confirmKey = false;
+                }
+              }
+            }
+            OptionElement_r.forEach((element) => {
+              var ElementOptions = element.querySelector(".opt_element");
+              if (ElementOptions != null) {
+                if (
+                  ElementOptions.classList.contains("active") &&
+                  !element.contains(target)
+                ) {
+                  if (!ElementOptions.contains(target)) {
+                    ElementOptions.classList.remove("active");
+                  }
+                } else {
+
+                  if (
+                    target.hasAttribute("Update_item") &&
+                    element.contains(target)
+                  ) {
+                    ElementEngage = element.parentElement;
+                  }
+                  if (
+                    target.hasAttribute("delete_item") &&
+                    element.contains(target)
+                  ) {
+                    ElementEngage = element.parentElement;
+                    validateKey = element
+                      .querySelector(".opt_element p")
+                      .getAttribute("Update_item");
+                    dn_message.classList.add("active");
+                    ElementOptions.classList.remove("active");
+                  }
+
+
+                  if (
+                    target.classList.contains("add_item") &&
+                    element.contains(target)
+                  ) {
+                    ElementEngage = element.parentElement;
+                    AddEventMenuIndi.classList.add('active');
+                    AddEventMenuIndi.querySelector('form input[name="delete_key"]').value = target.getAttribute("data-id");
+                    Exclusion = true;
+
+                  }
+                }
+              }
+            });
+            OptionElements.forEach((element) => {
+              if (element == target) {
+                DestructureJson(element);
+              }
+            })
+
+
+          });
+
+          function UpdateItemFunction(value) {
+            newObject = value.getAttribute("data-information");
+            newObject = JSON.parse(newObject);
+            document.querySelector('.event_menu_add input[name="name"]').value =
+              newObject["name"];
+            document.querySelector(
+              '.event_menu_add input[name="author"]'
+            ).value = newObject["Author"];
+            document.querySelector(
+              '.event_menu_add input[name="category"]'
+            ).value = newObject["category"];
+            document.querySelector(
+              '.event_menu_add input[name="source"]'
+            ).value = newObject["source"];
+            document.querySelector(
+              '.event_menu_add select[name="status"]'
+            ).value = newObject["status"];
+            document.querySelector('.event_menu_add input[name="date"]').value =
+              newObject["date"];
+            document.querySelector(
+              '.event_menu_add input[name="delete_key"]'
+            ).value = newObject["UniqueId"];
+            AddEventMenu.classList.add("active");
+            APIDOCS =
+              "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=update_file";
+          }
+          function DeleteItemFunction(value, validateKey) {
+            if (value == "true" && confirmKey) {
+              let API =
+                "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=delete_file";
+              PHPREQUESTDEL(API, validateKey);
+            } else if (value == "true" && !confirmKey) {
+              API =
+                "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=delete_ini";
+              PHPREQUESTDEL(API, validateKey);
+            }
+          }
+          async function PHPREQUESTIND(APIDOCS) {
+            let data;
+            try {
+              let loader = AddEventMenuIndi.querySelector('form .error_information');
+              const formMain = new FormData(AddEventMenuIndi.querySelector('form'));
+              controller = new AbortController();
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: formMain,
+              });
+
+              if (Request.status === 200) {
+                data = await Request.json();
+
+                if (data == "Upload was a success") {
+                  APIDOCS =
+                    "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=fetchlatest";
+                  validateKey = AddEventMenuIndi.querySelector('form input[name="delete_key"]').value;
+                  PHPLIVEUPDATE(APIDOCS, validateKey);
+                  loader.innerText = data;
+
+                }
+              } else {
+                console.error("cannot find endpoint");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
+          async function PHPREQUEST(APIDOCS) {
+            let data;
+            try {
+              if (UploadFlow) {
+                const formMain = new FormData(SubmitForm);
+                const Request = await fetch(APIDOCS, {
+                  method: "POST",
+                  body: formMain,
+                });
+                if (Request.status === 200) {
+                  data = await Request.json();
+
+                  requestData = data;
+                  if (data == 'success' || data == 'Update success') {
+                    loaderBtn.innerText = data;
+                    APIDOCS =
+                      "../../API/Library/data_process.php?APICALL=true&&user=true&&submit=fetchlatest";
+                    if (!validateKey) {
+                      validateKey = "";
+                    }
+                    PHPLIVEUPDATE(APIDOCS, validateKey);
+                  }
+                } else {
+                  console.error("cannot find endpoint");
+                }
+              } else {
+                alert('upload is denied, file size too big');
+              }
+
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
+          async function PHPREQUESTDEL(APIDOCS, validateKey) {
+            let data;
+
+            try {
+              ResponseView.classList.add('active');
+              dataSend = {
+                key: validateKey,
+              };
+
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: JSON.stringify(dataSend),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              if (Request.status === 200) {
+                data = await Request.json(data);
+
+                if (data == 'Item Deleted Successfully') {
+                  if (ElementEngage.querySelector('i').hasAttribute('data-id')) {
+                    DeleteItemI.push(ElementEngage.querySelector('i').getAttribute('data-id'))
+                  }
+                  ElementEngage.classList.add('hide')
+                  ResponseView.innerText = "Delete was a success";
+                  validateKey = '';
+                }
+              } else {
+                console.error("cannot find endpoint");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          async function PHPLIVEUPDATE(APIDOCS, validateKey) {
+            let data;
+            try {
+              if (!Exclusion) {
+                dataSend = {
+                  key: validateKey
+                };
+                controller = new AbortController();
+                const Request = await fetch(APIDOCS, {
+                  method: "POST",
+                  body: JSON.stringify(dataSend),
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                });
+
+                if (Request.status === 200) {
+                  data = await Request.json(data);
+                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                    let ObjectDataFrame = JSON.parse(data);
+                    Template = document.querySelector('.records_table table tbody');
+
+                    for (const key in ObjectDataFrame) {
+                      unique_id = ObjectDataFrame[key]['UniqueId'];
+                      namer = ObjectDataFrame[key]['name'];
+                      author = ObjectDataFrame[key]['Author'];
+                      date = ObjectDataFrame[key]['date'];
+                      source = ObjectDataFrame[key]['source'];
+                      category = ObjectDataFrame[key]['category'];
+                      statusi = ObjectDataFrame[key]['status'];
+                      ObjectData = ObjectDataFrame[key]['Obj'];
+                      ObjectDataIndividual = ObjectDataFrame[key]['IObj'];
+                      const CloneObject = document.querySelector('.CloneSearch tr').cloneNode(true);
+                      if (CloneObject != '') {
+                        const ElementDivCone = document.createElement('tr');
+                        ElementDivCone.classList.add('SearchItem');
+
+                        CloneObject.querySelector('.Clonecat').innerText = source;
+                        CloneObject.querySelector('.Clonedate').innerText = date;
+                        CloneObject.querySelector('.Clonesource').innerText = category;
+                        CloneObject.querySelector('.Cloneauthor').innerText = author;
+                        CloneObject.querySelector('.Clonename').innerText = namer;
+                        CloneObject.querySelector('.Cloneitem').setAttribute('data-information', ObjectDataIndividual);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('data-information', ObjectData);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('data-id', unique_id);
+                        CloneObject.querySelector('.opt_element p.dp').setAttribute('data-id', unique_id);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('Update_item', unique_id);
+                        CloneObject.querySelector('.opt_element p.dp').setAttribute('delete_item', unique_id);
+                        CloneObject.querySelector('.opt_element p.add_item').setAttribute('data_id', unique_id);
+                        statusClass = CloneObject.querySelector('.btn_record');
+                        if (statusi == 'active') {
+                          statusClass.classList.add("in_btn");
+                          statusClass.innerHTML = "<div></div>Active";
+                        } else {
+                          statusClass.classList.add("out_btn");
+                          statusClass.innerHTML = "<div></div>Inactive";
+                        }
+                        ElementDivCone.innerHTML = CloneObject.innerHTML;
+                        Template.prepend(ElementDivCone);
+                        if (requestData == 'Update success') {
+                          ElementEngage.classList.add('none');
+                          validateKey = '';
+                        }
+                        OptionElements = document.querySelectorAll(".btn_record");
+                        OptionElement_r = document.querySelectorAll(".option");
+                        const element = ElementDivCone.querySelector('.option');
+                        element.addEventListener("click", function () {
+                          var ElementOptions = element.querySelector(".opt_element");
+                          ElementOptions.classList.add("active");
+                        });
+
+                        const elementAdd = ElementDivCone.querySelector('.opt_element p.add_item');
+                        elementAdd.addEventListener("click", function () {
+                          AddEventMenuIndi.classList.add("active");
+                        });
+
+                      }
+                    }
+
+                  }
+
+                } else {
+                  console.error("cannot find endpoint");
+                }
+                Exclusion = false;
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          SubmitForm.addEventListener("submit", async function (e) {
+            ResponseView.innerText = "loading...";
+            e.preventDefault();
+            PHPREQUEST(APIDOCS);
+          });
+          AddEventMenuIndi.querySelector('form').addEventListener("submit", async function (e) {
+            AddEventMenuIndi.querySelector(".error_information").innerText = "loading...";
+            e.preventDefault();
+          });
+          const searchSystem = debounce(async (APIDOCS, value) => {
+            let data;
+            try {
+              loader_progress.classList.add("active");
+              ContentDom.classList.add("load");
+              DomManipulationElement.classList.add("load");
+              dn_message.querySelector("p").innerText = "...processing request";
+              dataSend = {
+                key: value,
+                numData: numoffset,
+              };
+
+              const Request = await fetch(APIDOCS, {
+                method: "POST",
+                body: JSON.stringify(dataSend),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              data = await Request.json(data);
+              if (Request.status === 200) {
+                if (data) {
+                  if (typeof data == 'object') {
+                    let ObjectDataFrame = data;
+                    Template = "";
+                    Template = document.querySelector('.records_table table tbody');
+                    Template.innerHTML = "";
+                    ObjectDataFrame = ObjectDataFrame['result'];
+                    for (const key in ObjectDataFrame) {
+                      unique_id = ObjectDataFrame[key]['UniqueId'];
+                      namer = ObjectDataFrame[key]['name'];
+                      author = ObjectDataFrame[key]['Author'];
+                      date = ObjectDataFrame[key]['date'];
+                      source = ObjectDataFrame[key]['source'];
+                      category = ObjectDataFrame[key]['category'];
+                      statusi = ObjectDataFrame[key]['status'];
+                      ObjectData = ObjectDataFrame[key]['Obj'];
+                      ObjectDataIndividual = ObjectDataFrame[key]['IObj'];
+                      const CloneObject = document.querySelector('.CloneSearch tr').cloneNode(true);
+                      if (CloneObject != '') {
+                        const ElementDivCone = document.createElement('tr');
+                        ElementDivCone.classList.add('SearchItem');
+
+                        CloneObject.querySelector('.Clonecat').innerText = source;
+                        CloneObject.querySelector('.Clonedate').innerText = date;
+                        CloneObject.querySelector('.Clonesource').innerText = category;
+                        CloneObject.querySelector('.Cloneauthor').innerText = author;
+                        CloneObject.querySelector('.Clonename').innerText = namer;
+                        CloneObject.querySelector('.Cloneitem').setAttribute('data-information', ObjectDataIndividual);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('data-information', ObjectData);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('data-id', unique_id);
+                        CloneObject.querySelector('.opt_element p.dp').setAttribute('data-id', unique_id);
+                        CloneObject.querySelector('.opt_element p.up').setAttribute('Update_item', unique_id);
+                        CloneObject.querySelector('.opt_element p.dp').setAttribute('delete_item', unique_id);
+                        CloneObject.querySelector('.opt_element p.add_item').setAttribute('data_id', unique_id);
+                        statusClass = CloneObject.querySelector('.btn_record');
+                        if (statusi == 'active') {
+                          statusClass.classList.add("in_btn");
+                          statusClass.innerHTML = "<div></div>Active";
+                        } else {
+                          statusClass.classList.add("out_btn");
+                          statusClass.innerHTML = "<div></div>Inactive";
+                        }
+                        ElementDivCone.innerHTML = CloneObject.innerHTML;
+                        Template.prepend(ElementDivCone);
+                        if (requestData == 'Update success') {
+                          ElementEngage.classList.add('none');
+                          validateKey = '';
+                        }
+                        OptionElements = document.querySelectorAll(".btn_record");
+                        OptionElement_r = document.querySelectorAll(".option");
+                        const element = ElementDivCone.querySelector('.option');
+                        element.addEventListener("click", function () {
+                          var ElementOptions = element.querySelector(".opt_element");
+                          ElementOptions.classList.add("active");
+                        });
+
+                        const elementAdd = ElementDivCone.querySelector('.opt_element p.add_item');
+                        elementAdd.addEventListener("click", function () {
+                          AddEventMenuIndi.classList.add("active");
+                        });
+
+                      }
+                    }
+
+
+
+
+                    if (ObjectDataFrame['pages'] > 25) {
+                      ConvertPages = ObjectDataFrame['pages'];
+                      RestructurePages(ConvertPages);
+                    }
+
+                  } else {
+                    ResponseView.classList.add('active');
+                    ResponseView.innerText = data;
+                    document.querySelector('.skeleton_loader').classList.remove('load');
+                  }
+                } else {
+                  console.error("cannot find endpoint");
                 }
                 loader_progress.classList.remove("active");
                 ContentDom.classList.remove("load");
@@ -6466,37 +7035,37 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             } else {
               FilterUI.classList.add("active");
             }
-            if(!DepartmentView.contains(target)){
-            if(CounterView == false){
-              
-                DepartmentList.forEach(element =>{
-                  if(element.contains(target)){
-                    if(!DepartmentView.classList.contains('active')){
+            if (!DepartmentView.contains(target)) {
+              if (CounterView == false) {
+
+                DepartmentList.forEach(element => {
+                  if (element.contains(target)) {
+                    if (!DepartmentView.classList.contains('active')) {
                       DepartmentView.classList.add('active');
                       CounterView = true;
-                      if(element.hasAttribute('data-name')){
-                        
+                      if (element.hasAttribute('data-name')) {
+
                         Dp_Key_remove = element.getAttribute('data-name');
-                      GetmembershipData(Dp_Key_remove)
+                        GetmembershipData(Dp_Key_remove)
                       }
-                      
+
                     }
                   }
-                });              
-          }else{
-              DepartmentView.classList.remove('active');
-              CounterView = false;
+                });
+              } else {
+                DepartmentView.classList.remove('active');
+                CounterView = false;
+              }
             }
-          }
-           
+
             setTimeout(() => {
               if (!loaderView.contains(target) && !target.classList.contains('btn_confirm')) {
                 if (loaderView.classList.contains('active')) {
                   loaderView.classList.remove('active');
                 }
-              }              
+              }
             }, 100)
-            
+
             OptionElements.forEach((element) => {
               var ElementOptions = element.querySelector(".opt_element");
               if (ElementOptions != null) {
@@ -6525,7 +7094,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
-                console.log(document.querySelector(".delete_item"));
+                console.error(document.querySelector(".delete_item"));
 
                 if (validateKey != "") {
                   DeleteItemFunction(
@@ -6585,19 +7154,19 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               PHPREQUESTDEL(API, validateKey);
             }
           }
-          async function GetmembershipData(name){
+          async function GetmembershipData(name) {
             APIDOCS =
               "../../API/ministriesData & theme/data_process.php?APICALL=true&&user=view&&submit=dpList";
             let data;
             bodySend = {
-              DpKey:name,
+              DpKey: name,
             }
             try {
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(bodySend),
-                headers:{
-                 "Content-Type": "application/json"
+                headers: {
+                  "Content-Type": "application/json"
                 }
               });
 
@@ -6605,8 +7174,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 data = await Request.json();
                 if (data['status'] == 'success') {
                   ObjectData = data['data'];
-                  if(typeof ObjectData == 'object'){
-                    
+                  if (typeof ObjectData == 'object') {
+
                     var TableMain = document.querySelector('.members table');
                     TableMain.innerHTML = '';
                     TableMain.innerHTML = ` <thead>
@@ -6630,7 +7199,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6643,18 +7212,18 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             AllChecked = document.querySelectorAll('.members table input[type="checkbox"]');
             CheckedVal = [];
             AllChecked.forEach(element => {
-              if(element.checked){
+              if (element.checked) {
                 CheckedVal.push(element.value);
               }
             });
             let dataSend = {
-              Keys:CheckedVal,
-              DpKey:Dp_Key_remove,
+              Keys: CheckedVal,
+              DpKey: Dp_Key_remove,
             }
             try {
-              if(CheckedVal.length < 1){
+              if (CheckedVal.length < 1) {
                 alert('You have a select / check at least one user to perform this action ');
-              }else{
+              } else {
                 const Request = await fetch(APIDOCS, {
                   method: "POST",
                   body: JSON.stringify(dataSend),
@@ -6662,18 +7231,18 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     "Content-Type": "application/json",
                   },
                 });
-  
+
                 if (Request.status === 200) {
                   data = await Request.json();
                   ResponseView.innerText = data['data'];
                   if (data['status'] == 'success') {
                     ObjectData = data['data'];
-                    if(ObjectData == 'success'){
+                    if (ObjectData == 'success') {
                       UrlTrace();
                     }
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
                 }
               }
 
@@ -6689,18 +7258,18 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             AllChecked = document.querySelectorAll('table input[type="checkbox"]');
             CheckedVal = [];
             AllChecked.forEach(element => {
-              if(element.checked){
+              if (element.checked) {
                 CheckedVal.push(element.value);
               }
             });
             let dataSend = {
-              Keys:CheckedVal,
-              DpKey:Dp_Key_remove,
+              Keys: CheckedVal,
+              DpKey: Dp_Key_remove,
             }
             try {
-              if(CheckedVal.length < 1){
+              if (CheckedVal.length < 1) {
                 alert('You have a select / check at least one user to perform this action ');
-              }else{
+              } else {
                 const Request = await fetch(APIDOCS, {
                   method: "POST",
                   body: JSON.stringify(dataSend),
@@ -6708,18 +7277,18 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     "Content-Type": "application/json",
                   },
                 });
-  
+
                 if (Request.status === 200) {
                   data = await Request.json();
                   ResponseView.innerText = data['data'];
                   if (data['status'] == 'success') {
                     ObjectData = data['data'];
-                    if(ObjectData == 'success'){
+                    if (ObjectData == 'success') {
                       UrlTrace();
                     }
                   }
                 } else {
-                  console.log("cannot find endpoint");
+                  console.error("cannot find endpoint");
                 }
               }
 
@@ -6732,7 +7301,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             let data;
             try {
               const formMain = new FormData(SubmitForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -6745,7 +7314,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   UrlTrace();
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6760,7 +7329,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -6776,7 +7345,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   UrlTrace();
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -6885,8 +7454,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                     ElementOptions.classList.remove("active");
                   }
                 } else {
-                  console.log(target.classList.contains("delete_item"),
-                    element.contains(target))
+
                   if (
                     target.classList.contains("delete_item") &&
                     element.contains(target)
@@ -6910,7 +7478,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
-                console.log(document.querySelector(".delete_item"));
 
                 if (validateKey != "") {
                   DeleteItemFunction(
@@ -7008,7 +7575,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 document.querySelector('.event_menu_add input[type="file"]')
                   .files[0]
               );
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -7027,7 +7594,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   PHPLIVEUPDATE(APIDOCS, validateKey);
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7042,7 +7609,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               dataSend = {
                 key: validateKey,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -7058,7 +7625,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   loaderiew.innerHTML = data;
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7085,9 +7652,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   Template = document.querySelector('.membership_table tbody');
                   let CloneObject = document.querySelector('.CloneSearch').cloneNode(true);
                   ObjectDataFrame = JSON.parse(data);
-                  console.log(ObjectDataFrame);
+
                   for (const key in ObjectDataFrame) {
-                    console.log(ObjectDataFrame[key]);
+
                     unique_id = ObjectDataFrame[key]['UniqueId'];
                     Firstname = ObjectDataFrame[key]['Firstname'];
                     Othername = ObjectDataFrame[key]['Othername'];
@@ -7139,7 +7706,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
 
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7156,7 +7723,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 key: value,
                 numData: numoffset,
               };
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: JSON.stringify(dataSend),
@@ -7227,7 +7794,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
               loader_progress.classList.remove("active");
               ContentDom.classList.remove("load");
@@ -7239,7 +7806,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
         }
         if (location == "Gallery") {
-          Selectimages  = {};
+          Selectimages = {};
           let APIDOCS;
           const AddEventBtn = document.querySelector(".add_event");
           const SubmitForm = document.querySelector(".event_menu_add.form_data form");
@@ -7262,7 +7829,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
               "../../API/membership/data_process.php?APICALL=true&&user=true&&submit=export";
             ExportData('MembershipExport', 'excel', APIDOCS)
           })
-          UploadImg.addEventListener('change',function(e){
+          UploadImg.addEventListener('change', function (e) {
             files = e.target.files;
             TempFiles = files.length;
           })
@@ -7283,12 +7850,12 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 }
               }
             }, 100)
-        
+
           })
           confirmsBtns.forEach((element) => {
             element.addEventListener("click", (e) => {
               if (element.getAttribute("data-confirm") == "true") {
-                console.log(document.querySelector(".delete_item"));
+                console.error(document.querySelector(".delete_item"));
 
                 if (validateKey != "") {
                   DeleteItemFunction(
@@ -7314,7 +7881,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             }
             validateKey = "";
           });
-          
+
           function UpdateItemFunction(value) {
             if (imageCompound.hasAttribute("required")) {
               imageCompound.removeAttribute("required");
@@ -7337,10 +7904,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             document.querySelector(
               '.event_menu_add input[name="delete_key"]'
             ).value = newObject["UniqueId"];
-            setTimeout(()=>{
+            setTimeout(() => {
               AddEventMenu.classList.add("active");
-            },100);
-            
+            }, 100);
+
             APIDOCS =
               "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=update_file";
           }
@@ -7368,10 +7935,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json();
-                
+
                 if (data) {
                   document.querySelector('.error_information').innerText = data;
-                  
+
                   if (data == 'Upload was a success') {
                     APIDOCS =
                       "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=fetchLatest";
@@ -7383,7 +7950,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7408,7 +7975,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data) {
                   if (data == 'Item Deleted Successfully') {
                     MainFormDel.classList.add('none')
@@ -7417,7 +7984,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7441,7 +8008,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
               if (Request.status === 200) {
                 data = await Request.json(data);
-                
+
                 if (data) {
                   if (data != 'No Record Available' || data != 'Fetching data encountered a problem' || data != '') {
                     ConvertJson = JSON.parse(data);
@@ -7468,14 +8035,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                         CloneObject.querySelector('.opt_element p.up').setAttribute('data-id', unique_id);
                         CloneObject.querySelector('.opt_element p.dp').setAttribute('data-id', unique_id);
                         tableCell.prepend(CloneObject);
-                        CloneObject.setAttribute('id',false);
+                        CloneObject.setAttribute('id', false);
                         OptionElements = document.querySelectorAll(".option");
                         const element = CloneObject.querySelector('.option');
                         element.addEventListener("click", function () {
                           var ElementOptions = element.querySelector(".opt_element");
                           ElementOptions.classList.add("active");
                         });
-                        if(MainFormDel != null){
+                        if (MainFormDel != null) {
                           MainFormDel.classList.add('hide');
                         }
                       }
@@ -7484,7 +8051,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                   }
                 }
               } else {
-                console.log("cannot find endpoint");
+                console.error("cannot find endpoint");
               }
             } catch (error) {
               console.error(error);
@@ -7492,7 +8059,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
           }
 
         }
-        if(location == "FinanceAccount"){
+        if (location == "FinanceAccount") {
           const loaderBtn = document.querySelector(".event_menu_add.form_data .loader");
           const AddEventMenu = document.querySelector(".event_menu_add.form_data");
           const AddEventMenuForm = AddEventMenu.querySelector("form");
@@ -7516,7 +8083,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
             let data;
             try {
               const formMain = new FormData(AddEventMenuForm);
-              
+
               const Request = await fetch(APIDOCS, {
                 method: "POST",
                 body: formMain,
@@ -7527,12 +8094,12 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
                 loaderBtn.innerText = data;
                 if (data == 'Upload was a success') {
                   requestData = data;
-                 
+
                   if (!validateKey) {
                     validateKey = "";
                   }
                 }
-              } 
+              }
             } catch (error) {
               console.error(error);
             }
@@ -7541,7 +8108,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   function setIntervalData() {
@@ -7635,7 +8202,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
 
           }
         } else {
-          console.log("Cannot iniate Download");
+          console.error("Cannot iniate Download");
         }
       } catch (error) {
         console.error(error);
@@ -7689,7 +8256,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
         }, 100);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         loader_progress.classList.remove("active");
         DomManipulationElement.classList.remove("load");
         ContentDom.classList.remove("load");
@@ -7697,24 +8264,20 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
   }
   function ConditionFeilds(arrayArg) {
     clearance = true;
-    console.log(arrayArg);
     arrayArg.forEach((element) => {
       if (
         element.value == "" ||
         element.value == " " ||
         element.value == null
       ) {
-        console.log(element.value, element);
         clearance = false;
       }
     });
-
-    console.log(clearance);
     return clearance;
   }
   function RestructurePages(number) {
-    pagesMain =  document.querySelector(".page_sys");
-    if(pagesMain.classList.contains('hide')){
+    pagesMain = document.querySelector(".page_sys");
+    if (pagesMain.classList.contains('hide')) {
       document.querySelector(".page_sys").classList.remove('hide');
     }
     let num = 1;
@@ -7769,7 +8332,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
       request = route.template + "?page=" + value;
       if (SearchTrigger) {
         if (location == "Transaction") {
-            numoffset = value;
+          numoffset = value;
           currentPageNum = value;
           document.querySelector(".List_filter").click();
           request = false;
@@ -7878,6 +8441,15 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick"],
       }, delay)
     }
   }
-  var Laravel = new Date();
-  get_current_date.innerText = Laravel.toDateString();
+  LogOutButton.addEventListener('click', async function () {
+    if (confirm("You are loggin out of your account, confirm request")) {
+      Logout = document.createElement('a');
+      Logout.href = '../../API/login/logout.php?logout';
+      document.querySelector('body').append(Logout);
+      Logout.click();
+    } else {
+      console.error('movemenet none');
+    }
+  });
+
 });

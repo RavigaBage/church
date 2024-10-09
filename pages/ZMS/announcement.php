@@ -1,8 +1,7 @@
 <?php
 session_start();
-include_once('../../API/notifications & token & history/autoloader.php');
-$newDataRequest = new viewData();
-
+require '../../API/vendor/autoload.php';
+$newDataRequest = new notification\viewData();
 $val = 1;
 $condition = false;
 if (isset($_GET['page'])) {
@@ -11,22 +10,22 @@ if (isset($_GET['page'])) {
 if (isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
     $token = $_SESSION['Admin_access'];
-    $known = hash('sha256',$unique_id.'admin');
-    if((hash_equals($known,$token))){
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($unique_id, "anouncement page selection", $date, "anouncement page section", "Admin Viewed Announcement page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['access_entryLog'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $newDataRequest->DataHistory($unique_id, "anouncement page selection", $date, "anouncement page section", "Admin Viewed Announcement page section");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $condition = true;
+                $_SESSION['access_entryLog'] = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-}else {
-    $condition = false;
-}
 } else {
     $condition = false;
 }
@@ -241,7 +240,7 @@ if ($condition) {
 
     <div class="event_menu_add form_data">
         <header>Create Notification</header>
-        <div class="error_information danger"  style="padding:10px;text-wrap:wrap;text-align:center;font-weight:bold;"></div>
+        <div class="error_information danger" style="padding:10px;text-wrap:wrap;text-align:center;font-weight:bold;"></div>
         <form>
             <div class="container_event">
                 <div class="field">
@@ -264,7 +263,7 @@ if ($condition) {
                         <?php
                         $data = json_decode($newDataRequest->ministries_viewList());
                         if ($data != 'No Records Available' || $data != 'Error' || $data != '' || $data != 'Fetching data encountered a problem') {
-                         
+
                             foreach ($data as $item) {
                                 $unique_id = $item->UniqueId;
                                 $name = $item->name;
@@ -280,14 +279,14 @@ if ($condition) {
                     </select>
                 </div>
                 <div class="cate_view">
-                        <div class="field">
-                            <label>Schedule Update</label>
-                            <input type="date" name="date" />
-                        </div>
-                        <div class="field" style="display:flex;gap:10px;align-items:center;">
-                            <label>Send an email</label>
-                            <input type="checkbox" name="email" style="width:20px;" />
-                        </div>
+                    <div class="field">
+                        <label>Schedule Update</label>
+                        <input type="date" name="date" />
+                    </div>
+                    <div class="field" style="display:flex;gap:10px;align-items:center;">
+                        <label>Send an email</label>
+                        <input type="checkbox" name="email" style="width:20px;" />
+                    </div>
                 </div>
                 <input hidden name="delete_key" />
                 <button>Record message</button>

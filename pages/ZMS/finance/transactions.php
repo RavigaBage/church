@@ -7,23 +7,26 @@ if (isset($_GET['page'])) {
 } else {
     $num = 1;
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['Transaction_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $newDataRequest->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard Transaction", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['Transaction_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
 
@@ -155,17 +158,17 @@ if ($condition) {
                             <path d="M480-360 280-560h400L480-360Z" />
                         </svg>
                         <select class="select" name="accfilter">
-                        <?php
-                        $data = json_decode($newDataRequest->Accounts_list_view());
-                        if ($data != "" || $data != 'Error Occurred' || $data != 'Not Records Available') {
-                            foreach ($data as $data_row) {
-                                echo "<option value='$data_row'>$data_row</option>";
+                            <?php
+                            $data = json_decode($newDataRequest->Accounts_list_view());
+                            if ($data != "" || $data != 'Error Occurred' || $data != 'Not Records Available') {
+                                foreach ($data as $data_row) {
+                                    echo "<option value='$data_row'>$data_row</option>";
+                                }
                             }
-                        }
-                        ?>
+                            ?>
                         </select>
 
-                        
+
                     </div>
 
                     <div class="filter_option">
@@ -358,15 +361,15 @@ if ($condition) {
                                 echo '<div class="' . $class . '">' . $i . '</div>';
                             }
                         } else {
-                            
+
                             for ($i = $start; $i < ($original_1); $i++) {
                                 $class = "";
                                 if ($i == $num) {
                                     $class = 'active';
                                 }
-                                echo '<div class="' . $class . '">' . $i . '</div>';                               
+                                echo '<div class="' . $class . '">' . $i . '</div>';
                             }
-                            
+
 
                         }
                         if ($total_raw > 6) {
@@ -378,10 +381,10 @@ if ($condition) {
                             echo '<span>......</span><div>' . $final . '</div>';
                         } else {
                             $class = '';
-                            if($num == $final){
+                            if ($num == $final) {
                                 $class = 'active';
                             }
-                            echo '<div class='.$class.'>' . $final . '</div>';
+                            echo '<div class=' . $class . '>' . $final . '</div>';
                         }
                         ?>
                     </div>
@@ -392,7 +395,7 @@ if ($condition) {
         ?>
     </div>
     <?php
-}  else {
+} else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

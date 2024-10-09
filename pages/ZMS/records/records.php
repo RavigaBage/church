@@ -1,7 +1,7 @@
 <?php
 session_start();
-include_once('../../../API/sundayRecords/autoloader.php');
-$newDataRequest = new viewData();
+require '../../../API/vendor/autoload.php';
+$viewDataClass = new Records\viewData();
 $year = date('Y');
 if (isset($_GET['year'])) {
     $year = $_GET['year'];
@@ -11,23 +11,26 @@ if (isset($_GET['data_page'])) {
 } else {
     $num = 1;
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['records_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $viewDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard records", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['records_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
     <div class="filter_wrapper relative">
@@ -88,14 +91,14 @@ if ($condition) {
         </form>
     </div>
     <div class="main_container">
-        <div class="ui_controlller">
+        <div class="ui_controller">
             <div class="profile_main ">
                 <header>SUNDAY SERVICE PROGRAMME DATA</header>
                 <div class="grid_sx tithebook">
                     <div class="profile">
                         <div class="tithe_list ancc_list">
                             <?php
-                            $data = json_decode($newDataRequest->View_List($year, $num));
+                            $data = json_decode($viewDataClass->View_List($year, $num));
                             if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
                                 echo "<header class='danger'>Not Records Available</header>";
                             } else {
@@ -448,7 +451,7 @@ if ($condition) {
                     if (isset($_SESSION['total_pages_sunDay'])) {
                         $total = $_SESSION['total_pages_sunDay'];
                     } else {
-                        $total = $newDataRequest->SundayPages();
+                        $total = $viewDataClass->SundayPages();
                         $_SESSION['total_pages_sunDay'] = $total;
                     }
                     if ($total != 'Error Occurred') {
@@ -466,7 +469,6 @@ if ($condition) {
                                 <div class="pages">
                                     <?php
                                     $loop = $total_raw;
-                                    $num = 2;
                                     $start = 1;
                                     $original_1 = $total;
                                     if ($total > 6) {
@@ -496,6 +498,7 @@ if ($condition) {
                                             echo '<div class="' . $class . '">' . $i . '</div>';
                                         }
                                     } else {
+
                                         for ($i = $start; $i < ($original_1); $i++) {
                                             $class = "";
                                             if ($i == $num) {
@@ -503,6 +506,8 @@ if ($condition) {
                                             }
                                             echo '<div class="' . $class . '">' . $i . '</div>';
                                         }
+
+
                                     }
                                     if ($total_raw > 6) {
                                         $final = $total - 1;
@@ -512,7 +517,11 @@ if ($condition) {
                                     if ($loop >= 6 && $original_1 < ($total - 2)) {
                                         echo '<span>......</span><div>' . $final . '</div>';
                                     } else {
-                                        echo '<div>' . $final . '</div>';
+                                        $class = '';
+                                        if ($num == $final) {
+                                            $class = 'active';
+                                        }
+                                        echo '<div class=' . $class . '>' . $final . '</div>';
                                     }
                                     ?>
                                 </div>
@@ -583,7 +592,7 @@ if ($condition) {
                         </div>
                         <div class="tithe_list ancc_list">
                             <?php
-                            $data = json_decode($newDataRequest->church_record_viewList($year, $num));
+                            $data = json_decode($viewDataClass->church_record_viewList($year, $num));
                             if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
                                 echo "<header class='danger'>Not Records Available</header>";
                             } else {
@@ -822,7 +831,7 @@ if ($condition) {
                     if (isset($_SESSION['total_pages_record'])) {
                         $total = $_SESSION['total_pages_record'];
                     } else {
-                        $total = $newDataRequest->RecordPages();
+                        $total = $viewDataClass->RecordPages();
                         $_SESSION['total_pages_record'] = $total;
                     }
                     if ($total != 'Error Occurred') {
@@ -840,7 +849,6 @@ if ($condition) {
                                 <div class="pages">
                                     <?php
                                     $loop = $total_raw;
-                                    $num = 2;
                                     $start = 1;
                                     $original_1 = $total;
                                     if ($total > 6) {
@@ -870,6 +878,7 @@ if ($condition) {
                                             echo '<div class="' . $class . '">' . $i . '</div>';
                                         }
                                     } else {
+
                                         for ($i = $start; $i < ($original_1); $i++) {
                                             $class = "";
                                             if ($i == $num) {
@@ -877,6 +886,8 @@ if ($condition) {
                                             }
                                             echo '<div class="' . $class . '">' . $i . '</div>';
                                         }
+
+
                                     }
                                     if ($total_raw > 6) {
                                         $final = $total - 1;
@@ -886,7 +897,11 @@ if ($condition) {
                                     if ($loop >= 6 && $original_1 < ($total - 2)) {
                                         echo '<span>......</span><div>' . $final . '</div>';
                                     } else {
-                                        echo '<div>' . $final . '</div>';
+                                        $class = '';
+                                        if ($num == $final) {
+                                            $class = 'active';
+                                        }
+                                        echo '<div class=' . $class . '>' . $final . '</div>';
                                     }
                                     ?>
                                 </div>
@@ -916,7 +931,7 @@ if ($condition) {
     </div>
     <?php
 
-}  else {
+} else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

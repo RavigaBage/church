@@ -1,18 +1,25 @@
 <?php
+namespace UserApi;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -35,7 +42,7 @@ class fetchData extends DBH
     {
         $exportData = 0;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-        $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+        $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
@@ -59,8 +66,8 @@ class fetchData extends DBH
                         $target4 = "../Images_folder/users/$filename4";
                         if (move_uploaded_file($Image_tmp_name, $target4)) {
                             $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET  `image` = ? where `unique_id` = ?");
-                            $stmt->bindParam('1', $filename4, PDO::PARAM_STR);
-                            $stmt->bindParam('2', $unique_id, PDO::PARAM_STR);
+                            $stmt->bindParam('1', $filename4, \PDO::PARAM_STR);
+                            $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
                             if (!$stmt->execute()) {
                                 $stmt = null;
                                 $Error = json_encode('Fetching data encountered a problems');
@@ -87,7 +94,7 @@ class fetchData extends DBH
     {
         $exportData = 0;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-        $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+        $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
@@ -96,9 +103,9 @@ class fetchData extends DBH
 
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ObjMainList = new stdClass();
+            $ObjMainList = new \stdClass();
             $data = $result[0];
-            $objectClass = new stdClass();
+            $objectClass = new \stdClass();
             $unique_id = $data['unique_id'];
             $Firstname = $data['Firstname'];
             $Othername = $data['Othername'];
@@ -163,7 +170,7 @@ class fetchData extends DBH
 
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -175,13 +182,13 @@ class fetchData extends DBH
             } else {
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `Firstname`=?, `Othername` =?, `email` =?, `contact`=?,`About`=?,`Address`=? where `unique_id` = ?");
 
-                $stmt->bindParam('1', $Name, PDO::PARAM_STR);
-                $stmt->bindParam('2', $OtherName, PDO::PARAM_STR);
-                $stmt->bindParam('3', $Email, PDO::PARAM_STR);
-                $stmt->bindParam('4', $contact, PDO::PARAM_STR);
-                $stmt->bindParam('5', $About, PDO::PARAM_STR);
-                $stmt->bindParam('6', $Address, PDO::PARAM_STR);
-                $stmt->bindParam('7', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $Name, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $OtherName, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $Email, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $contact, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $About, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $Address, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     print_r($stmt->errorInfo());
                     $stmt = null;
@@ -217,7 +224,7 @@ class fetchData extends DBH
 
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -232,8 +239,8 @@ class fetchData extends DBH
 
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `location` =? where `unique_id` = ?");
 
-                $stmt->bindParam('1', $location, PDO::PARAM_STR);
-                $stmt->bindParam('2', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $location, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
@@ -270,7 +277,7 @@ class fetchData extends DBH
 
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -328,7 +335,7 @@ class fetchData extends DBH
 
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -342,8 +349,8 @@ class fetchData extends DBH
                 $passkey = password_hash($password);
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `location` =? where `unique_id` = ?");
 
-                $stmt->bindParam('1', $passkey, PDO::PARAM_STR);
-                $stmt->bindParam('2', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $passkey, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
@@ -368,6 +375,79 @@ class fetchData extends DBH
             return $resultValidate;
         }
     }
+    protected function password_request_set($Email, $id)
+    {
+        $clean = true;
+        $exportData = 0;
+        $condition = true;
+        $clean = true;
+
+        if ($clean) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`password_reset` where `token`=?");
+            $stmt->bindParam('1', $id, \PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encountered a problem';
+                exit($Error);
+            }
+            if ($stmt->rowCount() > 0) {
+                $resultMail = $stmt->fetchAll()[0]['tokenValid'];
+                if ($resultMail) {
+                    $fulldaya = 3 * 60 * 60;
+                    $SetTime = time() - date($resultMail);
+                    if ($fulldaya >= $SetTime) {
+                        $exportData = 'You requested for a password, please check your mail';
+                        $condition = false;
+                    } else {
+                        $condition = true;
+                    }
+                }
+
+            }
+            if ($condition) {
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`password_reset` (`token`, `tokenRequest`, `tokenValid`, `email`) VALUES (?,?,?,?)");
+                $Token = hash('sha256', $id);
+                $validaTime = time();
+                $stmt->bindParam('1', $id, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $Token, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $validaTime, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $Email, \PDO::PARAM_STR);
+
+                if (!$stmt->execute()) {
+                    print_r($stmt->errorInfo());
+                    $stmt = null;
+                    $Error = 'Fetching data encountered a problem';
+                    exit($Error);
+                } else {
+                    $exportData = 'You request has been approved please check your email';
+
+                }
+            }
+        }
+        return $exportData;
+    }
+    protected function password_fetch_id($token)
+    {
+        $clean = true;
+        $exportData = 0;
+        $condition = true;
+        $clean = true;
+
+        if ($clean) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`password_reset` where `tokenRequest`=?");
+            $stmt->bindParam('1', $token, \PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = 'Fetching data encountered a problem';
+                exit($Error);
+            }
+            if ($stmt->rowCount() > 0) {
+                $resultId = $stmt->fetchAll()[0]['token'];
+                $exportData = $resultId;
+            }
+        }
+        return $exportData;
+    }
 
     protected function About_data($unique_id, $About)
     {
@@ -389,7 +469,7 @@ class fetchData extends DBH
 
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -404,8 +484,8 @@ class fetchData extends DBH
 
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` set `About` =? where `unique_id` = ?");
 
-                $stmt->bindParam('1', $About, PDO::PARAM_STR);
-                $stmt->bindParam('2', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $About, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problems';
@@ -435,7 +515,7 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $Ministries_list = new stdClass();
+        $Ministries_list = new \stdClass();
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`department` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
             $stmt = null;
@@ -448,8 +528,9 @@ class fetchData extends DBH
                 $name = $data['name'];
                 $membership = $data['members'];
                 $date = $data['Date'];
+
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ? ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
@@ -458,7 +539,7 @@ class fetchData extends DBH
                 if ($stmt->rowCount() > 0) {
                     $data = $stmt->fetchAll();
                     $position = $data[0]['position'];
-                    $Ministries_data = new stdClass();
+                    $Ministries_data = new \stdClass();
 
                     $Ministries_data->name = $name;
                     $Ministries_data->membership = $membership;
@@ -469,10 +550,16 @@ class fetchData extends DBH
                 }
 
             }
-            $exportData = json_encode($Ministries_list);
+            if ($Ministries_list == new \stdClass()) {
+                $exportData = 'No Records Available';
+            } else {
+                $exportData = json_encode($Ministries_list);
+            }
+
+
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'No Records Available';
         }
 
         if ($resultCheck) {
@@ -499,8 +586,6 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
-
-
     protected function notification($unique_id, $num)
     {
         $exportData = '';
@@ -518,7 +603,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $name = $data['name'];
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -540,7 +625,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
-                $ExportMain = new stdClass();
+                $ExportMain = new \stdClass();
                 foreach ($result as $data) {
                     $name = $data['title'];
                     $receiver = $data['Reciever'];
@@ -548,7 +633,7 @@ class fetchData extends DBH
                     $date = $data['date'];
                     $fileName = $data['file'];
                     $Id = $data['unique_id'];
-                    $ExportMainSend = new stdClass();
+                    $ExportMainSend = new \stdClass();
                     if (in_array($receiver, $department_list) || $receiver == 'all') {
                         $ExportMainSend->title = $name;
                         $ExportMainSend->message = $message;
@@ -592,7 +677,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $name = $data['name'];
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -624,7 +709,7 @@ class fetchData extends DBH
                         }
                         if ($stmt->rowCount() > 0) {
                             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeannouncement`.`$name` where `unique_id` = ? ORDER BY `date` DESC");
-                            $stmt->bindParam(1, $unique_id, PDO::PARAM_STR);
+                            $stmt->bindParam(1, $unique_id, \PDO::PARAM_STR);
                             if (!$stmt->execute()) {
                                 $stmt = null;
                                 $Error = 'Fetching data encounted a problem';
@@ -678,7 +763,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $name = $data['name'];
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
@@ -696,7 +781,7 @@ class fetchData extends DBH
             }
             $username = "";
             $stmt_r = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
-            $stmt_r->bindParam('1', $unique_id, PDO::PARAM_STR);
+            $stmt_r->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt_r->execute()) {
                 $stmt_r = null;
                 $Error = 'Fetching data encountered a problem';
@@ -726,7 +811,7 @@ class fetchData extends DBH
                             if ($stmt->rowCount() > 0) {
 
                                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeannouncement`.`$name` where `unique_id` = ? ORDER BY `date` DESC");
-                                $stmt->bindParam(1, $unique_id, PDO::PARAM_STR);
+                                $stmt->bindParam(1, $unique_id, \PDO::PARAM_STR);
                                 if (!$stmt->execute()) {
                                     $stmt = null;
                                     $Error = 'Fetching data encounted a problem';
@@ -735,10 +820,10 @@ class fetchData extends DBH
 
                                 if (!$stmt->rowCount() > 0) {
                                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeannouncement`.`$name` (`unique_id`, `Date`, `username`, `$reciever`) VALUES(?,?,?,?)");
-                                    $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                                    $stmt->bindParam('2', $date, PDO::PARAM_STR);
-                                    $stmt->bindParam('3', $username, PDO::PARAM_STR);
-                                    $stmt->bindParam('4', $username, PDO::PARAM_STR);
+                                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                                    $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+                                    $stmt->bindParam('3', $username, \PDO::PARAM_STR);
+                                    $stmt->bindParam('4', $username, \PDO::PARAM_STR);
 
                                     if (!$stmt->execute()) {
                                         $stmt = null;
@@ -754,10 +839,10 @@ class fetchData extends DBH
 
                             } else {
                                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeannouncement`.`$name` (`unique_id`, `Date`, `username`, `$reciever`) VALUES(?,?,?,?)");
-                                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                                $stmt->bindParam('2', $date, PDO::PARAM_STR);
-                                $stmt->bindParam('3', $username, PDO::PARAM_STR);
-                                $stmt->bindParam('4', $username, PDO::PARAM_STR);
+                                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                                $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+                                $stmt->bindParam('3', $username, \PDO::PARAM_STR);
+                                $stmt->bindParam('4', $username, \PDO::PARAM_STR);
 
                                 if (!$stmt->execute()) {
                                     $stmt = null;
@@ -800,7 +885,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportMain = new stdClass();
+            $ExportMain = new \stdClass();
             foreach ($result as $data) {
                 $id = $data['unique_id'];
                 $name = $data['name'];
@@ -809,7 +894,7 @@ class fetchData extends DBH
                 $date = $data['Date'];
                 $month = $data['month'];
                 $year = $data['year'];
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
                 $ExportSend->id = $id;
                 $ExportSend->name = $name;
                 $ExportSend->payment = $payment;
@@ -883,7 +968,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $name = $data['name'];
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ?ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';
@@ -901,7 +986,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
-                $ExportMain = new stdClass();
+                $ExportMain = new \stdClass();
 
                 foreach ($result as $data) {
                     $name = $data['name'];
@@ -909,7 +994,7 @@ class fetchData extends DBH
                     $department = $data['department'];
                     $date = $data['date'];
                     $Id = $data['unique_id'];
-                    $ExportMainSend = new stdClass();
+                    $ExportMainSend = new \stdClass();
                     if (in_array($department, $department_list) || $department == 'All users') {
                         $paidAmount = 0;
                         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoedues`.`$name` where `user`='$unique_id' ORDER BY `date` DESC");
@@ -967,7 +1052,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $name = $data['name'];
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name` where `unique_id` = ? ORDER BY `id` DESC");
-                $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted i a problem';
@@ -1002,7 +1087,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportMain = new stdClass();
+            $ExportMain = new \stdClass();
             foreach ($result as $data) {
                 $webpage = $data['webpage'];
                 $gateway = $data['gateway'];
@@ -1012,7 +1097,7 @@ class fetchData extends DBH
                 $amount = $data['amount'];
                 $idD = $data['transaction_id'];
 
-                $newExport = new stdClass();
+                $newExport = new \stdClass();
                 $newExport->webpage = $webpage;
                 $newExport->gateway = $gateway;
                 $newExport->status = $status;

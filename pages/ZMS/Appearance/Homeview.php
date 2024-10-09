@@ -1,26 +1,28 @@
 <?php
 session_start();
-include_once('../../../API/notifications & token & history/autoloader.php');
-$viewDataClass = new viewData();
+require '../../../API/vendor/autoload.php';
+$viewDataClass = new Ministry\viewData();
 $condition = false;
-if (isset($_SESSION['login_details'])) {
-    $login_details = $_SESSION['login_details'];
-    if (!isset($_SESSION['theme_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $viewDataClass->DataHistory($login_details, "Theme selection", $date, "Appearance section", "Admin Viewed Theme section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['theme_log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $viewDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard Theme page", "Admin permit was used logged in to theme page");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['theme_log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['theme_entryLog'] = true;
         }
     } else {
-
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
     <div class="filter_wrapper relative">

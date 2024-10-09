@@ -1,20 +1,25 @@
 <?php
+namespace notification;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
-
-
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new PDO($dsm, $this->user, $this->password);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
+            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             print "Error! " . $e->getMessage();
             die();
         }
@@ -371,7 +376,7 @@ class fetchData extends DBH
                 $total_pages = $stmt_pages->rowCount();
             }
             $result = $stmt->fetchAll();
-            $ObjData = new stdClass();
+            $ObjData = new \stdClass();
 
 
             $date = date('Y-m-d H:i:s');
@@ -392,7 +397,7 @@ class fetchData extends DBH
                 $file = $data['file'];
                 $status = $data['status'];
 
-                $DataName = new stdClass();
+                $DataName = new \stdClass();
                 $DataName->Id = $unique_id;
                 $DataName->name = $name;
                 $DataName->receiver = $receiver;
@@ -403,7 +408,7 @@ class fetchData extends DBH
 
                 $ObjData->$item = $DataName;
             }
-            $MainExport = new stdClass();
+            $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
             $MainExport->result = $ObjData;
             $exportData = json_encode($MainExport);
@@ -493,7 +498,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $data['name'];
                 $members = $data['members'];
@@ -503,7 +508,7 @@ class fetchData extends DBH
                     $message = substr($message, 0, 100) . "....";
                 }
 
-                $objectClass = new stdClass();
+                $objectClass = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
                 $objectClass->name = $name;
                 $objectClass->members = $members;
@@ -538,7 +543,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ObjData = new stdClass();
+            $ObjData = new \stdClass();
             foreach ($result as $data) {
                 $name = $data['title'];
                 $receiver = $data['Reciever'];
@@ -550,7 +555,7 @@ class fetchData extends DBH
                 $file = $data['file'];
                 $status = $data['status'];
 
-                $DataName = new stdClass();
+                $DataName = new \stdClass();
                 $DataName->Id = $unique_id;
                 $DataName->name = $name;
                 $DataName->receiver = $receiver;
@@ -585,7 +590,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ObjData = new stdClass();
+            $ObjData = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->cleanStringData($data['title']);
                 $receiver = $this->cleanStringData($data['Reciever']);
@@ -597,7 +602,7 @@ class fetchData extends DBH
                 $file = $this->cleanStringData($data['file']);
                 $status = $this->cleanStringData($data['status']);
 
-                $DataName = new stdClass();
+                $DataName = new \stdClass();
                 $DataName->Id = $unique_id;
                 $DataName->name = $name;
                 $DataName->receiver = $receiver;
@@ -659,14 +664,14 @@ class fetchData extends DBH
     protected function token($pass, $new, $timer, $date)
     {
         $exportData = "";
-        $pass = hash('sha256',$pass);
+        $pass = hash('sha256', $pass);
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`permission` where `status` like '%Active%'");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = json_encode('Fetching data encounted a problem');
             exit($Error);
         }
-        $unique_id = rand(time(), 1999);
+        $unique_id = $_SESSION['unique_id'];
         $str = 'Active';
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
@@ -678,11 +683,11 @@ class fetchData extends DBH
                     exit($Error);
                 } else {
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`permission`(`unique_id`, `Code`, `duration`, `date`, `status`) VALUES (?,?,?,?,?)");
-                    $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-                    $stmt->bindParam('2', $pass, PDO::PARAM_STR);
-                    $stmt->bindParam('3', $new, PDO::PARAM_STR);
-                    $stmt->bindParam('4', $date, PDO::PARAM_STR);
-                    $stmt->bindParam('5', $str, PDO::PARAM_STR);
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $pass, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $new, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $str, \PDO::PARAM_STR);
 
                     if (!$stmt->execute()) {
                         $stmt = null;
@@ -704,11 +709,11 @@ class fetchData extends DBH
 
         } else {
             $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`permission`(`unique_id`, `Code`, `duration`, `date`, `status`) VALUES (?,?,?,?,?)");
-            $stmt->bindParam('1', $unique_id, PDO::PARAM_STR);
-            $stmt->bindParam('2', $pass, PDO::PARAM_STR);
-            $stmt->bindParam('3', $new, PDO::PARAM_STR);
-            $stmt->bindParam('4', $date, PDO::PARAM_STR);
-            $stmt->bindParam('5', $str, PDO::PARAM_STR);
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $pass, \PDO::PARAM_STR);
+            $stmt->bindParam('3', $new, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+            $stmt->bindParam('5', $str, \PDO::PARAM_STR);
 
             if (!$stmt->execute()) {
                 $stmt = null;
@@ -752,7 +757,7 @@ class fetchData extends DBH
             $exportData = 'No Records Available';
 
         }
-        
+
 
         return json_encode($exportData);
     }
@@ -773,7 +778,7 @@ class fetchData extends DBH
         }
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
-            $ExportSendMain = new stdClass();
+            $ExportSendMain = new \stdClass();
 
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['login_details'];
@@ -789,7 +794,7 @@ class fetchData extends DBH
                 $sitename = $data['sitename'];
                 $action = $data['action'];
 
-                $ExportSend = new stdClass();
+                $ExportSend = new \stdClass();
                 $unique_id = rand(1012, time());
                 $ExportSend->name = $name;
                 $ExportSend->event = $event;
@@ -845,7 +850,7 @@ class fetchData extends DBH
                 } else {
                     return json_encode('Success');
                 }
-            }else{
+            } else {
                 echo 'Admin is a fake';
             }
         }

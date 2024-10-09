@@ -218,22 +218,52 @@ define(function () {
 
       }
       if (location == 'password') {
-        document.getElementById('contact-form').addEventListener('submit', function (event) {
-          event.preventDefault();
-          let Email = document.querySelector('#email').value;
-          emailjs.sendForm('service_sffdk0b', 'template_jihe9xi', this, { recipientEmail: Email })
-            .then(() => {
-              console.log('SUCCESS!');
-            }, (error) => {
-              console.log('FAILED...', error);
+        const EmailInput = document.querySelector('input[type="email"]')
+        var RequestBtn = document.querySelector('#request_btn');
+        // document.getElementById('contact-form').addEventListener('submit', function (event) {
+        //   event.preventDefault();
+        //   let Email = document.querySelector('#email').value;
+        //   emailjs.sendForm('service_sffdk0b', 'template_jihe9xi', this, { recipientEmail: Email })
+        //     .then(() => {
+        //       console.log('SUCCESS!');
+        //     }, (error) => {
+        //       console.log('FAILED...', error);
+        //     });
+        // });
+        RequestBtn.addEventListener('click', async function () {
+          let data;
+          APIDOCS = '../API/userpage-api/data_process.php?submit=true&&request=password&&user=true';
+          dataSend = {
+            Email: EmailInput.value,
+            unique_id: RequestBtn.getAttribute('data-value')
+          }
+          try {
+            const Request = await fetch(APIDOCS, {
+              method: "POST",
+              body: JSON.stringify(dataSend),
+              headers: {
+                "Content-Type": "application/json",
+              },
             });
-        });
 
-        (function () {
-          emailjs.init({
-            publicKey: 'RtfFLq0ZUtE5gn-AE',
-          });
-        })();
+            if (Request.status === 200) {
+              data = await Request.json();
+              if (data) {
+                console.log(data)
+              }
+            } else {
+              console.log("cannot find endpoint");
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        })
+
+          (function () {
+            emailjs.init({
+              publicKey: 'RtfFLq0ZUtE5gn-AE',
+            });
+          })();
 
       }
     }

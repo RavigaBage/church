@@ -358,8 +358,6 @@ async function PHPREQUEST(year, month, day) {
         }
 
       }
-    } else {
-      console.log("cannot find endpoint");
     }
   } catch (errors) {
     console.log(errors);

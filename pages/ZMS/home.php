@@ -24,15 +24,15 @@ if ($login_details) {
         $condition = true;
     }
 }
-$CheckYearBudget = 'zoe_'.date('Y').'_budget';
-if(!$FinanceDataClass->CheckBudget($CheckYearBudget)){
-    if($FinanceDataClass->CreateBudget($CheckYearBudget)){
+$CheckYearBudget = 'zoe_' . date('Y') . '_budget';
+if (!$FinanceDataClass->CheckBudget($CheckYearBudget)) {
+    if ($FinanceDataClass->CreateBudget($CheckYearBudget)) {
         $condition = true;
         echo 'Set';
-    }else{
+    } else {
         $condition = false;
     }
-    
+
 }
 if ($condition) {
     ?>
@@ -147,7 +147,7 @@ if ($condition) {
                                         <h1>
                                             <?php
                                             $num_val = (100 * $status) / $count;
-                                            $number_dp = number_format($num_val,2,'.',' ').'%';
+                                            $number_dp = number_format($num_val, 2, '.', ' ') . '%';
                                             echo $number_dp;
 
                         }
@@ -279,7 +279,7 @@ if ($condition) {
                     if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
                         echo "<p>" . $data . "</p>";
                     } else {
-                        echo '<p>The partnership program has generated a total of <b style="color:crimson;"> Ȼ  '.$data.' </b> since january ' . $Year . '</p>';
+                        echo '<p>The partnership program has generated a total of <b style="color:crimson;"> Ȼ  ' . $data . ' </b> since january ' . $Year . '</p>';
                     }
                     ?>
                 </div>
@@ -292,7 +292,7 @@ if ($condition) {
                     if ($data == "" || $data == 'Error Occurred' || $data == 'Not Records Available') {
                         echo "error";
                     } else {
-                        print_r($data);
+                        echo $data . "+";
                     }
                     ?></b>
                 </div>
@@ -305,6 +305,7 @@ if ($condition) {
                         $memberView_New = json_decode($memberView);
                         $i = 0;
                         foreach ($memberView_New as $item) {
+                            $item = json_decode($item);
                             if ($i < 6) {
                                 echo '<img src="../../API/images_folder/users/' . $item->image . '" alt="">';
                             }
@@ -326,6 +327,7 @@ if ($condition) {
                         $memberView_New = json_decode($memberView);
                         $i = 0;
                         foreach ($memberView_New as $item) {
+                            $item = json_decode($item);
                             if ($i < 2) {
                                 echo '
                                   <div class="item">

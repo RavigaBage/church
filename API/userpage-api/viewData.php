@@ -1,4 +1,5 @@
 <?php
+namespace UserApi;
 class viewData extends fetchData
 {
 
@@ -144,6 +145,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
     public function personalData_set($unique_id, $Name, $OtherName, $Email, $contact, $About, $Address)
     {
         $RecordsResult = $this->personal_data($unique_id, $Name, $OtherName, $Email, $contact, $About, $Address);
@@ -190,6 +192,21 @@ class viewData extends fetchData
     {
         $RecordsResult = $this->password_update($unique_id, $passkey);
         return $RecordsResult;
+    }
+    public function password_fetch_id_user($token)
+    {
+        $RecordsResult = $this->password_fetch_id($token);
+        return $RecordsResult;
+    }
+    public function Password_request($Email, $id)
+    {
+        $RecordsResult = $this->password_request_set($Email, $id);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
     }
 
 }

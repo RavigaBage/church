@@ -1,5 +1,6 @@
 <?php
-require('autoloader.php');
+require '../vendor/autoload.php';
+$viewDataClass = new notification\ViewData;
 session_start();
 if (isset($_GET['submit'])) {
 
@@ -11,7 +12,7 @@ if (isset($_GET['submit'])) {
             $new = $data['duration'];
             $date = date('Y-m-d H:i:s');
 
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->setToken($pass, $new, $new, $date);
             echo json_encode($result_data);
         } catch (Exception $e) {
@@ -27,7 +28,7 @@ if (isset($_GET['submit'])) {
             $data = json_decode(file_get_contents("php://input"), true);
             $pass = $data['key'];
 
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->Theme($pass);
             echo json_encode($result_data);
         } catch (Exception $e) {
@@ -46,7 +47,7 @@ if (isset($_GET['submit'])) {
             $receiver = $_POST['receiver'];
             $message = $_POST['message'];
             $date = $_POST['date'];
-            $viewDataClass = new viewData();
+
             if ($_GET['submit'] == 'true') {
                 $result_data = $viewDataClass->annc_upload($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name);
             } else if ($_GET['submit'] == 'update') {
@@ -66,7 +67,7 @@ if (isset($_GET['submit'])) {
             $data = json_decode(file_get_contents("php://input"), true);
             $pass = $data['key_Data'];
             $Id = $data['IdData'];
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->annc_status($pass, $Id);
             echo json_encode($result_data);
         } catch (Exception $e) {
@@ -78,7 +79,7 @@ if (isset($_GET['submit'])) {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             $pass = $data['key'];
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->ass_delete($pass);
             echo json_encode($result_data);
         } catch (Exception $e) {
@@ -92,7 +93,7 @@ if (isset($_GET['submit'])) {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             $num = $data['key'];
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->annc_liveUpdate($num);
 
             echo json_encode($result_data);
@@ -107,7 +108,7 @@ if (isset($_GET['submit'])) {
             $data = json_decode(file_get_contents("php://input"), true);
             $name = $data['key'];
             $nk = $data['numData'];
-            $viewDataClass = new viewData();
+
             $result_data = $viewDataClass->annc_SearchRequest($name, $nk);
             echo json_encode($result_data);
         } catch (Exception $e) {

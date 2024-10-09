@@ -1,11 +1,35 @@
-const sign_in_btn = document.querySelector("#sign-in-btn");
-const sign_up_btn = document.querySelector("#sign-up-btn");
-const container = document.querySelector(".container");
+try {
+  const formData = document.querySelector('form');
+  let EmailAddress = document.querySelector('input[type="email"]');
+  let textArea = document.querySelector('textarea');
 
-sign_up_btn.addEventListener("click", () => {
-  container.classList.add("sign-up-mode");
-});
+  function EmailSend(Address, textArea) {
+    Values = [Address, textArea];
+    Values.forEach(element => {
+      if (element == '' || element == ' ') {
+        return "All fields are required !!";
+      } else {
+        let Email = document.querySelector('#email').value;
+        emailjs.sendForm('service_sffdk0b', 'template_jihe9xi', this, { recipientEmail: Email })
+          .then(() => {
+            return 'SUCCESS!';
+          }, (error) => {
+            return 'FAILED...', error;
+          });
 
-sign_in_btn.addEventListener("click", () => {
-  container.classList.remove("sign-up-mode");
-});
+      }
+    });
+  }
+  formData.addEventListener('submit', function (e) {
+    e.preventDefault();
+    ValueData = EmailSend(EmailAddress.value, textArea.value);
+    alert(ValueData);
+  });
+  (function () {
+    emailjs.init({
+      publicKey: 'RtfFLq0ZUtE5gn-AE',
+    });
+  })();
+} catch (error) {
+  console.log(error);
+}

@@ -1,16 +1,22 @@
 <?php
 namespace Login;
+global $passwordKey;
+$dir = 'http://localhost/database/church/API/22cca3e2e75275b0753f62f2e6ee9bcf95562423e7455fc0ae9fa73e41226dba';
+$dotenv = \Dotenv\Dotenv::createImmutable($dir);
+$dotenv->safeLoad();
+$passwordKey = $_ENV['database_passkey'];
 class DBH
 {
     private $host = 'localhost';
     private $user = 'root';
-    private $password = '';
+    private $password = "";
 
     protected function data_connect()
     {
+        global $passwordKey;
         try {
             $dsm = 'mysql:host=' . $this->host;
-            $pdo = new \PDO($dsm, $this->user, $this->password);
+            $pdo = new \PDO($dsm, $this->user, $passwordKey);
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             return $pdo;
         } catch (\PDOException $e) {
@@ -79,6 +85,7 @@ class fetchData extends DBH
         }
 
     }
+
     protected function UserLogin($Key, $User)
     {
         $exportData = "";
@@ -99,17 +106,23 @@ class fetchData extends DBH
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
                 $Othername = $data['Othername'];
-                $details = new \stdClass();
-                $details->id = $unique_id;
-                $details->name = $Firstname . ' ' . $Othername;
-                $exportData = $details;
-                if ($data['Status'] == 'Admin') {
-                    if (!isset($_SESSION['Admin_access'])) {
-                        $_SESSION['Admin_access'] = hash('sha256', $unique_id . 'admin');
+                $status = strtolower($data['Status']);
+                if ($status == 'active' || $status == 'admin') {
+                    $details = new \stdClass();
+                    $details->id = $unique_id;
+                    $details->name = $Firstname . ' ' . $Othername;
+                    $exportData = $details;
+                    if ($data['Status'] == 'Admin') {
+                        if (!isset($_SESSION['Admin_access'])) {
+                            $_SESSION['Admin_access'] = hash('sha256', $unique_id . 'admin');
+                        }
                     }
+                    $_SESSION['user_token'] = hash('sha256', $unique_id);
+                    $_SESSION['unique_id'] = $unique_id;
+                } else {
+                    $exportData = 'Your account has been set to Inactive, contact your administrator to make the necessary changes';
                 }
-                $_SESSION['user_token'] = hash('sha256', $unique_id);
-                $_SESSION['unique_id'] = $unique_id;
+
             } else {
                 $exportData = 'Wrong credential';
             }
@@ -118,6 +131,48 @@ class fetchData extends DBH
 
         } else {
             $exportData = 'Wrong credentials';
+        }
+
+
+        return $exportData;
+
+    }
+    protected function UserPermission($Key)
+    {
+        $exportData = "";
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`permission` where `status` = 'Active'");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $exportData = 'Fetching data encounted a problem';
+            exit();
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new \stdClass();
+            $data = $result[0];
+            $password = $data['Code'];
+            $passCheck = hash('sha256', $Key);
+            if (hash_equals($passCheck, $password)) {
+                $unique_id = $data['unique_id'];
+                $details = new \stdClass();
+                $details->id = $unique_id;
+                $exportData = $details;
+                if (!isset($_SESSION['Admin_permit'])) {
+                    $_SESSION['Admin_access'] = hash('sha256', $unique_id . 'admin');
+                    $_SESSION['Admin_permit'] = hash('sha256', $unique_id . 'admin');
+                }
+                $_SESSION['user_token'] = hash('sha256', $unique_id);
+                $_SESSION['unique_id'] = $unique_id;
+
+
+            } else {
+                $exportData = 'Wrong credential';
+            }
+
+
+
+        } else {
+            $exportData = 'Token has expired, please request a new token';
         }
 
 

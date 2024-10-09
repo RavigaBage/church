@@ -4,15 +4,14 @@ date_default_timezone_set('UTC');
 require '../../API/vendor/autoload.php';
 $MemberDataClass = new Membership\viewData();
 $condition = false;
-
 if (isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
     $token = $_SESSION['Admin_access'];
-    $known = hash('sha256',$unique_id.'admin');
-    if((hash_equals($known,$token))){
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
         if (!isset($_SESSION['entryLog'])) {
             $date = date('Y-m-d H:i:s');
-            $newquest = $MemberDataClass->DataHistory($unique_id, "Admin logged in", $date, "Dashboard homepage", "Admin logged in to dashboard");
+            $newquest = $MemberDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard homepage", "Admin permit was used logged in to dashboard");
             $decode = json_decode($newquest);
             if ($decode == 'Success') {
                 $condition = true;
@@ -20,7 +19,7 @@ if (isset($_SESSION['unique_id'])) {
         } else {
             $condition = true;
         }
-    }else{
+    } else {
         $condition = false;
     }
 }
@@ -48,6 +47,15 @@ if ($condition) {
         <link rel="stylesheet" href="css/slick-theme.css" />
         <link rel="stylesheet" href="../error404/styles.css" />
         <script type="text/javascript" src="scripts/apexcharts-bundle/dist/apexcharts.js"></script>
+        <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // https://dashboard.emailjs.com/admin/account
+            emailjs.init({
+                publicKey: "RtfFLq0ZUtE5gn-AE",
+            });
+        })();
+    </script> -->
         <title>Zoe worship centre Admin Dashboard</title>
     </head>
 
@@ -125,7 +133,9 @@ if ($condition) {
 
                         <header class="pre_text">Security</header>
 
-                        <a href="#Access_token">
+                        <?php
+                        if (!isset($_SESSION['Admin_permit'])) {
+                            echo '<a href="#Access_token">
                             <li data-menu="generate_id">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -134,7 +144,10 @@ if ($condition) {
                                 </svg>
                                 <p>Access token</p>
                             </li>
-                        </a>
+                        </a>';
+                        }
+                        ?>
+
                         <li data-menu="projects" class="expand">
                             <div class="page_expand">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
@@ -206,8 +219,10 @@ if ($condition) {
                             </li>
                         </a>
 
+                        <?php
 
-                        <a href="#History">
+                        if (!isset($_SESSION['Admin_permit'])) {
+                            echo '<a href="#History">
                             <li data-menu="projects">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
                                     <path
@@ -215,7 +230,9 @@ if ($condition) {
                                 </svg>
                                 <p>History</p>
                             </li>
-                        </a>
+                        </a>';
+                        }
+                        ?>
                         <a href="#Library">
                             <li data-menu="interns">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -302,7 +319,16 @@ if ($condition) {
                                 <p>Departments</p>
                             </li>
                         </a>
+                        <header class="pre_text">Logs</header>
 
+                        <li data-menu="Log" id="LogOut">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                <path fill="#b10dcff6"
+                                    d="M666-440 440-666l226-226 226 226-226 226Zm-546-80v-320h320v320H120Zm400 400v-320h320v320H520Zm-400 0v-320h320v320H120Z" />
+                                />
+                            </svg>
+                            <p>Log Out</p>
+                        </li>
                     </ul>
                 </div>
             </aside>
@@ -331,7 +357,7 @@ if ($condition) {
                         </div>
 
                         <header>
-                            <h1 class="greeting">Good Morning, <span> </span></h1>
+                            <h1 class="greeting"> WELCOME <span> </span></h1>
                         </header>
                         <div class="nav_profile_link">
 
@@ -562,7 +588,7 @@ if ($condition) {
     </html>
     <?php
 } else {
-header('Location:../../login/?dmin');
+    header('Location:../../login/?admin');
 }
- 
+
 ?>

@@ -5,7 +5,6 @@ const moon = document.querySelector(".moon");
 const trees = document.querySelector(".tree");
 const mountains = document.querySelector(".mountain");
 
-const menuDiv = document.querySelector(".navigation");
 const ChristmasPage = document.querySelector("#christmas_theme");
 // if ('serviceWorker' in navigator) {
 //   window.addEventListener('load', () => {
@@ -23,14 +22,5 @@ window.addEventListener("scroll", function (e) {
   cloud_2.style.right = percentageY + "%";
   cloud_1.style.left = percentageY + "%";
   ChristmasPage.style.setProperty('--scroll', (percentageY / 3) + "px");
-  console.log(mountains);
-
 });
 
-document.addEventListener("scroll", function () {
-  if (window.scrollY > 100) {
-    sendUp.classList.add("active");
-  } else {
-    sendUp.classList.remove("active");
-  }
-});

@@ -7,23 +7,26 @@ if (isset($_GET['data_page'])) {
 } else {
     $num = 1;
 }
-if (isset($_SESSION['Admin_access'])) {
-    $login_details = $_SESSION['Admin_access'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $newDataRequest->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['Account_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $newDataRequest->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard Account", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['Account_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
 
@@ -265,7 +268,8 @@ if ($condition) {
 
                 <div class="field">
                     <label>Authorize</label>
-                    <input type="amount" class="form_condition" name="amount"  placeholder="what is the current amount in the account" required />
+                    <input type="amount" class="form_condition" name="amount"
+                        placeholder="what is the current amount in the account" required />
                 </div>
 
                 <input name="delete_key" value="000" hidden />
@@ -284,5 +288,5 @@ if ($condition) {
     <?php
 } else {
     header('Location:../error404/general404.html');
-    }
+}
 ?>

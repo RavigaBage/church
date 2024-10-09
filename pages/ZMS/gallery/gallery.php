@@ -6,23 +6,26 @@ $val = 1;
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
 }
-if (isset($_SESSION['login_details'])) {
-    $login_details = $_SESSION['login_details'];
-    if (!isset($_SESSION['access_entryLog'])) {
-        $date = date('Y-m-d H:i:s');
-        $newquest = $viewDataClass->DataHistory($login_details, "Access page selection", $date, "Access page section", "Admin Viewed Access page section");
-        $decode = json_decode($newquest);
-        if ($decode == 'Success') {
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $token = $_SESSION['Admin_access'];
+    $known = hash('sha256', $unique_id . 'admin');
+    if ((hash_equals($known, $token))) {
+        if (!isset($_SESSION['Gallery_Log'])) {
+            $date = date('Y-m-d H:i:s');
+            $newquest = $viewDataClass->DataHistory($unique_id, "Admin permit was used to logged in", $date, "Dashboard gallery", "Admin permit was used logged in to dashboard");
+            $decode = json_decode($newquest);
+            if ($decode == 'Success') {
+                $_SESSION['Gallery_Log'] = true;
+                $condition = true;
+            }
+        } else {
             $condition = true;
-            $_SESSION['access_entryLog'] = true;
         }
     } else {
-        $condition = true;
+        $condition = false;
     }
-} else {
-    $condition = false;
 }
-
 if ($condition) {
     ?>
     <div class="filter_wrapper relative">
@@ -283,12 +286,12 @@ if ($condition) {
             <header>Gallery form</header>
             <p class="error_information" style="text-align:center;font-size:bold;color:crimson;"></p>
             <div class="container_event">
-                    <div class="field">
-                        <label>Event Name</label>
-                        <input name="event_name" type="text" placeholder="" />
-                    </div>
+                <div class="field">
+                    <label>Event Name</label>
+                    <input name="event_name" type="text" placeholder="" />
+                </div>
 
-               
+
                 <div class="field">
                     <label>Category</label>
                     <select name="category">
@@ -309,7 +312,7 @@ if ($condition) {
                     </div>
                 </div>
                 <div class="image_view">
-                   
+
                 </div>
                 <input name="delete_key" type="text" value="" hidden />
                 <button>Upload Image</button>
@@ -341,7 +344,6 @@ if ($condition) {
                     <div class="pages">
                         <?php
                         $loop = $total_raw;
-                        $num = 2;
                         $start = 1;
                         $original_1 = $total;
                         if ($total > 6) {
@@ -371,6 +373,7 @@ if ($condition) {
                                 echo '<div class="' . $class . '">' . $i . '</div>';
                             }
                         } else {
+
                             for ($i = $start; $i < ($original_1); $i++) {
                                 $class = "";
                                 if ($i == $num) {
@@ -378,6 +381,8 @@ if ($condition) {
                                 }
                                 echo '<div class="' . $class . '">' . $i . '</div>';
                             }
+
+
                         }
                         if ($total_raw > 6) {
                             $final = $total - 1;
@@ -387,7 +392,11 @@ if ($condition) {
                         if ($loop >= 6 && $original_1 < ($total - 2)) {
                             echo '<span>......</span><div>' . $final . '</div>';
                         } else {
-                            echo '<div>' . $final . '</div>';
+                            $class = '';
+                            if ($num == $final) {
+                                $class = 'active';
+                            }
+                            echo '<div class=' . $class . '>' . $final . '</div>';
                         }
                         ?>
                     </div>
