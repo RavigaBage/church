@@ -82,7 +82,7 @@ if ($condition) {
                             d="m105-233-65-47 200-320 120 140 160-260 109 163q-23 1-43.5 5.5T545-539l-22-33-152 247-121-141-145 233ZM863-40 738-165q-20 14-44.5 21t-50.5 7q-75 0-127.5-52.5T463-317q0-75 52.5-127.5T643-497q75 0 127.5 52.5T823-317q0 26-7 50.5T795-221L920-97l-57 57ZM643-217q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm89-320q-19-8-39.5-13t-42.5-6l205-324 65 47-188 296Z" />
                     </svg>
                     <a style="text-decoration:none;" target="_blank"
-                        href="finance/budgetAnalysis.html?year=<?php echo $year_fetch; ?>">chart</a>
+                        href="finance/budgetAnalysis2_0.php?Year=<?php echo $year_fetch; ?>">chart</a>
                 </div>
 
 
@@ -133,47 +133,79 @@ if ($condition) {
 
                             function declareName($tableValue)
                             {
-                                if ($tableValue == "0" || $tableValue == 0) {
-                                    $tableValue = "-";
+                                if (is_array($tableValue)) {
+                                    if ($tableValue[0] == "0" || $tableValue[0] == 0) {
+                                        $tableValue[0] = "-";
+                                    }
+                                    return $tableValue;
                                 }
-                                return $tableValue;
                             }
-                            echo "<tr class='income'>
-                      <td>Offertory</td>";
+                            function total($value)
+                            {
+                                if ($value == "0" || $value == 0) {
+                                    $value = "-";
+                                }
+                                return $value;
+
+                            }
+                            echo "<tr title='Click to display details of data' class='income'><td>Offertory</td>";
                             foreach ($offertory as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td >" . $tableValue[0] . " 
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
 
-                            echo "<tr class='income'>
-                                            <td>Tithes</td>";
+                            echo "<tr title='Click to display details of data' class='income'><td>Tithes</td>";
                             foreach ($tithe as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
-                            echo "<tr class='income'>
-                                            <td>Other sources</td>";
+                            echo "<tr title='Click to display details of data' class='income'><td>Other sources</td>";
                             foreach ($income as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
-
-
-
                             $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            echo "<tr class='neutral'>
-                                            <td>Total</td>";
+
+                            echo "<tr title='Click to display details of data' class='neutral'><td>Total</td>";
                             foreach ($Months as $month) {
-                                $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
-                                    intval($income->$month);
-                                $TotalIncome = declareName($TotalIncome);
-                                echo "<td>" . $TotalIncome . "</td>";
+                                $TotalIncome = intval($offertory->$month[0]) + intval($tithe->$month[0]) +
+                                    intval($income->$month[0]);
+                                $TotalIncome = total($TotalIncome);
+                                echo "<td>" . $TotalIncome . "
+                                </td>";
                             }
                             echo "</tr>";
                             ?>
@@ -201,34 +233,70 @@ if ($condition) {
                         </thead>
                         <tbody>
                             <?php
-                            echo "<tr class='expenses'>
+                            echo "<tr title='Click to display details of data' class='expenses'>
                                             <td>Ultilities</td>";
                             foreach ($Ultilities as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
-                            echo "<tr class='expenses'>
+                            echo "<tr title='Click to display details of data' class='expenses'>
                                             <td>Housing</td>";
                             foreach ($Housing as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
-                            echo "<tr class='expenses'>
+                            echo "<tr title='Click to display details of data' class='expenses'>
                                             <td>Paychecks</td>";
                             foreach ($paycheck as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
-                            echo "<tr class='expenses'>
+                            echo "<tr title='Click to display details of data' class='expenses'>
                                             <td>Others</td>";
                             foreach ($Others as $tableValue) {
                                 $tableValue = declareName($tableValue);
-                                echo "<td>" . $tableValue . "</td>";
+                                echo "<td>" . $tableValue[0] . "
+                                <div class='Budget_details'>
+                                ";
+                                foreach ($tableValue[1] as $item) {
+                                    echo '<p>' . $item . '</p>';
+                                }
+                                ;
+                                echo "
+                                </div>
+                                </td>";
                             }
                             echo "</tr>";
 
@@ -236,12 +304,14 @@ if ($condition) {
 
 
                             $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            echo "<tr class='neutral'>
+                            echo "<tr title='Click to display details of data' class='neutral'>
                                             <td>Total</td>";
                             foreach ($Months as $month) {
-                                $TotalIncome = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
-                                $TotalIncome = declareName($TotalIncome);
-                                echo "<td>" . $TotalIncome . "</td>";
+                                $TotalIncome = intval($Ultilities->$month[0]) + intval($Housing->$month[0]) + intval($paycheck->$month[0]) + intval($Others->$month[0]);
+                                $TotalIncome = total($TotalIncome);
+                                echo "<td>" . $TotalIncome . "
+                                
+                                </td>";
                             }
                             echo "</tr>";
                             ?>
@@ -271,17 +341,17 @@ if ($condition) {
                         <tbody>
                             <?php
                             $Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            echo "<tr class='record'>
+                            echo "<tr title='Click to display details of data' class='record'>
                                             <td>Total</td>";
                             foreach ($Months as $month) {
-                                $TotalExpenses = intval($Ultilities->$month) + intval($Housing->$month) + intval($paycheck->$month) + intval($Others->$month);
+                                $TotalExpenses = intval($Ultilities->$month[0]) + intval($Housing->$month[0]) + intval($paycheck->$month[0]) + intval($Others->$month[0]);
 
 
 
-                                $TotalIncome = intval($offertory->$month) + intval($tithe->$month) +
-                                    intval($income->$month);
+                                $TotalIncome = intval($offertory->$month[0]) + intval($tithe->$month[0]) +
+                                    intval($income->$month[0]);
 
-                                $Savings = declareName(intval($TotalIncome) - intval($TotalExpenses));
+                                $Savings = total(intval($TotalIncome) - intval($TotalExpenses));
                                 echo "<td>" . $Savings . "</td>";
                             }
                             echo "</tr>";
@@ -290,6 +360,7 @@ if ($condition) {
                         </tbody>
 
                     </table>
+
                     <?php
                 } else {
                     echo '<header>An error occured whiles analysing your data</header>';

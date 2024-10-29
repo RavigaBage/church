@@ -5,9 +5,9 @@ use Membership\fetchData;
 class viewData extends fetchData
 {
 
-    public function member_upload($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image, $Image_type, $Image_tmp_name)
+    public function member_upload($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names)
     {
-        $RecordsResult = $this->member_upload_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image, $Image_type, $Image_tmp_name);
+        $RecordsResult = $this->member_upload_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -16,9 +16,9 @@ class viewData extends fetchData
         }
     }
 
-    public function member_update($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image_name, $Image_type, $Image_tmp_name, $unique_id)
+    public function member_update($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names, $unique_id)
     {
-        $RecordsResult = $this->member_update_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image_name, $Image_type, $Image_tmp_name, $unique_id);
+        $RecordsResult = $this->member_update_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;

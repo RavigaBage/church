@@ -1,0 +1,243 @@
+*{
+    padding:0px;
+    margin:0px;
+    box-sizing: border-box;
+}
+@font-face {
+    font-family: nunito-regular;
+    src: url("../../../font/Nunito-Regular_1.ttf");
+  }
+  @font-face {
+    font-family: boldFont;
+    src: url("../../../font/MontserratExtrabold-VGO60.ttf");
+  }
+  @font-face {
+    font-family: semi-boldFont;
+    src: url("../../../font/Rubik-SemiBold.ttf");
+  }
+  @font-face {
+    font-family: bold-regular;
+    src: url("../../../font/Nunito-Medium.ttf");
+  }
+
+:root{
+    --light:#fff;
+    --dark:#000000;
+    --label:#575353;
+    --body:#e0e3e4;
+    --online:rgb(5, 159, 206);
+    --in_person:rgb(3, 196, 196);
+    --percentageColor:rgb(10, 235, 10);
+    --warning:rgb(243, 4, 52);
+}
+body{
+    width: 100%;
+    height: 100%;
+    background: var(--body);
+
+}
+.warning{
+    color:var(--warning);
+    text-transform: uppercase;
+    font-family: semi-boldFont;
+}
+.dim{
+    color:var(--label)
+  }
+.intro_details,span{
+    font-size: 13px;
+    font-family: nunito-regular;
+    font-weight: bolder;
+}
+p,label{
+    font-family: nunito-regular;
+    font-weight: 700;
+}
+h1{
+    font-size: 20px;
+}
+h1,.h1,p.header{
+    font-family: semi-boldFont;
+    font-weight: 900;
+}
+.h1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.h1 svg{
+    width:12px;
+    height: 12px;
+}
+main{
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap:10px;
+    overflow-x: hidden;
+}
+section{
+    padding:5px 10px;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap:20px;
+}
+section.last{
+    max-height: 230px;
+    min-height: 200px;
+}
+.grid_T{
+    grid-template-columns: calc(70% - 15px) calc(30% - 15px);
+
+}
+.grid_TH{
+    grid-template-columns: calc(27% - 15px) calc(23% - 15px) calc(50% - 15px);
+}
+.grid_F{
+    grid-template-columns: calc(20% - 15px) calc(30% - 15px) calc(25% - 15px) calc(25% - 15px);
+}
+label{
+    font-size: 15px;
+    color:var(--label);
+}
+.records_main,.tithe_main,.visitors_time,.payment_comparism,.Budget_main,.partnership_main,.events_main,.membership_main,
+.offertory_main{
+    padding:10px;
+    border-radius: 10px;
+    background: var(--light);
+}
+.tithe_main{ 
+    padding:0px;
+    display: grid;
+    grid-template-columns: 70% 30%;
+
+}
+.tithe_details{
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+    border-left:1px solid #ddd;
+}
+.tithe_details label{
+    font-weight: 900;
+    font-family: semi-boldFont;
+}
+.tithe_details .current_val{
+    padding: 0px 10px;
+}
+.tithe_details .graph_gap{
+    width: 100%;
+    height: calc(100% - 50px);
+}
+.tithe_gross{
+    padding:10px;
+    height: 100%;
+}
+.tithe_gross .thith_gross_flex{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.current_val{
+    display: flex;
+    align-items: center;
+    gap:5px;
+}
+.current_val p{
+    font-size: 15px;
+    font-weight: bold;
+    color:var(--percentageColor);
+}
+.current_val,.tithe_details .previous_val{
+    padding:10px 0px;
+}
+.compare .main{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    margin-top:20px;
+}
+.vrs{
+    position: absolute;
+    top:25%;
+    left:calc(50% - 15px);
+    width:30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: 0px 0px 4px 0px var(--label);
+    z-index: 9;
+    font-size: 14px;
+    background: var(--light);
+}
+.compare .storm_label.left{
+    border-left:5px solid var(--online);
+    padding-left:5px;
+}
+
+.compare .storm_label.right{
+    border-right:5px solid var(--in_person);
+    padding-right:5px;
+    text-align:right;
+}
+.compare .in_person{
+    text-align:right;
+}
+.compare .colors{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin:10px auto;
+    gap:10px;
+}
+.compare .color{
+    width:var(--width);
+    height: 10px;
+    border-radius: 10px;
+}
+.compare .color.in_person{
+    background-color: var(--in_person);
+}
+.compare .color.online{
+    background-color: var(--online);
+}
+.compare .storm_label{
+    height: 20px;
+    text-transform: uppercase;
+    margin-bottom:10px;
+}
+.compare h1{
+    margin-bottom:10px;
+}
+.compare .storm_label p{
+    font-size: 14px;
+}
+.partnership_main h1{
+    font-size: 18px;
+}
+.partnership_main .summary{
+    display: flex;
+    width:100%;
+    justify-content: space-between;
+    margin:10px auto;
+    text-transform: uppercase;
+}
+.partnership_main .summary p{
+    font-family: semi-boldFont;
+}
+.partnership_main .summary p:nth-child(1){
+    font-size: 15px;
+}
+.partnership_main .summary p:nth-child(2){
+font-size: 13px;
+color:var(--label)
+}
+#tithe_main{
+    width:100%;
+    height: calc(100% - 60px);
+}

@@ -6,7 +6,7 @@ button {
   height: 40px;
   border-radius: 10px;
 }
-.hide{
+.hide {
   display: none !important;
 }
 .option {
@@ -16,36 +16,37 @@ button {
 tbody td svg {
   width: 20px;
 }
-.ministry_data .new_members{
+.ministry_data .new_members {
   width: 100%;
 }
-.ministry_data table{
-  width:100%;
+.ministry_data table {
+  width: 100%;
   height: 100%;
 }
 
-.ministry_data .members  img{
-  width:50px;
+.ministry_data .members img {
+  width: 50px;
   height: 50px;
   object-fit: cover;
   border-radius: 50%;
 }
-.dp_buttons{
-  padding:15px;
+.dp_buttons {
+  padding: 15px;
 }
-.dp_buttons button{
-  color:#fff;
+.dp_buttons button {
+  color: #fff;
   font-weight: bolder;
 }
-.dp_buttons button:nth-child(1){
-background-color: crimson;
+.dp_buttons button:nth-child(1) {
+  background-color: crimson;
 }
-.dp_buttons button:nth-child(2){
+.dp_buttons button:nth-child(2) {
   background-color: rgb(0, 110, 255);
-  }
+}
 .ministry_data.active,
 .event_menu_add.active,
-.export_dialogue.active {
+.export_dialogue.active,
+.data_upload_platform.active {
   display: block;
   opacity: 1;
   transition: 200ms all ease;
@@ -72,7 +73,8 @@ background-color: crimson;
 }
 .ministry_data,
 .event_menu_add,
-.export_dialogue {
+.export_dialogue,
+.data_upload_platform {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -95,7 +97,8 @@ background-color: crimson;
 }
 .ministry_data header,
 .event_menu_add header,
-.export_dialogue header {
+.export_dialogue header,
+.data_upload_platform header {
   text-align: center;
   font-size: 30px;
 }
@@ -118,7 +121,7 @@ background-color: crimson;
 .event_menu_add .field_e,
 .export_dialogue .field_e {
   width: 100%;
-  height: 180px;
+  height: 140px;
   padding: 10px;
   margin-block: 5px;
 }
@@ -158,11 +161,14 @@ background-color: crimson;
   border-radius: 5px;
   pointer-events: initial;
 }
+.Activity_record.edit .field_e textarea {
+  height: 120px;
+}
 
 .event_menu_add .field_e textarea,
 .Activity_record .field_e textarea {
   width: 100%;
-  height: 150px;
+  height: 110px;
   padding: 5px;
   outline: none;
   border-width: 0px;
@@ -176,7 +182,8 @@ background-color: crimson;
 .display_setting .field button,
 .Activity_record.edit button,
 .event_menu_add button,
-.export_dialogue button {
+.export_dialogue button,
+.data_upload_platform button {
   width: 250px;
   height: 45px;
   background-color: crimson;
@@ -185,6 +192,14 @@ background-color: crimson;
   font-size: 18px;
   margin: 15px;
   display: block;
+}
+.data_upload_platform .upload{
+  color:rgb(17, 216, 17) !important;
+  padding:10px;
+}
+.data_upload_platform .error{
+  color:crimson !important;
+    padding:10px;
 }
 .export_dialogue .container_event {
   padding: 10px;
@@ -412,4 +427,12 @@ background-color: crimson;
   width: 45px;
   height: 45px;
   object-fit: cover;
+}
+.acc_delete .item {
+  width: 98%;
+  height: 40px;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin: 5px auto;
 }

@@ -38,7 +38,7 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function user_upload_data($unique_id, $Image, $Image_type, $Image_tmp_name)
+    protected function user_upload_data($unique_id, $Image)
     {
         $exportData = 0;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
@@ -52,40 +52,16 @@ class fetchData extends DBH
             $exportData = "User doesn't exist, if you are viewing this and is a verified member of the church, please contact your administrator";
             exit(json_encode($exportData));
         } else {
-            if ($Image == '') {
-                $Image = '';
-                exit(json_encode('Image file does not exist, try uploading an image'));
+            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET  `image` = ? where `unique_id` = ?");
+            $stmt->bindParam('1', $Image, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = json_encode('Fetching data encountered a problems');
+                exit($Error);
             } else {
-                $explodes = explode('.', $Image);
-                $explode_end = end($explodes);
-                $Extensions = array('jpg', 'png', 'jpeg');
-                if (in_array($explode_end, $Extensions)) {
-                    $types = ["image/jpg", "image/png", "image/jpeg"];
-                    if (in_array($Image_type, $types)) {
-                        $filename4 = time() . $Image;
-                        $target4 = "../Images_folder/users/$filename4";
-                        if (move_uploaded_file($Image_tmp_name, $target4)) {
-                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET  `image` = ? where `unique_id` = ?");
-                            $stmt->bindParam('1', $filename4, \PDO::PARAM_STR);
-                            $stmt->bindParam('2', $unique_id, \PDO::PARAM_STR);
-                            if (!$stmt->execute()) {
-                                $stmt = null;
-                                $Error = json_encode('Fetching data encountered a problems');
-                                exit($Error);
-                            } else {
-                                exit(json_encode('success'));
+                exit(json_encode('success'));
 
-                            }
-
-                        } else {
-                            exit(json_encode("An error occurred while processing image, try again"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                } else {
-                    exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                }
             }
 
         }

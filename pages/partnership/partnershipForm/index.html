@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tailwindcss-colors.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Partnership-Form</title>
+</head>
+
+<body>
+    <section class="payment-section">
+        <div class="container">
+            <div class="payment-wrapper">
+                <div class="payment-left">
+                    <div class="payment-header">
+                        <div class="payment-header-icon"><i class="ri-flashlight-fill"></i></div>
+                        <div class="payment-header-title">Data Summary</div>
+                        <p class="payment-header-description">This partnership Cover is to support Education.</p>
+                    </div>
+                    <div class="payment-content">
+                        <div class="payment-body">
+                            <div class="payment-plan">
+                                <div class="payment-plan-type">Zoe</div>
+                                <div class="payment-plan-info">
+                                    <div class="payment-plan-info-name">circulation details</div>
+                                    <div class="payment-plan-info-price">$49 per month</div>
+                                </div>
+                            </div>
+                            <div class="payment-summary">
+                                <div class="payment-summary-item">
+                                    <div class="payment-summary-name">Education</div>
+                                    <div class="payment-summary-price target">80%</div>
+                                </div>
+                                <div class="payment-summary-item">
+                                    <div class="payment-summary-name">Management </div>
+                                    <div class="payment-summary-price management">20%</div>
+                                </div>
+                                <div class="payment-summary-divider"></div>
+                                <div class="payment-summary-item payment-summary-total">
+                                    <div class="payment-summary-name">Total</div>
+                                    <div class="payment-summary-price">100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-right">
+                    <form action="" class="payment-form">
+                        <h1 class="payment-title">Partnership details</h1>
+                        <div class="loader_wrapper">
+                            <div class="load-3">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="text">
+                                <p style="color:crimson"></p>
+                            </div>
+                        </div>
+                        <div class="payment-form-group">
+                            <input type="email" name="email" class="payment-form-control" id="email">
+                            <label for="email" class="payment-form-label payment-form-label-required">Email
+                                Address</label>
+                        </div>
+                        <div class="payment-form-group">
+                            <input type="text" placeholder=" " class="payment-form-control" id="card-number">
+                            <label for="card-number" class="payment-form-label payment-form-label-required">Mobile
+                                number</label>
+                        </div>
+                        <div class="payment-form-group">
+                            <div class="payment-form-group">
+                                <input type="text" name="name" class="payment-form-control" id="name_form">
+                                <label for="name_form" class="payment-form-label payment-form-label-required">Name /
+                                    Organization</label>
+                            </div>
+                        </div>
+                        <div class="payment-form-group-flex">
+                            <div class="payment-form-group">
+                                <input type="number" name="amount" class="payment-form-control amount" id="amount_form"
+                                    value="30">
+                                <label for="amount_form" class="payment-form-label payment-form-label-required">amount
+                                    per
+                                    period</label>
+                            </div>
+                            <div class="payment-form-group">
+                                <select type="text" name="period" class="payment-form-control period" id="period_form">
+                                    <option>four Months</option>
+                                    <option>Eight Months</option>
+                                    <option>one year</option>
+                                    <option>three years</option>
+                                    <option>indefinite</option>
+                                </select>
+                                <label for="period_form"
+                                    class="payment-form-label payment-form-label-required">Partnership
+                                    period</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="payment-form-submit-button"><i class="ri-wallet-line"></i>
+                            Submit details</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        var AccountName = document.querySelector('.payment-plan-info-price');
+        var OptionsName = document.querySelector('.payment-form-control.amount');
+        var ManagementVal = document.querySelector('.payment-summary-price.management');
+        var periodVal = document.querySelector('.payment-form-control.period');
+        var targetVal = document.querySelector('.payment-summary-price.target');
+        var Optionsbutton = document.querySelector('button');
+        const SubmitForm = document.querySelector('form');
+        const Loader = document.querySelector('.loader_wrapper');
+        function debounce(cb, delay = 1000) {
+            let timeout
+
+            return (...args) => {
+                clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    cb(...args)
+                }, delay)
+            }
+        }
+        function DomManipulation() {
+            AccountName.innerText = `$${OptionsName.value} per ${periodVal.value}`;
+            ManagementVal.innerText = `$${Math.round((80 / 100) * OptionsName.value)}`;
+            targetVal.innerText = `$${Math.round((20 / 100) * OptionsName.value)}`;
+        }
+        async function PHP_REQUEST(APIDOCS) {
+            let data;
+            Loader.classList.remove('active');
+            Loader.classList.add('play');
+
+            try {
+                var TypeValues = window.location.href.split('#');
+                var date = new Date();
+                formateDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+
+                if (TypeValues.length > 1) {
+                    const formMain = new FormData(SubmitForm);
+                    formMain.append('status', 'pending');
+                    formMain.append('type', TypeValues[1]);
+                    formMain.append('date', formateDate);
+
+                    const Request = await fetch(APIDOCS, {
+                        method: "POST",
+                        body: formMain,
+                    });
+                    if (Request.status === 200) {
+                        data = await Request.json();
+                        Loader.classList.remove('play');
+                        Loader.classList.add('active');
+                        Loader.querySelector('.text p').textContent = data;
+                    } else {
+                        console.error("cannot find endpoint");
+                    }
+                } else {
+                    Loader.classList.remove('play');
+                    Loader.classList.add('active');
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
+            Loader.classList.remove('play');
+        }
+
+        SubmitForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            PHP_REQUEST("../../../API/partnership/data_process.php?APICALL=true&&user=true&&submit=upload&&user=true");
+        })
+        OptionsName.addEventListener('input', debounce(function () {
+            DomManipulation();
+        }));
+        periodVal.addEventListener('change', function () {
+            DomManipulation();
+        })
+    </script>
+</body>
+
+</html>

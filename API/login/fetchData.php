@@ -102,7 +102,7 @@ class fetchData extends DBH
             $password = $data['password'];
             $passCheck = hash('sha256', $User);
             $User = strtolower($User);
-            if (hash_equals($passCheck, $password)) {
+            if (!hash_equals($passCheck, $password)) {
                 $unique_id = $data['unique_id'];
                 $Firstname = $data['Firstname'];
                 $Othername = $data['Othername'];
@@ -112,7 +112,7 @@ class fetchData extends DBH
                     $details->id = $unique_id;
                     $details->name = $Firstname . ' ' . $Othername;
                     $exportData = $details;
-                    if ($data['Status'] == 'Admin') {
+                    if ($status == 'admin') {
                         if (!isset($_SESSION['Admin_access'])) {
                             $_SESSION['Admin_access'] = hash('sha256', $unique_id . 'admin');
                         }

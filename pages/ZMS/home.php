@@ -44,30 +44,6 @@ if ($condition) {
                 <div class="cover">
                     <div class="event_slider">
                         <div class="events" id="sliderMain">
-                            <div class="item">
-                                <div class="image">
-                                    <img src="../../images/blog-2.jpg" alt="" />
-                                </div>
-                                <div class="overlay"></div>
-                                <div class="details">
-                                    <header>Box Exchange</header>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda omnis
-                                        inventore odio, non officia suscipit nesciunt blanditiis.</p>
-                                    <p>2023-04-10</p>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="image">
-                                    <img src="../../images/blog-1.jpg" alt="" />
-                                </div>
-                                <div class="overlay"></div>
-                                <div class="details">
-                                    <header>Box Exchange</header>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda omnis
-                                        inventore odio, non officia suscipit nesciunt blanditiis.</p>
-                                    <p>2023-04-10</p>
-                                </div>
-                            </div>
                             <?php
                             $year = date('Y');
                             $data = $EventDataClass->viewList($year);
@@ -75,20 +51,20 @@ if ($condition) {
                                 echo "error";
                             } else {
                                 $data = json_decode($data);
-                                foreach ($data as $tithe) {
-                                    $About = $tithe->about;
+                                foreach ($data as $EventData) {
+                                    $About = $EventData->about;
                                     if (strlen($About) > 72) {
                                         $About = substr($About, 0, 72) . '........';
                                     }
-                                    $date = $tithe->Year . '-' . $tithe->Month . '-' . $tithe->Day;
+                                    $date = $EventData->Year . '-' . $EventData->Month . '-' . $EventData->Day;
                                     $Fdate = new DateTimeImmutable($date);
                                     echo ' <div class="item">
                                 <div class="image">
-                                    <img src="../../images/' . $tithe->image . '" alt="" />
+                                    <img src="../../API/images/calenda/' . $EventData->image . '" alt="" />
                                 </div>
                                 <div class="overlay"></div>
                                 <div class="details">
-                                    <header>' . $tithe->name . '</header>
+                                    <header>' . $EventData->name . '</header>
                                     <p>' . $About . '</p>
                                     <p>' . $Fdate->format('jS F Y') . '</p>
                                 </div>

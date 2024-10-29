@@ -45,7 +45,7 @@ if (isset($_GET['vid_id']) && !empty($_GET['vid_id']) && isset($_GET['dir'])) {
                             <div class="playlist-songs-container">
                                 <div class="playlist-buttons">
                                     <div class="playlist-buttons-left">
-                                        <audio controls="false" src="Shiloh_Dynasty_-_So_Low__Lyrics_(256k).mp3" hidden>
+                                        <audio controls="false" src="http://<?php echo $currentVal->source; ?>" hidden>
                                         </audio>
                                         <div class="playlist-buttons-resume-pause">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -69,10 +69,12 @@ if (isset($_GET['vid_id']) && !empty($_GET['vid_id']) && isset($_GET['dir'])) {
                                     <?php
                                     if ($currentVal->series != 'none') {
                                         $series = json_decode($currentVal->series);
+
                                         foreach ($series as $item) {
                                             $name = $item->name;
                                             $source = $item->source;
                                             $date = $item->Date;
+
                                             echo '<div class="song-title series_list">
                                         <div class="song-image">
                                             <img src="../API/images_folder/library/covers/' . $currentVal->Image . '" alt="">

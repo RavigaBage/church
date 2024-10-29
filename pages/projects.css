@@ -391,6 +391,7 @@ a {
   .menu_toggle.active svg:nth-child(1) {
     display: none;
   }
+  
   .navigation {
     position: fixed !important;
     top: 0;
@@ -470,3 +471,5 @@ a {
     width: auto;
   }
 }
+
+

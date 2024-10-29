@@ -46,7 +46,7 @@ class fetchData extends DBH
         $data = htmlspecialchars($data);
         return $data;
     }
-    protected function member_upload_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image, $Image_type, $Image_tmp_name)
+    protected function member_upload_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names)
     {
         $input_list = array($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status);
         $clean = true;
@@ -56,53 +56,26 @@ class fetchData extends DBH
             $data = $this->validate($input);
             $data = $this->cleanStringData($input);
             if ($data == 'test pass failed') {
-                $Error = json_encode('validating data encountered a problem, All fields are required !');
+                $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
+                return $Error;
             }
         }
         if ($clean) {
+            $uploaded_file_name = $uploaded_file_names;
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Firstname`=? AND  `Othername`=?");
             $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
             $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
-                print_r($stmt->errorInfo());
                 $stmt = null;
-                $Error = json_encode('Fetching data encountered a problem');
-                exit($Error);
+                $Error = 'Fetching data encountered a problem';
+                return $Error;
             }
             if ($stmt->rowCount() > 0) {
                 $exportData = "Data already exist";
                 $resultValidate = false;
-                exit($exportData);
+                return $exportData;
             } else {
-
-                if ($Image == '') {
-                    $Image = '';
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/users/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $unique_id = rand(time(), 3002);
-                                $Image = $filename4;
-
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
                 if ($stmt->execute()) {
                     $NewMail = strtoupper($Firstname[0]) . '' . strtolower($Othername) . '0';
                     $EmailName = strtoupper($Firstname[0]) . '' . strtolower($Othername);
@@ -110,8 +83,8 @@ class fetchData extends DBH
                     $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `email` like '%$EmailName%' ORDER BY `id` DESC limit 1");
                     if (!$stmt->execute()) {
                         $stmt = null;
-                        $Error = json_encode('Fetching data encountered a problem');
-                        exit($Error);
+                        $Error = 'Fetching data encountered a problem';
+                        return $Error;
                     }
 
                     if ($stmt->rowCount() > 0) {
@@ -131,7 +104,7 @@ class fetchData extends DBH
                     $stmt->bindParam('6', $contact, \PDO::PARAM_STR);
                     $stmt->bindParam('7', $NewMail, \PDO::PARAM_STR);
                     $stmt->bindParam('8', $passwordKey, \PDO::PARAM_STR);
-                    $stmt->bindParam('9', $Image, \PDO::PARAM_STR);
+                    $stmt->bindParam('9', $uploaded_file_name, \PDO::PARAM_STR);
                     $stmt->bindParam('10', $Address, \PDO::PARAM_STR);
                     $stmt->bindParam('11', $Baptism, \PDO::PARAM_STR);
                     $stmt->bindParam('12', $membership_start, \PDO::PARAM_STR);
@@ -144,11 +117,11 @@ class fetchData extends DBH
 
                     if (!$stmt->execute()) {
                         $stmt = null;
-                        $Error = json_encode('Fetching data encountered a problems');
-                        exit($Error);
+                        $Error = 'Fetching data encountered a problems';
+                        return $Error;
                     } else {
                         $date = date('Y-m-d H:i:s');
-                        $namer = $_SESSION['login_details'];
+                        $namer = $_SESSION['unique_id'];
                         $historySet = $this->history_set($namer, "Membership  Data Upload", $date, "Membership  page dashboard Admin", "User Uploaded a data");
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
@@ -158,12 +131,9 @@ class fetchData extends DBH
                     }
                 } else {
                     $stmt = null;
-                    $Error = json_encode('Fetching data encountered a problem');
-                    exit($Error);
+                    $Error = 'Fetching data encountered a problem';
+                    return $Error;
                 }
-
-
-
 
             }
 
@@ -171,7 +141,7 @@ class fetchData extends DBH
         }
         return $exportData;
     }
-    protected function member_update_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image, $Image_type, $Image_tmp_name, $unique_id)
+    protected function member_update_data($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $uploaded_file_names, $unique_id)
     {
         $input_list = array($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status);
         $clean = true;
@@ -187,49 +157,22 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Firstname`=? AND `Othername`=?");
-            $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
-            $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=? ");
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
                 exit($Error);
             }
-            if ($stmt->rowCount() > 0) {
-                $exportData = "Data already exist";
+            if (!$stmt->rowCount() > 0) {
+                $exportData = "error occured: user was not found";
                 $resultValidate = false;
                 exit($exportData);
             } else {
-
-                if ($Image == '') {
-                    $Image = '';
-                    $pass = false;
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/users/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $Image = $filename4;
-                                $pass = true;
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
+               
+                
                 if ($stmt->execute()) {
-                    $stmt;
-                    if ($Image == '') {
+                    if (empty($uploaded_file_names)) {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET `Firstname`=?,`Othername`=?,`Age`=?,`Position`=?,`contact`=?,`email`=?,`Address`=?,`Baptism`=?,`membership_start`=?,`username`=?,`gender`=?,`occupation`=?,`About`=?,`status`=? where `unique_id` = ?");
                     } else {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET `Firstname`=?,`Othername`=?,`Age`=?,`Position`=?,`contact`=?,`email`=?,`image`=?,`Address`=?,`Baptism`=?,`membership_start`=?,`username`=?,`gender`=?,`occupation`=?,`About`=?,`status`=? where `unique_id` = ?");
@@ -237,13 +180,14 @@ class fetchData extends DBH
 
 
 
+                    
                     $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
                     $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
                     $stmt->bindParam('3', $Age, \PDO::PARAM_STR);
                     $stmt->bindParam('4', $Position, \PDO::PARAM_STR);
                     $stmt->bindParam('5', $contact, \PDO::PARAM_STR);
                     $stmt->bindParam('6', $email, \PDO::PARAM_STR);
-                    if ($Image == '') {
+                    if (empty($uploaded_file_names)) {
                         $stmt->bindParam('7', $Address, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $Baptism, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $membership_start, \PDO::PARAM_STR);
@@ -254,7 +198,7 @@ class fetchData extends DBH
                         $stmt->bindParam('14', $status, \PDO::PARAM_STR);
                         $stmt->bindParam('15', $unique_id, \PDO::PARAM_STR);
                     } else {
-                        $stmt->bindParam('7', $image, \PDO::PARAM_STR);
+                        $stmt->bindParam('7', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $Address, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $Baptism, \PDO::PARAM_STR);
                         $stmt->bindParam('10', $membership_start, \PDO::PARAM_STR);
@@ -273,7 +217,7 @@ class fetchData extends DBH
                         exit($Error);
                     } else {
                         $date = date('Y-m-d H:i:s');
-                        $namer = $_SESSION['login_details'];
+                        $namer = $_SESSION['unique_id'];
                         $historySet = $this->history_set($namer, "Membership  Data Update", $date, "Membership  page dashboard Admin", "User Updated a data");
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
@@ -286,12 +230,7 @@ class fetchData extends DBH
                     exit($Error);
                 }
 
-
-
-
-
             }
-
 
         }
         return $exportData;
@@ -336,11 +275,11 @@ class fetchData extends DBH
                                 $result = $stmt->fetchAll();
                                 $name_1 = $result[0]['name'];
                                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zeodepartments`.`$name_1` where `unique_id`=?");
-                                $stmt->bindParam('1', $name, PDO::PARAM_STR);
+                                $stmt->bindParam('1', $name, \PDO::PARAM_STR);
                                 if ($stmt->execute()) {
                                     if ($stmt->rowCount() > 0) {
                                         $stmt1 = $this->data_connect()->prepare("DELETE FROM `zeodepartments`.`$name_1` where   `unique_id`=?");
-                                        $stmt1->bindParam('1', $name, PDO::PARAM_STR);
+                                        $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                                         if (!$stmt1->execute()) {
                                             $stmt1 = null;
                                             $Error = json_encode('deleting data encountered a problem');
@@ -362,7 +301,7 @@ class fetchData extends DBH
                         }
                         if ($clearance = true) {
                             $date = date('Y-m-d H:i:s');
-                            $namer = $_SESSION['login_details'];
+                            $namer = $_SESSION['unique_id'];
                             $historySet = $this->history_set($namer, "Membership  Data Delete", $date, "Membership  page dashboard Admin", "User Deleted a data");
                             if (json_decode($historySet) != 'Success') {
                                 $exportData = 'success';
@@ -433,6 +372,7 @@ class fetchData extends DBH
                 $objectClass = new \stdClass();
                 $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
+                $objectClass->status = $status;
                 $objectClass->Oname = $Firstname;
                 $objectClass->Fname = $Othername;
                 $objectClass->birth = $Age;
@@ -537,7 +477,7 @@ class fetchData extends DBH
             $ExportSendMain = new \stdClass();
 
             $date = date('Y-m-d H:i:s');
-            $namer = $_SESSION['login_details'];
+            $namer = $_SESSION['unique_id'];
             $historySet = $this->history_set($namer, "Membership  Data Export", $date, "Membership  page dashboard Admin", "User Exported a data");
             if (json_decode($historySet) != 'Success') {
                 $exportData = 'success';
@@ -613,10 +553,9 @@ class fetchData extends DBH
             if ($stmt_pages->execute()) {
                 $total_pages = $stmt_pages->rowCount();
             }
+            $ExportSendMain = new \stdClass();
             $result = $stmt->fetchAll();
-            $ObjMainList = new \stdClass();
             foreach ($result as $data) {
-                $objectClass = new \stdClass();
                 $unique_id = $this->cleanStringData($data['unique_id']);
                 $Firstname = $this->cleanStringData($data['Firstname']);
                 $Othername = $this->cleanStringData($data['Othername']);
@@ -632,32 +571,53 @@ class fetchData extends DBH
                 $gender = $this->cleanStringData($data['gender']);
                 $occupation = $this->cleanStringData($data['occupation']);
                 $About = $this->cleanStringData($data['About']);
+                $status = $this->cleanStringData($data['Status']);
 
-
+                $objectClass = new \stdClass();
+                $ExportSend = new \stdClass();
                 $objectClass->UniqueId = $unique_id;
-                $objectClass->Firstname = $Firstname;
-                $objectClass->Othername = $Othername;
-                $objectClass->Age = $Age;
+                $objectClass->status = $status;
+                $objectClass->Oname = $Firstname;
+                $objectClass->Fname = $Othername;
+                $objectClass->birth = $Age;
                 $objectClass->Position = $Position;
                 $objectClass->contact = $contact;
                 $objectClass->email = $email;
                 $objectClass->image = $image;
-                $objectClass->Address = $Address;
+                $objectClass->location = $Address;
                 $objectClass->Baptism = $Baptism;
                 $objectClass->membership_start = $membership_start;
                 $objectClass->username = $username;
                 $objectClass->gender = $gender;
                 $objectClass->occupation = $occupation;
                 $objectClass->About = $About;
-                $objectClass->Obj = json_encode($objectClass);
-                $ObjMainList->$unique_id = $objectClass;
+                $ObjectData = json_encode($objectClass);
+
+                $ExportSend->UniqueId = $unique_id;
+                $ExportSend->status = $status;
+                $ExportSend->Oname = $Firstname;
+                $ExportSend->Fname = $Othername;
+                $ExportSend->birth = $Age;
+                $ExportSend->Position = $Position;
+                $ExportSend->contact = $contact;
+                $ExportSend->email = $email;
+                $ExportSend->image = $image;
+                $ExportSend->location = $Address;
+                $ExportSend->Baptism = $Baptism;
+                $ExportSend->membership_start = $membership_start;
+                $ExportSend->username = $username;
+                $ExportSend->gender = $gender;
+                $ExportSend->occupation = $occupation;
+                $ExportSend->About = $About;
+                $ExportSend->Obj = $ObjectData;
+
+                $ExportSendMain->$unique_id = $ExportSend;
             }
             $MainExport = new \stdClass();
             $MainExport->pages = $total_pages;
-            $MainExport->result = $ObjMainList;
-            $exportData = json_encode($MainExport);
+            $MainExport->result = $ExportSendMain;
+            $exportData = $MainExport;
         } else {
-            $resultCheck = false;
             $exportData = 'No Record Available';
         }
 
@@ -697,9 +657,11 @@ class fetchData extends DBH
                 $gender = $this->cleanStringData($data['gender']);
                 $occupation = $this->cleanStringData($data['occupation']);
                 $About = $this->cleanStringData($data['About']);
+                $status = $this->cleanStringData($data['Status']);
 
                 $objectClass1->UniqueId = $unique_id;
                 $objectClass1->Fname = $Firstname;
+                $objectClass->status = $status;
                 $objectClass1->Oname = $Othername;
                 $objectClass1->birth = $Age;
                 $objectClass1->Position = $Position;

@@ -3,6 +3,7 @@ session_start();
 require '../../../API/vendor/autoload.php';
 $viewDataClass = new Gallery\viewData();
 $val = 1;
+
 if (isset($_GET['page'])) {
     $val = $_GET['page'];
 }
@@ -27,6 +28,7 @@ if (isset($_SESSION['unique_id'])) {
     }
 }
 if ($condition) {
+    $num = $val;
     ?>
     <div class="filter_wrapper relative">
         <div style="height:40px;width:100%" class="flex">
@@ -207,20 +209,18 @@ if ($condition) {
                     </tr>
                 </table>
             </div>
-            <div class="membership_table">
+            <div class="membership_table" id="main_table">
                 <?php
                 $data = json_decode($viewDataClass->viewList($val));
-
-                if ($data == '' || $data == " " || $data == "Fetching data encountered a problem" || $data == "No Record Available" || $data == false) {
+                if (!is_object($data)) {
                     echo '<header>No Records Available</header>';
                 } else {
 
-                    echo '                <table>
+                    echo '<table>
                     <thead>
                         <tr>
                             <th>file</th>
-                            <th>Eventname</th>
-
+                            <th>Event name</th>
                             <th>size</th>
                             <th>upload</th>
                             <th></th>
@@ -284,17 +284,27 @@ if ($condition) {
     <div class="event_menu_add form_data">
         <form>
             <header>Gallery form</header>
-            <p class="error_information" style="text-align:center;font-size:bold;color:crimson;"></p>
+            <div class="loader_wrapper">
+                <div class="load-3">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <div class="text">
+                    <p style="color:crimson"></p>
+                </div>
+            </div>
+
             <div class="container_event">
                 <div class="field">
                     <label>Event Name</label>
-                    <input name="event_name" type="text" placeholder="" />
+                    <input name="event_name" type="text" placeholder="" required />
                 </div>
 
 
                 <div class="field">
                     <label>Category</label>
-                    <select name="category">
+                    <select name="category" required>
                         <option>Funeral</option>
                         <option>Wedding</option>
                         <option>Ceremony</option>
@@ -304,17 +314,29 @@ if ($condition) {
                 <div class="cate_view">
                     <div class="field">
                         <label>Upload Image</label>
-                        <input id="image_files" name="imageFile[]" multiple type="file" />
+                        <div class="upload_blog">
+                            <a id="browseButton" name="imageFile">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                    <path d="M9 15l3 -3l3 3" />
+                                    <path d="M12 12l0 9" />
+                                </svg>
+
+                                <span>Select file to upload here</span>
+                            </a>
+                        </div>
+
                     </div>
                     <div class="field">
                         <label>Upload date</label>
-                        <input name="date" type="date" placeholder="" />
+                        <input name="date" type="date" placeholder="" required />
                     </div>
                 </div>
                 <div class="image_view">
-
                 </div>
-                <input name="delete_key" type="text" value="" hidden />
+                <input name="delete_key" type="number" value="" hidden />
                 <button>Upload Image</button>
             </div>
         </form>
@@ -323,16 +345,10 @@ if ($condition) {
 
     <div class="page_sys">
         <?php
-        if (isset($_SESSION['total_pages_gal'])) {
-            $total = $_SESSION['total_pages_gal'];
-        } else {
-            $total = $viewDataClass->viewpages();
-            $_SESSION['total_pages_gal'] = $total;
-        }
+        $total = $viewDataClass->viewpages();
         if ($total != 'Error Occurred') {
             ?>
             <header>
-
                 <?php
                 $total_raw = $total / 40;
                 $total = ceil($total / 40);

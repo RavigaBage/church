@@ -240,7 +240,16 @@ if ($condition) {
 
     <div class="event_menu_add form_data">
         <header>Create Notification</header>
-        <div class="error_information danger" style="padding:10px;text-wrap:wrap;text-align:center;font-weight:bold;"></div>
+        <div class="loader_wrapper">
+            <div class="load-3">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="text">
+                <p style="color:crimson"></p>
+            </div>
+        </div>
         <form>
             <div class="container_event">
                 <div class="field">
@@ -262,7 +271,7 @@ if ($condition) {
                         <option value="all">Every member</option>
                         <?php
                         $data = json_decode($newDataRequest->ministries_viewList());
-                        if ($data != 'No Records Available' || $data != 'Error' || $data != '' || $data != 'Fetching data encountered a problem') {
+                        if (is_object($data)) {
 
                             foreach ($data as $item) {
                                 $unique_id = $item->UniqueId;
@@ -272,7 +281,7 @@ if ($condition) {
                             }
 
                         } else {
-                            echo '<header class="danger">No groups available</header>';
+                            echo '<option class="danger">No groups available</option>';
                         }
 
                         ?>
@@ -288,7 +297,7 @@ if ($condition) {
                         <input type="checkbox" name="email" style="width:20px;" />
                     </div>
                 </div>
-                <input hidden name="delete_key" />
+                <input hidden name="delete_key" type="number" />
                 <button>Record message</button>
             </div>
         </form>

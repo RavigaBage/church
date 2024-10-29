@@ -3,9 +3,9 @@ namespace UserApi;
 class viewData extends fetchData
 {
 
-    public function Image_upload($unique_id, $Image, $Image_type, $Image_tmp_name)
+    public function Image_upload($unique_id, $Image)
     {
-        $RecordsResult = $this->user_upload_data($unique_id, $Image, $Image_type, $Image_tmp_name);
+        $RecordsResult = $this->user_upload_data($unique_id, $Image);
         return $RecordsResult;
     }
 

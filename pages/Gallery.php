@@ -20,7 +20,7 @@ if (isset($_SESSION['unique_id'])) {
 } else {
     $condition = false;
 }
-
+$condition = true;
 if ($condition) {
     $count = 0;
     if (!isset($_SESSION['loadCounter'])) {
@@ -46,6 +46,7 @@ if ($condition) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="gal.css">
+            <link rel="stylesheet" href="css/izmir.min.css">
             <link rel="stylesheet" href="../css/aos.css">
             <title>Zoe memories</title>
         </head>
@@ -55,62 +56,61 @@ if ($condition) {
 
                 <div class="hero_page">
                     <div class="container">
-
                         <div class="slide">
-                            <div class="item" style="background-image: url(images/p1.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg6.jpg);">
                                 <div class="content">
-                                    <div class="name">' . $name . '</div>
-                                    <div class="des">' . $description . '</div>
+                                    <div class="name">Events</div>
+                                    <div class="des">Check out our event Albums</div>
                                 </div>
                             </div>
-                            <div class="item" style="background-image: url(images/p1.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg1.jpg);">
                                 <div class="content">
-                                    <div class="name">Switzerland</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
+                                    <div class="name">Evangelism</div>
+                                    <div class="des">Discover some of the outreach events we had as a church</div>
                                 </div>
                             </div>
-                            <div class="item" style="background-image: url(images/p2.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg5.jpg);">
                                 <div class="content">
-                                    <div class="name">Finland</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
+                                    <div class="name">Sunday School</div>
+                                    <div class="des">Discover some of the exquisite images of the children ministry</div>
                                 </div>
                             </div>
-                            <div class="item" style="background-image: url(images/p3.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg4.jpg);">
                                 <div class="content">
-                                    <div class="name">Iceland</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
+                                    <div class="name">Events</div>
+                                    <div class="des">Check out our event Albums</div>
+
                                 </div>
                             </div>
-                            <div class="item" style="background-image: url(images/p2.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg3.jpg);">
                                 <div class="content">
-                                    <div class="name">Australia</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
+                                    <div class="name">Events</div>
+                                    <div class="des">Check out our event Albums</div>
+
                                 </div>
                             </div>
-                            <div class="item" style="background-image: url(images/p1.jpg);">
+                            <div class="item" style="background-image: url(images/gal/bg2.jpg);">
                                 <div class="content">
-                                    <div class="name">Netherland</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/p3.jpg);">
-                                <div class="content">
-                                    <div class="name">Ireland</div>
-                                    <div class="des">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!</div>
-                                    <button>See More</button>
+                                    <div class="name">Events</div>
+                                    <div class="des">Check out our event Albums</div>
                                 </div>
                             </div>
 
                         </div>
 
                         <div class="button">
-                            <button class="prev"><i class="fa-solid fa-arrow-left"></i></button>
-                            <button class="next"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="prev"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0 0 0 -3.414 -1.414z" />
+                                </svg>
+
+                            </button>
+                            <button class="next"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" />
+                                </svg></button>
                         </div>
                     </div>
                 </div>
@@ -136,13 +136,22 @@ if ($condition) {
                 <div class="grid_content">
                     <ul class="image_class">
                         <li class="card">
-                            <img src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
-                            <div class="details">
-                                <p>Romano conto</p>
-                                <div class="download">
-                                    |^
-                                </div>
-                            </div>
+                            <figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card">
+                                <img data-src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
+                                <figcaption>
+                                    <div class="details">
+                                        <p>Romano conto</p>
+                                        <div class="download">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                fill="currentColor">
+                                                <path
+                                                    d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
+                                            </svg>
+
+                                        </div>
+                                    </div>
+                                </figcaption>
+                            </figure>
                         </li>
                         <li class="card"><img data-src="../API/images_folder/users/pexels-stefanstefancik-91227.jpg" alt="" />
                         </li>
@@ -161,47 +170,70 @@ if ($condition) {
 
                 </div>
                 <div class="loader">
-                    loading.....
+                <div class="loader_wrapper">
+                    <div class="load-3">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
                 </div>
                 <div class="viewer">
-                    <div class="details">
-                        <p>Sunday service post 123</p>
-                        <div class="download">
-                            |v
+                    <div class="viewer_element">
+                        <div class="details">
+                            <p>Previewing image</p>
+                            <div class="download main">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
+                                </svg>
+                            </div>
+                            <div class="times">
+                                X
+                            </div>
                         </div>
-                        <div class="times">
-                            X
-                        </div>
+                        <img src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
                     </div>
-                    <img src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
-
                 </div>
             </main>
             <script src="../js/aos.js"></script>
             <script>
                 AOS.init();
+                let denial_of_service = false;
                 const LoadCounter = document.querySelector('#loadCounter');
                 const ImageClassLoader = document.querySelector('.image_class');
                 let next = document.querySelector(' .next');
                 let prev = document.querySelector('.prev');
                 let exitView = document.querySelector('.viewer .times');
                 let Viewer = document.querySelector('.viewer');
-                let Cards = document.querySelectorAll('.card .details .download');
+                let Cards = document.querySelectorAll('.download');
                 var Elements = document.querySelectorAll("li img");
                 var formSelector = document.querySelector('form select');
                 const BodyElement = document.documentElement;
                 const Bodyloader = document.querySelector('.loader');
+                let DownloadBtn = document.querySelector('.download.main');
+                DownloadBtn.addEventListener('click', function () {
+                    Image = Viewer.querySelector('img');
+                    Anchor = document.createElement('a');
+                    Anchor.setAttribute('href', Image.src);
+                    Anchor.setAttribute('download', Image.src);
+                    Anchor.click();
+
+                    Anchor.delete();
+                })
                 formSelector.addEventListener('change', function (e) {
                     location.href = 'gallery.php?filter_var=' + formSelector.value;
                 })
 
                 window.addEventListener('scroll', async function (e) {
+                    console.log(window.scrollY + window.innerHeight, window.scrollY, window.innerHeight, BodyElement.scrollHeight);
                     if ((window.scrollY + window.innerHeight) == BodyElement.scrollHeight) {
                         APIDOCS = "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=load";
-
                         //make request
                         try {
-                            Bodyloader.classList.add('active');
+                            if(!denial_of_service){
+                                Bodyloader.classList.add('active');
                             bodyData = {
                                 num: LoadCounter.value,
                                 filter: LoadCounter.getAttribute('data-filter')
@@ -218,16 +250,23 @@ if ($condition) {
                                 if (typeof Response == 'object') {
                                     for (const key in Response) {
                                         const element = Response[key];
-                                        template = `<li class="card">
-                                                                                                                                                                        <img  data-src="../API/Images_folder/gallery/${element['name']}" alt="" />
-                                                                                                                                                                        <div class="details">
-                                                                                                                                                                            <p>${element['Event_name']}</p>
-                                                                                                                                                                            <div class="download">
-                                                                                                                                                                                |^
-                                                                                                                                                                            </div>
-                                                                                                                                                                        </div>
-                                                                                                                                                                    </li>`
-                                            ;
+                                        template =
+                                            `<li class="card"><figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card">
+                                            <img  data-src="../API/Images_folder/gallery/${element['name']}" alt="" />
+                                            <figcaption>
+                                                <div class="details">
+                                                        <p>${element['Event_name']}</p>
+                                                        <div class="download">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
+                                                        </svg>
+
+                                                    </div>
+                                                </div>
+                                            </figcaption>
+                                        </figure></li>`;
                                         ImageClassLoader.innerHTML += template;
                                         Cards = document.querySelectorAll('.card .details .download');
 
@@ -238,12 +277,15 @@ if ($condition) {
                                     LoadCounter.value = parseInt(LoadCounter.value) + 1;
                                     console.log(LoadCounter.value);
                                 } else {
+                                    denial_of_service = true;
                                     console.log(Response);
                                 }
 
 
                             }
-                            Bodyloader.classList.add('active');
+                            Bodyloader.classList.remove('active');
+                            }
+                           
 
                         } catch (error) {
                             console.log(error);
@@ -273,8 +315,9 @@ if ($condition) {
                 window.addEventListener('click', function (e) {
                     target = e.target;
                     Cards.forEach(element => {
-                        if (element == target) {
-                            ParentElement = element.parentElement.parentElement;
+                        if (element == target || element.contains(target)) {
+                            ParentElement = element.parentElement.parentElement.parentElement;
+                            console.log()
                             Viewer.querySelector('img').setAttribute('src', ParentElement.querySelector('img').getAttribute('src'));
                             Viewer.classList.add('active');
                         }

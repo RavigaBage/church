@@ -105,7 +105,7 @@ $unique_id = $_SESSION['unique_id'];
                         ' . ($amount - $paidAmount) . ' to pay </p>
                         <p>Total amount - <b>' . $amount . '</b>. Paid amount- <b>' . $paidAmount . '</b></p>
                     </div>
-                  <a href="../pages/gateway.html?welfare"> <button>Pay</button></a>
+                  <a href="../payment/?welfare"> <button>Pay</button></a>
 
                 </div>';
                         }

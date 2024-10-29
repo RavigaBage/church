@@ -4,6 +4,7 @@ var monthsListVal = document.querySelectorAll(".monthsList");
 var DataToSort = document.querySelectorAll(".hiddenData");
 var Name = document.querySelector(".monthName");
 var CalendaData = document.querySelector("#months_data").getAttribute('data_calenderData');
+const loaderBtn = document.querySelector(".loader_wrapper");
 var now = new Date();
 var year = now.getFullYear();
 var currentDay = now.getDay();
@@ -55,23 +56,44 @@ isLeapYear = (year) => {
 getFebDays = (year) => {
   return isLeapYear(year) ? 29 : 28;
 };
-SpaceGenerator = (number) => {
+SpaceGenerator = (number,  MonthsTotal) => {
   if (number === 0) {
     Value_date = ``;
   } else if (number === 1) {
-    Value_date = `<p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 2) {
-    Value_date = `<p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 3) {
-    Value_date = `<p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 2
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 4) {
-    Value_date = `<p ></p><p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 3
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 2
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 5) {
-    Value_date = `<p ></p><p></p><p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 4
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 3
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 2
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 6) {
-    Value_date = `<p ></p><p></p><p></p><p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 5
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 4
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 3
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 2
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   } else if (number === 7) {
-    Value_date = `<p ></p><p></p><p></p><p></p><p></p><p></p>`;
+    Value_date = `<div class='dim sortData'><p>${MonthsTotal - 6
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 5
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 4
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 3
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 2
+      }</p></div><div class='dim sortData'><p>${MonthsTotal - 1
+      }</p></div><div class='dim sortData'><p>${MonthsTotal}</p></div>`;
   }
   calenda.innerHTML = Value_date;
 };
@@ -112,7 +134,7 @@ function calender(monthValue, yearValue, dayValue) {
   ///LeadYear divide by 4,400,100,1000,40000 which must output a 0
   const DayOfWeek = ["", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun"];
   let first_day = new Date(yearValue_f, monthValue_f, 1);
-  SpaceGenerator(first_day.getDay());
+  SpaceGenerator(first_day.getDay(),DaysOfMonth[monthValue_f]);
   for (i = 0; i <= DaysOfMonth[monthValue_f]; i++) {
     if (i <= 0) {
     } else if (
@@ -120,8 +142,10 @@ function calender(monthValue, yearValue, dayValue) {
       yearValue_f === now.getFullYear() &&
       monthValue_f === now.getMonth()
     ) {
-      calenda.innerHTML += `<p class='sortData active' title="today">${i}</p>`;
+      calenda.innerHTML += `<div class='sortData active' title="today"><p>${i}</p></div>`;
+      
     } else {
+      template = `<div class="sortData"><p>${i}</p></div>`;
       Cdata = JSON.parse(CalendaData);
       if (Cdata) {
         pass = false;
@@ -131,11 +155,13 @@ function calender(monthValue, yearValue, dayValue) {
             yearValue_f === parseInt(element['Year']) &&
             monthValue_f === parseInt(element['Month'])) {
             pass = true;
-            calenda.innerHTML += `<p class="sortData CalenderEvent" data_year="${yearValue_f}" data_month="${monthValue_f}" data_day="${i}">${i}</p>`;
+            template = `<div title= "Event Date click to preview" class="sortData CalenderEvent mark" data_year="${yearValue_f}" data_month="${monthValue_f}" data_day="${i}"><p>${i}</p></div>`;
           }
         }
         if (!pass) {
-          calenda.innerHTML += `<p class="sortData" >${i}</p>`;
+          calenda.innerHTML += `<div class="sortData" ><p>${i}</p></div>`;
+        }else{
+          calenda.innerHTML += template;
         }
 
       }
@@ -143,7 +169,6 @@ function calender(monthValue, yearValue, dayValue) {
     }
   }
 
-  EventList_Marking(monthValue_f, yearValue_f, dayValue_f);
   Name.innerHTML = monthNames[monthValue];
 
   ///////////setting month Value
@@ -156,33 +181,7 @@ function calender(monthValue, yearValue, dayValue) {
     }
   }
 }
-function EventList_Marking(monthValue, yearValue, dayValue) {
-  var DataSort = document.querySelectorAll(".sortData");
-  for (const element of dataDates) {
-    for (let m = 0; m < DataSort.length; m++) {
-      let i = parseInt(DataSort[m].innerHTML);
-      if (
-        i === element.Day &&
-        parseInt(yearValue) === element._Year &&
-        parseInt(monthValue) === element.Month - 1
-      ) {
-        DataSort[m].classList.add("mark");
-        DataSort[m].setAttribute("title", "Event Date click to preview");
-        DataSort[m].setAttribute("onclick", "getData(this)");
-        DataSort[m].setAttribute(
-          "data-value",
-          element.events +
-          "/" +
-          element._Year +
-          "/" +
-          element.Month +
-          "/" +
-          element.Day
-        );
-      }
-    }
-  }
-}
+
 
 function monthSelector(e) {
   Name.innerHTML = e.innerHTML;
@@ -311,16 +310,23 @@ calender(currentMonth, year, day);
 
 window.addEventListener('click', function (e) {
   target = e.target;
-  if (target.classList.contains('CalenderEvent')) {
-    year = target.getAttribute('data_year');
-    month = target.getAttribute('data_month');
-    day = target.getAttribute('data_day');
-    PHPREQUEST(year, month, day);
-  }
+  Elements_to_sort = document.querySelectorAll('.CalenderEvent');
+  Elements_to_sort.forEach(element => {
+    if(element.contains(target)){
+      year = element.getAttribute('data_year');
+      month = element.getAttribute('data_month');
+      day = element.getAttribute('data_day');
+      PHPREQUEST(year, month, day);
+    }
+  });
+
 
 })
 
 async function PHPREQUEST(year, month, day) {
+  loaderBtn.classList.add('play');
+  loaderBtn.classList.remove('active');
+  loaderBtn.querySelector('.text p').textContent = "";
   try {
     APIDOCS = "../API/calender/data_process.php?APICALL=true&&user=true&&submit=filter";
     dataSend = {
@@ -337,10 +343,14 @@ async function PHPREQUEST(year, month, day) {
     });
 
     if (Request.status === 200) {
-      let ContainerMain = document.querySelector('#eventDataView');
+      
+      let ContainerMain = document.querySelector('#eventDataView .content');
       ContainerMain.innerHTML = 'loading data pls wait';
       let data = await Request.json(dataSend);
       if (data) {
+        loaderBtn.classList.remove('play');
+        loaderBtn.classList.add('active');
+
         ParseD = JSON.parse(data);
         for (const key in ParseD) {
           const element = ParseD[key];
@@ -350,7 +360,7 @@ async function PHPREQUEST(year, month, day) {
                                 <div class="head">${new Date(dateStr).toDateString()}</div>
                                 <p>${element['about']}</p>
                                 <div class="image">
-                                    <img src="../API/Images_folder/${element['image']}" alt="" />
+                                    <img src="../API/Images/calenda/${element['image']}" alt="" />
                                 </div>
                             </div>`;
           ContainerMain.innerHTML = template;
@@ -359,6 +369,8 @@ async function PHPREQUEST(year, month, day) {
 
       }
     }
+    loaderBtn.classList.remove('play');
+    loaderBtn.classList.add('active');
   } catch (errors) {
     console.log(errors);
   }

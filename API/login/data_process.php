@@ -4,6 +4,7 @@ require('../vendor/autoload.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 $secreteKey = "c50be242171e9b8449c17765eff742993b6bd7b5b0ca3195ff74fe17ddd5ebb4";
+
 function sanitaize($data)
 {
     $data = htmlspecialchars($data, ENT_QUOTES);

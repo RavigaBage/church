@@ -61,9 +61,10 @@ class fetchData extends DBH
         if ($stmt->rowCount() > 0) {
             $result = $stmt->fetchAll();
             $ObjectDataMain = new \stdClass();
-            $list = ['birth', 'death', 'water_baptism', 'fire_baptism', 'soul'];
             $birth = 0;
             $death = 0;
+            $visitor = 0;
+            $marriage = 0;
             $water_baptism = 0;
             $fire_baptism = 0;
             $soul = 0;
@@ -81,6 +82,10 @@ class fetchData extends DBH
                     $fire_baptism += 1;
                 } elseif ($name == 'soul') {
                     $soul += 1;
+                } elseif ($name == 'visitor') {
+                    $visitor += 1;
+                } elseif ($name == 'marriage') {
+                    $marriage += 1;
                 }
 
 
@@ -91,10 +96,12 @@ class fetchData extends DBH
             $ObjectDataMain->water_baptism = $water_baptism;
             $ObjectDataMain->fire_baptism = $fire_baptism;
             $ObjectDataMain->soul = $soul;
+            $ObjectDataMain->visitor = $visitor;
+            $ObjectDataMain->marriage = $marriage;
             $exportData = json_encode($ObjectDataMain);
         } else {
             $resultCheck = false;
-            $exportData = json_encode('<header>Not Records Available</header>');
+            $exportData = json_encode('Not Records Available');
         }
 
         if ($resultCheck) {
@@ -167,7 +174,7 @@ class fetchData extends DBH
         $resultCheck = true;
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` where `department` ='all'  OR   `department` = 'All users' ORDER BY `id` DESC");
         if (!$stmt->execute()) {
-            print_r($stmt->errorInfo());
+
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
             exit(json_encode($Error));
@@ -262,7 +269,7 @@ class fetchData extends DBH
 
         } else {
             $resultCheck = false;
-            array_push($CompletedList, '<header>No Records Available</header>');
+            array_push($CompletedList, 'No Records Available');
 
         }
 
@@ -285,7 +292,7 @@ class fetchData extends DBH
 
         } else {
             $resultCheck = false;
-            array_push($Current, '<header>No Records Available</header>');
+            array_push($Current, 'No Records Available');
         }
 
         $object_data->completed = $CompletedList;
@@ -364,8 +371,8 @@ class fetchData extends DBH
         $dataList = new \stdClass();
         if (!$stmt->execute()) {
             $stmt = null;
-            $Error = 'Fetching data encounted a problem';
-            exit(json_encode($Error));
+            $exportData = 'Fetching data encounted a problem';
+
         } else {
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
@@ -375,14 +382,11 @@ class fetchData extends DBH
                     array_push($Mountain, $name);
                 }
                 $dataList->Mountain = $Mountain;
+                $exportData = json_encode($dataList);
             } else {
-                exit(json_encode('No Available records'));
+                $exportData = 'No Available records';
             }
         }
-
-
-
-        $exportData = json_encode($dataList);
 
         if ($resultCheck) {
             return $exportData;
@@ -709,7 +713,7 @@ class fetchData extends DBH
     {
 
         $exportData = '';
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`datacollections` ORDER BY `id` DESC limit 4");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`datacollections` ORDER BY `id` DESC ");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
@@ -985,5 +989,102 @@ class fetchData extends DBH
         }
         return $exportData;
     }
+
+
+    protected function library_view_category()
+    {
+
+        $exportData = '';
+        $stmt = $this->data_connect()->prepare("SELECT  `category` as 'category_view' FROM `zoe_library`.`datacollections` ORDER BY `id` DESC ");
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encountered a problem';
+            return $Error;
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportSendMain = new \stdClass();
+            foreach ($result as $data) {
+                $name = $this->validate($data['category_view']);
+                if (preg_match('/[,]/', $name)) {
+                    $explode = explode(",", $name);
+                    foreach ($explode as $sep) {
+                        $keys = get_object_vars($ExportSendMain);
+
+                        if (array_key_exists($sep, $keys)) {
+                            $ExportSendMain->$sep += 1;
+                        } else {
+                            $ExportSendMain->$sep = 0 + 1;
+                        }
+                    }
+                }
+            }
+            $exportData = $ExportSendMain;
+        } else {
+            $exportData = 'No Records available';
+        }
+        $exportDataSift = new \stdClass();
+        if (is_object($exportData)) {
+            $Keys = array_keys(get_mangled_object_vars($exportData));
+            foreach ($Keys as $itemMain) {
+                if ($exportData->$itemMain >= 2) {
+
+                    $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`datacollections` where  category like '%$itemMain%' limit 5");
+                    if (!$stmt->execute()) {
+                        $stmt = null;
+                        $Error = 'Fetching data encountered a problem';
+                        exit(json_encode($Error));
+                    }
+                    if ($stmt->rowCount() > 0) {
+                        $result = $stmt->fetchAll();
+                        $ExportSendMainSif = new \stdClass();
+                        foreach ($result as $data) {
+                            $ExportSend = new \stdClass();
+                            $name = $this->validate($data['name']);
+                            $Author = $this->validate($data['Author']);
+                            $unique_id = $this->validate($data['unique_id']);
+                            $source = $this->validate($data['Source']);
+                            $coverImage = $this->validate($data['cover_img']);
+
+                            $ExportSend->Image = $coverImage;
+                            $ExportSend->UniqueId = $unique_id;
+                            $ExportSend->name = $name;
+                            $ExportSend->Author = $Author;
+                            $ExportSend->source = $source;
+                            $ExportSendMainSif->$unique_id = $ExportSend;
+                        }
+                        $exportDataSift->$itemMain = $ExportSendMainSif;
+                    }
+                }
+            }
+        }
+        if (count(get_object_vars($exportDataSift)) > 0) {
+            return json_encode($exportDataSift);
+        } else {
+            return json_encode('No Records available');
+        }
+    }
+
+
+    protected function set_Notification($site, $item)
+    {
+
+        $date = date('jS F Y');
+        $status = 'unchecked';
+        $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`notification`(`site`, `title`, `date`, `status`) VALUES (?,?,?,?)");
+        $stmt->bindParam('1', $site, \PDO::PARAM_STR);
+        $stmt->bindParam('2', $item, \PDO::PARAM_STR);
+        $stmt->bindParam('3', $date, \PDO::PARAM_STR);
+        $stmt->bindParam('4', $status, \PDO::PARAM_STR);
+        if (!$stmt->execute()) {
+
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        } else {
+            return json_encode('Success');
+        }
+    }
+
 }
 ?>

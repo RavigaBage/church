@@ -4,10 +4,17 @@ define(function () {
   var year = now.getFullYear();
   var month = now.getMonth();
   isLeapYear = (year) => {
-    return (
-      (year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) ||
-      (year % 100 === 0 && year % 400 === 0)
-    );
+    isLeapYear = (year) => {
+      if (year % 4 == 0) {
+        if ((year % 100) % 4 == 0) {
+          if ((year % 400) % 4 == 0) {
+            return true
+          }
+        }
+      }
+      return false
+
+    };
   };
   getFebDays = (year) => {
     return isLeapYear(year) ? 29 : 28;
@@ -53,40 +60,6 @@ define(function () {
     }
     calender.innerHTML = Value_date;
   };
-  // function EventList_Marking(monthValue, yearValue, dayValue, objData) {
-  //   colors = ["pink", "crimson", "blue"];
-  //   pTemp = "";
-  //   let ParseData = JSON.parse(objData);
-  //   KeysData = Object.keys(ParseData);
-  //   KeysData.forEach((element) => {
-  //     const elementObj = ParseData[element];
-  //     let name = elementObj["name"];
-  //     let year = elementObj["year"];
-  //     let month = elementObj["Month"];
-  //     let Day = elementObj["Day"];
-  //     let start = elementObj["start"];
-  //     let end = elementObj["end"];
-  //     let venue = elementObj["venue"];
-  //     let theme = elementObj["theme"];
-  //     let about = elementObj["about"];
-  //     let file = elementObj["image"];
-  //     let department = elementObj["department"];
-  //     let state = elementObj["state"];
-  //     let unique_id = elementObj["unique_id"];
-  //     ColorRand = Math.round((Math.random() * 100) % 5);
-  //     if (ColorRand > 2) {
-  //       ColorRand = 2;
-  //     }
-  //     if (
-  //       parseInt(dayValue) === parseInt(Day) &&
-  //       parseInt(yearValue) === parseInt(year) &&
-  //       parseInt(monthValue) === parseInt(month) - 1
-  //     ) {
-  //       pTemp += `<p style="--color:${colors[ColorRand]}">${name}</p>`;
-  //     }
-  //   });
-  //   return pTemp;
-  // }
   CalenderMethods.EvenData = (objData) => {
     let ParseData = JSON.parse(objData);
     ParseData.foreach((element) => {
@@ -107,6 +80,7 @@ define(function () {
     });
   };
   CalenderMethods.calender = (monthValue, yearValue, dayValue, eventData) => {
+
     const calender = document.querySelector(".min_data.event_days");
     const CalenderMonth = document.querySelector(".view.month_view .view_main");
     const monthValue_f = parseInt(monthValue);
@@ -143,7 +117,12 @@ define(function () {
 
     const DayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"];
     let first_day = new Date(yearValue_f, monthValue_f, 1);
-    let MonthsTotal = DaysOfMonth[monthValue_f - 1];
+    Total_Counter = monthValue_f;
+    if (Total_Counter < 1) {
+      Total_Counter = 1;
+    }
+
+    let MonthsTotal = DaysOfMonth[Total_Counter - 1];
     SpaceGenerator(first_day.getDay(), calender, MonthsTotal);
     SpaceGenerator(first_day.getDay(), CalenderMonth, MonthsTotal);
     for (i = 0; i <= DaysOfMonth[monthValue_f]; i++) {
@@ -154,23 +133,13 @@ define(function () {
         monthValue_f === now.getMonth()
       ) {
         calender.innerHTML += `<div class='active_today' title="today" data-icu=""><p>${i}</p></div>`;
-        CalenderMonth.innerHTML += `<div class='active_today' title="today" data-icu=""><span>${i}</span></div>`;
+        CalenderMonth.innerHTML += `<div class='active_today' title="today" data-icu=""><span>${i}</span><div class="data_list"></div></div>`;
       } else {
         calender.innerHTML += `<div class="" data-icu=""><p>${i}</p></div>`;
-        CalenderMonth.innerHTML += `<div data-icu=""><span>${i}</span></div>`;
+        CalenderMonth.innerHTML += `<div data-icu=""><span>${i}</span><div class="data_list"></div></div>`;
       }
     }
-    // Name.innerHTML = monthNames[monthValue];
 
-    ///////////setting month Value
-    // for (let i = 0; i < monthsListVal.length; i++) {
-    //   const element = monthsListVal[i];
-    //   if (i == monthValue) {
-    //     element.classList.add("display_active");
-    //   } else {
-    //     element.classList.remove("display_active");
-    //   }
-    // }
   };
 
   return CalenderMethods;

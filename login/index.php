@@ -40,6 +40,17 @@ $token = $_SESSION['token_data'];
         <div class="form-container sign-in-container">
             <form action="#" autocomplete="off">
                 <h1>Sign in</h1>
+                <div class="loader_wrapper">
+                    <div class="load-3">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="text">
+                        <p style="color:crimson"></p>
+                    </div>
+                </div>
+
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
@@ -74,7 +85,7 @@ $token = $_SESSION['token_data'];
         }
         var form = document.querySelector('form');
         var button = document.querySelector('form button');
-        var loader = document.querySelector('.loader');
+        var Loader = document.querySelector('.loader_wrapper');
         bearer_token = false;
         window.addEventListener('load', async function () {
             try {
@@ -109,6 +120,9 @@ $token = $_SESSION['token_data'];
             if (bearer_token != false) {
                 let AllInput = document.querySelectorAll('form input');
                 if (CleanData(AllInput)) {
+                    Loader.classList.remove('active');
+                    Loader.classList.add('play');
+
                     dataSend = {
                         User: AllInput[1].value,
                         Key: AllInput[0].value,
@@ -127,15 +141,13 @@ $token = $_SESSION['token_data'];
                         if (Request.status == 200) {
                             response = await Request.json(response);
                             if (response['status'] == 'success') {
-                                if (!loader.classList.contains('danger')) {
-                                    loader.classList.add('danger');
-                                }
                                 if (typeof response['message'] != 'object') {
-                                    loader.innerText = response['message'];
+                                    Loader.querySelector('.text p').textContent = response['message'];
                                 } else {
-                                    loader.innerText = response['status'];
+                                    Loader.classList.remove('play');
+                                    Loader.classList.add('active');
+                                    Loader.querySelector('.text p').textContent = response['status'];
                                     Splitname = splitScreen[1].toLowerCase();
-                                    console.log(Splitname);
                                     if (typeof splitScreen == 'object') {
                                         if (Splitname == 'userlogin') {
                                             location.href = '../pages/parallax.php';
@@ -143,15 +155,17 @@ $token = $_SESSION['token_data'];
                                             location.href = '../pages/ZMS/Dashboard.php#';
                                         }
                                     }
-
                                 }
                             } else {
-                                loader.innerText = response['message'];
+                                Loader.classList.remove('play');
+                                Loader.classList.add('active');
+                                Loader.querySelector('.text p').textContent = response;
                             }
                         }
                     } catch (error) {
                         console.error(error);
                     }
+                    Loader.classList.remove('play');
                 }
 
             }

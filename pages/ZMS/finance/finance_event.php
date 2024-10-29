@@ -416,8 +416,7 @@ if ($condition) {
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                        </tr>        
-                                        ";
+                                                        </tr>";
                                                     }
                                                     echo ' </tbody>';
                                                 }
@@ -472,7 +471,7 @@ if ($condition) {
                                             <label>Activity Date</label>
                                             <input type="date" name="Date" placeholder="" />
                                         </div>
-                                        <input type="hidden" name="delete_key" />
+                                        <input type="hidden" name="delete_key" type="number"/>
                                         <input type="hidden" name="formName" value="<?php echo $_GET['data_page']; ?>" />
                                         <button>create Activity</button>
                                     </div>

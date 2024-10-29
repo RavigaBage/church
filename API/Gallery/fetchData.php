@@ -29,6 +29,7 @@ class fetchData extends DBH
 {
     public function validate($data)
     {
+
         if (empty($data)) {
             $data = 'test pass failed';
         } else {
@@ -38,9 +39,9 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function gallery_upload_data($Event_name, $Image_name, $upload_date, $category, $Image, $Image_type, $Image_tmp_name)
+    protected function gallery_upload_data($Event_name, $uploaded_file_names ,$upload_date, $category)
     {
-        $input_list = array($Event_name, $Image_name, $upload_date, $category);
+        $input_list = array($Event_name, $upload_date, $category);
         $clean = true;
         $exportData = 0;
         $resultValidate = true;
@@ -53,134 +54,82 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            if (count($Image) == 0) {
-                $Image = '';
-            } else {
-                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` WHERE `EventName` = '$Event_name' AND  `name` = '$Image_name' AND  `date_uploaded`='$upload_date' AND  `category` = '$category'");
+            $count  = 0;
+            foreach($uploaded_file_names as $uploaded_file_name){
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` WHERE `EventName` = ?  AND  `date_uploaded`=? AND  `category` = ? AND `name`=?");
+                $stmt->bindParam('1',$Event_name,\PDO::PARAM_STR);
+                $stmt->bindParam('2',$upload_date,\PDO::PARAM_STR);
+                $stmt->bindParam('3',$category,\PDO::PARAM_STR);
+                $stmt->bindParam('4',$uploaded_file_name,\PDO::PARAM_STR);
                 if (!$stmt->execute()) {
-
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problems');
                     exit($Error);
                 } else {
                     if (!$stmt->rowCount() > 0) {
-                        $total = count($Image);
-                        for ($i = 0; $i < $total; $i++) {
-                            $explodes = explode('.', $Image[$i]);
-                            $explode_end = end($explodes);
-                            $Extensions = array('jpg', 'png', 'jpeg');
-                            if (in_array($explode_end, $Extensions)) {
-                                $types = ["image/jpg", "image/png", "image/jpeg"];
-                                if (in_array($Image_type[$i], $types)) {
-                                    $filename4 = time() . $Image[$i];
-                                    $Image_name = $Event_name . $filename4;
-                                    $target4 = "../Images_folder/gallery/$Image_name";
-                                    if (move_uploaded_file($Image_tmp_name[$i], $target4)) {
-                                        $unique_id = rand(time(), 3002);
-                                        $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`gallary`(`unique_id`, `EventName`, `name`, `date_uploaded`, `category`)VALUES (?,?,?,?,?)");
-                                        $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
-                                        $stmt->bindParam('2', $Event_name, \PDO::PARAM_STR);
-                                        $stmt->bindParam('3', $Image_name, \PDO::PARAM_STR);
-                                        $stmt->bindParam('4', $upload_date, \PDO::PARAM_STR);
-                                        $stmt->bindParam('5', $category, \PDO::PARAM_STR);
-                                        if (!$stmt->execute()) {
-                                            $stmt = null;
-                                            $Error = json_encode('Fetching data encountered a problems');
-                                            exit($Error);
-                                        } else {
-                                            $date = date('Y-m-d H:i:s');
-                                            $namer = $_SESSION['login_details'];
-                                            $historySet = $this->history_set($namer, "Gallery  Data Upload", $date, "Gallery  page dashboard Admin", "User Uploaded a data");
-                                            if (json_decode($historySet) != 'Success') {
-                                                $exportData = 'success';
-                                            }
-
-                                            $exportData = 'Upload was a success';
-                                        }
-
-                                    } else {
-                                        exit(json_encode("An error occurred while processing image, try again"));
-                                    }
-                                } else {
-                                    exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                                }
+                            $unique_id = rand(time(), 3002);
+                            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`gallary`(`unique_id`, `EventName`, `name`, `date_uploaded`, `category`)VALUES (?,?,?,?,?)");
+                            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                            $stmt->bindParam('2', $Event_name, \PDO::PARAM_STR);
+                            $stmt->bindParam('3', $uploaded_file_name, \PDO::PARAM_STR);
+                            $stmt->bindParam('4', $upload_date, \PDO::PARAM_STR);
+                            $stmt->bindParam('5', $category, \PDO::PARAM_STR);
+                            if (!$stmt->execute()) {
+                                $stmt = null;
+                                $Error = 'Fetching data encountered a problems';
+                                return ($Error);
                             } else {
-                                exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
+                                $date = date('Y-m-d H:i:s');
+                                $namer = $_SESSION['login_details'];
+                                $historySet = $this->history_set($namer, "Gallery  Data Upload", $date, "Gallery  page dashboard Admin", "User Uploaded a data");
+                                if (json_decode($historySet) != 'Success') {
+                                    $exportData = 'success';
+                                   
+                                }
+                                $count += 1;
+                                $exportData = 'Upload was a success';
                             }
-                        }
                     } else {
-                        exit(json_encode('Data already exist'));
+                        return('Data already exist');
                     }
                 }
-            }
-
-
+            }        
         }
-        return $exportData;
+        if($count == count($uploaded_file_names)){
+            return $exportData;
+        }else{
+            $message = 'first'.$count .'files we uploaded succesfuly';
+            return $message;
+        }
 
     }
 
-    protected function gallery_update_data($Event_name, $Image_name, $upload_date, $category, $ImageName, $Image_type, $Image_tmp_name, $unique_id)
+    protected function gallery_update_data($Event_name, $uploaded_file_names, $upload_date, $category, $unique_id)
     {
-
         $input_list = array($Event_name, $upload_date, $category);
         $clean = true;
         $exportData = 0;
-        $Image_name = $Image_name[0];
         foreach ($input_list as $input) {
             $data = $this->validate($input);
             if ($data == 'test pass failed') {
-                $Error = json_encode('validating data encountered a problem, All fields are required !');
+                $Error = 'validating data encountered a problem, All fields are required !';
                 $clean = false;
-                exit($Error);
-
+                return $Error;
             }
         }
         if ($clean) {
-
-            if (!strlen($Image_name) > 2) {
-                $Image_v = '';
-            } else {
-                $Image_v = $Image_name;
-            }
-
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` WHERE `unique_id` = '$unique_id'");
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problems');
-                exit($Error);
+                return $Error;
             } else {
                 if ($stmt->rowCount() > 0) {
-                    if (strlen($Image_v) > 2) {
-                        $explodes = explode('.', $Image_v);
-                        $explode_end = end($explodes);
-                        $Extensions = array('jpg', 'png', 'jpeg');
-                        if (in_array($explode_end, $Extensions)) {
-                            $types = ["image/jpg", "image/png", "image/jpeg"];
-                            if (in_array($Image_type[0], $types)) {
-                                $filename4 = time() . $explodes[0];
-                                $Image_name = $filename4;
-
-                                $target4 = "../Images_folder/gallery/" . $Image_name . "";
-
-                                if (move_uploaded_file($Image_tmp_name[0], $target4)) {
-                                } else {
-                                    exit(json_encode("An error occurred while processing image, try again"));
-                                }
-                            } else {
-                                exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-
-                    }
-
-                    $stmt = '';
-                    if (strlen($Image_v) > 2) {
+                    $stmt;
+                    if (!empty($uploaded_file_names)) {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`gallary` SET `EventName`=?,`name`=?,`date_uploaded`=?,`category`=? where `unique_id` = ?");
                         $stmt->bindParam('1', $Event_name, \PDO::PARAM_STR);
-                        $stmt->bindParam('2', $Image_name, \PDO::PARAM_STR);
+                        $stmt->bindParam('2', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('3', $upload_date, \PDO::PARAM_STR);
                         $stmt->bindParam('4', $category, \PDO::PARAM_STR);
                         $stmt->bindParam('5', $unique_id, \PDO::PARAM_STR);
@@ -194,7 +143,7 @@ class fetchData extends DBH
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = json_encode('Fetching data encountered a problems');
-                        exit($Error);
+                        return $Error;
                     } else {
                         $date = date('Y-m-d H:i:s');
                         $namer = $_SESSION['login_details'];
@@ -202,11 +151,11 @@ class fetchData extends DBH
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-                        $exportData = 'Upload was a success';
+                        $exportData = 'Update was a success';
                     }
 
                 } else {
-                    exit(json_encode('Data does not exist, perhaps it has been deleted'));
+                    return 'Data does not exist, perhaps it has been deleted';
                 }
             }
             return $exportData;
@@ -265,14 +214,12 @@ class fetchData extends DBH
     protected function gallery_view($num)
     {
         $exportData = '';
-        $resultCheck = true;
-        $nk = $num - 1 * 40;
-        if ($num == '1') {
+        $nk = ($num - 1) * 40;
+        if (intVal($num) == 1) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` ORDER BY `id` DESC limit 40");
         } else {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` ORDER BY `id` DESC limit 40 OFFSET $nk");
         }
-
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
@@ -352,24 +299,19 @@ class fetchData extends DBH
                 $ExportSend->date_uploaded = $date_uploaded;
                 $ExportSend->category = $category;
                 $ExportSend->Obj = $ObjectData;
-
                 $ExportSendMain->$unique_id = $ExportSend;
             }
-            $exportData = json_encode($ExportSendMain);
+            $exportData = $ExportSendMain;
         } else {
-            $resultCheck = false;
             $exportData = 'No Record Available';
         }
         return $exportData;
 
     }
-
     protected function gallery_view_pages()
     {
         $exportData = '';
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` ORDER BY `id` DESC");
-
-
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -379,7 +321,6 @@ class fetchData extends DBH
 
         return $exportData;
     }
-
     protected function gallery_view_export()
     {
         $exportData = '';
@@ -558,7 +499,6 @@ class fetchData extends DBH
         return $exportData;
     }
 
-
     protected function history_set($name, $event, $Date, $sitename, $action)
     {
         $unique_id = rand(time(), 1002);
@@ -583,7 +523,6 @@ class fetchData extends DBH
             }
         }
     }
-
     protected function gallery_view_images($count, $filter)
     {
         $offset = 100 * intVal($count);

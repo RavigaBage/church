@@ -16,6 +16,16 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+    public function ministries_upload_user($name, $partnership, $date, $status, $email, $type, $period)
+    {
+        $RecordsResult = $this->Partnership_upload_data_user($name, $partnership, $date, $status, $email, $type, $period);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
 
     public function ministries_update($name, $partnership, $date, $status, $email, $type, $period, $unique_id)
     {

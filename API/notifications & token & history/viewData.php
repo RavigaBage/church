@@ -183,6 +183,29 @@ class viewData extends fetchData
         }
     }
 
+    public function Status_Notification()
+    {
+        $RecordsResult = $this->Get_Notification();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Reset_Notification($site)
+    {
+        $RecordsResult = $this->Set_Notification($site);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+
+
+
 
 
 }

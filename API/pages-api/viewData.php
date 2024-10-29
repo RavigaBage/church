@@ -4,6 +4,16 @@ namespace ChurchApi;
 use ChurchApi\fetchData;
 class viewData extends fetchData
 {
+    public function Category_view()
+    {
+        $RecordsResult = $this->library_view_category();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
     public function call_action_viewList()
     {
         $RecordsResult = $this->call_action_view();
@@ -164,6 +174,17 @@ class viewData extends fetchData
         } else {
             return $RecordsResult;
         }
+    }
+    public function notification_set($site, $title)
+    {
+        $RecordsResult = $this->set_Notification($site, $title);
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+
     }
 
 

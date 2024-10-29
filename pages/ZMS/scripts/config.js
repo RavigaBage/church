@@ -12,6 +12,11 @@ requirejs.config({
     slick: "slick.min",
     slickAnimation: "slick-animation.min",
     jQuery: "jquery",
-    emailjs: "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    emailjs: "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js",
+    transaction: "transactions",
+    Expenses: "Expensis",
+    Tithe: "tithe",
+    resumable: "resumable"
+
   },
 });

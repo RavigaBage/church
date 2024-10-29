@@ -2,8 +2,11 @@
 require '../API/vendor/autoload.php';
 $newDataRequest = new ChurchApi\viewData();
 $stringpass = 'libraryhome.php' . date('Y');
-$hash = hash('sha256', $stringpass)
-    ?>
+$hash = hash('sha256', $stringpass);
+$Class = new \stdClass();
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,25 +60,30 @@ $hash = hash('sha256', $stringpass)
                                      <h1>RECENT SERMONS</h1>
                                  </div>
                                  <div class="podcast">';
+                    $counter = 0;
                     foreach ($data as $item) {
-                        $unique_id = $item->UniqueId;
-                        $name = $item->name;
-                        $Author = $item->Author;
-                        $source = $item->source;
-
-
-                        echo '<a href="Libraryvid.php?encrypt=local&&01%8&&data_num=zoevideo&&dir=' . $hash . '&&vid_id=' . $unique_id . '" target="_blank"><div class="item">
-                        <div class="image">
-                            <img src="../API/images_folder/library/covers/' . $item->Image . '" alt="item" />
-                            <div class="viewers">
-                                <p>' . $Author . '</p>
+                        if ($counter < 4) {
+                            $unique_id = $item->UniqueId;
+                            $name = $item->name;
+                            $Author = $item->Author;
+                            $source = $item->source;
+                            echo '<a href="Libraryvid.php?encrypt=local&&01%8&&data_num=zoevideo&&dir=' . $hash . '&&vid_id=' . $unique_id . '" target="_blank"><div class="item">
+                            <div class="image">
+                                <img src="../API/images_folder/library/covers/' . $item->Image . '" alt="item" />
+                                <div class="viewers">
+                                    <p>' . $Author . '</p>
+                                </div>
                             </div>
-                        </div>
+    
+                            <div class="details">
+                                <h1>' . $name . '</h1>
+                            </div>
+                        </div></a>';
+                        } else {
+                            break;
+                        }
 
-                        <div class="details">
-                            <h1>' . $name . '</h1>
-                        </div>
-                    </div></a>';
+                        $counter++;
 
                     }
                     echo '</div>';
@@ -93,24 +101,29 @@ $hash = hash('sha256', $stringpass)
                                      <h1>Explore our Collection</h1>
                                  </div>
                                  <div class="podcast">';
+                    $counter = 0;
                     foreach ($data as $item) {
-                        $unique_id = $item->UniqueId;
-                        $name = $item->name;
-                        $Author = $item->Author;
-                        $source = $item->source;
+                        if ($counter >= 4) {
+                            $unique_id = $item->UniqueId;
+                            $name = $item->name;
+                            $Author = $item->Author;
+                            $source = $item->source;
 
-                        echo ' <div class="item" id=' . $unique_id . '>
-                        <div class="image">
-                            <img src="' . $source . '" alt="item" />
-                            <div class="viewers">
-                                <p>' . $Author . '</p>
+                            echo '<a href="Libraryvid.php?encrypt=local&&01%8&&data_num=zoevideo&&dir=' . $hash . '&&vid_id=' . $unique_id . '" target="_blank"><div class="item">
+                            <div class="image">
+                                <img src="../API/images_folder/library/covers/' . $item->Image . '" alt="item" />
+                                <div class="viewers">
+                                    <p>' . $Author . '</p>
+                                </div>
                             </div>
-                        </div>
+    
+                            <div class="details">
+                                <h1>' . $name . '</h1>
+                            </div>
+                        </div></a>';
+                        }
+                        $counter++;
 
-                        <div class="details">
-                            <h1>' . $name . '</h1>
-                        </div>
-                    </div>';
 
                     }
                     echo '</div>';
@@ -118,6 +131,49 @@ $hash = hash('sha256', $stringpass)
 
                 ?>
             </section>
+            <?php
+            $data = $newDataRequest->Category_view();
+            if (is_object(json_decode($data))) {
+                $count = 0;
+                $Keys_ref = array_keys(get_object_vars(json_decode($data)));
+                foreach (json_decode($data) as $item) {
+                    echo '<section>
+                     <div class="title">
+                                     <h1>' . $Keys_ref[$count] . '</h1>
+                                     <button>More..</button>
+                                 </div>
+                                 <div class="podcast">';
+                    foreach ($item as $m_item) {
+                        if ($counter >= 4) {
+                            $unique_id = $m_item->UniqueId;
+                            $name = $m_item->name;
+                            $Author = $m_item->Author;
+                            $source = $m_item->source;
+
+                            echo '<a href="Libraryvid.php?encrypt=local&&01%8&&data_num=zoevideo&&dir=' . $hash . '&&vid_id=' . $unique_id . '" target="_blank"><div class="item">
+                            <div class="image">
+                                <img src="../API/images_folder/library/covers/' . $m_item->Image . '" alt="m_item" />
+                                <div class="viewers">
+                                    <p>' . $Author . '</p>
+                                </div>
+                            </div>
+    
+                            <div class="details">
+                                <h1>' . $name . '</h1>
+                            </div>
+                        </div></a>';
+                        }
+                        $counter++;
+
+
+                    }
+
+                    echo '</div></section>';
+                    $count++;
+                }
+                ;
+            }
+            ?>
             <section>
                 <div class="title">
                     <h1>Repentance</h1>

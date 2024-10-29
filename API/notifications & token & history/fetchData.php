@@ -855,4 +855,60 @@ class fetchData extends DBH
             }
         }
     }
+    protected function Get_Notification()
+    {
+
+        $result = 'none';
+        $stmt = $this->data_connect()->prepare("SELECT * FROM  `zoeworshipcentre`.`notification` where `status`='unchecked'");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            $ExportResult = new \stdClass();
+            foreach ($result as $data) {
+                $mini = new \stdClass();
+                $name = $data['site'];
+                $date = $data['date'];
+                $title = $data['title'];
+                $mini->name = $name;
+                $mini->date = $date;
+                $mini->title = $title;
+
+                $unique_id = rand(time(), 1023);
+                $ExportResult->$unique_id = $mini;
+            }
+            $result = $ExportResult;
+        }
+        return json_encode($result);
+    }
+    protected function Set_Notification($site)
+    {
+        $result = 'none';
+        $stmt = $this->data_connect()->prepare("SELECT * FROM  `zoeworshipcentre`.`notification` where `site`='$site' and `status`='unchecked'");
+
+        if (!$stmt->execute()) {
+            $stmt = null;
+            $Error = 'Fetching data encounted a problem';
+            exit(json_encode($Error));
+        }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetchAll();
+            foreach ($result as $data) {
+                $Id = $data['id'];
+                $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`notification` SET `status`='checked' WHERE `id`=$Id");
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = 'Fetching data encounted a problem';
+                    exit(json_encode($Error));
+                } else {
+                    echo 'success';
+                }
+            }
+        }
+    }
+
 }

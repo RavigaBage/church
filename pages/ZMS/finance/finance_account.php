@@ -2,11 +2,13 @@
 session_start();
 require '../../../API/vendor/autoload.php';
 $newDataRequest = new Finance\viewData();
-if (isset($_GET['data_page'])) {
-    $num = $_GET['data_page'];
+
+if (isset($_GET['page'])) {
+    $num = $_GET['page'];
 } else {
     $num = 1;
 }
+
 if (isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
     $token = $_SESSION['Admin_access'];
@@ -127,6 +129,7 @@ if ($condition) {
                 } else {
                     echo "<thead>
                     <tr>
+                    <th>No.</th>
                        <th>Description</th>
                         <th>Date</th>
                         <th>category</th>
@@ -157,7 +160,7 @@ if ($condition) {
                             $item_2 = "<div class='success'>+ " . $percentage . "%</div>";
                         }
 
-                        echo "<tr>
+                        echo "<tr><td class='count'><input type='checkbox' /></td>
                     <td>" . $account . " " . $description . "</td>
                     <td>" . $date . "</td>
                     <td>" . $item . "</td>
@@ -174,16 +177,10 @@ if ($condition) {
     </div>
     <div class="page_sys">
         <?php
-        if (isset($_SESSION['total_pages_account'])) {
-            $total = $_SESSION['total_pages_account'];
-        } else {
-            $total = $newDataRequest->AccountPages();
-            $_SESSION['total_pages_account'] = $total;
-        }
+        $total = $newDataRequest->AccountPages();
         if ($total != 'Error Occurred') {
             ?>
             <header>
-
                 <?php
                 $total_raw = $total / 40;
                 $total = ceil($total / 40);
@@ -195,7 +192,6 @@ if ($condition) {
                     <div class="pages">
                         <?php
                         $loop = $total_raw;
-                        $num = 2;
                         $start = 1;
                         $original_1 = $total;
                         if ($total > 6) {
@@ -225,6 +221,7 @@ if ($condition) {
                                 echo '<div class="' . $class . '">' . $i . '</div>';
                             }
                         } else {
+
                             for ($i = $start; $i < ($original_1); $i++) {
                                 $class = "";
                                 if ($i == $num) {
@@ -232,6 +229,8 @@ if ($condition) {
                                 }
                                 echo '<div class="' . $class . '">' . $i . '</div>';
                             }
+
+
                         }
                         if ($total_raw > 6) {
                             $final = $total - 1;
@@ -241,7 +240,11 @@ if ($condition) {
                         if ($loop >= 6 && $original_1 < ($total - 2)) {
                             echo '<span>......</span><div>' . $final . '</div>';
                         } else {
-                            echo '<div>' . $final . '</div>';
+                            $class = '';
+                            if ($num == $final) {
+                                $class = 'active';
+                            }
+                            echo '<div class=' . $class . '>' . $final . '</div>';
                         }
                         ?>
                     </div>
@@ -278,12 +281,49 @@ if ($condition) {
         </form>
     </div>
 
+    <div class="event_menu_add form_data  acc_delete">
+        <form>
+            <header>Account Setting</header>
+            <?php
+            $data = $newDataRequest->Accounts_list_view();
+            if(is_object(json_decode($data))){
+                $data = json_decode($data);
+                foreach($data as $item){
+                      foreach ($item as $key) {
+                        echo "
+                        <div class='item flex'>
+                            <div class='details'>
+                                <p class='item_name'>".$key."</p>
+                            </div>
+                            <div class='delete option'>
+                            <i class='fas fa-trash delete_item' delete_acc='".$key."'></i>
+                            </div>
+                        </div>";
+                      }
+                        
+                    }
+                  
+                }
+            
+            ?>
+        </form>
+    </div>
+    <div class="info_information event_menu_add"
+                style="height:300px; width:500px; padding:10px;text-wrap:wrap;display:grid;place-items:center;">
+                <header class="danger"></header>
+            </div>
+
     <div class="add_event" data-menu="event">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
             <path
                 d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
         </svg>
         <p>New</p>
+    </div>
+
+    <div class="add_event far" data-menu="event">
+    <i class='fas fa-trash delete_item' ></i>
+        <p>Delete</p>
     </div>
     <?php
 } else {

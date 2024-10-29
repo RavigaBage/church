@@ -36,13 +36,24 @@ $unique_id = $_SESSION['unique_id'];
                 $_SESSION['userImage'] = $image;
                 ?>
                 <div class="flex profile_status">
-                    <div class="cover">
+                    <div class="cover" style="position:relative;">
                         <img src="../API/Images_folder/users/<?php echo $image; ?>" alt="" id="cover_profile" />
+                        <div class="loader_btn">
+                        <div class="loader_wrapper">
+                            <div class="load-3">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="text">
+                                <p style="color:crimson"></p>
+                            </div>
+                        </div>
+                        </div>
                     </div>
 
                     <div class="details">
-                        <button id="uploadbtn">Upload new photo</button>
-                        <input hidden type="file" name="id_file" />
+                        <button id="browseButton">Upload new photo</button>
                         <p>At least 800 x 800 px recommended.</p>
                         <p>JPG OR PNG is allowed</p>
                     </div>

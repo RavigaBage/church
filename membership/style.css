@@ -5,7 +5,15 @@
 }
 @font-face {
   font-family: Ninu;
-  src: url("../font/Nunito-Regular_1.ttf");
+  src: url("../font/Nunito-Medium.ttf");
+}
+@font-face {
+  font-family: boldFont;
+  src: url("../font/MontserratExtrabold-VGO60.ttf");
+}
+@font-face {
+  font-family: semi-boldFont;
+  src: url("../font/Rubik-SemiBold.ttf");
 }
 
 :root {
@@ -24,6 +32,75 @@
   --bgfadeblack: #080b0e;
   --bgfadeblack-light: #16181a;
 }
+.loader_btn{
+  position: absolute;
+  inset:0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: none;
+}
+.loader_btn.active{
+  background-color: teal;
+  color:#fff;
+  display: grid;
+  place-items: center;
+}
+
+.load-3 .line:nth-last-child(1) {
+  animation: loadingC 0.6s 0.1s linear infinite;
+}
+
+.load-3 .line:nth-last-child(2) {
+  animation: loadingC 0.6s 0.2s linear infinite;
+}
+
+.load-3 .line:nth-last-child(3) {
+  animation: loadingC 0.6s 0.3s linear infinite;
+}
+.line {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  background-color: #4b9cdb;
+}
+.loader_wrapper {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+.loader_wrapper .load-3,
+.loader_wrapper .text {
+  display: none;
+}
+.loader_wrapper.play .load-3 {
+  display: inline;
+}
+.loader_btn.active .loader_wrapper .load-3 {
+  display: block;
+}
+.loader_wrapper .text {
+  display: none;
+}
+.loader_wrapper .text p {
+  text-align: center;
+  font-weight: bolder;
+}
+
+@keyframes loadingC {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(0, 15px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
 p.unchecked {
   margin-top: 10px;
   font-weight: bolder;
@@ -41,6 +118,13 @@ body {
   background: var(--bgblack);
   color: var(--white);
   font-family: Ninu;
+}
+h1,
+h2 {
+  font-family: semi-boldFont;
+}
+header {
+  font-family: boldFont;
 }
 main {
   display: grid;

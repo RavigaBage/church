@@ -1,7 +1,7 @@
 define(function () {
   var CallMethods = {};
 
-  CallMethods.UpdateItemFunction = (value) => {
+  CallMethods.aUpdateItemFunction = (value) => {
     console.log(value);
   };
   CallMethods.DeleteItemFunction = (value) => {

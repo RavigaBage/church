@@ -43,7 +43,16 @@ if ($condition) {
         <form encryption="multipart/form">
             <header>Assets form</header>
             <div class="container_event">
-                <p style="color:crimson;font-size:18px;text-align:center" class="error_information"></p>
+                <div class="loader_wrapper">
+                    <div class="load-3">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="text">
+                        <p style="color:crimson"></p>
+                    </div>
+                </div>
                 <div class="cate_view_e">
                     <div class="field">
                         <label>Assets name</label>
@@ -71,14 +80,34 @@ if ($condition) {
                     </div>
                     <div class="field">
                         <label>value</label>
-                        <input name="value" type="text" placeholder="" value="" required />
+                        <input name="value" type="number" placeholder="" value="" required />
                     </div>
                 </div>
 
                 <div class="cate_view">
                     <div class="field">
                         <label>Select file</label>
-                        <input name="imageFile" type="file" value="" />
+                        <div class="upload_blog">
+                            <a id="browseButton" name="imageFile">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                    <path d="M9 15l3 -3l3 3" />
+                                    <path d="M12 12l0 9" />
+                                </svg>
+
+                                <span>Select file to upload here</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="field">
                         <label>Status</label>
@@ -92,10 +121,10 @@ if ($condition) {
                 </div>
                 <div class="field_e">
                     <label>Description</label>
-                    <textarea name="description">..description this valuable...</textarea>
+                    <textarea name="description" >..description this valuable...</textarea>
                 </div>
 
-                <input name="delete_key" type="text" value="" hidden />
+                <input name="delete_key" type="number" value="" hidden />
                 <button>Record Asset</button>
             </div>
         </form>

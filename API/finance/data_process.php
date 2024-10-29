@@ -2,13 +2,75 @@
 require '../vendor/autoload.php';
 session_start();
 $pdh = new Finance\ViewData;
-if (isset($_GET['submit'])) {
+
+
+function DataCleansing($opt,$data){
+    if($opt == 'str'){
+        if(dataInstance_string($data) == False){
+            echo json_encode("Data cannot contain illegal characters");
+            exit();
+        }
+    }
+    if($opt == 'num'){
+        if(dataInstance_num($data) == False){
+            echo json_encode("Number cannot contain illegal characters");
+            exit();
+        }
+    }
+    if($opt == 'arr'){
+        if(dataInstance_array($data) == False){
+            echo json_encode("An error occurred please try again");
+            exit();
+        }
+    }
+    if($opt == 'obj'){
+        if(dataInstance_object($data) == False){
+            echo json_encode("An error occurred please try again");
+            exit();
+        }
+    }
+    if($opt == 'date'){
+        if(dataInstance_date($data) == False){
+            echo json_encode("illegal date formate detected");
+            exit();
+        }
+    }
+
+    if($opt == 'bool'){
+        if(dataInstance_bool($data) == False){
+            echo json_encode("An error occurred please try again");
+            exit();
+        }
+    }
+    return $data;
+}
+function dataInstance_num($data){
+    return Intval($data) && is_numeric($data) ? $data : False;
+}
+function dataInstance_string($data){
+    return is_string($data) && !preg_match('/[!@$%^&*()_+=*~;:><?]/',$data) ? $data : False;
+}
+function dataInstance_bool($data){
+    return is_bool($data) ? $data : False;
+}
+function dataInstance_array($data){
+    return is_array($data) ? $data : False;
+}
+function dataInstance_object($data){
+    return is_object($data) ? $data : False;
+}
+function dataInstance_date($data){
+     return ((DateTime::createFromFormat('Y-m-d',$data) !== False))? $data: False;
+}
+
+
+if (isset($_GET['submit']) && !isset($_GET['confirm_name'])) {
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-        $Account = $_POST['event'];
-        $Category = $_POST['category'];
-        $Amount = $_POST['amount'];
-        $Date = $_POST['date'];
-        $Description = $_POST['description'];
+        $Account = DataCleansing('str',$_POST['event']);
+        $Category = DataCleansing('str',$_POST['category']);
+        $Amount = DataCleansing('num',$_POST['amount']);
+        $Date = DataCleansing('date',$_POST['date']);
+        $Description = DataCleansing('date',$_POST['description']);
 
         $requestResponse = $pdh->Record_dues($Account, $Category, $Amount, $Description, $Date);
 
@@ -16,11 +78,11 @@ if (isset($_GET['submit'])) {
     }
 
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
-        $name = $_POST['event'];
-        $department = $_POST['category'];
-        $amount = $_POST['amount'];
-        $due = $_POST['date'];
-        $purpose = $_POST['description'];
+        $name = DataCleansing('str',$_POST['event']);
+        $department = DataCleansing('str',$_POST['category']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $due = DataCleansing('date',$_POST['date']);
+        $purpose = DataCleansing('date',$_POST['description']);
         $id = $_POST['delete_key'];
 
         $requestResponse = $pdh->update_dues_records($name, $department, $amount, $purpose, $due, $id);
@@ -30,17 +92,17 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
+        $id = DataCleansing('num',$data['key']);
 
         $requestResponse = $pdh->delete_dues_records($id);
         echo json_encode($requestResponse);
     }
 
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'upload' && $_GET['user'] == 'offertory') {
-        $name = $_POST['event'];
-        $amount = $_POST['amount'];
-        $date = $_POST['Date'];
-        $Description = $_POST['description'];
+        $name = DataCleansing('str',$_POST['event']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $Description = DataCleansing('date',$_POST['description']);
         $splitDate = explode('-', $date);
         $year = $splitDate[0];
         $month = $splitDate[1];
@@ -48,21 +110,21 @@ if (isset($_GET['submit'])) {
         echo json_encode($requestResponse);
     }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'update' && $_GET['user'] == 'offertory') {
-        $name = $_POST['event'];
-        $amount = $_POST['amount'];
-        $date = $_POST['Date'];
-        $Description = $_POST['description'];
+        $name = DataCleansing('str',$_POST['event']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $purpose = DataCleansing('date',$_POST['description']);
         $splitDate = explode('-', $date);
         $year = $splitDate[0];
         $month = $splitDate[1];
         $id = $_POST['delete_key'];
-        $requestResponse = $pdh->UpdateRecords($name, 'offertory', $amount, $Description, $date, $month, $year, $id);
+        $requestResponse = $pdh->UpdateRecords($name, 'offertory', $amount, $purpose, $date, $month, $year, $id);
         echo json_encode($requestResponse);
     }
 
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'delete' && $_GET['user'] == 'offertory') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
+        $id = DataCleansing('num',$data['key']);
 
         $requestResponse = $pdh->DeleteRecords($id);
         echo json_encode($requestResponse);
@@ -76,7 +138,7 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'filter' && $_GET['user'] == 'offertory') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['year'];
+        $id = DataCleansing('num',$data['year']);
         $requestResponse = $pdh->ListOffertorySearch($id);
         echo json_encode($requestResponse);
     }
@@ -88,14 +150,14 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'search' && $_GET['user'] == 'event') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['id'];
-        $name = $data['search'];
+        $id = DataCleansing('num',$data['id']);
+        $name = DataCleansing('str',$data['search']);
         $requestResponse = $pdh->Dues_pay_list_search($id, $name);
         echo json_encode($requestResponse);
     }
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'export_dues' && $_GET['user'] == 'event') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $num = $data['num'];
+        $num = DataCleansing('num',$data['num']);
         $requestResponse = $pdh->Dues_pay_list($num);
         echo json_encode($requestResponse);
     }
@@ -115,8 +177,8 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'search' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
-        $nk = $data['numData'];
+        $id = DataCleansing('num',$data['key']);
+        $nk = DataCleansing('num',$data['numData']);
         $requestResponse = $pdh->ListDataDuesSearch($id, $nk);
         echo json_encode($requestResponse);
     }
@@ -124,11 +186,11 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'event' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
 
-        $name = $_POST['name'];
-        $amount = $_POST['amount'];
-        $date = $_POST['Date'];
-        $form_name = $_POST['formName'];
-        $medium = $_POST['medium'];
+        $name = DataCleansing('str',$_POST['name']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $form_name = DataCleansing('num',$_POST['formName']);
+        $medium = DataCleansing('str',$_POST['medium']);
 
         $requestResponse = $pdh->user_dues_record($name, $medium, $amount, $date, $form_name);
         echo json_encode($requestResponse);
@@ -137,12 +199,12 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'event' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
 
-        $name = $_POST['name'];
-        $amount = $_POST['amount'];
-        $date = $_POST['Date'];
-        $unique_id = $_POST['delete_key'];
-        $form_name = $_POST['formName'];
-        $medium = $_POST['medium'];
+        $name = DataCleansing('str',$_POST['name']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $unique_id = DataCleansing('num',$_POST['delete_key']);
+        $form_name = DataCleansing('num',$_POST['formName']);
+        $medium = DataCleansing('str',$_POST['medium']);
 
         $requestResponse = $pdh->user_dues_update($name, $medium, $amount, $form_name, $date, $unique_id);
         echo json_encode($requestResponse);
@@ -150,8 +212,8 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'event' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
-        $name = $data['name'];
+        $id = DataCleansing('num',$data['key']);
+        $name = DataCleansing('str',$data['name']);
 
         $requestResponse = $pdh->user_dues_delete($name, $id);
         echo json_encode($requestResponse);
@@ -170,24 +232,24 @@ if (isset($_GET['submit'])) {
     }
 
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-        $account = $_POST['account'];
-        $category = $_POST['category'];
-        $amount = $_POST['amount'];
-        $status = $_POST['status_information'];
-        $authorize = $_POST['authorize'];
-        $date = $_POST['date'];
+        $account = DataCleansing('str',$_POST['account']);
+        $category = DataCleansing('str',$_POST['category']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $status = DataCleansing('str',$_POST['status_information']);
+        $authorize = DataCleansing('str',$_POST['authorize']);
+        $date = DataCleansing('date',$_POST['date']);
 
         $requestResponse = $pdh->Transaction_upload($account, $category, $amount, $status, $authorize, $date);
         echo json_encode($requestResponse);
     }
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
         $account = $_POST['account'];
-        $category = $_POST['category'];
-        $amount = $_POST['amount'];
-        $status = $_POST['status_information'];
-        $authorize = $_POST['authorize'];
-        $date = $_POST['date'];
-        $id = $_POST['delete_key'];
+        $category = DataCleansing('str',$_POST['category']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $status = DataCleansing('str',$_POST['status_information']);
+        $authorize = DataCleansing('str',$_POST['authorize']);
+        $date = DataCleansing('date',$_POST['date']);
+        $id = DataCleansing('num',$_POST['delete_key']);
 
         $requestResponse = $pdh->Transaction_update($id, $account, $category, $amount, $status, $authorize, $date);
         echo json_encode($requestResponse);
@@ -209,50 +271,59 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'transaction' && $_GET['submit'] == 'filter' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $category = $data['category'];
-        $year = $data['year'];
-        $account = $data['account'];
-        $nk = $data['numData'];
+        $category = DataCleansing('str',$data['category']);
+        $year = DataCleansing('num',$data['year']);
+        $account = DataCleansing('str',$data['account']);
+        $nk = DataCleansing('num',$data['numData']);
 
         $requestResponse = $pdh->TransactionFilter($account, $category, $year, $nk);
         echo json_encode($requestResponse);
     }
 
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-
+        try{
         $type = $_POST['type'];
-        $category = $_POST['category'];
-        $amount = $_POST['Amount'];
-        $details = $_POST['details'];
+        $category = DataCleansing('str',$_POST['category']);
+        $amount = DataCleansing('num',$_POST['Amount']);
+        $details = DataCleansing('str',$_POST['details']);
         $recorded_by = "Admin";
-        $date = $_POST['Date'];
+        $date = DataCleansing('date',$_POST['Date']);
         $splitDate = explode('-', $date);
         $year = $splitDate[0];
         $month = $splitDate[1];
 
         $requestResponse = $pdh->Budget_list_upload($category, $type, $amount, $details, $date, $year, $month, $recorded_by);
         echo json_encode($requestResponse);
+        }catch(\throwable $error){
+            echo $error;
+        }
     }
 
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
-        $type = $_POST['type'];
-        $category = $_POST['category'];
-        $amount = $_POST['Amount'];
-        $details = $_POST['details'];
-        $recorded_by = "Admin";
-        $date = $_POST['Date'];
-        $splitDate = explode('-', $date);
-        $year = $splitDate[0];
-        $month = $splitDate[1];
-        $id = $_POST['delete_key'];
-
-        $requestResponse = $pdh->Budget_list_update($category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id);
-        echo json_encode($requestResponse);
+        
+        try{
+            $type = $_POST['type'];
+            $category = DataCleansing('str',$_POST['category']);
+            $amount = DataCleansing('num',$_POST['Amount']);
+            $details = DataCleansing('str',$_POST['details']);
+            $recorded_by = "Admin";
+            $date = DataCleansing('date',$_POST['Date']);
+            $splitDate = explode('-', $date);
+            $year = $splitDate[0];
+            $month = $splitDate[1];
+            $id = $_POST['delete_key'];
+    
+            $requestResponse = $pdh->Budget_list_update($category, $type, $amount, $details, $date, $year, $month, $recorded_by, $id);
+            echo json_encode($requestResponse);
+        }catch(\Throwable $error){
+            echo $error;
+        }
+        
     }
 
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
+        $id = DataCleansing('str',$data['key']);
         $year = date('Y');
 
         $requestResponse = $pdh->BudgetDeleteList($year, $id);
@@ -267,9 +338,9 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'filter' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $category = $data['category'];
-        $year = $data['year'];
-        $nk = $data['numData'];
+        $category = DataCleansing('str',$data['category']);
+        $year = DataCleansing('num',$data['year']);
+        $nk = DataCleansing('num',$data['numData']);
 
         $requestResponse = $pdh->BudgeCategoryListFilter($year, $category, $nk);
         echo json_encode($requestResponse);
@@ -277,8 +348,8 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'expensis' && $_GET['submit'] == 'search' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $name = $data['key'];
-        $nk = $data['numData'];
+        $name = DataCleansing('num',$data['key']);
+        $nk = DataCleansing('num',$data['numData']);
 
         $requestResponse = $pdh->TitheSearch($name, $nk);
         echo json_encode($requestResponse);
@@ -286,12 +357,12 @@ if (isset($_GET['submit'])) {
 
 
     if ($_GET['APICALL'] == 'tithe' && $_GET['submit'] == 'upload' && $_GET['user'] == 'true') {
-        $amount = $_POST['amount'];
-        $details = $_POST['details'];
+        $amount = DataCleansing('num',$_POST['amount']);
+        $details = DataCleansing('str',$_POST['details']);
         $recorded_by = "Admin";
-        $name = $_POST['Name'];
-        $date = $_POST['Date'];
-        $Medium_payment = $_POST['medium'];
+        $name = DataCleansing('str',$_POST['Name']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $Medium_payment = DataCleansing('str',$_POST['medium']);
         $splitDate = explode('-', $date);
         $year = $splitDate[0];
         $month = $splitDate[1];
@@ -300,12 +371,12 @@ if (isset($_GET['submit'])) {
     }
 
     if ($_GET['APICALL'] == 'tithe' && $_GET['submit'] == 'update' && $_GET['user'] == 'true') {
-        $amount = $_POST['amount'];
-        $details = $_POST['details'];
+        $amount = DataCleansing('num',$_POST['amount']);
+        $details = DataCleansing('str',$_POST['details']);
         $recorded_by = "Admin";
-        $name = $_POST['Name'];
-        $date = $_POST['Date'];
-        $Medium_payment = $_POST['medium'];
+        $name = DataCleansing('str',$_POST['Name']);
+        $date = DataCleansing('date',$_POST['Date']);
+        $Medium_payment = DataCleansing('str',$_POST['medium']);
         $splitDate = explode('-', $date);
         $year = $splitDate[0];
         $month = $splitDate[1];
@@ -316,7 +387,7 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['APICALL'] == 'tithe' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id = $data['key'];
+        $id = DataCleansing('num',$data['key']);
 
         $requestResponse = $pdh->DeleteTithes($id);
         echo json_encode($requestResponse);
@@ -330,99 +401,24 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['APICALL'] == 'account' && $_GET['submit'] == 'true' && $_GET['user'] == 'true') {
         $name = $_POST['account'];
-        $created = $_POST['date'];
-        $amount = $_POST['amount'];
-        $requestResponse = $pdh-> Account_load_Records($name, $created, $amount);
+        $created = DataCleansing('date',$_POST['date']);
+        $amount = DataCleansing('num',$_POST['amount']);
+        $requestResponse = $pdh->Account_load_Records($name, $created, $amount);
+        echo json_encode($requestResponse);
+    }
+    if ($_GET['APICALL'] == 'account' && $_GET['submit'] == 'delete' && $_GET['user'] == 'true') {
+        $name = json_decode(file_get_contents("php://input"), true)['account'];
+        $requestResponse = $pdh->Account_delete_Records($name);
+        echo json_encode($requestResponse);
+    }
+    if($_GET['APICALL']=='analysis' && $_GET['submit'] == 'fetch' && $_GET['user'] == 'Admin'){
+        $year = json_decode(file_get_contents("php://input"), true)['account'];
+        $requestResponse = $pdh-> ChartAnalysis($year);
         echo json_encode($requestResponse);
     }
 
-    // if ($_GET['APICALL'] == 'true' && $_GET['submit'] == 'search' && $_GET['user'] == 'offertory') {
-    //     $data = json_decode(file_get_contents("php://input"), true);
-    //     $id = $data['key'];
-    //     $nk = $data['numData'];
-    //     $requestResponse = $pdh->ListOffertorySearch($id, $nk);
-    //     echo json_encode($requestResponse);
-    // }
 
-
-
-
-
+}else if($_GET['confirm_name']){
+    $data = json_decode(file_get_contents('php://input'),true);
+    echo json_encode($pdh->Confirm_name($data['name']));
 }
-// if (isset($_GET['submit'])) {
-//     if ($_GET['submit'] != 'delete_file' && $_GET['submit'] != 'search_file') {
-//         $Firstname = $_POST['Fname'];
-//         $Othername = $_POST['Oname'];
-//         $Age = $_POST['birth'];
-//         $Position = $_POST['position'];
-//         $contact = $_POST['contact'];
-//         $email = '...';
-//         $password = "zoe-" . $Firstname . $Othername;
-//         $Address = $_POST['location'];
-//         $Baptism = $_POST['baptism'];
-//         $membership_start = "....";
-//         $username = "...";
-//         $gender = $_POST['gender'];
-//         $occupation = $_POST['occupation'];
-//         $About = '..';
-//         $status = $_POST['status'];
-//     }
-//     if ($_GET['submit'] == 'true' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
-//         try {
-
-//             $Image_name = $_FILES['imageFile']['name'];
-//             $Image_type = $_FILES['imageFile']['type'];
-//             $Image_tmp_name = $_FILES['imageFile']['tmp_name'];
-//             $size = $_FILES['imageFile']['size'];
-//             $pdh = new viewData();
-
-//             $resultFetch = $pdh->member_upload($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image_name, $Image_type, $Image_tmp_name);
-//             echo json_encode(["status" => "errors", "message" => $resultFetch]);
-//         } catch (Exception $e) {
-//             $error_message = "Exception: " . $e->getMessage();
-//             echo json_encode(["status" => "error", "message" => $error_message]);
-//         }
-
-//     } else if ($_GET['submit'] == 'update_file' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
-//         try {
-//             $Image_name = $_FILES['imageFile']['name'];
-//             $Image_type = $_FILES['imageFile']['type'];
-//             $Image_tmp_name = $_FILES['imageFile']['tmp_name'];
-//             $unique_id = $_POST['delete_key'];
-//             $pdh = new viewData();
-
-//             $resultFetch = $pdh->member_update($Firstname, $Othername, $Age, $Position, $contact, $email, $password, $Address, $Baptism, $membership_start, $username, $gender, $occupation, $About, $status, $Image_name, $Image_type, $Image_tmp_name, $unique_id);
-//             echo json_encode(["status" => "errors", "message" => $resultFetch]);
-//         } catch (Exception $e) {
-//             $error_message = "Exception: " . $e->getMessage();
-//             echo json_encode(["status" => "error", "message" => $error_message]);
-//         }
-//     } else if ($_GET['submit'] == 'delete_file' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
-//         try {
-//             $data = json_decode(file_get_contents("php://input"), true);
-//             $unique_id = $data['key'];
-//             $pdh = new viewData();
-
-//             $resultFetch = $pdh->member_delete($unique_id);
-//             echo json_encode(["status" => "success", "message" => $resultFetch]);
-//         } catch (Exception $e) {
-//             $error_message = "Exception: " . $e->getMessage();
-//             echo json_encode(["status" => "error", "message" => $error_message]);
-//         }
-//     } else if ($_GET['submit'] == 'search_file' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
-//         try {
-//             $data = json_decode(file_get_contents("php://input"), true);
-//             $search = $data['key'];
-//             $pdh = new viewData();
-
-//             $resultFetch = $pdh->search($search);
-//             echo json_encode(["status" => "success", "message" => $resultFetch]);
-//         } catch (Exception $e) {
-//             $error_message = "Exception: " . $e->getMessage();
-//             echo json_encode(["status" => "error", "message" => $error_message]);
-//         }
-//     } else {
-//         $error_message = "Exception: Unauthorized access";
-//         echo json_encode(["status" => "error", "message" => $error_message]);
-//     }
-// }

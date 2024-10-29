@@ -4,9 +4,9 @@ use AssetProject\fetchData;
 class viewData extends fetchData
 {
 
-    public function Assets_upload($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image_name, $Image_type, $Image_tmp_name, $About)
+    public function Assets_upload($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About)
     {
-        $RecordsResult = $this->Assets_upload_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image_name, $Image_type, $Image_tmp_name, $About);
+        $RecordsResult = $this->Assets_upload_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About);
 
 
         return $RecordsResult;
@@ -14,9 +14,9 @@ class viewData extends fetchData
 
     }
 
-    public function Assets_update($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $Image, $Image_type, $Image_tmp_name, $About, $unique_id)
+    public function Assets_update($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About, $unique_id)
     {
-        $RecordsResult = $this->Assets_update_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $Image, $Image_type, $Image_tmp_name, $About, $unique_id);
+        $RecordsResult = $this->Assets_update_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About, $unique_id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -88,9 +88,9 @@ class viewData extends fetchData
 
 
 
-    public function projects_upload($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current)
+    public function projects_upload($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current)
     {
-        $RecordsResult = $this->projects_upload_data($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current);
+        $RecordsResult = $this->projects_upload_data($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -99,9 +99,9 @@ class viewData extends fetchData
         }
     }
 
-    public function projects_update($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current, $id)
+    public function projects_update($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current, $id)
     {
-        $RecordsResult = $this->projects_update_data($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current, $id);
+        $RecordsResult = $this->projects_update_data($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;

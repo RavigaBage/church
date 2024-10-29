@@ -24,6 +24,7 @@ if (isset($_SESSION['unique_id'])) {
     }
 }
 if ($condition) {
+    $Notification = new notification\viewData();
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -164,7 +165,7 @@ if ($condition) {
                                         <p>Finance page</p>
                                     </div>
                                 </a>
-                                <div class="item home_event_itenary"
+                                <div class="item home_event_itenary active"
                                     title="Event section contains all event and contribution records ">
                                     <div></div>
                                     <p>Events</p>
@@ -332,7 +333,7 @@ if ($condition) {
                     </ul>
                 </div>
             </aside>
-            <section>
+            <section style="position:relative">
                 <nav>
                     <!-- <div class="logo_section">
                     <div class="sidemenu_trigger">
@@ -367,7 +368,13 @@ if ($condition) {
                                     <path
                                         d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z" />
                                 </svg>
-                                <p class="get_current_date">17th June 2024</p>
+                                <p class="get_current_date">
+                                    <?php
+                                    $date = date("Y-m-d");
+                                    $date_f = new DateTimeImmutable($date);
+                                    echo $date_f->format('jS F Y');
+                                    ?>
+                                </p>
                             </div>
                             <div class="date_view search">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -383,19 +390,40 @@ if ($condition) {
                                     <path
                                         d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
                                 </svg>
-                                <div class="counter">
-                                    <p>2</p>
-                                </div>
-                                <div class="notification_list">
-                                    <div class="item">
-                                        <h1>Announcement site</h1>
-                                        <p>23.01.24</p>
-                                    </div>
 
-                                    <div class="item">
-                                        <h1>Membership site</h1>
-                                        <p>23.01.24</p>
-                                    </div>
+                                <?php
+                                $data = $Notification->Status_Notification();
+
+                                $data = json_decode($data);
+                                if (is_object($data)) {
+                                    $count = count(get_object_vars($data));
+                                    if ($count > 0) {
+                                        echo '<div class="counter"><p>' . $count . '</p></div>';
+                                    }
+                                }
+
+                                ?>
+
+                                <div class="notification_list">
+                                    <?php
+
+                                    if (is_object($data)) {
+
+                                        foreach ($data as $item) {
+                                            $name = $item->name;
+                                            $date = $item->date;
+                                            $title = $item->title;
+
+                                            echo '<a href="#Partnership"><div class="item">
+                                            <h1>' . $name . '</h1>
+                                            <p>' . $date . '</p>
+                                        </div></a>';
+                                        }
+
+                                    } else {
+                                        echo '<p>No new notification</p>';
+                                    }
+                                    ?>
                                 </div>
                             </div>
 
@@ -574,19 +602,53 @@ if ($condition) {
                             <div class="btn_confirm" data-confirm="true">Yes</div>
                         </div>
                     </div>
+                </div>
+                <div class="error_require">
+                    <p>Something went wrong, please refresh your page</p>
+                </div>
+                <div class="data_upload_platform">
+                    <input type="file" id="batch_file" hidden/>
+                    <div class="loader_wrapper">
+                        <div class="load-3">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="text">
+                            <p style="color:crimson"></p>
+                        </div>
+                    </div>
+                    <div class="data_list">
+                        <header>900 rows of data has been detected, click on the upload to begin</header>
+                        <div class="container_data">
+                            <div class="upload">Date upload a success</div>
+                            <div class="error">Data upload encountered an error</div>
+                        </div>
+                        <button>create Activity</button>
+                    </div>
+                </div>
             </section>
+
         </main>
+        <script>
+            window.addEventListener('error', function (e) {
+                document.querySelector('.error_require').classList.add('active');
+            })
+        </script>
         <script src="scripts/require.2.3.6.js"></script>
         <script>
             require(['scripts/config'], function () {
                 require(['scripts/custome.js'])
-
             });
+
+
         </script>
     </body>
 
     </html>
     <?php
+    //set all notification reset for partnership
+
 } else {
     header('Location:../../login/?admin');
 }

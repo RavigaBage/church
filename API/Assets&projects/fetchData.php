@@ -38,7 +38,7 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function Assets_upload_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $size, $Image, $Image_type, $Image_tmp_name, $About)
+    protected function Assets_upload_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About)
     {
         $input_list = array($Name, $Acquisition, $Value, $Items, $Location, $About, $status);
         $clean = true;
@@ -63,34 +63,7 @@ class fetchData extends DBH
                 $exportData = json_encode("Data already exist");
                 exit($exportData);
             } else {
-
-                if ($Image == '') {
-                    $Image = '';
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/Assets/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $unique_id = rand(time(), 3002);
-                                $Image = $filename4;
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
                 if ($stmt->execute()) {
-
                     $unique_id = rand(time(), 1999);
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`lastname`(`unique_id`, `Name`, `Acquisition`, `Value`, `Item`, `Location`, `Image`, `About`,`Date`, `status`)VALUES (?,?,?,?,?,?,?,?,?,?)");
                     $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
@@ -99,7 +72,7 @@ class fetchData extends DBH
                     $stmt->bindParam('4', $Value, \PDO::PARAM_STR);
                     $stmt->bindParam('5', $Items, \PDO::PARAM_STR);
                     $stmt->bindParam('6', $Location, \PDO::PARAM_STR);
-                    $stmt->bindParam('7', $Image, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $uploaded_file_names, \PDO::PARAM_STR);
                     $stmt->bindParam('8', $About, \PDO::PARAM_STR);
                     $stmt->bindParam('9', $date, \PDO::PARAM_STR);
                     $stmt->bindParam('10', $status, \PDO::PARAM_STR);
@@ -128,7 +101,7 @@ class fetchData extends DBH
         return $exportData;
 
     }
-    protected function Assets_update_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $Image, $Image_type, $Image_tmp_name, $About, $unique_id)
+    protected function Assets_update_data($Name, $Acquisition, $Value, $Items, $Location, $date, $status, $uploaded_file_names, $About, $unique_id)
     {
         $input_list = array($Name, $Acquisition, $Value, $Items, $Location, $About);
         $clean = true;
@@ -155,34 +128,9 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-
-                if ($Image == '') {
-                    $Image = '';
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/Assets/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $Image = $filename4;
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
                 if ($stmt->execute()) {
                     $stmt;
-                    if ($Image == '') {
+                    if ($uploaded_file_names == '') {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`lastname` set `Name`=?, `Acquisition` =?, `Value` =?, `Item`=?, `Location`=?,`Date`=?, `status`=?,`About`=? where `unique_id` = ?");
                     } else {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`lastname` set `Name`=?, `Acquisition` =?, `Value` =?, `Item`=?, `Location`=?,`Date`=?, `status`=?, `Image` = ?,`About`=? where `unique_id` = ?");
@@ -197,12 +145,12 @@ class fetchData extends DBH
                     $stmt->bindParam('5', $Location, \PDO::PARAM_STR);
                     $stmt->bindParam('6', $date, \PDO::PARAM_STR);
                     $stmt->bindParam('7', $status, \PDO::PARAM_STR);
-                    if ($Image == '') {
+                    if ($uploaded_file_names == '') {
                         $stmt->bindParam('8', $About, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $unique_id, \PDO::PARAM_STR);
 
                     } else {
-                        $stmt->bindParam('8', $Image, \PDO::PARAM_STR);
+                        $stmt->bindParam('8', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $About, \PDO::PARAM_STR);
                         $stmt->bindParam('10', $unique_id, \PDO::PARAM_STR);
 
@@ -538,7 +486,7 @@ class fetchData extends DBH
 
 
 
-    protected function projects_upload_data($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current)
+    protected function projects_upload_data($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current)
     {
         $input_list = array($Name, $description, $start_date, $team, $status, $target, $current);
         $clean = true;
@@ -565,31 +513,6 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-
-                if ($Image == '') {
-                    $Image = '';
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/projects/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $Image = $target4;
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
                 if ($stmt->execute()) {
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`projects`(`Name`, `description`, `start_date`, `end_date`, `team`, `status`, `Image`, `target`, `current`)VALUES (?,?,?,?,?,?,?,?,?)");
                     $stmt->bindParam('1', $Name, \PDO::PARAM_STR);
@@ -598,7 +521,7 @@ class fetchData extends DBH
                     $stmt->bindParam('4', $end_date, \PDO::PARAM_STR);
                     $stmt->bindParam('5', $team, \PDO::PARAM_STR);
                     $stmt->bindParam('6', $status, \PDO::PARAM_STR);
-                    $stmt->bindParam('7', $Image, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $uploaded_file_names, \PDO::PARAM_STR);
                     $stmt->bindParam('8', $target, \PDO::PARAM_STR);
                     $stmt->bindParam('9', $current, \PDO::PARAM_STR);
 
@@ -629,7 +552,7 @@ class fetchData extends DBH
         return $exportData;
     }
 
-    protected function projects_update_data($Name, $description, $start_date, $end_date, $team, $status, $Image, $Image_type, $Image_tmp_name, $target, $current, $id)
+    protected function projects_update_data($Name, $description, $start_date, $end_date, $team, $status, $uploaded_file_names, $target, $current, $id)
     {
         $input_list = array($Name, $description, $start_date, $team, $status, $target, $current);
         $clean = true;
@@ -656,33 +579,10 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-                if ($Image == '') {
-                    $Image = '';
-                } else {
-                    $explodes = explode('.', $Image);
-                    $explode_end = end($explodes);
-                    $Extensions = array('jpg', 'png', 'jpeg');
-                    if (in_array($explode_end, $Extensions)) {
-                        $types = ["image/jpg", "image/png", "image/jpeg"];
-                        if (in_array($Image_type, $types)) {
-                            $filename4 = time() . $Image;
-                            $target4 = "../Images_folder/$filename4";
-                            if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                $Image = $target4;
-                            } else {
-                                exit(json_encode("An error occurred while processing image, try again"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    } else {
-                        exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                    }
-                }
-
+               
                 if ($stmt->execute()) {
                     $stmt;
-                    if ($Image == '') {
+                    if ($uploaded_file_names == '') {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`projects` set `Name`=?, `description` =?, `start_date` =?, `end_date`=?, `team`=?, `status` = ?,`target`=?,`current`=? where `id` = ?");
                     } else {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`projects` set `Name`=?, `description` =?, `start_date` =?, `end_date`=?, `team`=?, `status` = ?,`Image`=?,`target`=?,`current`=? where `id` = ?");
@@ -695,12 +595,12 @@ class fetchData extends DBH
                     $stmt->bindParam('4', $end_date, \PDO::PARAM_STR);
                     $stmt->bindParam('5', $team, \PDO::PARAM_STR);
                     $stmt->bindParam('6', $status, \PDO::PARAM_STR);
-                    if ($Image == '') {
+                    if ($uploaded_file_names == '') {
                         $stmt->bindParam('7', $target, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $current, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $id, \PDO::PARAM_STR);
                     } else {
-                        $stmt->bindParam('7', $Image, \PDO::PARAM_STR);
+                        $stmt->bindParam('7', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $target, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $current, \PDO::PARAM_STR);
                         $stmt->bindParam('10', $id, \PDO::PARAM_STR);
@@ -820,11 +720,13 @@ class fetchData extends DBH
                 $Image = $data['Image'];
                 $target = $data['target'];
                 $current = $data['current'];
+                $team = $data['team'];
                 $id = $data['id'];
 
                 $DataObj = new \stdClass();
                 $ExportSend = "";
                 $DataObj->id = $id;
+                $DataObj->team = $team;
                 $DataObj->name = $name;
                 $DataObj->Start = $Start;
                 $DataObj->End_date = $End_date;
@@ -841,7 +743,6 @@ class fetchData extends DBH
             }
             $exportData = json_encode($ExportSendMain);
         } else {
-            $resultCheck = false;
             $exportData = 'No records available';
         }
         return $exportData;

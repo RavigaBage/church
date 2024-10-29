@@ -94,7 +94,7 @@ if ($condition) {
             </div>
         </div>
     </div>
-    <div class="export_dialogue">
+    <div class="export_dialogue" style="height:300px;width:600px;">
         <form>
             <header>Exporting Data</header>
             <div class="loader">All fields required</div>
@@ -112,7 +112,9 @@ if ($condition) {
             <tr>
                 <td>
                     <div class='details'>
-
+                        <div class='Cloneimg'>
+                            <img src='' alt='' />
+                        </div>
                         <div class='text'>
                             <p class="Clonename"></p>
                             <p class="Clonedate"></p>
@@ -121,7 +123,7 @@ if ($condition) {
                     </div>
                 </td>
                 <td class='td_action'>
-                    <p class="Clonecat"></p>
+                    <p class="Clonecat"><a>File source link</a></p>
                 </td>
                 <td class='td_action'>
                     <p class="Clonesource"></p>
@@ -146,7 +148,7 @@ if ($condition) {
                             item
                             <i></i>
                         </p>
-                        <p class='add_item' data-id="  ">Add item<i></i>
+                        <p class='add_item' data-id="">Add item<i></i>
                         </p>
                     </div>
                 </td>
@@ -164,7 +166,16 @@ if ($condition) {
         <div class="event_menu_add main form_data">
             <form>
                 <header>Library Records</header>
-                <p class="error_information" style="padding:10px;text-wrap:wrap;display:grid;place-items:center;"></p>
+                <div class="loader_wrapper">
+                    <div class="load-3">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="text">
+                        <p style="color:crimson"></p>
+                    </div>
+                </div>
                 <div class="container_event">
                     <div class="cate_view">
                         <div class="field">
@@ -181,8 +192,20 @@ if ($condition) {
                         <input name="source" type="text" placeholder="" />
                     </div>
                     <div class="field">
-                        <label>cover image</label>
-                        <input name="upload_cover" type="file" placeholder="" />
+                        <label>Select file</label>
+                        <div class="upload_blog">
+                            <a id="browseButton" name="imageFile">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                    <path d="M9 15l3 -3l3 3" />
+                                    <path d="M12 12l0 9" />
+                                </svg>
+
+                                <span>Select file to upload here</span>
+                            </a>
+                        </div>
                     </div>
 
                     <div class="field">
@@ -204,7 +227,7 @@ if ($condition) {
                         <option>Other reasons</option>
                     </select>
                 </div>
-                <input name="delete_key" type="text" hidden />
+                <input name="delete_key" type="number" hidden />
                 <button>Record Asset</button>
         </div>
         </form>
@@ -213,7 +236,7 @@ if ($condition) {
     <div class="event_menu_add indi">
         <form>
             <header>Sub Records form</header>
-            <p class="error_information"></p>
+            <p class="error_information" style="padding:10px;text-wrap:wrap;display:grid;place-items:center;"></p>
             <p>Add the recent payment information of this partner to update their profile</p>
             <div class="container_event">
                 <div class="field">
@@ -225,7 +248,7 @@ if ($condition) {
                     <input name="source" type="text" placeholder="" />
                 </div>
 
-                <input name="delete_key" type="text" hidden />
+                <input name="delete_key" type="number" hidden />
                 <button>Add Record</button>
             </div>
         </form>
@@ -271,7 +294,6 @@ if ($condition) {
 
                         <tbody>';
                     foreach ($data as $item) {
-
                         $unique_id = $item->UniqueId;
                         $name = $item->name;
                         $Author = $item->Author;
@@ -280,6 +302,7 @@ if ($condition) {
                         $category = $item->category;
                         $status = $item->status;
                         $ObjectData = $item->Obj;
+                        $cover = $item->cover;
                         $ObjectDataIndividual = $item->IObj;
 
                         if ($status == 'active') {
@@ -297,6 +320,9 @@ if ($condition) {
                                             <td>
                                                 <div class='details'>
                                                     
+                                                <div class='img'>
+                                                <img src='../../API/Images_folder/library/covers/" . $cover . "' alt='' />
+                                                </div>
                                                     <div class='text'>
                                                         <p>" . $name . "</p>
                                                         <p>" . $date . "</p>
@@ -305,7 +331,7 @@ if ($condition) {
                                                 </div>
                                             </td>
                                             <td class='td_action'><p>" . $category . "</p></td>
-                                            <td class='td_action'><p>" . $source . "</p></td>
+                                            <td class='td_action'><a href=" . $source . " target='_blank'>File source link</a></td>
                                        <td class='td_action'><p>" . $Author . "</p></td>
                                             <td data-information='" . $ObjectDataIndividual . "'>" . $item . "</td>
                                             <td class='option'>

@@ -35,19 +35,8 @@ if ($condition) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="../icons/css/all.css" />
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-        <script type="text/javascript">
-            (function () {
-                // https://dashboard.emailjs.com/admin/account
-                emailjs.init({
-                    publicKey: "RtfFLq0ZUtE5gn-AE",
-                });
-            })();
-        </script>
-
-        <title>User profile</title>
+        <title>user profile</title>
     </head>
-
     <body>
         <main>
             <aside>

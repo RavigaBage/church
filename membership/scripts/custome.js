@@ -1,4 +1,4 @@
-define(function () {
+define(["resumable"],function (resumable) {
   const ContentDom = document.querySelector(".profile_container_main");
   const SkeletonDom_list = document.querySelector(".skeleton");
   const menu_trigger = document.querySelector('.sidemenu_trigger');
@@ -115,19 +115,71 @@ define(function () {
     }
     if (!loader_status) {
       if (location == '/') {
-        var UploadBtn = document.querySelector('#uploadbtn');
-        var UploadFile = document.querySelector('input[name="id_file"]');
         var ProfileDisplay = document.querySelector('#cover_profile');
         const AddEventMenu = document.querySelector(".event_menu_add");
         var EditFiles = document.querySelectorAll('.fa-edit');
         const SubmitForm = document.querySelector(".event_menu_add form");
         const ResponseView = document.querySelector(".error_information");
+        const Membership_loaderBtn = document.querySelector('.loader_btn');
+        permission = false;
+        MembershipMediaFilenames = [];
         SubmitForm.addEventListener("submit", async function (e) {
           APIDOCS = API = "../API/userpage-api/data_process.php?submit=true&&request=uploadData&&user=true";
           ResponseView.innerText = "loading...";
           e.preventDefault();
           PHPREQUEST(APIDOCS);
         });
+        var r = new resumable({
+          target: "../API/userpage-api/data_process.php?upload_submit=true",
+          query: { 
+            upload_token: document.querySelector('.event_menu_add input[name="delete_key"]').value
+           }
+        });
+        r.assignBrowse(document.getElementById('browseButton'));
+        r.on('filesAdded', function (array) {
+          acceptedExtension = ['jpg', 'png', 'jpeg'];
+          permission = true;
+            if (r.files.length > 0) {
+              if (r.files.length == 1) {
+                Membership_loaderBtn.classList.add('active');
+              }
+              MembershipMediaFilenames = [];
+              if (acceptedExtension.includes(r.files[0].file.name.split('.')[1].toLowerCase())) {
+                MembershipMediaFilenames.push(r.files[0].file.name);
+              } else {
+                permission = false;
+              }  
+            if (permission) {
+              if (MembershipMediaFilenames.length > 0) {
+                if (MembershipMediaFilenames.length == 1) {
+                  r.upload();
+                  Membership_loaderBtn.classList.remove('active');
+                  UrlTrace();
+                } else {
+                  alert("Only one file is allowed by update")
+                  r.cancel();
+                  Membership_loaderBtn.classList.remove('active');
+                }
+
+              }else{
+                alert('Select a file to upload');
+                r.cancel();
+                Membership_loaderBtn.classList.remove('active');
+              }
+            } else {
+              Membership_loaderBtn.classList.remove('active');
+              alert("Files should be an image either JPG,PNG,JPEG");
+            }
+          }
+        });
+        r.on('complete', function () {
+          console.log('complete');
+          r.cancel();
+          MembershipMediaFilenames = [];
+        });
+
+          
+        
         async function PHPREQUEST(APIDOCS) {
           let data;
           try {
@@ -149,53 +201,7 @@ define(function () {
             console.error(error);
           }
         }
-        async function UploadImage(api, image) {
-          let data;
-          try {
-            const formMain = new FormData();
-            formMain.append(
-              "file", UploadFile.files[0]
-            );
-            formMain.append(
-              'key', document.querySelector('#userId').value
-            )
-
-            const Request = await fetch(api, {
-              method: "POST",
-              body: formMain,
-            });
-            if (Request.status === 200) {
-              data = await Request.json();
-              if (data) {
-                if (data == 'success') {
-                  ProfileDisplay.setAttribute('src', image);
-                } else {
-                  console.log(data)
-                }
-              }
-            } else {
-              console.log("invalid link directory");
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        }
-
-        UploadFile.addEventListener('change', function (e) {
-          Target = e.target;
-          console.log(e.target.files[0], e.target.file);
-          if (Target.files[0]) {
-            reader = new FileReader();
-            reader.onload = (e) => {
-              API = "../API/userpage-api/data_process.php?submit=true&&request=uploadImage&&user=true";
-              UploadImage(API, e.target.result);
-            }
-            reader.readAsDataURL(Target.files[0]);
-          }
-        });
-        UploadBtn.addEventListener('click', function () {
-          UploadFile.click();
-        })
+        
         window.addEventListener("click", function (e) {
           var target = e.target;
           EditFiles.forEach(element => {
@@ -266,6 +272,7 @@ define(function () {
           })();
 
       }
+
     }
   };
 
@@ -289,6 +296,10 @@ define(function () {
         ContentDom.classList.remove("load");
       });
   }
+  const location_updator = () => {
+    location = window.location.hash.replace("#", "")
+    return (location);
+  }
   window.addEventListener("hashchange", function (e) {
     document.documentElement.scrollTo({
       top: 0,
@@ -297,4 +308,5 @@ define(function () {
     UrlTrace();
   });
   UrlTrace();
+
 });

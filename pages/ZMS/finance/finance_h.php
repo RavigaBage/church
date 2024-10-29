@@ -2,6 +2,7 @@
 session_start();
 require '../../../API/vendor/autoload.php';
 $newDataRequest = new Finance\viewData();
+$ministry = new notification\viewData();
 $val = 1;
 $valO = 1;
 if (isset($_GET['page'])) {
@@ -34,8 +35,10 @@ if (isset($_SESSION['unique_id'])) {
     }
 }
 if ($condition) {
+    $images = ['bkg_01_january.jpg', 'bkg_02_february.jpg', 'bkg_03_march.jpg', 'bkg_04_april.jpg', 'bkg_05_may.jpg', 'bkg_06_june.jpg', 'bkg_07_july.jpg', 'bkg_08_august.jpg', 'bkg_09_september.jpg', 'bkg_10_october.jpg', 'bkg_11_november.jpg', 'bkg_12_december.jpg'];
 
     ?>
+
 
 
     <div class="filter_wrapper relative">
@@ -125,7 +128,16 @@ if ($condition) {
     <div class="event_menu_add">
         <form>
             <header>New Activity</header>
-            <div class="loader">.....loading data please wait</div>
+            <div class="loader_wrapper">
+                <div class="load-3">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <div class="text">
+                    <p style="color:crimson"></p>
+                </div>
+            </div>
             <div class="container_event">
                 <div class="field">
                     <label>Event name</label>
@@ -147,7 +159,7 @@ if ($condition) {
                     <label>Activity description</label>
                     <textarea class="form_condition" name="description"></textarea>
                 </div>
-                <input hidden class="form_condtiion" name="delete_key" value="000" />
+                <input hidden class="form_condtiion" name="delete_key" value="000" type="number"/>
                 <button>create Activity</button>
             </div>
         </form>
@@ -155,7 +167,16 @@ if ($condition) {
     <div class="event_menu_add main">
         <form>
             <header>New Activity</header>
-            <div class="loader">.....loading data please wait</div>
+            <div class="loader_wrapper">
+                <div class="load-3">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <div class="text">
+                    <p style="color:crimson"></p>
+                </div>
+            </div>
             <div class="container_event">
                 <div class="cate_view">
                     <div class="field">
@@ -165,17 +186,29 @@ if ($condition) {
                     <div class="field">
                         <label>category</label>
                         <select class="form_condition" name="category">
-                            <option>Select category</option>
                             <option>All users</option>
-                            <option>presbytery</option>
-                            <option>Department</option>
+                        <?php
+                        $data = json_decode($ministry->ministries_viewList());
+                        if (is_object($data)) {
+                            foreach ($data as $item) {
+                                $unique_id = $item->UniqueId;
+                                $name = $item->name;
+                                $members = $item->members;
+                                echo '<option value=' . $unique_id . '>' . $name . ' - ' . $members . '</option>';
+                            }
+
+                        } else {
+                            echo '<option class="danger">No groups available</option>';
+                        }
+
+                        ?>
                         </select>
                     </div>
                 </div>
                 <div class="cate_view">
                     <div class="field">
                         <label>Amount</label>
-                        <input type="amount" class="form_condition" name="amount" placeholder="" />
+                        <input type="number" class="form_condition" name="amount" placeholder="" />
                     </div>
                     <div class="field">
                         <label>Activity due date</label>
@@ -186,7 +219,7 @@ if ($condition) {
                     <label>Activity description</label>
                     <textarea class="form_condition" name="description"></textarea>
                 </div>
-                <input hidden class="form_condtion" name="delete_key" value="000" />
+                <input hidden class="form_condtion" name="delete_key" value="000" type="number"/>
                 <button>create Activity</button>
             </div>
         </form>
@@ -405,11 +438,16 @@ if ($condition) {
                             $purpose = $item->purpose;
                             $id = $item->id;
                             $Month = $item->Month;
+                            if ($Month > 1) {
+                                $Month = intVal($Month) - 1;
+                            } else {
+                                $Month = intVal($Month);
+                            }
+                            ;
                             $ObjectData = $item->obj;
                             if ($month != intval($Month)) {
-                                echo
-                                    "<div class='itemlist calender'>
-                            <img src='../../images/calender/" . $Month . ".jpg' alt='calender year " . $Month . "' />
+                                echo "<div class='itemlist calender' style='width:100%;height:200px;'>
+                            <img  style='width:100%;height:100%;object-fit:cover;' src='../../membership/images/" . $images[$Month] . "' alt='calender year " . $Month . "' />
                             </div>";
                                 $month = $Month;
                             }
@@ -526,12 +564,17 @@ if ($condition) {
             </div>
         </div>
     </div>
+    
     <div class="add_event" data-menu="event">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
             <path
                 d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
         </svg>
         <p>New</p>
+    </div>
+    <div class="info_information event_menu_add"
+        style="height:300px; width:500px; padding:10px;text-wrap:wrap;display:grid;place-items:center;">
+        <header class="danger"></header>
     </div>
     <?php
 

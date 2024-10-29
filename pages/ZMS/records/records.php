@@ -2,6 +2,28 @@
 session_start();
 require '../../../API/vendor/autoload.php';
 $viewDataClass = new Records\viewData();
+$newDataRequest = new ChurchApi\viewData();
+$BirthNum = 0;
+$DeathNum = 0;
+$WaterNum = 0;
+$FireNum = 0;
+$Souls = 0;
+$visitors = 0;
+$marriage = 0;
+$records = $newDataRequest->church_record_viewList();
+
+$decoded_records = json_decode($records);
+if (is_object($decoded_records)) {
+    $item = $decoded_records;
+    $BirthNum += intval($item->birth);
+    $DeathNum += intval($item->death);
+    $WaterNum += intval($item->water_baptism);
+    $FireNum += intval($item->fire_baptism);
+    $Souls += intval($item->soul);
+    $visitors += intval($item->visitor);
+    $marriage += intval($item->marriage);
+}
+
 $year = date('Y');
 if (isset($_GET['year'])) {
     $year = $_GET['year'];
@@ -93,7 +115,7 @@ if ($condition) {
     <div class="main_container">
         <div class="ui_controller">
             <div class="profile_main ">
-                <header>SUNDAY SERVICE PROGRAMME DATA</header>
+
                 <div class="grid_sx tithebook">
                     <div class="profile">
                         <div class="tithe_list ancc_list">
@@ -534,6 +556,32 @@ if ($condition) {
             </div>
             <div class="profile_main records_data">
                 <header>SUNDAY SERVICE PROGRAMME DATA</header>
+                <div class="record_summary">
+                    <div class="card">
+                        <h1><?php echo $visitors ?></h1>
+                        <label>visitors</label>
+                    </div>
+                    <div class="card">
+                        <h1><?php echo $BirthNum ?></h1>
+                        <label>Births</label>
+                    </div>
+                    <div class="card">
+                        <h1><?php echo $DeathNum ?></h1>
+                        <label>Deaths</label>
+                    </div>
+                    <div class="card">
+                        <h1><?php echo $WaterNum ?></h1>
+                        <label>water Baptism</label>
+                    </div>
+                    <div class="card">
+                        <h1><?php echo $FireNum ?></h1>
+                        <label>Fire Baptism</label>
+                    </div>
+                    <div class="card">
+                        <h1><?php echo $marriage ?></h1>
+                        <label>Marriages</label>
+                    </div>
+                </div>
                 <div class="grid_sx tithebook">
                     <div class="profile records_main">
                         <div class="annc_item" hidden id="Recordtemplate">
@@ -556,7 +604,9 @@ if ($condition) {
                                                     <option>Death</option>
                                                     <option>water baptism</option>
                                                     <option>fire baptism</option>
-                                                    <option>wedding</option>
+                                                    <option value="visitor">Visitors</option>
+                                                    <option value="returning visitor">returning visitors</option>
+                                                    <option>marriage</option>
                                                 </select>
                                             </div>
                                             <div class="field">
@@ -606,7 +656,7 @@ if ($condition) {
                                         ' <div class="annc_item list_mode">
                     <div class="flex button">
                         <div class=" flex title">
-                            <h1>Church Record' . $name . '</h1>
+                            <h1>Church Record-' . $name . '</h1>
                             <div class="flex button"><i class="fas fa-date"></i>' . $date . '</div>
                         </div>
                     </div>

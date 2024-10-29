@@ -91,7 +91,7 @@ class fetchData extends DBH
                 exit($Error);
             } else {
                 $date = date('Y-m-d H:i:s');
-                $namer = $_SESSION['login_details'];
+                $namer = $_SESSION['unique_id'];
                 $historySet = $this->history_set($namer, "Sunday records  Data Upload", $date, "Sunday records  page dashboard Admin", "User Uploaded a Records  data");
                 if (json_decode($historySet) != 'Success') {
                     $exportData = 'success';
@@ -167,12 +167,13 @@ class fetchData extends DBH
                         exit($Error);
                     } else {
                         $date = date('Y-m-d H:i:s');
-                        $namer = $_SESSION['login_details'];
+                        $namer = $_SESSION['unique_id'];
+                        
                         $historySet = $this->history_set($namer, "Sunday records  Data Update", $date, "Sunday records  page dashboard Admin", "User Updated a Records  data");
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-                        $exportData = json_encode('Data entry was a success Page will refresh to display new data');
+                        $exportData = 'update was a success';
                         $resultValidate = true;
                     }
                 } else {
@@ -217,7 +218,8 @@ class fetchData extends DBH
                     exit($Error);
                 } else {
                     $date = date('Y-m-d H:i:s');
-                    $namer = $_SESSION['login_details'];
+                    $namer = $_SESSION['unique_id'];
+                    
                     $historySet = $this->history_set($namer, "Sunday records  Data Export", $date, "Sunday records  page dashboard Admin", "User Exported a Records  data");
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
@@ -306,7 +308,7 @@ class fetchData extends DBH
             $result = $stmt->fetchAll();
             $exportMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
-            $namer = $_SESSION['login_details'];
+            $namer = $_SESSION['unique_id'];
             $historySet = $this->history_set($namer, "Sunday records  Data Export", $date, "Sunday records  page dashboard Admin", "User Exported a Sunday records  data");
             if (json_decode($historySet) != 'Success') {
                 $exportData = 'success';
@@ -365,7 +367,7 @@ class fetchData extends DBH
             $result = $stmt->fetchAll();
             $exportMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
-            $namer = $_SESSION['login_details'];
+            $namer = $_SESSION['unique_id'];
             $historySet = $this->history_set($namer, "records  Data Export", $date, "records  page dashboard Admin", "User Exported a records  data");
             if (json_decode($historySet) != 'Success') {
                 $exportData = 'success';
@@ -591,8 +593,10 @@ class fetchData extends DBH
         return $exportData;
 
     }
+    
     protected function history_set($name, $event, $Date, $sitename, $action)
     {
+        
         $unique_id = rand(time(), 1002);
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$name' ORDER BY `id` DESC");
         if (!$stmt->execute()) {
@@ -632,7 +636,7 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $namer = $_SESSION['login_details'];
+            $namer = $_SESSION['unique_id'];
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer' ORDER BY `id` DESC");
             if (!$stmt->execute()) {
                 $stmt = null;
@@ -685,7 +689,7 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $namer = $_SESSION['login_details'];
+            $namer = $_SESSION['unique_id'];
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$namer' ORDER BY `id` DESC");
             if (!$stmt->execute()) {
                 $stmt = null;
@@ -707,7 +711,7 @@ class fetchData extends DBH
                     $stmt->bindParam('6', $year, \PDO::PARAM_STR);
                     $stmt->bindParam('7', $id, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
-                        print_r($stmt->errorInfo());
+
                         $stmt = null;
                         $Error = 'Fetching data encountered a problems';
                         exit(json_encode($Error));

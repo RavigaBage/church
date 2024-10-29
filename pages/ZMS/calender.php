@@ -53,6 +53,38 @@ if ($condition) {
 
         </div>
     </div>
+    <div class="month_selector">
+        <div class="year">
+            <div class="flex">
+                <header>2024</header>
+                <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true"
+                    class="year_choose">
+                    <path d="M7 10l5 5 5-5z" class="ng-tns-c333432692-11"></path>
+                </svg>
+
+                <div class="year_list">
+                    <p>2023</p>
+                </div>
+            </div>
+
+            <div class="icons"></div>
+            <button>Submit</button>
+        </div>
+        <div class="view">
+            <div data_id="1">Jan</div>
+            <div data_id="2">Feb</div>
+            <div data_id="3">Mar</div>
+            <div data_id="4">Apr</div>
+            <div data_id="5">May</div>
+            <div data_id="6">Jun</div>
+            <div data_id="7">Jul</div>
+            <div data_id="8">Aug</div>
+            <div data_id="9">Sep</div>
+            <div data_id="10">Oct</div>
+            <div data_id="11">Nov</div>
+            <div data_id="12">Dec</div>
+        </div>
+    </div>
     <div class="schedule activities_main">
         <div class="category_main">
             <div class="event_category day">
@@ -220,7 +252,17 @@ if ($condition) {
                     </div>
 
                     <div class="main">
-                        <div class="error"></div>
+                        <div class="loader_wrapper">
+                            <div class="load-3">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="text">
+                                <p style="color:crimson"></p>
+                            </div>
+                        </div>
+
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#000">
@@ -231,18 +273,18 @@ if ($condition) {
                         </div>
 
                         <div class="event">
-                            <input type="text" placeholder="new event" name="EventName" />
+                            <input type="text"  placeholder="new event" name="EventName" required />
                         </div>
                         <div class="flex">
                             <i class="fas fa-location"></i>
                             <p>Location</p>
                         </div>
                         <div class="event">
-                            <input type="text" placeholder="location" name="EventLocation" />
+                            <input type="text" placeholder="location" name="EventLocation" required />
                         </div>
                         <div class="event">
                             <p><i class="fas fa-tag"></i>Calender tag</p>
-                            <div class="function selector">
+                            <div class="function selector wrapper_selectors">
                                 <p class="EventTag">#Tag</p>
                                 <div class="svg_wrapper">
                                     <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true"
@@ -276,7 +318,7 @@ if ($condition) {
                         </div>
                         <div class="event">
                             <p><i class="fas fa-clock"></i>Start time</p>
-                            <div class="function selector">
+                            <div class="function selector wrapper_selectors">
                                 <p class="start_time_p">2:30AM</p>
                                 <div class="svg_wrapper" data-origin="start">
                                     <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true"
@@ -396,7 +438,7 @@ if ($condition) {
                         </div>
                         <div class="event">
                             <p><i class="fas fa-clock"></i>End time</p>
-                            <div class="function selector">
+                            <div class="function selector wrapper_selectors">
                                 <p class="End_time_p">2:30AM</p>
                                 <div class="svg_wrapper" data-origin="end">
                                     <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true"
@@ -519,7 +561,27 @@ if ($condition) {
                             <p><i class="fas fa-image"></i> Image or Video</p>
 
                             <div class="file">
-                                <input type="file" name="ImageFile" value />
+                            <div class="upload_blog">
+                            <a id="browseButton" name="imageFile">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                    <path d="M9 15l3 -3l3 3" />
+                                    <path d="M12 12l0 9" />
+                                </svg>
+
+                                <span>Select file to upload here</span>
+                            </a>
+                        </div>
                             </div>
 
                         </div>
@@ -534,7 +596,7 @@ if ($condition) {
                             </div>
                         </div>
                         <div class="details"><textarea name="EventDescription"></textarea></div>
-                        <input type="hidden" name="delete_key" />
+                        <input type="hidden" name="delete_key" type="number"/>
                     </div>
                     <div class="sub_option">
                         <div class="flex btn">
@@ -548,38 +610,7 @@ if ($condition) {
                 </div>
             </form>
         </div>
-        <div class="month_selector">
-            <div class="year">
-                <div class="flex">
-                    <header>2024</header>
-                    <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true"
-                        class="year_choose">
-                        <path d="M7 10l5 5 5-5z" class="ng-tns-c333432692-11"></path>
-                    </svg>
 
-                    <div class="year_list">
-                        <p>2023</p>
-                    </div>
-                </div>
-
-                <div class="icons"></div>
-                <button>Submit</button>
-            </div>
-            <div class="view">
-                <div data_id="1">Jan</div>
-                <div data_id="2">Feb</div>
-                <div data_id="3">Mar</div>
-                <div data_id="4">Apr</div>
-                <div data_id="5">May</div>
-                <div data_id="6">Jun</div>
-                <div data_id="7">Jul</div>
-                <div data_id="8">Aug</div>
-                <div data_id="9">Sep</div>
-                <div data_id="10">Oct</div>
-                <div data_id="11">Nov</div>
-                <div data_id="12">Dec</div>
-            </div>
-        </div>
     </div>
     <?php
 } else {

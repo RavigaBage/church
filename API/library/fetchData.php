@@ -38,7 +38,7 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function library_upload_data($name, $author, $date, $status, $source, $category, $FILES, $REQUEST)
+    protected function library_upload_data($name, $author, $date, $status, $source, $category, $upload_file)
     {
         $input_list = array($name, $author, $date, $status, $source, $category);
         $clean = true;
@@ -64,10 +64,8 @@ class fetchData extends DBH
             } else {
                 $unique_id = rand(time(), 1999);
                 $date_now = date('Y-m-d');
-                $filepath = 'default';
-                if ($FILES['upload_cover']['name'] != "") {
-                    $filepath = $this->Uploader($FILES, $REQUEST);
-                }
+                $filepath = $upload_file;
+
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoe_library`.`datacollections`(`unique_id`, `name`, `category`, `Source`, `Author`, `Date`, `Status`,`cover_img`,`last modified`)VALUES (?,?,?,?,?,?,?,?,?)");
                 $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 $stmt->bindParam('2', $name, \PDO::PARAM_STR);
@@ -98,7 +96,7 @@ class fetchData extends DBH
 
     }
 
-    protected function library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $FILES, $REQUEST)
+    protected function library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $upload_file)
     {
         $input_list = array($name, $author, $date, $status, $source, $category);
         $clean = true;
@@ -124,7 +122,7 @@ class fetchData extends DBH
             } else {
                 if ($stmt->execute()) {
                     $date_now = date('Y-m-d');
-                    if (empty($FILES['upload_cover']['name'])) {
+                    if (empty($upload_file)) {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoe_library`.`datacollections` set `name`=?,`Author`=?,`date`=?,`Status`=?,`Source`=?,`category`=?,`last modified`= ? WHERE `unique_id` = ?");
                         $stmt->bindParam('1', $name, \PDO::PARAM_STR);
                         $stmt->bindParam('2', $author, \PDO::PARAM_STR);
@@ -135,7 +133,7 @@ class fetchData extends DBH
                         $stmt->bindParam('7', $date_now, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $unique_id, \PDO::PARAM_STR);
                     } else {
-                        $filepath = $this->Uploader($FILES, $REQUEST);
+                        $filepath = $upload_file;
                         $stmt = $this->data_connect()->prepare("UPDATE `zoe_library`.`datacollections` set `name`=?,`Author`=?,`date`=?,`Status`=?,`Source`=?,`category`=?,`cover_img`=?,`last modified`= ? WHERE `unique_id` = ?");
                         $stmt->bindParam('1', $name, \PDO::PARAM_STR);
                         $stmt->bindParam('2', $author, \PDO::PARAM_STR);
@@ -143,7 +141,6 @@ class fetchData extends DBH
                         $stmt->bindParam('4', $status, \PDO::PARAM_STR);
                         $stmt->bindParam('5', $source, \PDO::PARAM_STR);
                         $stmt->bindParam('6', $category, \PDO::PARAM_STR);
-
                         $stmt->bindParam('7', $filepath, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $date_now, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $unique_id, \PDO::PARAM_STR);
@@ -501,6 +498,7 @@ class fetchData extends DBH
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
                 $status = $this->validate($data['Status']);
+                $cover_img = $this->validate($data['cover_img']);
                 $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`library_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
 
                 if (!$stmt_record->execute()) {
@@ -539,6 +537,7 @@ class fetchData extends DBH
                 $objectClass->Author = $Author;
                 $objectClass->status = $status;
                 $objectClass->source = $source;
+                $objectClass->cover = $cover_img;
                 $ObjectData = json_encode($objectClass);
 
                 $ExportSend->UniqueId = $unique_id;
@@ -548,6 +547,7 @@ class fetchData extends DBH
                 $ExportSend->Author = $Author;
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;
+                $ExportSend->cover = $cover_img;
                 $ExportSend->Obj = $ObjectData;
                 $ExportSend->IObj = $ObjectDataIndividual;
                 $ExportSendMain->$unique_id = $ExportSend;
@@ -584,6 +584,8 @@ class fetchData extends DBH
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
                 $status = $this->validate($data['Status']);
+                $cover_img = $this->validate($data['cover_img']);
+
                 $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`library_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
 
                 if (!$stmt_record->execute()) {
@@ -622,6 +624,7 @@ class fetchData extends DBH
                 $objectClass->Author = $Author;
                 $objectClass->status = $status;
                 $objectClass->source = $source;
+                $objectClass->cover = $cover_img;
                 $ObjectData = json_encode($objectClass);
 
                 $ExportSend->UniqueId = $unique_id;
@@ -632,6 +635,7 @@ class fetchData extends DBH
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;
                 $ExportSend->Obj = $ObjectData;
+                $ExportSend->cover = $cover_img;
                 $ExportSend->IObj = $ObjectDataIndividual;
                 $ExportSendMain->$unique_id = $ExportSend;
             }
@@ -786,114 +790,6 @@ class fetchData extends DBH
                 exit(json_encode('Error invalid user'));
             }
         }
-    }
-
-    protected function Uploader($FILES, $REQUEST)
-    {
-
-
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-
-
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            exit('The requested page does not exist');
-        }
-
-
-        @set_time_limit(5 * 60);
-        $targetDir = '../Images_folder/library/covers/';
-        //$targetDir = 'uploads';
-        $cleanupTargetDir = true; // Remove old files
-        $maxFileAge = 5 * 3600; // Temp file age in seconds
-
-
-        // Create target dir
-        if (!file_exists($targetDir)) {
-            @mkdir($targetDir);
-        }
-
-        // Get a file name
-        if (!isset($REQUEST["user"])) {
-            exit('invalid request');
-        } elseif (!empty($FILES)) {
-            $fileName = $FILES["upload_cover"]["name"];
-        } else {
-            $fileName = uniqid("file_");
-        }
-
-        $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-        // Chunking might be enabled
-        $chunk = isset($REQUEST["chunk"]) ? intval($REQUEST["chunk"]) : 0;
-        $chunks = isset($REQUEST["chunks"]) ? intval($REQUEST["chunks"]) : 0;
-
-
-        // Remove old temp files	
-        if ($cleanupTargetDir) {
-            if (!is_dir($targetDir) || !$dir = opendir($targetDir)) {
-                die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
-            }
-
-            while (($file = readdir($dir)) !== false) {
-                $tmpfilePath = $targetDir . DIRECTORY_SEPARATOR . $file;
-
-                // If temp file is current file proceed to the next
-                if ($tmpfilePath == "{$filePath}.part") {
-                    continue;
-                }
-
-                // Remove temp file if it is older than the max age and is not the current file
-                if (preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time() - $maxFileAge)) {
-                    @unlink($tmpfilePath);
-                }
-            }
-            closedir($dir);
-        }
-
-
-        // Open temp file
-        if (!$out = @fopen("{$filePath}.part", $chunks ? "ab" : "wb")) {
-            die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-        }
-
-        if (!empty($FILES)) {
-            if ($FILES["upload_cover"]["error"] || !is_uploaded_file($FILES["upload_cover"]["tmp_name"])) {
-                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
-            }
-
-            // Read binary input stream and append it to temp file
-            if (!$in = @fopen($FILES["upload_cover"]["tmp_name"], "rb")) {
-                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-            }
-        } else {
-            if (!$in = @fopen("php://input", "rb")) {
-                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-            }
-        }
-
-        while ($buff = fread($in, 4096)) {
-            fwrite($out, $buff);
-        }
-
-        @fclose($out);
-        @fclose($in);
-
-        // Check if file has been uploaded
-        if (!$chunks || $chunk == $chunks - 1) {
-            // Strip the temp .part suffix off 
-            if (rename("{$filePath}.part", $filePath)) {
-
-                return $fileName;
-            }
-            ;
-        }
-
-        // Return Success JSON-RPC response
-        die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
-
     }
 
 }

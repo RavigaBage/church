@@ -24,9 +24,9 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Account_delete_Records($name, $id)
+    public function Account_delete_Records($name)
     {
-        $RecordsResult = $this->Account_delete_data($name, $id);
+        $RecordsResult = $this->Account_delete_data($name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -79,6 +79,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
     public function UpdateRecords($name, $type, $amount, $purpose, $date, $month, $year, $id)
     {
         $RecordsResult = $this->RecordsUpdate($name, $type, $amount, $purpose, $date, $month, $year, $id);
@@ -324,6 +325,15 @@ class viewData extends fetchData
     public function Records_membership()
     {
         $RecordsResult = $this->membership_Records();
+        if ($RecordsResult == false) {
+            $Error = 'Error Occurred';
+            return $Error;
+        } else {
+            return $RecordsResult;
+        }
+    }
+    public function Confirm_name($name){
+        $RecordsResult = $this->Confirm_membership_Records($name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -753,6 +763,31 @@ class viewData extends fetchData
         } else {
             return $RecordsResult;
         }
+    }
+    public function ChartAnalysis($year){
+        $RecordsTithe = $this->ChartData($year);
+        $RecordsTitheYear = $this->ChartDataYear($year);
+        $RecordData = $this->ChatRecords($year);
+        $VisitorsChat = $this->ChatVisitors($year);
+        $titheComparism = $this->ChatTithComparism($year);
+        $BudgetData = $this->ChatBudget($year);
+        $Partnership = $this->ChatPartnership($year);
+        $ChartEvent = $this->ChartEventYear($year);
+        $Membership = $this->ChartMembership();
+        $Offertory = $this->ChartOffertoryYear($year);
+        $AnalysisData = new \stdClass();
+        $AnalysisData->Tithe =  $RecordsTithe;
+        $AnalysisData->TitheYear =  $RecordsTitheYear;
+        $AnalysisData->Records =  $RecordData ;
+        $AnalysisData->visitors =  $VisitorsChat;
+        $AnalysisData->TitheComparism =  $titheComparism;
+        $AnalysisData->BudgetData =  $BudgetData;
+        $AnalysisData->Partnership =  $Partnership;
+        $AnalysisData->Events =  $ChartEvent;
+        $AnalysisData->membership =  $Membership;
+        $AnalysisData->offertory =  $Offertory;
+        return json_encode($AnalysisData);
+        
     }
 
 }

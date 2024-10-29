@@ -38,6 +38,55 @@ class fetchData extends DBH
         }
         return $data;
     }
+    protected function Partnership_upload_data_user($name, $partnership, $date, $status, $email, $type, $period)
+    {
+        $input_list = array($name, $partnership, $date, $status, $email, $type, $period);
+        $clean = true;
+        $exportData = 0;
+        foreach ($input_list as $input) {
+            $data = $this->validate($input);
+            if ($data == 'test pass failed') {
+                $Error = json_encode('validating data encountered a problem, All fields are required !');
+                $clean = false;
+                exit($Error);
+            }
+        }
+        if ($clean) {
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` where `name`='$name' AND `Email`='$email' AND `partnership_type`='$type' ");
+            if (!$stmt->execute()) {
+                $stmt = null;
+                $Error = json_encode('Fetching data encountered a problem');
+                exit($Error);
+            }
+            if ($stmt->rowCount() > 0) {
+                $exportData = json_encode("Data name already exist");
+                exit($exportData);
+            } else {
+                $unique_id = rand(time(), 1999);
+
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`partnership`(`unique_id`, `Name`, `partnership`, `date`, `status`, `Email`, `partnership_type`, `period`)VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $partnership, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $status, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $email, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $type, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $period, \PDO::PARAM_STR);
+                if (!$stmt->execute()) {
+                    $stmt = null;
+                    $Error = json_encode('Fetching data encountered a problems');
+                    exit($Error);
+                } else {
+
+                    return 'success';
+                }
+            }
+        } else {
+            exit(json_encode('unexpected error'));
+        }
+
+    }
     protected function Partnership_upload_data($name, $partnership, $date, $status, $email, $type, $period)
     {
         $input_list = array($name, $partnership, $date, $status, $email, $type, $period);
@@ -52,7 +101,7 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` where `name`='$name'");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`partnership` where `name`='$name' AND `Email`='$email' AND `partnership_type`='$type' ");
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
@@ -79,12 +128,12 @@ class fetchData extends DBH
                     exit($Error);
                 } else {
                     $date = date('Y-m-d H:i:s');
-                    $namer = $_SESSION['login_details'];
+                    $namer = $_SESSION['unique_id'];
                     $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
                     }
-                    exit(json_encode('success'));
+                    return 'success';
                 }
             }
         } else {
@@ -134,7 +183,7 @@ class fetchData extends DBH
                         exit($Error);
                     } else {
                         $date = date('Y-m-d H:i:s');
-                        $namer = $_SESSION['login_details'];
+                        $namer = $_SESSION['unique_id'];
                         $historySet = $this->history_set($namer, "Partnership  Data Updated", $date, "Partnership  page dashboard Admin", "User Updated a data");
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
@@ -259,7 +308,7 @@ class fetchData extends DBH
             }
             if ($stmt->rowCount() > 0) {
                 /////////////////////drop table
-                $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`partnership` where   `unique_id`=?");
+                $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`partnership` where  `unique_id`=?");
                 $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
@@ -267,7 +316,7 @@ class fetchData extends DBH
                     exit($Error);
                 } else {
                     $date = date('Y-m-d H:i:s');
-                    $namer = $_SESSION['login_details'];
+                    $namer = $_SESSION['unique_id'];
                     $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
@@ -627,11 +676,11 @@ class fetchData extends DBH
                 exit($Error);
             } else {
                 $resultCheck = true;
-                $exportData = json_encode('Item Deleted Successfully');
+                $exportData = 'Item Deleted Successfully';
             }
         } else {
             $resultCheck = false;
-            $exportData = json_encode('Not Records Available');
+            $exportData = 'Not Records Available';
         }
 
         return $exportData;
@@ -675,7 +724,7 @@ class fetchData extends DBH
                     exit($Error);
                 } else {
                     $date = date('Y-m-d H:i:s');
-                    $namer = $_SESSION['login_details'];
+                    $namer = $_SESSION['unique_id'];
                     $historySet = $this->history_set($namer, "Partnership  Data Upload", $date, "Partnership  page dashboard Admin", "User Uploaded a data");
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';

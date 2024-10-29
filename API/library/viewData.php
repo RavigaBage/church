@@ -5,9 +5,11 @@ use Library\fetchData;
 
 class viewData extends fetchData
 {
-    public function libraryCover($FILES, $REQUEST)
+
+
+    public function library_upload($name, $author, $date, $status, $source, $category, $FILES)
     {
-        $RecordsResult = $this->Uploader($FILES, $REQUEST);
+        $RecordsResult = $this->library_upload_data($name, $author, $date, $status, $source, $category, $FILES);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -16,21 +18,9 @@ class viewData extends fetchData
         }
     }
 
-
-    public function library_upload($name, $author, $date, $status, $source, $category, $FILES, $REQUEST)
+    public function Library_update($name, $author, $date, $status, $source, $category, $unique_id, $FILES)
     {
-        $RecordsResult = $this->library_upload_data($name, $author, $date, $status, $source, $category, $FILES, $REQUEST);
-        if ($RecordsResult == false) {
-            $Error = 'Error Occurred';
-            return $Error;
-        } else {
-            return $RecordsResult;
-        }
-    }
-
-    public function Library_update($name, $author, $date, $status, $source, $category, $unique_id, $FILES, $REQUEST)
-    {
-        $RecordsResult = $this->library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $FILES, $REQUEST);
+        $RecordsResult = $this->library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $FILES);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;

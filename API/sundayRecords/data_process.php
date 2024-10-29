@@ -1,4 +1,5 @@
 <?php
+session_start();
 require '../vendor/autoload.php';
 $pdh = new Records\ViewData;
 
@@ -41,10 +42,8 @@ if (isset($_GET['submit'])) {
     } else
         if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
             try {
-
-                $result_data = $pdh->sunday_upload($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date)
-                ;
-                json_encode(["status" => "result", "result" => $result_data]);
+                $result_data = $pdh->sunday_upload($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date);
+                echo json_encode(["status" => "success", "message" => $result_data]);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
                 echo json_encode(["status" => "error", "message" => $error_message]);
@@ -54,7 +53,7 @@ if (isset($_GET['submit'])) {
                 $unique_id = $_POST['delete_key'];
 
                 $result_data = $pdh->sunday_update($opening_prayer, $praises, $scripture_reading, $scripture, $Opening_Hymn, $Hymn_new, $Hymn_title, $worship, $testimonies, $song_thanksgving_offering, $sermon_prayer, $sermon_from, $scripture_preacher, $peacher_duration, $alter_call, $tithe_offering, $special_appeal, $welcome_visitors, $Announcement, $closing_prayer, $Benediction, $MC, $total_attendance, $date, $unique_id);
-                json_encode(["status" => "result", "result" => $result_data]);
+                echo json_encode(["status" => "success", "message" => $result_data]);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();
                 echo json_encode(["status" => "error", "message" => $error_message]);
@@ -63,8 +62,6 @@ if (isset($_GET['submit'])) {
             try {
                 $data = json_decode(file_get_contents("php://input"), true);
                 $unique_id = $data['key'];
-                $pdh = new viewData();
-
                 $resultFetch = $pdh->sunday_delete($unique_id);
                 echo json_encode(["status" => "success", "message" => $resultFetch]);
             } catch (Exception $e) {
@@ -75,8 +72,6 @@ if (isset($_GET['submit'])) {
             try {
                 $data = json_decode(file_get_contents("php://input"), true);
                 $unique_id = $data['key'];
-                $pdh = new viewData();
-
                 $resultFetch = $pdh->ministries_filter($unique_id);
                 echo json_encode(["status" => "success", "message" => trim($resultFetch)]);
             } catch (Exception $e) {
@@ -87,8 +82,6 @@ if (isset($_GET['submit'])) {
             try {
                 $data = json_decode(file_get_contents("php://input"), true);
                 $unique_id = $data['key'];
-                $pdh = new viewData();
-
                 $resultFetch = $pdh->ministries_delete_inidividual($unique_id);
                 echo json_encode(["status" => "success", "message" => $resultFetch]);
             } catch (Exception $e) {
@@ -111,7 +104,6 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['submit'] == 'update' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
         try {
-
             $category = $_POST['category'];
             $details = $_POST['details'];
             $year = $_POST['year'];
@@ -127,8 +119,6 @@ if (isset($_GET['submit'])) {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             $unique_id = $data['key'];
-            $pdh = new viewData();
-
             $resultFetch = $pdh->church_record_delete($unique_id);
             echo json_encode(["status" => "success", "message" => $resultFetch]);
         } catch (Exception $e) {
@@ -138,9 +128,6 @@ if (isset($_GET['submit'])) {
     }
     if ($_GET['submit'] == 'export' && $_GET['APICALL'] == 'record' && $_GET['user'] == 'true') {
         try {
-
-            $pdh = new viewData();
-
             $resultFetch = $pdh->church_record_export();
             echo json_encode($resultFetch);
         } catch (Exception $e) {

@@ -86,7 +86,7 @@ if ($condition) {
         </div>
     </div>
 
-    <div class="export_dialogue">
+    <div class="export_dialogue" style="width:600px;height:300px;">
         <form>
             <header>Exporting Data</header>
             <div class="loader">All fields required</div>
@@ -159,74 +159,6 @@ if ($condition) {
 
 
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="details">
-                                        <div class="img">
-                                            <img src="../images/blog-3.jpg" alt="" />
-                                        </div>
-                                        <div class="text">
-                                            <p>Camiel@gmail.com</p>
-                                            <p>20/03/2024</p>
-                                        </div>
-
-                                    </div>
-                                </td>
-                                <td class="td_action">23</td>
-                                <td class="td_action">Female</td>
-                                <td class="td_action">Cote d'voire</td>
-
-                                <td>
-                                    <div class="in_btn">
-                                        <div></div>Active
-                                    </div>
-                                </td>
-                                <td class="option">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
-                                        <path
-                                            d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
-                                    </svg>
-                                    <div class="opt_element">
-                                        <p class="delete_item">Delete item <i></i></p>
-                                        <p class="Update_item"
-                                            data-information='{"id":2,"name":"tarry sunday","target":"122","current":"Aug,12,2023","description":"more","date":"","status":""}'>
-                                            Update item <i></i></p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details">
-                                        <div class="img">
-                                            <img src="../images/blog-3.jpg" alt="" />
-                                        </div>
-                                        <div class="text">
-                                            <p>Camiel@gmail.com</p>
-                                            <p>20/03/2024</p>
-                                        </div>
-
-                                    </div>
-                                </td>
-                                <td class="td_action">23</td>
-                                <td class="td_action">Female</td>
-                                <td class="td_action">Cote d'voire</td>
-
-                                <td>
-                                    <div class="out_btn">
-                                        <div></div>Active
-                                    </div>
-                                </td>
-                                <td class="option">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
-                                        <path
-                                            d="M479.858-160Q460-160 446-174.142q-14-14.141-14-34Q432-228 446.142-242q14.141-14 34-14Q500-256 514-241.858q14 14.141 14 34Q528-188 513.858-174q-14.141 14-34 14Zm0-272Q460-432 446-446.142q-14-14.141-14-34Q432-500 446.142-514q14.141-14 34-14Q500-528 514-513.858q14 14.141 14 34Q528-460 513.858-446q-14.141 14-34 14Zm0-272Q460-704 446-718.142q-14-14.141-14-34Q432-772 446.142-786q14.141-14 34-14Q500-800 514-785.858q14 14.141 14 34Q528-732 513.858-718q-14.141 14-34 14Z" />
-                                    </svg>
-                                    <div class="opt_element">
-                                        <p class="delete_item">Delete item <i></i></p>
-                                        <p class="update_item">Update item <i></i></p>
-                                    </div>
-                                </td>
-                            </tr>
                             <?php
                             $data = "";
                             if ($year == "") {
@@ -250,9 +182,9 @@ if ($condition) {
                                     $description = str_split($description, 72)[0] + "....";
                                 }
 
-                                if ($Status == 'in progress') {
+                                if (str_contains($Status, 'in progress')) {
                                     $Status = "<div class='in_btn blue'><div></div>In progress</div>";
-                                } else if ($Status == 'complete') {
+                                } else if (str_contains($Status, 'complete')) {
                                     $Status = "<div class='in_btn'><div></div>Completed</div>";
                                 } else {
                                     $Status = "<div class='out_btn blue'><div></div>hold</div>";
@@ -299,7 +231,16 @@ if ($condition) {
     <div class="event_menu_add form_data">
         <form>
             <header>Project form</header>
-            <p style="color:crimson;font-size:18px;text-align:center" class="error_information"></p>
+            <div class="loader_wrapper">
+                <div class="load-3">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+                <div class="text">
+                    <p style="color:crimson"></p>
+                </div>
+            </div>
             <div class="container_event">
                 <div class="cate_view">
                     <div class="field">
@@ -308,7 +249,27 @@ if ($condition) {
                     </div>
                     <div class="field">
                         <label>Image</label>
-                        <input name="imageFile" type="file" />
+                        <div class="upload_blog">
+                            <a id="browseButton" name="imageFile">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                    <path d="M9 15l3 -3l3 3" />
+                                    <path d="M12 12l0 9" />
+                                </svg>
+
+                                <span>Select file to upload here</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="cate_view_e">
@@ -344,7 +305,7 @@ if ($condition) {
                     <label>description</label>
                     <textarea name="description"></textarea>
                 </div>
-                <input name="delete_key" value="" hidden />
+                <input name="delete_key" type="number" value="" hidden />
                 <button>Record Asset</button>
             </div>
         </form>
@@ -353,7 +314,7 @@ if ($condition) {
     <div class="add_event " data-menu="event">
         <i>+</i>
         <p>New</p>
-    </div>;
+    </div>
     <div class="page_sys">
         <?php
         if (isset($_SESSION['total_pages_projects'])) {
