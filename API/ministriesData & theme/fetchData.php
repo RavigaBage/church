@@ -329,7 +329,15 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 $data = $stmt->fetchAll();
                 $Username = $data[0]['Firstname'] . $data[0]['Othername'];
-                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES ('$unique_id','$Username','$event','$Date','$sitename','$action')");
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`history`(`unique_id`, `name`, `event`, `Date`, `sitename`, `action`) VALUES (?,?,?,?,?,?)");
+
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $Username, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $event, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $Date, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $sitename, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $action, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
 
                     $stmt = null;

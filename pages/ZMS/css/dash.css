@@ -1519,6 +1519,14 @@ tbody td.option .opt_element p:hover {
   margin-left: 30px;
   transition: background 0.4s ease-in-out;
 }
+.tabs .item:nth-child(2),
+.tabs .item:nth-child(3) {
+  display: none;
+}
+.tabs .item.b_view:nth-child(2),
+.tabs .item.b_view:nth-child(3) {
+  display: flex;
+}
 .tabs .item.active:nth-child(2),
 .tabs .item.active:nth-child(3) {
   border-bottom: 2px solid crimson;

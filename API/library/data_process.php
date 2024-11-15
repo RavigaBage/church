@@ -38,7 +38,7 @@ function DataCleansing($opt, $data)
     }
 
     if ($opt == 'bool') {
-        if (dataInstance_bool($data) == False) {
+        if (dataInstance_bool($data) == 'False') {
             echo json_encode("An error occurred please try again");
             exit();
         }
@@ -55,7 +55,7 @@ function dataInstance_string($data)
 }
 function dataInstance_bool($data)
 {
-    return is_bool($data) ? $data : False;
+    return is_bool($data) ? $data : 'False';
 }
 function dataInstance_array($data)
 {
@@ -83,6 +83,7 @@ if (isset($_GET['submit'])) {
         $status = DataCleansing('str', $_POST['status']);
         $date = DataCleansing('date', $_POST['date']);
         $category = DataCleansing('str', $_POST['category']);
+        $tag = DataCleansing('str', $_POST['tag']);
         $uploaded_file_names = json_decode($_POST['fileNames']);
         if (is_array($uploaded_file_names) && count($uploaded_file_names) > 0) {
             $uploaded_file_names = $uploaded_file_names[0];
@@ -117,7 +118,7 @@ if (isset($_GET['submit'])) {
         if ($_GET['submit'] == 'upload' && $_GET['APICALL'] == 'true' && $_GET['user'] == 'true') {
             try {
                 $FILES = $uploaded_file_names;
-                $result_data = $viewDataClass->library_upload($name, $author, $date, $status, $source, $category, $FILES)
+                $result_data = $viewDataClass->library_upload($name, $author, $date, $status, $source, $category,$tag, $FILES)
                 ;
                 echo json_encode($result_data);
             } catch (Exception $e) {
@@ -128,7 +129,7 @@ if (isset($_GET['submit'])) {
             try {
                 $FILES = $uploaded_file_names;
                 $unique_id = DataCleansing('str', $_POST['delete_key']);
-                $result_data = $viewDataClass->library_update($name, $author, $date, $status, $source, $category, $unique_id, $FILES);
+                $result_data = $viewDataClass->library_update($name, $author, $date, $status, $source, $category,$tag, $unique_id, $FILES);
                 echo json_encode($result_data);
             } catch (Exception $e) {
                 $error_message = "Exception: " . $e->getMessage();

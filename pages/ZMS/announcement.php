@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../API/vendor/autoload.php';
+include 'SvgPath.php';
 $newDataRequest = new notification\viewData();
 $val = 1;
 $condition = false;
@@ -138,7 +139,7 @@ if ($condition) {
                                 $object->date = $item->date;
                                 $object->message = $item->message;
 
-                                $objectFile = json_encode($object);
+                                $objectFile = htmlspecialchars(json_encode($object), ENT_QUOTES);
                                 $status = "";
                                 if ($item->status == 'active') {
                                     $status = 'active';
@@ -146,47 +147,54 @@ if ($condition) {
 
                                 if ($item->file == " " || $item->file == "") {
                                     echo "<div class='annc_item'>
-                            <div class='flex button'>
-                                <div class=' flex title'>
-                                    <h1>" . $item->name . "</h1>
-                                    <div class='flex button'><i class='fas fa-date'></i>" . $item->date . "</div>
-                                </div>
-                            </div>
-        
-                            <div class='div_content'>
-                                <p>" . $item->message . "</p>
-                            </div>
-                            <div class=' flex options title'>
-                                <div class='edit flex'>
-                                    <i class='fas fa-edit Update_item' data-id=" . $item->Id . " data-information='$objectFile'></i>
-                                    <p>Edit</p>
-                                     <div class='toggle_mode $status' data-id='" . $item->Id . "'>
-                                        <svg xmlns='http://www.w3.org/2000/svg' class='on' height='24' fill='green'
-                                            viewBox='0 -960 960 960' width='24'>
-                                            <path
-                                                d='M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-80h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm400-40q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM480-480Z' />
-                                        </svg>
-                                        <svg xmlns='http://www.w3.org/2000/svg' class='off' height='24' fill='red'
-                                            viewBox='0 -960 960 960' width='24'>
-                                            <path
-                                                d='M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-80h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-40q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm200-120Z' />
-                                        </svg>
-                                    </div>
-                                </div>                        
-                                <div class='edit flex'>
-                                    <i class='fas fa-trash delete_item' data-id='" . $item->Id . "'></i>
-                                    <p>Remove</p>
-                                </div>
-                            </div>
-        
-                        </div>";
+                                        <div class='flex button'>
+                                            <div class=' flex title'>
+                                                <h1>$item->name</h1>
+                                                <div class='flex button'><i class='fas fa-date'></i>$item->date </div>
+                                            </div>
+                                        </div>
+                    
+                                        <div class='div_content'>
+                                            <p> $item->message</p>
+                                        </div>
+                                        <div class=' flex options title'>
+                                            <div class='edit flex'>
+                                                <i class='fas fa-edit Update_item' data-id=" . $item->Id . " data-information='" . $objectFile . "'></i>
+                                                <p>Edit</p>
+                                                <div class='toggle_mode $status' data-id='$item->Id'>
+                                                    <svg xmlns='http://www.w3.org/2000/svg' class='on' height='24' fill='green'
+                                                        viewBox='0 -960 960 960' width='24'>
+                                                        <path
+                                                            d='M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-80h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm400-40q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM480-480Z' />
+                                                    </svg>
+                                                    <svg xmlns='http://www.w3.org/2000/svg' class='off' height='24' fill='red'
+                                                        viewBox='0 -960 960 960' width='24'>
+                                                        <path
+                                                            d='M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-80h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-40q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm200-120Z' />
+                                                    </svg>
+                                                </div>
+                                            </div>                        
+                                            <div class='edit flex'>
+                                                <i class='fas fa-trash delete_item' data-id='$item->Id'></i>
+                                                <p>Remove</p>
+                                            </div>
+                                        </div>
+                    
+                                    </div>";
                                 } else {
+                                    $path = '../../API/images/annc/' . $item->file . '';
+                                    $svg = $svg_path;
+                                    if (!file_exists('../../../API/images/annc/' . $item->file . '')) {
+                                        $path_img = $svg;
+                                    } else {
+                                        $path_img = '<img src=' . $path . ' alt="image file" />';
+                                    }
 
                                     echo
                                         "
                             <div class='annc_item'>
                                <div class='flex'>
-                                <img src='../../API/images/annc/" . $item->file . "' alt='' />
+                               " . $path_img . "
                                 <div class='img_details'>
                                     <div class='flex button'>
                                      <div class=' flex title'>
@@ -201,9 +209,9 @@ if ($condition) {
                               </div> 
                                 <div class=' flex options title'>
                                 <div class='edit flex'>
-                                    <i class='fas fa-edit Update_item' data-id=" . $item->Id . " data-information='$objectFile'></i>
+                                    <i class='fas fa-edit Update_item' data-id=' . $item->Id . ' data-information='" . $objectFile . "'></i>
                                     <p>Edit</p>
-                                     <div class='toggle_mode' data-id=" . $item->Id . ">
+                                     <div class='toggle_mode' data-id=' . $item->Id . '>
                                         <svg xmlns='http://www.w3.org/2000/svg' class='on' height='24' fill='green'
                                             viewBox='0 -960 960 960' width='24'>
                                             <path
@@ -217,7 +225,7 @@ if ($condition) {
                                     </div>
                                 </div>                        
                                 <div class='edit flex'>
-                                    <i class='fas fa-trash delete_item' data-id=" . $item->Id . "></i>
+                                    <i class='fas fa-trash delete_item' data-id=' . $item->Id . '></i>
                                     <p>Remove</p>
                                 </div>
                                 </div>
@@ -260,9 +268,17 @@ if ($condition) {
                     <label>Enter message</label>
                     <textarea name="message">...</textarea>
                 </div>
-                <div class="field">
-                    <label>Add file</label>
-                    <input type="file" name="file" />
+                <div class="upload_blog">
+                    <a id="browseButton" name="imageFile">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                            <path d="M9 15l3 -3l3 3" />
+                            <path d="M12 12l0 9" />
+                        </svg>
+
+                        <span>Select file to upload here</span>
+                    </a>
                 </div>
 
                 <div class="field">

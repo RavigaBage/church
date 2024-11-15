@@ -282,7 +282,7 @@ header.title {
 .wallet .display_wallet .content_dash .main .card .middle h1 {
   margin-block: 3px;
   color: var(--white);
-  font-size: 35px;
+  font-size: 28px;
 }
 .wallet .display_wallet .content_dash .main .card .bottom {
   color: var(--white);

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../../API/vendor/autoload.php';
+include '../SvgPath.php';
 $newDataRequest = new AssetProject\viewData();
 $val = 1;
 $year = "";
@@ -278,10 +279,20 @@ if ($condition) {
                                 $Image = $item->Image;
                                 $message = $item->About;
                                 $ObjectData = $item->Obj;
+
+                                $path = "../../API/Images_folder/Assets/$Image";
+                                $svg = $svg_path;
+                                if(!empty($Image) && file_exists('../../../API/Images_folder/Assets/' . $Image. '')){
+                                     $path_img = '<img src='.$path.' alt="img" />';
+                                }else{
+                                    $path_img = $svg;
+                                   
+                                }
+
                                 echo "<tr>
                     <td><div class='details'>
                  <div class='img'>
-                 <img src='../../API/Images_folder/Assets/" . $Image . "' alt='asset file'/>
+                 " . $path_img . "
                  </div>
                  <div class='text'>
                  <p> " . $name . "</p>
@@ -331,6 +342,9 @@ if ($condition) {
             <header>
 
                 <?php
+                if(IntVal($total)){
+
+
                 $total_raw = $total / 40;
                 $total = ceil($total / 40);
                 if ($total_raw > 1) {
@@ -400,6 +414,7 @@ if ($condition) {
                 </header>
                 <?php
                 }
+            }
         }
         ?>
     </div>

@@ -293,30 +293,33 @@ if ($data != "Fetching data encounted a problem" || $data != "No records availab
                     </div>
 
                 </div>
-                <div class="About project_display">
+                <?php
+                if (is_object(json_decode($projects))) {
+                    echo '<div class="About project_display">
                     <div class="title">
                         <h1>Completed projects</h1>
                     </div>
-                    <div class="detail_project">
-                        <?php
-                        if ($projects != "Fetching data encounted a problem" || $projects != "No records available'" || $projects != "Error Occurred") {
-                            $decoded = json_decode($projects);
+                    <div class="detail_project">'; ?>
+                    <?php
 
-                            foreach ($decoded as $item) {
-                                $id = $item->id;
-                                $name = $item->name;
+                    $decoded = json_decode($projects);
+                    foreach ($decoded as $item) {
+                        $id = $item->id;
+                        $name = $item->name;
 
-                                echo '<div class="col" id="' . $id . '">
+                        echo '<div class="col" id="' . $id . '">
                             <img src="../API/Images_folder/' . $Image . '" alt="" />
                             <h1>' . $name . '</h1>
                         </div>';
-                            }
-                        }
+                    }
 
-                        ?>
 
-                    </div>
-                </div>
+                    ?>
+
+                    <?php echo '</div></div>';
+                }
+                ?>
+
                 <div class="About">
                     <div class="title">
                         <h1>Current project</h1>

@@ -38,7 +38,7 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function library_upload_data($name, $author, $date, $status, $source, $category, $upload_file)
+    protected function library_upload_data($name, $author, $date, $status, $source, $category, $tag, $upload_file)
     {
         $input_list = array($name, $author, $date, $status, $source, $category);
         $clean = true;
@@ -66,7 +66,7 @@ class fetchData extends DBH
                 $date_now = date('Y-m-d');
                 $filepath = $upload_file;
 
-                $stmt = $this->data_connect()->prepare("INSERT INTO `zoe_library`.`datacollections`(`unique_id`, `name`, `category`, `Source`, `Author`, `Date`, `Status`,`cover_img`,`last modified`)VALUES (?,?,?,?,?,?,?,?,?)");
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoe_library`.`datacollections`(`unique_id`, `name`, `category`, `Source`, `Author`, `Date`, `Status`,`cover_img`,`last modified`,`tag`)VALUES (?,?,?,?,?,?,?,?,?,?)");
                 $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
                 $stmt->bindParam('2', $name, \PDO::PARAM_STR);
                 $stmt->bindParam('3', $category, \PDO::PARAM_STR);
@@ -76,6 +76,7 @@ class fetchData extends DBH
                 $stmt->bindParam('7', $status, \PDO::PARAM_STR);
                 $stmt->bindParam('8', $filepath, \PDO::PARAM_STR);
                 $stmt->bindParam('9', $date_now, \PDO::PARAM_STR);
+                $stmt->bindParam('10', $tag, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problems');
@@ -96,7 +97,7 @@ class fetchData extends DBH
 
     }
 
-    protected function library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $upload_file)
+    protected function library_update_data($name, $author, $date, $status, $source, $category, $tag, $unique_id, $upload_file)
     {
         $input_list = array($name, $author, $date, $status, $source, $category);
         $clean = true;
@@ -123,7 +124,7 @@ class fetchData extends DBH
                 if ($stmt->execute()) {
                     $date_now = date('Y-m-d');
                     if (empty($upload_file)) {
-                        $stmt = $this->data_connect()->prepare("UPDATE `zoe_library`.`datacollections` set `name`=?,`Author`=?,`date`=?,`Status`=?,`Source`=?,`category`=?,`last modified`= ? WHERE `unique_id` = ?");
+                        $stmt = $this->data_connect()->prepare("UPDATE `zoe_library`.`datacollections` set `name`=?,`Author`=?,`date`=?,`Status`=?,`Source`=?,`category`=?,`last modified`= ?,`tag`=? WHERE `unique_id` = ?");
                         $stmt->bindParam('1', $name, \PDO::PARAM_STR);
                         $stmt->bindParam('2', $author, \PDO::PARAM_STR);
                         $stmt->bindParam('3', $date, \PDO::PARAM_STR);
@@ -131,7 +132,8 @@ class fetchData extends DBH
                         $stmt->bindParam('5', $source, \PDO::PARAM_STR);
                         $stmt->bindParam('6', $category, \PDO::PARAM_STR);
                         $stmt->bindParam('7', $date_now, \PDO::PARAM_STR);
-                        $stmt->bindParam('8', $unique_id, \PDO::PARAM_STR);
+                        $stmt->bindParam('8', $tag, \PDO::PARAM_STR);
+                        $stmt->bindParam('9', $unique_id, \PDO::PARAM_STR);
                     } else {
                         $filepath = $upload_file;
                         $stmt = $this->data_connect()->prepare("UPDATE `zoe_library`.`datacollections` set `name`=?,`Author`=?,`date`=?,`Status`=?,`Source`=?,`category`=?,`cover_img`=?,`last modified`= ? WHERE `unique_id` = ?");
@@ -143,7 +145,8 @@ class fetchData extends DBH
                         $stmt->bindParam('6', $category, \PDO::PARAM_STR);
                         $stmt->bindParam('7', $filepath, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $date_now, \PDO::PARAM_STR);
-                        $stmt->bindParam('9', $unique_id, \PDO::PARAM_STR);
+                        $stmt->bindParam('9', $tag, \PDO::PARAM_STR);
+                        $stmt->bindParam('10', $unique_id, \PDO::PARAM_STR);
                     }
 
 
@@ -190,11 +193,10 @@ class fetchData extends DBH
                 $date = $this->validate($data['date']);
                 $source = $this->validate($data['Source']);
                 $Type = $this->validate($data['category']);
+                $tag = $this->validate($data['tag']);
                 $Period = $this->validate($data['period']);
                 $unique_id = $this->validate($data['unique_id']);
                 $status = $this->validate($data['status']);
-
-
 
                 $stmt_record = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`partnership_records` where `unique_id`='$unique_id' ORDER BY `id` DESC");
 
@@ -231,6 +233,7 @@ class fetchData extends DBH
                 $objectClass->date = $date;
                 $objectClass->Email = $Email;
                 $objectClass->Type = $Type;
+                $objectClass->tag = $tag;
                 $objectClass->Period = $Period;
                 $objectClass->status = $status;
                 $ObjectData = json_encode($objectClass);
@@ -241,6 +244,7 @@ class fetchData extends DBH
                 $ExportSend->date = $date;
                 $ExportSend->Email = $Email;
                 $ExportSend->Type = $Type;
+                $ExportSend->tag = $tag;
                 $ExportSend->Period = $Period;
                 $ExportSend->status = $status;
                 $ExportSend->Obj = $ObjectData;
@@ -325,6 +329,7 @@ class fetchData extends DBH
                 $name = $this->validate($data['name']);
                 $date = $this->validate($data['Date']);
                 $category = $this->validate($data['category']);
+                $tag = $this->validate($data['tag']);
                 $Author = $this->validate($data['Author']);
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
@@ -362,6 +367,7 @@ class fetchData extends DBH
                 $objectClass->name = $name;
                 $objectClass->date = $date;
                 $objectClass->category = $category;
+                $objectClass->tag = $tag;
                 $objectClass->Author = $Author;
                 $objectClass->status = $status;
                 $objectClass->source = $source;
@@ -371,6 +377,7 @@ class fetchData extends DBH
                 $ExportSend->name = $name;
                 $ExportSend->date = $date;
                 $ExportSend->category = $category;
+                $ExportSend->tag = $tag;
                 $ExportSend->Author = $Author;
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;
@@ -405,6 +412,7 @@ class fetchData extends DBH
                 $name = $this->validate($data['name']);
                 $date = $this->validate($data['Date']);
                 $category = $this->validate($data['category']);
+                $tag = $this->validate($data['tag']);
                 $Author = $this->validate($data['Author']);
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
@@ -425,39 +433,26 @@ class fetchData extends DBH
                         $date = $dfile['date'];
                         $filename = $dfile['filename'];
                         $source = $dfile['source'];
-                        $id = $dfile['id'];
-                        $IndRecord->UniqueId = $unique_id;
                         $IndRecord->date = $date;
                         $IndRecord->filename = $filename;
                         $IndRecord->source = $source;
-                        $IndRecord->id = $id;
-                        $IdName = $unique_id . $id;
+                        $IdName = rand(time(), 10029);
                         $objectClassRecord->$IdName = $IndRecord;
 
                     }
                 }
 
                 $ObjectDataIndividual = json_encode($objectClassRecord);
-                $objectClass = new \stdClass();
                 $ExportSend = new \stdClass();
-                $objectClass->UniqueId = $unique_id;
-                $objectClass->name = $name;
-                $objectClass->date = $date;
-                $objectClass->category = $category;
-                $objectClass->Author = $Author;
-                $objectClass->status = $status;
-                $objectClass->source = $source;
-                $ObjectData = json_encode($objectClass);
 
-                $ExportSend->UniqueId = $unique_id;
                 $ExportSend->name = $name;
                 $ExportSend->date = $date;
                 $ExportSend->category = $category;
+                $ExportSend->tag = $tag;
                 $ExportSend->Author = $Author;
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;
-                $ExportSend->Obj = $ObjectData;
-                $ExportSend->IObj = $ObjectDataIndividual;
+                $ExportSend->subList = $ObjectDataIndividual;
                 $ExportSendMain->$unique_id = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);
@@ -494,6 +489,7 @@ class fetchData extends DBH
                 $name = $this->validate($data['name']);
                 $date = $this->validate($data['Date']);
                 $category = $this->validate($data['category']);
+                $tag = $this->validate($data['tag']);
                 $Author = $this->validate($data['Author']);
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
@@ -534,6 +530,7 @@ class fetchData extends DBH
                 $objectClass->name = $name;
                 $objectClass->date = $date;
                 $objectClass->category = $category;
+                $objectClass->tag = $tag;
                 $objectClass->Author = $Author;
                 $objectClass->status = $status;
                 $objectClass->source = $source;
@@ -544,6 +541,7 @@ class fetchData extends DBH
                 $ExportSend->name = $name;
                 $ExportSend->date = $date;
                 $ExportSend->category = $category;
+                $ExportSend->tag = $tag;
                 $ExportSend->Author = $Author;
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;
@@ -580,6 +578,7 @@ class fetchData extends DBH
                 $name = $this->validate($data['name']);
                 $date = $this->validate($data['Date']);
                 $category = $this->validate($data['category']);
+                $tag = $this->validate($data['tag']);
                 $Author = $this->validate($data['Author']);
                 $unique_id = $this->validate($data['unique_id']);
                 $source = $this->validate($data['Source']);
@@ -621,6 +620,7 @@ class fetchData extends DBH
                 $objectClass->name = $name;
                 $objectClass->date = $date;
                 $objectClass->category = $category;
+                $objectClass->tag = $tag;
                 $objectClass->Author = $Author;
                 $objectClass->status = $status;
                 $objectClass->source = $source;
@@ -631,6 +631,7 @@ class fetchData extends DBH
                 $ExportSend->name = $name;
                 $ExportSend->date = $date;
                 $ExportSend->category = $category;
+                $ExportSend->tag = $tag;
                 $ExportSend->Author = $Author;
                 $ExportSend->status = $status;
                 $ExportSend->source = $source;

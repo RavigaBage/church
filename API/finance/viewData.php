@@ -332,7 +332,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function Confirm_name($name){
+    public function Confirm_name($name)
+    {
         $RecordsResult = $this->Confirm_membership_Records($name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
@@ -764,7 +765,8 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
-    public function ChartAnalysis($year){
+    public function ChartAnalysis($year)
+    {
         $RecordsTithe = $this->ChartData($year);
         $RecordsTitheYear = $this->ChartDataYear($year);
         $RecordData = $this->ChatRecords($year);
@@ -776,18 +778,18 @@ class viewData extends fetchData
         $Membership = $this->ChartMembership();
         $Offertory = $this->ChartOffertoryYear($year);
         $AnalysisData = new \stdClass();
-        $AnalysisData->Tithe =  $RecordsTithe;
-        $AnalysisData->TitheYear =  $RecordsTitheYear;
-        $AnalysisData->Records =  $RecordData ;
-        $AnalysisData->visitors =  $VisitorsChat;
-        $AnalysisData->TitheComparism =  $titheComparism;
-        $AnalysisData->BudgetData =  $BudgetData;
-        $AnalysisData->Partnership =  $Partnership;
-        $AnalysisData->Events =  $ChartEvent;
-        $AnalysisData->membership =  $Membership;
-        $AnalysisData->offertory =  $Offertory;
+        $AnalysisData->Tithe = $RecordsTithe;
+        $AnalysisData->TitheYear = $RecordsTitheYear;
+        $AnalysisData->Records = $RecordData;
+        $AnalysisData->visitors = $VisitorsChat;
+        $AnalysisData->TitheComparism = $titheComparism;
+        $AnalysisData->BudgetData = $BudgetData;
+        $AnalysisData->Partnership = $Partnership;
+        $AnalysisData->Events = $ChartEvent;
+        $AnalysisData->membership = $Membership;
+        $AnalysisData->offertory = $Offertory;
         return json_encode($AnalysisData);
-        
+
     }
 
 }

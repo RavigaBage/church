@@ -39,7 +39,7 @@ class fetchData extends DBH
         }
         return $data;
     }
-    protected function gallery_upload_data($Event_name, $uploaded_file_names ,$upload_date, $category)
+    protected function gallery_upload_data($Event_name, $uploaded_file_names, $upload_date, $category)
     {
         $input_list = array($Event_name, $upload_date, $category);
         $clean = true;
@@ -54,51 +54,51 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $count  = 0;
-            foreach($uploaded_file_names as $uploaded_file_name){
+            $count = 0;
+            foreach ($uploaded_file_names as $uploaded_file_name) {
                 $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary` WHERE `EventName` = ?  AND  `date_uploaded`=? AND  `category` = ? AND `name`=?");
-                $stmt->bindParam('1',$Event_name,\PDO::PARAM_STR);
-                $stmt->bindParam('2',$upload_date,\PDO::PARAM_STR);
-                $stmt->bindParam('3',$category,\PDO::PARAM_STR);
-                $stmt->bindParam('4',$uploaded_file_name,\PDO::PARAM_STR);
+                $stmt->bindParam('1', $Event_name, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $upload_date, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $category, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $uploaded_file_name, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = json_encode('Fetching data encountered a problems');
                     exit($Error);
                 } else {
                     if (!$stmt->rowCount() > 0) {
-                            $unique_id = rand(time(), 3002);
-                            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`gallary`(`unique_id`, `EventName`, `name`, `date_uploaded`, `category`)VALUES (?,?,?,?,?)");
-                            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
-                            $stmt->bindParam('2', $Event_name, \PDO::PARAM_STR);
-                            $stmt->bindParam('3', $uploaded_file_name, \PDO::PARAM_STR);
-                            $stmt->bindParam('4', $upload_date, \PDO::PARAM_STR);
-                            $stmt->bindParam('5', $category, \PDO::PARAM_STR);
-                            if (!$stmt->execute()) {
-                                $stmt = null;
-                                $Error = 'Fetching data encountered a problems';
-                                return ($Error);
-                            } else {
-                                $date = date('Y-m-d H:i:s');
-                                $namer = $_SESSION['login_details'];
-                                $historySet = $this->history_set($namer, "Gallery  Data Upload", $date, "Gallery  page dashboard Admin", "User Uploaded a data");
-                                if (json_decode($historySet) != 'Success') {
-                                    $exportData = 'success';
-                                   
-                                }
-                                $count += 1;
-                                $exportData = 'Upload was a success';
+                        $unique_id = rand(time(), 3002);
+                        $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`gallary`(`unique_id`, `EventName`, `name`, `date_uploaded`, `category`)VALUES (?,?,?,?,?)");
+                        $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                        $stmt->bindParam('2', $Event_name, \PDO::PARAM_STR);
+                        $stmt->bindParam('3', $uploaded_file_name, \PDO::PARAM_STR);
+                        $stmt->bindParam('4', $upload_date, \PDO::PARAM_STR);
+                        $stmt->bindParam('5', $category, \PDO::PARAM_STR);
+                        if (!$stmt->execute()) {
+                            $stmt = null;
+                            $Error = 'Fetching data encountered a problems';
+                            return ($Error);
+                        } else {
+                            $date = date('Y-m-d H:i:s');
+                            $namer = $_SESSION['login_details'];
+                            $historySet = $this->history_set($namer, "Gallery  Data Upload", $date, "Gallery  page dashboard Admin", "User Uploaded a data");
+                            if (json_decode($historySet) != 'Success') {
+                                $exportData = 'success';
+
                             }
+                            $count += 1;
+                            $exportData = 'Upload was a success';
+                        }
                     } else {
-                        return('Data already exist');
+                        return ('Data already exist');
                     }
                 }
-            }        
+            }
         }
-        if($count == count($uploaded_file_names)){
+        if ($count == count($uploaded_file_names)) {
             return $exportData;
-        }else{
-            $message = 'first'.$count .'files we uploaded succesfuly';
+        } else {
+            $message = 'first' . $count . 'files we uploaded succesfuly';
             return $message;
         }
 
@@ -347,22 +347,11 @@ class fetchData extends DBH
                 $name = $data['name'];
                 $date_uploaded = $data['date_uploaded'];
                 $category = $data['category'];
-
-                $objectClass = new \stdClass();
                 $ExportSend = new \stdClass();
-                $objectClass->UniqueId = $unique_id;
-                $objectClass->Eventname = $Eventname;
-                $objectClass->name = $name;
-                $objectClass->date_uploaded = $date_uploaded;
-                $objectClass->category = $category;
-                $ObjectData = json_encode($objectClass);
-                $ExportSend->UniqueId = $unique_id;
                 $ExportSend->Eventname = $Eventname;
                 $ExportSend->name = $name;
                 $ExportSend->date_uploaded = $date_uploaded;
                 $ExportSend->category = $category;
-                $ExportSend->Obj = $ObjectData;
-
                 $ExportSendMain->$unique_id = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);
@@ -390,12 +379,17 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $unique_id = $data['unique_id'];
                 $Eventname = $data['Eventname'];
+                $name = $data['name'];
                 $ExportSend = new \stdClass();
                 $Naming = $unique_id . $Eventname;
                 $ExportSend->Event_name = $Eventname;
+                $ExportSend->name = $name;
                 $ExportSendMain->$Naming = $ExportSend;
             }
 
+
+
+            
             $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;

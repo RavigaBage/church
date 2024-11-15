@@ -32,7 +32,7 @@ if ($condition) {
         $filter = $_GET['filter_var'];
     }
     $data = $viewDataClass->gallery_view_sort_view($count, $filter);
-    if ($data != "Fetching data encounted a problem" || $data != "No records available'" || $data != "Error Occurred") {
+    if (is_object(json_decode($data))) {
         // if (empty($_SESSION['gallery_csrf'])) {
         //     $_SESSION['gallery_csrf'] = bin2hex(random_bytes(32));
         // }
@@ -48,6 +48,7 @@ if ($condition) {
             <link rel="stylesheet" href="gal.css">
             <link rel="stylesheet" href="css/izmir.min.css">
             <link rel="stylesheet" href="../css/aos.css">
+            <script src="../js/jquery-3.4.1.min.js"></script>
             <title>Zoe memories</title>
         </head>
 
@@ -56,73 +57,42 @@ if ($condition) {
 
                 <div class="hero_page">
                     <div class="container">
-                        <div class="slide">
-                            <div class="item" style="background-image: url(images/gal/bg6.jpg);">
-                                <div class="content">
-                                    <div class="name">Events</div>
-                                    <div class="des">Check out our event Albums</div>
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/gal/bg1.jpg);">
-                                <div class="content">
-                                    <div class="name">Evangelism</div>
-                                    <div class="des">Discover some of the outreach events we had as a church</div>
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/gal/bg5.jpg);">
-                                <div class="content">
-                                    <div class="name">Sunday School</div>
-                                    <div class="des">Discover some of the exquisite images of the children ministry</div>
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/gal/bg4.jpg);">
-                                <div class="content">
-                                    <div class="name">Events</div>
-                                    <div class="des">Check out our event Albums</div>
-
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/gal/bg3.jpg);">
-                                <div class="content">
-                                    <div class="name">Events</div>
-                                    <div class="des">Check out our event Albums</div>
-
-                                </div>
-                            </div>
-                            <div class="item" style="background-image: url(images/gal/bg2.jpg);">
-                                <div class="content">
-                                    <div class="name">Events</div>
-                                    <div class="des">Check out our event Albums</div>
-                                </div>
-                            </div>
-
+                        <div class="panel"
+                            style="background-image: url(../images/gallery_default/straw-transport-7948338_640.jpg);">
+                            <h1>Missionary</h1>
                         </div>
-
-                        <div class="button">
-                            <button class="prev"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0 0 0 -3.414 -1.414z" />
-                                </svg>
-
-                            </button>
-                            <button class="next"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.586h-6.999a2 2 0 0 0 -2 2v4l.005 .15a2 2 0 0 0 1.995 1.85l6.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z" />
-                                </svg></button>
+                        <div class="panel" style="background-image: url(../images/gallery_default/evan.jpg);">
+                            <h1>Evangelism</h1>
+                        </div>
+                        <div class="panel  active" style="background-image: url(../images/gallery_default/happy.jpg);">
+                            <h1>Happy times</h1>
+                        </div>
+                        <div class="panel" style="background-image: url(../images/gallery_default/sad.jpg);">
+                            <h1>Sad moments</h1>
+                        </div>
+                        <div class="panel" style="background-image: url(../images/gallery_default/fello.jpg);">
+                            <h1>Fellowship</h1>
                         </div>
                     </div>
                 </div>
                 <div class="filter_page">
-                    <input hidden id="loadCounter" data-filter="<?php echo $filter; ?>" value="0" />
+                    <input hidden id="loadCounter" data-filter="<?php echo $filter; ?>" value=0 />
                     <div class="intro">
                         <h1 class="hello">
                             Zoe Gallery
                         </h1>
                         <form>
-                            <div class="filter_icon"></div>
-                            <select>
+                            <div class="filter_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M8.813 11.612c.457 -.38 .918 -.38 1.386 .011l.108 .098l4.986 4.986l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l.292 -.293l.106 -.095c.457 -.38 .918 -.38 1.386 .011l.108 .098l4.674 4.675a4 4 0 0 1 -3.775 3.599l-.206 .005h-12a4 4 0 0 1 -3.98 -3.603l6.687 -6.69l.106 -.095zm9.187 -9.612a4 4 0 0 1 3.995 3.8l.005 .2v9.585l-3.293 -3.292l-.15 -.137c-1.256 -1.095 -2.85 -1.097 -4.096 -.017l-.154 .14l-.307 .306l-2.293 -2.292l-.15 -.137c-1.256 -1.095 -2.85 -1.097 -4.096 -.017l-.154 .14l-5.307 5.306v-9.585a4 4 0 0 1 3.8 -3.995l.2 -.005h12zm-2.99 5l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" />
+                                </svg>
+
+                            </div>
+                            <select value=<?php if ($filter != 'null') {
+                                echo $filter;
+                            } ?>>
                                 <?php
                                 foreach ($decoded as $item) {
                                     $Event_name = $item->Event_name;
@@ -134,49 +104,28 @@ if ($condition) {
                     </div>
                 </div>
                 <div class="grid_content">
-                    <ul class="image_class">
-                        <li class="card">
-                            <figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card">
-                                <img data-src="../API/images_folder/users/pexels-soldiervip-1468379.jpg" alt="" />
-                                <figcaption>
-                                    <div class="details">
-                                        <p>Romano conto</p>
-                                        <div class="download">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                                fill="currentColor">
-                                                <path
-                                                    d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
-                                            </svg>
-
-                                        </div>
-                                    </div>
-                                </figcaption>
-                            </figure>
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-stefanstefancik-91227.jpg" alt="" />
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-stefanstefancik-91227.jpg" alt="" />
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-creationhill-1681010.jpg" alt="" />
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-khalidgarcia-1144170.jpg" alt="" />
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-creationhill-1681010.jpg" alt="" />
-                        </li>
-                        <li class="card"><img data-src="../API/images_folder/users/pexels-bertellifotografia-573299.jpg"
-                                alt="" />
-                        </li>
-                    </ul>
+                    <div class="grid_content_box">
+                        <ul class="image_class"></ul>
+                    </div>
+                    <div class="grid_content_box">
+                        <ul class="image_class"></ul>
+                    </div>
+                    <div class="grid_content_box">
+                        <ul class="image_class"></ul>
+                    </div>
+                    <div class="grid_content_box">
+                        <ul class="image_class"></ul>
+                    </div>
 
                 </div>
                 <div class="loader">
-                <div class="loader_wrapper">
-                    <div class="load-3">
-                        <div class="line"></div>
-                        <div class="line"></div>
-                        <div class="line"></div>
+                    <div class="loader_wrapper">
+                        <div class="load-3">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
                     </div>
-                </div>
                 </div>
                 <div class="viewer">
                     <div class="viewer_element">
@@ -199,138 +148,173 @@ if ($condition) {
             </main>
             <script src="../js/aos.js"></script>
             <script>
-                AOS.init();
-                let denial_of_service = false;
-                const LoadCounter = document.querySelector('#loadCounter');
-                const ImageClassLoader = document.querySelector('.image_class');
-                let next = document.querySelector(' .next');
-                let prev = document.querySelector('.prev');
-                let exitView = document.querySelector('.viewer .times');
-                let Viewer = document.querySelector('.viewer');
-                let Cards = document.querySelectorAll('.download');
-                var Elements = document.querySelectorAll("li img");
-                var formSelector = document.querySelector('form select');
-                const BodyElement = document.documentElement;
-                const Bodyloader = document.querySelector('.loader');
-                let DownloadBtn = document.querySelector('.download.main');
-                DownloadBtn.addEventListener('click', function () {
-                    Image = Viewer.querySelector('img');
-                    Anchor = document.createElement('a');
-                    Anchor.setAttribute('href', Image.src);
-                    Anchor.setAttribute('download', Image.src);
-                    Anchor.click();
+                $(document).ready(function () {
+                    AOS.init();
+                    Color_ranges = ['#523b23', '#261e16', '#0083B0']
+                    let denial_of_service = false;
+                    const LoadCounter = document.querySelector('#loadCounter');
+                    const ImageClassLoader = document.querySelector('.image_class');
+                    let exitView = document.querySelector('.viewer .times');
+                    let Viewer = document.querySelector('.viewer');
+                    let Cards = document.querySelectorAll('.download');
+                    var Elements = document.querySelectorAll("figure");
+                    var formSelector = document.querySelector('form select');
+                    const BodyElement = document.documentElement;
+                    const Bodyloader = document.querySelector('.loader');
+                    let DownloadBtn = document.querySelector('.download.main');
+                    const HomeData = <?php print_r($data); ?>;
+                    renderHomeImages(HomeData)
+                    function renderHomeImages(Obj) {
+                        console.log(Obj)
+                        const Containers = document.querySelectorAll('.grid_content_box');
+                        counter = 0;
+                        if (typeof Obj == 'object') {
+                            ObjectData = Obj;
+                            ObjectKeys = Object.keys(ObjectData);
+                            shuffedData = ShuffleKeys(ObjectKeys);
+                            shuffedData.forEach(element => {
+                                Images = Obj[element];
+                                radmi = ShuffleKeys(Color_ranges)[0];
+                                Containers[counter].querySelector('ul').innerHTML +=
+                                    `<li class="card">
+                                        <figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card" style="--secondary-color:${radmi}; --primary-color:${radmi}">
+                                                            <img data-src="../API/Images_folder/gallery/${Images['name']}" alt="" />
+                                                            <figcaption >
+                                                                <div class="details">
+                                                                        <p>${Images['Event_name']}</p>
+                                                                        <div class="download">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                                            fill="currentColor">
+                                                                            <path
+                                                                                d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
+                                                                        </svg>
 
-                    Anchor.delete();
-                })
-                formSelector.addEventListener('change', function (e) {
-                    location.href = 'gallery.php?filter_var=' + formSelector.value;
-                })
-
-                window.addEventListener('scroll', async function (e) {
-                    console.log(window.scrollY + window.innerHeight, window.scrollY, window.innerHeight, BodyElement.scrollHeight);
-                    if ((window.scrollY + window.innerHeight) == BodyElement.scrollHeight) {
-                        APIDOCS = "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=load";
-                        //make request
-                        try {
-                            if(!denial_of_service){
-                                Bodyloader.classList.add('active');
-                            bodyData = {
-                                num: LoadCounter.value,
-                                filter: LoadCounter.getAttribute('data-filter')
-                            }
-                            var fetchRequest = await fetch(APIDOCS, {
-                                method: "POST",
-                                body: JSON.stringify(bodyData),
-                                headers: {
-                                    "Content-type": "application/JSON"
+                                                                    </div>
+                                                                </div>
+                                                            </figcaption>
+                                                        </figure></li>`;
+                                counter++;
+                                if (counter > 3) {
+                                    counter = 0;
                                 }
+
                             });
-                            if (fetchRequest.status == 200) {
-                                var Response = await fetchRequest.json();
-                                if (typeof Response == 'object') {
-                                    for (const key in Response) {
-                                        const element = Response[key];
-                                        template =
-                                            `<li class="card"><figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card">
-                                            <img  data-src="../API/Images_folder/gallery/${element['name']}" alt="" />
-                                            <figcaption>
-                                                <div class="details">
-                                                        <p>${element['Event_name']}</p>
-                                                        <div class="download">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                                            fill="currentColor">
-                                                            <path
-                                                                d="M10 2l-.15 .005a2 2 0 0 0 -1.85 1.995v6.999l-2.586 .001a2 2 0 0 0 -1.414 3.414l6.586 6.586a2 2 0 0 0 2.828 0l6.586 -6.586a2 2 0 0 0 .434 -2.18l-.068 -.145a2 2 0 0 0 -1.78 -1.089l-2.586 -.001v-6.999a2 2 0 0 0 -2 -2h-4z" />
-                                                        </svg>
-
-                                                    </div>
-                                                </div>
-                                            </figcaption>
-                                        </figure></li>`;
-                                        ImageClassLoader.innerHTML += template;
-                                        Cards = document.querySelectorAll('.card .details .download');
-
-                                    }
-                                    Elements = document.querySelectorAll("li img");
-                                    Elements.forEach((el) => observer.observe(el));
-
-                                    LoadCounter.value = parseInt(LoadCounter.value) + 1;
-                                    console.log(LoadCounter.value);
-                                } else {
-                                    denial_of_service = true;
-                                    console.log(Response);
-                                }
-
-
-                            }
-                            Bodyloader.classList.remove('active');
-                            }
-                           
-
-                        } catch (error) {
-                            console.log(error);
                         }
                     }
-                })
+                    function ShuffleKeys(array) {
+                        returnArray = [];
+                        for (let i = array.length - 1; i >= 0; i--) {
+                            const picker = Math.floor(Math.random() * (i + 1));
+                            picked = [array[i]]
+                            returnArray.push(array[picker])
+                        }
 
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            if (!entry.target.hasAttribute('src') && entry.target.hasAttribute('data-src') && !entry.target.classList.contains('srcLoad')) {
-                                SectionName = entry.target.getAttribute("data-src");
-                                entry.target.setAttribute('src', SectionName);
-                                entry.target.classList.add('srcLoad');
-                                console.log('here');
+                        return returnArray;
+                    }
+                    DownloadBtn.addEventListener('click', function () {
+                        Image = Viewer.querySelector('img');
+                        Anchor = document.createElement('a');
+                        Anchor.setAttribute('href', Image.src);
+                        Anchor.setAttribute('download', Image.src);
+                        Anchor.click();
+
+                        Anchor.delete();
+                    })
+                    formSelector.addEventListener('change', function (e) {
+                        location.href = 'gallery.php?filter_var=' + formSelector.value;
+                    })
+
+                    window.addEventListener('scroll', async function (e) {
+                        if ((Math.ceil(window.scrollY + window.innerHeight)) == BodyElement.scrollHeight) {
+                            APIDOCS = "../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=load";
+                            //make request
+                            try {
+                                if (!denial_of_service) {
+                                    Bodyloader.classList.add('active');
+                                    bodyData = {
+                                        num: parseInt(LoadCounter.value),
+                                        filter: LoadCounter.getAttribute('data-filter')
+                                    }
+                                    var fetchRequest = await fetch(APIDOCS, {
+                                        method: "POST",
+                                        body: JSON.stringify(bodyData),
+                                        headers: {
+                                            "Content-type": "application/JSON"
+                                        }
+                                    });
+                                    if (fetchRequest.status == 200) {
+                                        var Response = await fetchRequest.json();
+                                        if (typeof Response == 'object') {
+                                            renderHomeImages(Response)
+                                            Cards = document.querySelectorAll('.card .details .download');
+                                            Elements = document.querySelectorAll("li img");
+                                            Elements.forEach((el) => observer.observe(el));
+
+                                            LoadCounter.value = parseInt(LoadCounter.value) + 1;
+                                        } else {
+                                            denial_of_service = true;
+                                        }
+
+
+                                    }
+                                    Bodyloader.classList.remove('active');
+                                }
+
+
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }
+                    })
+
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                console.log(entry.target);
+                                entryImage = entry.target;
+                                if (entryImage) {
+                                    if (!entryImage.hasAttribute('src') && entryImage.hasAttribute('data-src') && !entryImage.classList.contains('srcLoad')) {
+                                        SectionName = entryImage.getAttribute("data-src");
+                                        entryImage.setAttribute('src', SectionName);
+                                        entryImage.classList.add('srcLoad');
+                                    }
+                                }
+
 
                             }
-
-                        }
+                        });
                     });
-                });
-                Elements.forEach((el) => observer.observe(el));
 
-                exitView.addEventListener('click', function () {
-                    Viewer.classList.remove('active');
-                });
-                window.addEventListener('click', function (e) {
-                    target = e.target;
-                    Cards.forEach(element => {
-                        if (element == target || element.contains(target)) {
-                            ParentElement = element.parentElement.parentElement.parentElement;
-                            console.log()
-                            Viewer.querySelector('img').setAttribute('src', ParentElement.querySelector('img').getAttribute('src'));
-                            Viewer.classList.add('active');
-                        }
+                    exitView.addEventListener('click', function () {
+                        Viewer.classList.remove('active');
                     });
-                })
+                    window.addEventListener('click', function (e) {
+                        target = e.target;
+                        Cards.forEach(element => {
+                            if (element == target || element.contains(target)) {
+                                ParentElement = element.parentElement.parentElement.parentElement;
+                                console.log()
+                                Viewer.querySelector('img').setAttribute('src', ParentElement.querySelector('img').getAttribute('src'));
+                                Viewer.classList.add('active');
+                            }
+                        });
+                    })
+                    Elements.forEach((el) => observer.observe(el));
 
-                next.addEventListener('click', function () {
-                    let items = document.querySelectorAll('.item');
-                    document.querySelector('.slide').appendChild(items[0]);
-                });
-                prev.addEventListener('click', function () {
-                    let items = document.querySelectorAll('.item');
-                    document.querySelector('.slide').prepend(items[items.length - 1]);
+                    const panels = document.querySelectorAll(".panel");
+
+                    panels.forEach((panel) => {
+                        panel.addEventListener("click", () => {
+                            removeActiveClasses();
+                            panel.classList.add("active");
+                        });
+                    });
+
+                    function removeActiveClasses() {
+                        panels.forEach((panel) => {
+                            panel.classList.remove("active");
+                        })
+                    }
                 });
 
             </script>

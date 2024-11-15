@@ -169,8 +169,8 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-               
-                
+
+
                 if ($stmt->execute()) {
                     if (empty($uploaded_file_names)) {
                         $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`users` SET `Firstname`=?,`Othername`=?,`Age`=?,`Position`=?,`contact`=?,`email`=?,`Address`=?,`Baptism`=?,`membership_start`=?,`username`=?,`gender`=?,`occupation`=?,`About`=?,`status`=? where `unique_id` = ?");
@@ -180,7 +180,7 @@ class fetchData extends DBH
 
 
 
-                    
+
                     $stmt->bindParam('1', $Firstname, \PDO::PARAM_STR);
                     $stmt->bindParam('2', $Othername, \PDO::PARAM_STR);
                     $stmt->bindParam('3', $Age, \PDO::PARAM_STR);
@@ -469,7 +469,7 @@ class fetchData extends DBH
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
             $stmt = null;
-            $Error = 'Fetching data encounted a problem';
+            $Error = 'Fetching data encountered a problem';
             exit(json_encode($Error));
         }
         if ($stmt->rowCount() > 0) {
@@ -503,7 +503,6 @@ class fetchData extends DBH
 
                 $ExportSend = new \stdClass();
 
-                $ExportSend->UniqueId = $unique_id;
                 $ExportSend->status = $status;
                 $ExportSend->Oname = $Firstname;
                 $ExportSend->Fname = $Othername;

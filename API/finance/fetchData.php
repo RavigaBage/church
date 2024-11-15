@@ -146,7 +146,8 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$unique_id'");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`=?");
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -156,14 +157,25 @@ class fetchData extends DBH
                 $result = $stmt->fetchAll();
                 $name = $result[0]['Firstname'] . $result[0]['Othername'];
 
-                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`='$unique_id' AND `month`='$month' AND `year`='$year'");
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`tiths` where `unique_id`=? AND `month`=? AND `year`=?");
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $month, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $year, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
                     exit(json_encode($Error));
                 }
                 if ($stmt->rowCount() > 0) {
-                    $stmt_insert = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`tiths` SET `month`='$month',`year`='$year',`Medium_payment`='$Medium_payment',`Date`='$Date',`description`='$description',`name`='$name',`amount`='$amount' WHERE `unique_id`='$unique_id' ");
+                    $stmt_insert = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`tiths` SET `month`=?,`year`=?,`Medium_payment`=?,`Date`=?,`description`=?,`name`=?,`amount`=? WHERE `unique_id`=? ");
+                    $stmt_insert->bindParam('1', $month, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('2', $year, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('3', $Medium_payment, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('4', $Date, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('5', $description, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('6', $name, \PDO::PARAM_STR);
+                    $stmt_insert->bindParam('7', $amount, \PDO::PARAM_INT);
+                    $stmt_insert->bindParam('8', $unique_id, \PDO::PARAM_INT);
 
                     if (!$stmt_insert->execute()) {
                         $stmt_insert = null;
@@ -282,7 +294,15 @@ class fetchData extends DBH
             } else {
                 $unique_id = rand(time(), 3002);
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`offertory_records` (`unique_id`, `date`,`month`,`year`, `event`, `type`, `amount`, `purpose`)
-                VALUES ('$unique_id', '$date','$month','$year','$name', '$type', '$amount', '$purpose')");
+                VALUES (?, ?,?,?,?,?,?,?)");
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $month, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $year, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $type, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('8', $purpose, \PDO::PARAM_STR);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -327,8 +347,16 @@ class fetchData extends DBH
                 $resultCheck = false;
             } else {
 
-                $stmt = $this->data_connect()->prepare("UPDATE  `zoeworshipcentre`.`offertory_records` SET `date`='$date',`month`='$month',`year`='$year',`event`='$name',
-                `type`='$type',`amount`='$amount',`purpose`='$purpose' WHERE `unique_id`='$id'");
+                $stmt = $this->data_connect()->prepare("UPDATE  `zoeworshipcentre`.`offertory_records` SET `date`=?,`month`=?,`year`=?,`event`=?,`type`=?,`amount`=?,`purpose`=? WHERE `unique_id`=?");
+                $stmt->bindParam('1', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $month, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $year, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $type, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('7', $purpose, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $id, \PDO::PARAM_INT);
+
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -370,7 +398,7 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 if ($stmt->execute()) {
                     $stmt1 = $this->data_connect()->prepare("DELETE FROM `zoeworshipcentre`.`offertory_records` where `unique_id`=?");
-                    $stmt1->bindParam('1', $name, \PDO::PARAM_STR);
+                    $stmt1->bindParam('1', $name, \PDO::PARAM_INT);
                     if (!$stmt1->execute()) {
                         $stmt1 = null;
                         $Error = 'deleting data encountered a problem';
@@ -430,8 +458,16 @@ class fetchData extends DBH
                 exit($Error);
             }
             if ($stmt->rowCount() > 0) {
-                $stmt = $this->data_connect()->prepare("INSERT INTO `zoedues`.`$name` ( `$id`, `user`, `Amount`, `Date`, `Medium`, `status`, `Record_date`)
-                    values ('$id','$name','$amount','$date','$medium','$status','$date')");
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoedues`.`$name` ( `$id`, `user`, `Amount`, `Date`, `Medium`, `status`, `Record_date`)values (?,?,?,?,?,?,?)");
+
+                $stmt->bindParam('1', $id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $medium, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $status, \PDO::PARAM_INT);
+                $stmt->bindParam('7', $date, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
 
                     $stmt = null;
@@ -483,6 +519,16 @@ class fetchData extends DBH
             } else {
                 $unique_id = rand(time(), 3002);
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`dues` (`unique_id`,`name`, `amount`, `purpose`, `department`, `status`, `due_date`, `date`) VALUES ('$unique_id','$name','$amount','$purpose','$department','$status','$due','$date')");
+
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('4', $purpose, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $department, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $status, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $due, \PDO::PARAM_STR);
+                $stmt->bindParam('8', $date, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -579,6 +625,16 @@ class fetchData extends DBH
                 }
                 if ($clearance_table) {
                     $stmt = $this->data_connect()->prepare("UPDATE  `zoeworshipcentre`.`dues` SET `name`='$name',`amount`='$amount',`purpose`='$purpose',`department`='$department',`status`='$status',`due_date`='$due',`date`='$date' WHERE `unique_id`='$id'");
+
+                    $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $amount, \PDO::PARAM_INT);
+                    $stmt->bindParam('3', $purpose, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $department, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $status, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $due, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('8', $id, \PDO::PARAM_INT);
+
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problem';
@@ -678,7 +734,13 @@ class fetchData extends DBH
                 $exportData = 'Duplication detected, data already exists';
             } else {
                 $unique_id = rand(time(), 3002);
-                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`account_system` (`account_name`, `date_created`, `Total_amount`, `last_modified`) VALUES ('$name','$created','$amount','$date')");
+                $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`account_system` (`account_name`, `date_created`, `Total_amount`, `last_modified`) VALUES (?,?,?,?)");
+
+                $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                $stmt->bindParam('2', $created, \PDO::PARAM_INT);
+                $stmt->bindParam('3', $amount, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
                     print_r($stmt->errorInfo());
                     $stmt = null;
@@ -857,7 +919,15 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("UPDATE  `zoeaccounts`.`$acc_name` SET `description`='$description',`date`='$date',`category`='$category', `percentage`='$percentage',`amount`='$amount',balance='$balance' WHERE `unique_id`='$id'");
+            $stmt = $this->data_connect()->prepare("UPDATE  `zoeaccounts`.`$acc_name` SET `description`=?,`date`=?,`category`=?, `percentage`=?,`amount`=?,balance=? WHERE `unique_id`=?");
+
+            $stmt->bindParam('1', $description, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+            $stmt->bindParam('3', $category, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $percentage, \PDO::PARAM_STR);
+            $stmt->bindParam('5', $amount, \PDO::PARAM_STR);
+            $stmt->bindParam('6', $balance, \PDO::PARAM_STR);
+            $stmt->bindParam('7', $id, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -961,7 +1031,16 @@ class fetchData extends DBH
         }
         if ($clean) {
             $unique_id = rand(time(), 3002);
-            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$acc_name` (`unique_id`,`description`,`date`,`category`,`percentage`,`amount`,`balance`) VALUES ('$unique_id','$description',' $date',' $category',' $percentage',' $amount',' $balance')");
+            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$acc_name` (`unique_id`,`description`,`date`,`category`,`percentage`,`amount`,`balance`) VALUES (?,?,?,?,?,?,?)");
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $description, \PDO::PARAM_STR);
+            $stmt->bindParam('3', $date, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $category, \PDO::PARAM_STR);
+            $stmt->bindParam('5', $percentage, \PDO::PARAM_STR);
+            $stmt->bindParam('6', $amount, \PDO::PARAM_STR);
+            $stmt->bindParam('7', $balance, \PDO::PARAM_STR);
+
+
             if (!$stmt->execute()) {
                 print_r($stmt->errorInfo());
                 $stmt = null;
@@ -1033,12 +1112,30 @@ class fetchData extends DBH
 
 
                 $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`transaction_records` (`unique_id`,`account`, `Category`, `Amount`, `Status`, `Authorize`,`Date`) VALUES ('$unique_id','$account','$category','$amount','$status','$authorize','$date')");
+
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $account, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $category, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('5', $status, \PDO::PARAM_STR);
+                $stmt->bindParam('6', $authorize, \PDO::PARAM_STR);
+                $stmt->bindParam('7', $date, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
                     exit(json_encode($Error));
                 } else {
-                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$account`(`unique_id`, `description`, `date`, `category`, `percentage`, `amount`, `balance`) VALUES ('$unique_id','$category record from transaction records','$date','$category','$percentage','$amount',$newAmount) ");
+                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$account`(`unique_id`, `description`, `date`, `category`, `percentage`, `amount`, `balance`) VALUES (?,?,?,?,?,?,?) ");
+                    $cate_name = $category . 'record from transaction records';
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                    $stmt->bindParam('2', $cate_name, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $category, \PDO::PARAM_INT);
+                    $stmt->bindParam('5', $percentage, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $amount, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $newAmount, \PDO::PARAM_STR);
+
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problem';
@@ -1114,7 +1211,8 @@ class fetchData extends DBH
                     $Account_uploaded_category = $result[0]['Category'];
                     $Account_uploaded_amount = $result[0]['Amount'];
 
-                    $stmt = $this->data_connect()->prepare("SELECT Total_amount from `zoeworshipcentre`.`account_system` where `account_name`='$account'");
+                    $stmt = $this->data_connect()->prepare("SELECT Total_amount from `zoeworshipcentre`.`account_system` where `account_name`=?");
+                    $stmt->bindParam('1', $account, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problem';
@@ -1169,6 +1267,15 @@ class fetchData extends DBH
 
                         if ($account == $Account_uploaded_name) {
                             $stmt = $this->data_connect()->prepare("UPDATE `zoeaccounts`.`$account` SET `description`='$category record from transaction records',`date`='$date',`category`='$category',`percentage`='$percentage',`amount`='$amount',`balance`='$newAmount'  where `unique_id`='$id'");
+                            $cate_name = $category . ' record from transaction records';
+                            $stmt->bindParam('1', $cate_name, \PDO::PARAM_STR);
+                            $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+                            $stmt->bindParam('3', $category, \PDO::PARAM_INT);
+                            $stmt->bindParam('4', $percentage, \PDO::PARAM_STR);
+                            $stmt->bindParam('5', $amount, \PDO::PARAM_STR);
+                            $stmt->bindParam('6', $newAmount, \PDO::PARAM_STR);
+                            $stmt->bindParam('7', $id, \PDO::PARAM_INT);
+
                             if (!$stmt->execute()) {
                                 $stmt = null;
                                 $Error = 'Fetching data encountered a problem';
@@ -1202,9 +1309,26 @@ class fetchData extends DBH
                                 $Error = 'Fetching data encountered a problem';
                                 exit(json_encode($Error));
                             } else {
-                                $stmt = $this->data_connect()->prepare("UPDATE  `zoeworshipcentre`.`account_system` SET `Total_amount`='$OriginalMain',`last_modified`='$date' WHERE `account_name`='$Account_uploaded_name'");
+                                $stmt = $this->data_connect()->prepare("UPDATE  `zoeworshipcentre`.`account_system` SET `Total_amount`=?,`last_modified`=? WHERE `account_name`=?");
+
+                                $stmt->bindParam('1', $OriginalMain, \PDO::PARAM_STR);
+                                $stmt->bindParam('2', $date, \PDO::PARAM_STR);
+                                $stmt->bindParam('3', $Account_uploaded_name, \PDO::PARAM_STR);
+
+
                                 if ($stmt->execute()) {
-                                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$account`(`unique_id`, `description`, `date`, `category`, `percentage`, `amount`, `balance`) VALUES ('$id','$category record from transaction records','$date','$category','$percentage','$amount',$newAmount) ");
+                                    $stmt = $this->data_connect()->prepare("INSERT INTO `zoeaccounts`.`$account`(`unique_id`, `description`, `date`, `category`, `percentage`, `amount`, `balance`) VALUES (?,?,?,?,?,?,?) ");
+
+                                    $cate_name = $category . ' record from transaction records';
+                                    $stmt->bindParam('1', $id, \PDO::PARAM_INT);
+                                    $stmt->bindParam('2', $cate_name, \PDO::PARAM_STR);
+                                    $stmt->bindParam('3', $date, \PDO::PARAM_STR);
+                                    $stmt->bindParam('4', $category, \PDO::PARAM_INT);
+                                    $stmt->bindParam('5', $percentage, \PDO::PARAM_STR);
+                                    $stmt->bindParam('6', $amount, \PDO::PARAM_STR);
+                                    $stmt->bindParam('7', $newAmount, \PDO::PARAM_STR);
+
+
                                     if (!$stmt->execute()) {
                                         $stmt = null;
                                         $Error = 'Fetching data encountered a problem';
@@ -1464,7 +1588,7 @@ class fetchData extends DBH
                 $ExportSend->Authorize = $Authorize;
                 $ExportSend->Status = $Status;
                 $ExportSend->id = $id;
-                $exportname = $id . $amount;
+                $exportname = rand(time(), 1298);
                 $ExportSendMain->$exportname = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);
@@ -1537,7 +1661,14 @@ class fetchData extends DBH
         }
         if ($clean) {
             $unique_id = rand(time(), 3002);
-            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`budget` (`Name`, `status`, `Authorize`, `About`, `details`,`Date`) VALUES ('$name','$status','$authorize','$about','$details',$date)");
+            $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`budget` (`Name`, `status`, `Authorize`, `About`, `details`,`Date`) VALUES (?,?,?,?,?,?)");
+
+            $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $status, \PDO::PARAM_STR);
+            $stmt->bindParam('3', $authorize, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $about, \PDO::PARAM_INT);
+            $stmt->bindParam('5', $details, \PDO::PARAM_STR);
+            $stmt->bindParam('6', $date, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -1682,6 +1813,17 @@ class fetchData extends DBH
         if ($clean) {
             $unique_id = rand(time(), 3002);
             $stmt = $this->data_connect()->prepare("INSERT INTO `zoe_budget`.$database_name (`category`,`unique_id`, `type`, `amount`, `details`, `date`, `Year`, `month`, `recorded_by`) VALUES ('$category','$unique_id','$type','$amount','$details','$date','$year','$month','$recorded_by')");
+
+            $stmt->bindParam('1', $category, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $unique_id, \PDO::PARAM_INT);
+            $stmt->bindParam('3', $type, \PDO::PARAM_STR);
+            $stmt->bindParam('4', $amount, \PDO::PARAM_INT);
+            $stmt->bindParam('5', $details, \PDO::PARAM_STR);
+            $stmt->bindParam('6', $date, \PDO::PARAM_STR);
+            $stmt->bindParam('7', $year, \PDO::PARAM_STR);
+            $stmt->bindParam('8', $month, \PDO::PARAM_STR);
+            $stmt->bindParam('9', $recorded_by, \PDO::PARAM_STR);
+
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -1838,6 +1980,13 @@ class fetchData extends DBH
                 exit($exportData);
             } else {
                 $stmt = $this->data_connect()->prepare("UPDATE  `zoedues`.`$form_name` SET `Amount`='$amount',`Date`='$user_date',`Medium`='$medium',`Record_date`='$date' WHERE `user`='$unique_id'");
+
+                $stmt->bindParam('1', $amount, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $user_date, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $medium, \PDO::PARAM_STR);
+                $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                $stmt->bindParam('5', $unique_id, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encountered a problem';
@@ -1895,7 +2044,12 @@ class fetchData extends DBH
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetchAll();
                 $name = $result[0]['name'];
-                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoedues`.`$name` where `$unique_id`='$unique_id' AND `Record_date`='$user_date' AND `user`='$Name'");
+                $stmt = $this->data_connect()->prepare("SELECT * FROM `zoedues`.`$name` where `$unique_id`=? AND `Record_date`=? AND `user`=?");
+
+                $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                $stmt->bindParam('2', $user_date, \PDO::PARAM_STR);
+                $stmt->bindParam('3', $Name, \PDO::PARAM_STR);
+
                 if (!$stmt->execute()) {
 
                     $stmt = null;
@@ -1908,7 +2062,15 @@ class fetchData extends DBH
                     exit(json_encode($exportData));
                 } else {
                     // $userData = $this->Confirm_membership_Records($Name);
-                    $stmt = $this->data_connect()->prepare("INSERT INTO  `zoedues`.`$name`( `$unique_id`, `user`, `Amount`, `Date`, `Medium`, `status`, `Record_date`) VALUES ('$unique_id','$Name','$amount','$user_date','$medium','active pay','$date')");
+                    $stmt = $this->data_connect()->prepare("INSERT INTO  `zoedues`.`$name`( `$unique_id`, `user`, `Amount`, `Date`, `Medium`, `status`, `Record_date`) VALUES (?,?,?,?,?,?,?)");
+                    $user_data = 'active pay';
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('2', $Name, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $amount, \PDO::PARAM_INT);
+                    $stmt->bindParam('4', $user_date, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $medium, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $user_data, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $date, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problem';
@@ -2022,7 +2184,10 @@ class fetchData extends DBH
         if (count($splitName) > 1) {
             $LastSplit = $splitName[0];
             $FirstSplit = $splitName[1];
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Othername` like '%$LastSplit%' AND `Firstname` like '%$FirstSplit%' ");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `Othername` like '%?%' AND `Firstname` like '%?%' ");
+            $stmt->bindParam('1', $LastSplit, \PDO::PARAM_STR);
+            $stmt->bindParam('2', $FirstSplit, \PDO::PARAM_STR);
+
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encounted a problem';
@@ -2395,6 +2560,7 @@ class fetchData extends DBH
             return $resultCheck;
         }
     }
+
     protected function Budget_Delete($year, $id)
     {
         $exportData = 0;
@@ -2601,7 +2767,7 @@ class fetchData extends DBH
                 $ExportSend->amount = $amount;
                 $ExportSend->recorded_by = $recorded_by;
                 $ExportSend->id = $unique_id;
-                $exportname = $id;
+                $exportname = rand(time(), $unique_id);
                 $ExportSendMain->$exportname = $ExportSend;
             }
         } else {
@@ -3145,7 +3311,7 @@ class fetchData extends DBH
             }
             $exportData = json_encode($ExportSendMain);
         } else {
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -3825,7 +3991,7 @@ class fetchData extends DBH
             }
             $exportData = json_encode($ExportSendMain);
         } else {
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -3946,7 +4112,7 @@ class fetchData extends DBH
             $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -4010,7 +4176,6 @@ class fetchData extends DBH
                 $ExportSend->Name = $Name;
                 $ExportSend->Amount = $amount;
                 $ExportSend->Date = $Date;
-                $ExportSend->id = $namer;
                 $ExportSend->medium = $medium;
                 $ExportSend->details = $detais;
                 $ExportSend->gender = $gender;
@@ -4021,7 +4186,7 @@ class fetchData extends DBH
             $exportData = json_encode($ExportSendMain);
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -4105,7 +4270,7 @@ class fetchData extends DBH
             $MainExport->result = $ExportSendMain;
             $exportData = json_encode($MainExport);
         } else {
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -4176,7 +4341,7 @@ class fetchData extends DBH
             }
         } else {
             $resultCheck = false;
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -4190,7 +4355,7 @@ class fetchData extends DBH
         $year = date('Y');
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`offertory_records` where `year` = $year ORDER BY `year`,`month` ");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`offertory_records` where `year` = '$year'");
 
         if (!$stmt->execute()) {
             $stmt = null;
@@ -4202,7 +4367,7 @@ class fetchData extends DBH
             $ExportSendMain = new \stdClass();
             $date = date('Y-m-d H:i:s');
             $namer = $_SESSION['unique_id'];
-            $historySet = $this->history_set($namer, "Payment List  Data Export", $date, "Payment List  page dashboard Admin", "User Exported a Offertory  data");
+            $historySet = $this->history_set($namer, "Offertory  Data Export", $date, "Offertory  page dashboard Admin", "User Exported a Offertory  data");
             if (json_decode($historySet) != 'Success') {
                 $exportData = 'success';
             }
@@ -4214,13 +4379,13 @@ class fetchData extends DBH
                 $ExportSend->name = $name;
                 $ExportSend->amount = $amount;
                 $ExportSend->date = $date;
-                $exportname = time();
+                $exportname = rand(time(), 120832);
                 $ExportSendMain->$exportname = $ExportSend;
 
             }
             $exportData = json_encode($ExportSendMain);
         } else {
-            $exportData = '<header>Not Records Available</header>';
+            $exportData = 'Not Records Available';
         }
 
         if ($resultCheck) {
@@ -4233,7 +4398,7 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` ORDER BY `id` DESC limit 50");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`dues` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -4260,7 +4425,7 @@ class fetchData extends DBH
                 $ExportSend->amount = $amount;
                 $ExportSend->name = $name;
                 $ExportSend->date = $date_data;
-                $exportname = time() . $amount;
+                $exportname = rand(time(), 1209);
                 $ExportSendMain->$exportname = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);

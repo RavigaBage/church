@@ -7,25 +7,28 @@
     <link rel="stylesheet" href="icons/css/all.css">
     <title>directions</title>
     <style>
+        @font-face {
+            font-family: redHart;
+            src: url("font/Nunito-Regular_1.ttf");
+        }
+
         * {
             padding: 0px;
             margin: 0px;
             box-sizing: border-box;
+            font-family: redHart;
         }
 
         main {
             width: 100%;
-            height: 100vh;
-            background-image: url('images/dir1 (2).jpg');
-            background-position: center right;
-            background-repeat: no-repeat;
-            background-size: cover;
+            height: 100%;
         }
 
         .overlay {
             width: 100%;
             height: 100%;
-            background: linear-gradient(255deg, #0e0d0d46, rgba(12, 12, 12, 0.37));
+            min-height: 100vh;
+            background: #000;
             display: grid;
             place-items: center;
             padding: 10px;
@@ -34,23 +37,46 @@
         .overlay header {
             max-width: 700px;
             width: 100%;
-            font-size: 30px;
+            font-size: 35px;
             color: #fff;
-            display: grid;
-            place-items: center;
+            font-weight: bolder;
+            text-transform: capitalize;
+            text-align: left;
         }
 
-        .overlay header button {
-            max-width: 300px;
-            width: 100%;
-            height: 50px;
-            border-radius: 20px;
-            background-color: rgb(10, 113, 209);
-            outline: none;
-            border-width: 0px;
+        .overlay p {
             font-size: 20px;
             color: #fff;
-            margin: 10px;
+            text-align: left;
+        }
+
+        .info_details {
+            width: 90%;
+            height: 80%;
+            margin: 10% auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .info_details .map iframe {
+            width: 100%;
+            height: 100%;
+            max-width: 700px;
+            max-height: 350px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .text {
+            padding-top: 30px;
+        }
+
+        @media screen and (max-width:768px) {
+            .info_details {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
         }
     </style>
 </head>
@@ -60,10 +86,20 @@
     <body>
         <main>
             <div class="overlay">
-                <header>Welcome to zoe worship centre once again, for directions to our premises, click on the button
-                    below to redirect you to a map service to lead you to our premises
-                    <button>Zoe worship center <i class="fas fa-paper-plane"></i></button>
-                </header>
+                <div class="info_details">
+                    <div class="text">
+                        <header>Our Location</header>
+                        <p>Welcome back to Zoe Worship Centre! Need help finding us? Click the button below to be
+                            directed to a map service. We can't wait to worship with you!</p>
+                    </div>
+                    <div class="map">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.4093116649647!2d-0.18463252595904378!3d5.653780732660656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9c861b1ba223%3A0xe283f1ed8c2d9b09!2sSchool%20of%20Engineering%20Sciences!5e0!3m2!1sen!2sgh!4v1730827089279!5m2!1sen!2sgh"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
             </div>
         </main>
     </body>

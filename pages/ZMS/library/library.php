@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../../API/vendor/autoload.php';
+include '../SvgPath.php';
 $viewDataClass = new Library\viewData();
 $val = 1;
 $type = "";
@@ -209,8 +210,36 @@ if ($condition) {
                     </div>
 
                     <div class="field">
-                        <label>category/genre i.e faith,repentence etc.</label>
-                        <input name="category"></input>
+                        <label>category/genre</label>
+                        <select name="category">
+                            <option>Faith</option>
+                            <option>Love</option>
+                            <option>Grace</option>
+                            <option>Hope</option>
+                            <option>Forgiveness</option>
+                            <option>Justice</option>
+                            <option>Peace</option>
+                            <option>Joy</option>
+                            <option>Suffering</option>
+                            <option>Salvation</option>
+                            <option>Trinity</option>
+                            <option>Atonement</option>
+                            <option>Santification</option>
+                            <option>Glorification</option>
+                            <option>Adolescenes</option>
+                            <option>Adulthood</option>
+                            <option>Marriage</option>
+                            <option>Singleness</option>
+                            <option>Parenting</option>
+                            <option>Grief</option>
+                            <option>Sickness</option>
+                            <option>Finance</option>
+                            <option>Trinity</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>TAGs  i.e faith,repentence etc.</label>
+                        <input name="tag"></input>
                     </div>
                 </div>
                 <div class="field">
@@ -315,13 +344,22 @@ if ($condition) {
                                 </div>";
                         }
 
+
+                        $path = '../../API/Images_folder/library/covers/' . $cover . '';
+                        $svg = $svg_path;
+                        if(!file_exists('../../../API/Images_folder/library/covers/' . $cover . '')){
+                            $path_img = $svg;
+                        }else{
+                            $path_img = '<img src='.$path.' alt="image file" />';
+                        }
+
                         echo "
                                     <tr>
                                             <td>
                                                 <div class='details'>
                                                     
                                                 <div class='img'>
-                                                <img src='../../API/Images_folder/library/covers/" . $cover . "' alt='' />
+                                                ".$path_img."
                                                 </div>
                                                     <div class='text'>
                                                         <p>" . $name . "</p>

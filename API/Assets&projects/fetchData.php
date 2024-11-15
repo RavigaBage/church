@@ -285,7 +285,7 @@ class fetchData extends DBH
     protected function Assets_view_export()
     {
         $exportData = '';
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`assets` ORDER BY `id` DESC");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`lastname` ORDER BY `id` DESC");
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -307,20 +307,24 @@ class fetchData extends DBH
                 $Source = str_replace("'", " ", $data['Acquisition']);
                 $message = str_replace("'", " ", $data['About']);
                 $value = str_replace("'", " ", $data['Value']);
-                $Items = str_replace("'", " ", $data['Items']);
+                $Items = str_replace("'", " ", $data['Item']);
                 $Location = str_replace("'", " ", $data['Location']);
+                $Image = str_replace("'", " ", $data['Image']);
                 $unique_id = str_replace("'", " ", $data['unique_id']);
                 $date = str_replace("''", "", $data['Date']);
                 $status = str_replace("'", " ", $data['status']);
-                $ExportSend = "";
+                if (strlen($message > 72)) {
+                    $message = str_split($message, 72)[0] + "....";
+                }
                 $DataObj = new \stdClass();
-                $DataObj->id = $unique_id;
+                $ExportSend = "";
                 $DataObj->name = $name;
                 $DataObj->source = $Source;
                 $DataObj->location = $Location;
                 $DataObj->total = $Items;
                 $DataObj->date = $date;
                 $DataObj->status = $status;
+                $DataObj->Image = $Image;
                 $DataObj->value = $value;
                 $DataObj->About = $message;
                 $ExportSend = $DataObj;
@@ -579,7 +583,7 @@ class fetchData extends DBH
                 $resultValidate = false;
                 exit($exportData);
             } else {
-               
+
                 if ($stmt->execute()) {
                     $stmt;
                     if ($uploaded_file_names == '') {
@@ -598,12 +602,12 @@ class fetchData extends DBH
                     if ($uploaded_file_names == '') {
                         $stmt->bindParam('7', $target, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $current, \PDO::PARAM_STR);
-                        $stmt->bindParam('9', $id, \PDO::PARAM_STR);
+                        $stmt->bindParam('9', $id, \PDO::PARAM_INT);
                     } else {
                         $stmt->bindParam('7', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('8', $target, \PDO::PARAM_STR);
                         $stmt->bindParam('9', $current, \PDO::PARAM_STR);
-                        $stmt->bindParam('10', $id, \PDO::PARAM_STR);
+                        $stmt->bindParam('10', $id, \PDO::PARAM_INT);
                     }
 
                     if (!$stmt->execute()) {
@@ -888,10 +892,9 @@ class fetchData extends DBH
                 $target = $this->validate($data['target']);
                 $current = $this->validate($data['current']);
                 $id = $this->validate($data['id']);
-
+                $named = rand(time(), 10923);
                 $DataObj = new \stdClass();
                 $ExportSend = "";
-                $DataObj->id = $id;
                 $DataObj->name = $name;
                 $DataObj->Start = $Start;
                 $DataObj->End_date = $End_date;
@@ -900,8 +903,7 @@ class fetchData extends DBH
                 $DataObj->Image = $Image;
                 $DataObj->target = $target;
                 $DataObj->current = $current;
-                $ExportSend = $DataObj;
-                $ExportSendMain->$id = $ExportSend;
+                $ExportSendMain->$named = $ExportSend;
             }
             $exportData = json_encode($ExportSendMain);
         } else {

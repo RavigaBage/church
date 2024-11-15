@@ -14,6 +14,9 @@ html {
   --text-light: #767268;
   --extra-light: #ffffff;
 }
+a {
+  color: var(--extra-light);
+}
 body {
   width: 100%;
   background-color: #000;
@@ -108,6 +111,12 @@ nav .nav_container_main .logo .logo_name {
   display: block;
   width: 100%;
   position: relative;
+}
+img {
+  width: 100%;
+  position: relative;
+  height: 100%;
+  object-fit: cover;
 }
 
 .Slider-item .bg {
@@ -574,8 +583,7 @@ h3 {
 }
 
 .footer h4 {
-  font-family: "Noto Serif", serif;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 900;
   margin-bottom: 1rem;
 }
@@ -583,7 +591,7 @@ h3 {
 .footer p {
   max-width: 450px;
   margin: auto;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   line-height: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -784,13 +792,15 @@ footer .container .brand ul li:hover {
 footer .container .field ul li {
   margin-block: 10px;
 }
-footer .container .field ul li span {
-  border-bottom: 2px solid #fff;
-  text-decoration: underline;
-}
+
 footer .container .links ul li {
   margin-inline: auto;
   margin-block: 5px;
+  font-size: 1.4rem;
+  font-weight: bolder;
+}
+footer ul li i {
+  font-size: 20px;
 }
 footer .container .links ul {
   margin-bottom: 10px;

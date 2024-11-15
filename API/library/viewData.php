@@ -7,9 +7,9 @@ class viewData extends fetchData
 {
 
 
-    public function library_upload($name, $author, $date, $status, $source, $category, $FILES)
+    public function library_upload($name, $author, $date, $status, $source, $category,$tag, $FILES)
     {
-        $RecordsResult = $this->library_upload_data($name, $author, $date, $status, $source, $category, $FILES);
+        $RecordsResult = $this->library_upload_data($name, $author, $date, $status, $source, $category,$tag, $FILES);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -18,9 +18,9 @@ class viewData extends fetchData
         }
     }
 
-    public function Library_update($name, $author, $date, $status, $source, $category, $unique_id, $FILES)
+    public function Library_update($name, $author, $date, $status, $source, $category,$tag, $unique_id, $FILES)
     {
-        $RecordsResult = $this->library_update_data($name, $author, $date, $status, $source, $category, $unique_id, $FILES);
+        $RecordsResult = $this->library_update_data($name, $author, $date, $status, $source, $category,$tag, $unique_id, $FILES);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;

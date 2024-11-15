@@ -96,33 +96,8 @@ if ($condition) {
         </div>
     </div>
     <div class="export_dialogue">
-        <form>
-            <header>Exporting Data</header>
-            <div class="loader">All fields required</div>
-            <div class="container_event">
-                <div class="field">
-                    <label>Select Option</label>
-                    <select required name="data_type">
-                        <option value="1">Export Data displayed on this page</option>
-                        <option value="2">Export All Data in database relating to this page</option>
-                    </select>
-                </div>
-                <div class="cate_view">
-                    <div class="field">
-                        <label>Export Name</label>
-                        <input required type="text" class="form_condtion" name="export_name"
-                            placeholder="specify the a name to export this data with" />
-                    </div>
-                    <div class="field">
-                        <label>Export type</label>
-                        <select required name="export_type">
-                            <option value="word">MsWord(.docx)</option>
-                        </select>
-                    </div>
-                </div>
-                <button id="exportDataBtn">Save document</button>
-            </div>
-        </form>
+        <header>Exporting Data</header>
+        <button id="exportDataBtn">Save document</button>
     </div>
 
     <div class="event_menu_add">
@@ -159,7 +134,7 @@ if ($condition) {
                     <label>Activity description</label>
                     <textarea class="form_condition" name="description"></textarea>
                 </div>
-                <input hidden class="form_condtiion" name="delete_key" value="000" type="number"/>
+                <input hidden class="form_condtiion" name="delete_key" value="000" type="number" />
                 <button>create Activity</button>
             </div>
         </form>
@@ -187,21 +162,21 @@ if ($condition) {
                         <label>category</label>
                         <select class="form_condition" name="category">
                             <option>All users</option>
-                        <?php
-                        $data = json_decode($ministry->ministries_viewList());
-                        if (is_object($data)) {
-                            foreach ($data as $item) {
-                                $unique_id = $item->UniqueId;
-                                $name = $item->name;
-                                $members = $item->members;
-                                echo '<option value=' . $unique_id . '>' . $name . ' - ' . $members . '</option>';
+                            <?php
+                            $data = json_decode($ministry->ministries_viewList());
+                            if (is_object($data)) {
+                                foreach ($data as $item) {
+                                    $unique_id = $item->UniqueId;
+                                    $name = $item->name;
+                                    $members = $item->members;
+                                    echo '<option value=' . $unique_id . '>' . $name . ' - ' . $members . '</option>';
+                                }
+
+                            } else {
+                                echo '<option class="danger">No groups available</option>';
                             }
 
-                        } else {
-                            echo '<option class="danger">No groups available</option>';
-                        }
-
-                        ?>
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -219,7 +194,7 @@ if ($condition) {
                     <label>Activity description</label>
                     <textarea class="form_condition" name="description"></textarea>
                 </div>
-                <input hidden class="form_condtion" name="delete_key" value="000" type="number"/>
+                <input hidden class="form_condtion" name="delete_key" value="000" type="number" />
                 <button>create Activity</button>
             </div>
         </form>
@@ -564,7 +539,7 @@ if ($condition) {
             </div>
         </div>
     </div>
-    
+
     <div class="add_event" data-menu="event">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
             <path

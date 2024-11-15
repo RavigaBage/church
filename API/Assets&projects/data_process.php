@@ -39,7 +39,7 @@ function DataCleansing($opt,$data){
     }
 
     if($opt == 'bool'){
-        if(dataInstance_bool($data) == False){
+        if(dataInstance_bool($data) == 'False'){
             echo json_encode("An error occurred please try again");
             exit();
         }
@@ -53,7 +53,7 @@ function dataInstance_string($data){
     return is_string($data) && !preg_match('/[!@$%^&*()_+=*~;:><?]/',$data) ? $data : False;
 }
 function dataInstance_bool($data){
-    return is_bool($data) ? $data : False;
+    return is_bool($data) ? $data : 'False';
 }
 function dataInstance_array($data){
     return is_array($data) ? $data : False;

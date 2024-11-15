@@ -1,20 +1,20 @@
 <?php
 class UploadData
 {
-    
+
     private $target_dir = "../images_folder/users/";
     public function _log($str)
-    {   
+    {
         $log_str = date('d.m.Y') . ": {$str}\r\n";
         if (($fp = fopen('upload_log.txt', 'a+')) !== false) {
             fputs($fp, $log_str);
             fclose($fp);
         }
-        
-        if($str == 'success'){
-            return json_encode(["status"=>"success","name"=>$_POST['resumableFilename']]);
-        }else{
-            return json_encode(["status"=>"error","name"=>$str]);
+
+        if ($str == 'success') {
+            return json_encode(["status" => "success", "name" => $_POST['resumableFilename']]);
+        } else {
+            return json_encode(["status" => "error", "name" => $str]);
         }
     }
 
@@ -46,7 +46,7 @@ class UploadData
             $tempfilesize = filesize($temp_dir . '/' . $file);
             $total_files_on_server_size = $temp_total + $tempfilesize;
         }
-        
+
         if ($total_files_on_server_size >= $totalSize) {
             if (($fp = fopen($this->target_dir . '/' . $fileName, 'w')) !== false) {
                 for ($i = 1; $i <= $total_files; $i++) {
@@ -58,18 +58,19 @@ class UploadData
                 return false;
             }
 
-        
+
             if (rename($temp_dir, $temp_dir . '_UNUSED')) {
                 $this->rrmdir($temp_dir . '_UNUSED');
             } else {
                 $this->rrmdir($temp_dir);
             }
-            
+
         }
 
     }
 
-    public function file_registry(){
+    public function file_registry()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (!(isset($_GET['resumableIdentifier']) && trim($_GET['resumableIdentifier']) != '')) {
                 $_GET['resumableIdentifier'] = '';
@@ -89,42 +90,42 @@ class UploadData
                 return "ban";
             }
         }
-        
-        
+
+
         if (!empty($_FILES))
-        if(!file_exists($this->target_dir.'/'.$_POST['resumableFilename'].'')){
-            foreach ($_FILES as $file) {
-                if ($file['error'] != 0) {
-                    $this->_log('error ' . $file['error'] . ' in file ' . $_POST['resumableFilename']);
-                    continue;
-                }
-        
-                if (isset($_POST['resumableIdentifier']) && trim($_POST['resumableIdentifier']) != '') {
-                    $temp_dir = 'temp/' . $_POST['resumableIdentifier'];
-                }
-                $dest_file = $temp_dir . '/' . $_POST['resumableFilename'] . '.part' . $_POST['resumableChunkNumber'];
-        
-                if (!is_dir($temp_dir)) {
-                    mkdir($temp_dir, 0777, true);
-                }
-        
-                if (!move_uploaded_file($file['tmp_name'], $dest_file)) {
-                    $this->_log('Error saving (move_uploaded_file) chunk ' . $_POST['resumableChunkNumber'] . ' for file ' . $_POST['resumableFilename']);
-                } else {
-                    if (is_dir($this->target_dir)) {
-                        $this->createFileFromChunks($temp_dir, $_POST['resumableFilename'], $_POST['resumableChunkSize'], $_POST['resumableTotalSize'], $_POST['resumableTotalChunks']);
-                        if(file_exists($this->target_dir . '/' . $_POST['resumableFilename'])){
-                            return($this->_log("success"));
-                        }else{
-                            return($this->_log("error occured could not upload file, try a different file"));
-                        }
+            if (!file_exists($this->target_dir . '/' . $_POST['resumableFilename'] . '')) {
+                foreach ($_FILES as $file) {
+                    if ($file['error'] != 0) {
+                        $this->_log('error ' . $file['error'] . ' in file ' . $_POST['resumableFilename']);
+                        continue;
+                    }
+
+                    if (isset($_POST['resumableIdentifier']) && trim($_POST['resumableIdentifier']) != '') {
+                        $temp_dir = 'temp/' . $_POST['resumableIdentifier'];
+                    }
+                    $dest_file = $temp_dir . '/' . $_POST['resumableFilename'] . '.part' . $_POST['resumableChunkNumber'];
+
+                    if (!is_dir($temp_dir)) {
+                        mkdir($temp_dir, 0777, true);
+                    }
+
+                    if (!move_uploaded_file($file['tmp_name'], $dest_file)) {
+                        $this->_log('Error saving (move_uploaded_file) chunk ' . $_POST['resumableChunkNumber'] . ' for file ' . $_POST['resumableFilename']);
                     } else {
-                        return($this->_log('target directory cannot be found' . $this->target_dir));
+                        if (is_dir($this->target_dir)) {
+                            $this->createFileFromChunks($temp_dir, $_POST['resumableFilename'], $_POST['resumableChunkSize'], $_POST['resumableTotalSize'], $_POST['resumableTotalChunks']);
+                            if (file_exists($this->target_dir . '/' . $_POST['resumableFilename'])) {
+                                return ($this->_log("success"));
+                            } else {
+                                return ($this->_log("error occured could not upload file, try a different file"));
+                            }
+                        } else {
+                            return ($this->_log('target directory cannot be found' . $this->target_dir));
+                        }
                     }
                 }
+            } else {
+                return ($this->_log("success"));
             }
-        }else{
-            return($this->_log("success"));
-        }
-        }
+    }
 }

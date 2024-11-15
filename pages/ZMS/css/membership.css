@@ -1,4 +1,4 @@
-button {
+button:not(.iti__selected-country) {
   color: #000;
   outline: none;
   border-width: 0px;
@@ -15,6 +15,9 @@ button {
 }
 tbody td svg {
   width: 20px;
+}
+.img svg{
+  width:60px;
 }
 .ministry_data .new_members {
   width: 100%;
@@ -89,6 +92,9 @@ tbody td svg {
   transition: 200ms all ease;
   opacity: 0;
   pointer-events: none;
+}
+.export_dialogue {
+  height: 400px;
 }
 .Activity_record header {
   font-size: 18px;
@@ -181,7 +187,7 @@ tbody td svg {
 }
 .display_setting .field button,
 .Activity_record.edit button,
-.event_menu_add button,
+.event_menu_add button:not(.iti__selected-country),
 .export_dialogue button,
 .data_upload_platform button {
   width: 250px;
@@ -193,13 +199,13 @@ tbody td svg {
   margin: 15px;
   display: block;
 }
-.data_upload_platform .upload{
-  color:rgb(17, 216, 17) !important;
-  padding:10px;
+.data_upload_platform .upload {
+  color: rgb(17, 216, 17) !important;
+  padding: 10px;
 }
-.data_upload_platform .error{
-  color:crimson !important;
-    padding:10px;
+.data_upload_platform .error {
+  color: crimson !important;
+  padding: 10px;
 }
 .export_dialogue .container_event {
   padding: 10px;

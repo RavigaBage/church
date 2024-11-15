@@ -47,7 +47,7 @@ class fetchData extends DBH
         $data = strip_tags($data);
         return $data;
     }
-    protected function annc_upload_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name)
+    protected function annc_upload_data($name, $receiver, $message, $date, $file_name)
     {
         $input_list = array($name, $receiver, $message, $date);
         $clean = true;
@@ -61,16 +61,15 @@ class fetchData extends DBH
             }
         }
         if ($clean) {
-            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title`='$name'");
+            $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `title`=?");
+            $stmt->bindParam('1', $name, \PDO::PARAM_STR);
             if (!$stmt->execute()) {
-
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
                 exit($Error);
             }
             if ($stmt->rowCount() > 0) {
                 $exportData = json_encode("Data name already exist");
-                $resultValidate = false;
                 exit($exportData);
             } else {
                 $stmt = $this->data_connect()->prepare("CREATE TABLE `zoeannouncement`.`$name` (
@@ -81,35 +80,18 @@ class fetchData extends DBH
                         `$receiver` varchar(255) NOT NULL
                     )");
                 if ($stmt->execute()) {
-                    if ($file_name == '') {
-                        $file_name = '';
-                    } else {
-                        $explodes = explode('.', $file_name);
-                        $explode_end = end($explodes);
-                        $Extensions = array('jpg', 'png', 'jpeg');
-                        if (in_array($explode_end, $Extensions)) {
-                            $types = ["image/jpg", "image/png", "image/jpeg"];
-                            if (in_array($Image_type, $types)) {
-                                $filename4 = time() . $file_name;
-                                $target4 = "../images/annc/$filename4";
-                                if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                    $unique_id = rand(time(), 3002);
-                                    $file_name = $filename4;
-                                } else {
-                                    exit(json_encode("An error occurred while processing image, try again"));
-                                }
-                            } else {
-                                exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    }
-
                     $unique_id = rand(time(), 1999);
 
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`announcement`(`unique_id`, `title`, `Reciever`, `message`, `date`, `file`, `status`)
-                        VALUES ('$unique_id','$name','$receiver','$message','$date','$file_name','active')");
+                        VALUES (?,?,?,?,?,?,?)");
+                    $status = 'active';
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
+                    $stmt->bindParam('2', $name, \PDO::PARAM_STR);
+                    $stmt->bindParam('3', $receiver, \PDO::PARAM_STR);
+                    $stmt->bindParam('4', $message, \PDO::PARAM_STR);
+                    $stmt->bindParam('5', $date, \PDO::PARAM_STR);
+                    $stmt->bindParam('6', $file_name, \PDO::PARAM_STR);
+                    $stmt->bindParam('7', $status, \PDO::PARAM_STR);
                     if (!$stmt->execute()) {
 
                         $stmt = null;
@@ -120,6 +102,7 @@ class fetchData extends DBH
                         $date = date('Y-m-d H:i:s');
                         $namer = $_SESSION['login_details'];
                         $historySet = $this->history_set($namer, "Anncouncement Data Upload", $date, "Announcement page dashboard Admin", "User added an announcement data $name");
+
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
@@ -139,8 +122,9 @@ class fetchData extends DBH
         return $exportData;
     }
 
-    protected function annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $unique_id)
+    protected function annc_update_data($name, $receiver, $message, $date, $file_name, $unique_id)
     {
+
         $input_list = array($name, $receiver, $message, $date);
         $clean = true;
         $exportData = 0;
@@ -156,6 +140,7 @@ class fetchData extends DBH
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `unique_id`='$unique_id'");
             if (!$stmt->execute()) {
+                print_r($stmt->errorInfo());
                 $stmt = null;
                 $Error = json_encode('Fetching data encountered a problem');
                 exit($Error);
@@ -172,29 +157,7 @@ class fetchData extends DBH
                     $result = $stmt->fetchAll();
                     $Oldname = $result[0]['title'];
 
-                    if ($file_name == '') {
-                        $file_name = '';
-                    } else {
-                        $explodes = explode('.', $file_name);
-                        $explode_end = end($explodes);
-                        $Extensions = array('jpg', 'png', 'jpeg');
-                        if (in_array($explode_end, $Extensions)) {
-                            $types = ["image/jpg", "image/png", "image/jpeg"];
-                            if (in_array($Image_type, $types)) {
-                                $filename4 = time() . $file_name;
-                                $target4 = "../images/annc/$filename4";
-                                if (move_uploaded_file($Image_tmp_name, $target4)) {
-                                    $file_name = $filename4;
-                                } else {
-                                    exit(json_encode("An error occurred while processing image, try again"));
-                                }
-                            } else {
-                                exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                            }
-                        } else {
-                            exit(json_encode("Image file must be of the following extensions only 'jpg','png','jpeg'"));
-                        }
-                    }
+
                     $stmt = "";
                     $clearance = true;
                     if ($Oldname != $name) {
@@ -203,8 +166,9 @@ class fetchData extends DBH
                     if (!$clearance) {
                         $stmt = $this->data_connect()->prepare("RENAME TABLE `zoeannouncement`.`$title` TO `zoeannouncement`.`$name`");
                         if (!$stmt->execute()) {
+                            print_r($stmt->errorInfo());
                             $stmt = null;
-                            $Error = json_encode('Fetching data encountered w a problem');
+                            $Error = json_encode('Fetching data encountered  a problem');
                             exit($Error);
                         } else {
                             $clearance = true;
@@ -212,20 +176,37 @@ class fetchData extends DBH
                     }
                     if ($clearance) {
 
-                        if ($file_name == "") {
-                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET    `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',    `status`='active' WHERE `unique_id`='$unique_id'");
+                        if (empty($file_name)) {
+                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET    `title`=?, `Reciever`=?, `message`=?, `date`=?,`status`=? WHERE `unique_id`=?");
+                            $active = 'active';
+                            $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                            $stmt->bindParam('2', $receiver, \PDO::PARAM_STR);
+                            $stmt->bindParam('3', $message, \PDO::PARAM_STR);
+                            $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                            $stmt->bindParam('5', $active, \PDO::PARAM_STR);
+                            $stmt->bindParam('6', $unique_id, \PDO::PARAM_STR);
                         } else {
-                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET     `title`='$name', `Reciever`='$receiver', `message`='$message', `date`='$date',     `file`='$file_name', `status`='active' WHERE `unique_id`='$unique_id'");
+                            $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET  `title`=?, `Reciever`=?, `message`=?, `date`=?,`file`=?, `status`=? WHERE `unique_id`=?");
+                            $active = 'active';
+                            $stmt->bindParam('1', $name, \PDO::PARAM_STR);
+                            $stmt->bindParam('2', $receiver, \PDO::PARAM_STR);
+                            $stmt->bindParam('3', $message, \PDO::PARAM_STR);
+                            $stmt->bindParam('4', $date, \PDO::PARAM_STR);
+                            $stmt->bindParam('5', $file_name, \PDO::PARAM_STR);
+                            $stmt->bindParam('6', $active, \PDO::PARAM_STR);
+                            $stmt->bindParam('7', $unique_id, \PDO::PARAM_STR);
+
                         }
 
                         if (!$stmt->execute()) {
+                            print_r($stmt->errorInfo());
                             $stmt = null;
                             $Error = json_encode('Fetching data encountered a problem');
                             exit($Error);
                         } else {
                             $date = date('Y-m-d H:i:s');
                             $namer = $_SESSION['login_details'];
-                            $historySet = $this->history_set($namer, "Anncouncement Data Updated", $date, "Announcement page dashboard Admin", "User Updated an announcement data $name");
+                            $historySet = $this->history_set($namer, "Announcement Data Updated", $date, "Announcement page dashboard Admin", "User Updated an announcement data $name");
                             if (json_decode($historySet) != 'Success') {
                                 $exportData = 'success';
                             }
@@ -264,6 +245,7 @@ class fetchData extends DBH
         }
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `unique_id` ='$name'");
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -289,7 +271,6 @@ class fetchData extends DBH
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
                         }
-                        $resultCheck = true;
                         $exportData = 'Item Deleted Successfully';
                     }
                 } else {
@@ -323,6 +304,7 @@ class fetchData extends DBH
         }
         if ($clean) {
             $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `unique_id` ='$id'");
+            $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
             if (!$stmt->execute()) {
                 $stmt = null;
                 $Error = 'Fetching data encountered a problem';
@@ -338,6 +320,7 @@ class fetchData extends DBH
                     $status = 'active';
                 }
                 $stmt1 = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`announcement` SET `status`= '$status' where `unique_id`='$id'");
+                $stmt1->bindParam('1', $unique_id, \PDO::PARAM_INT);
                 if (!$stmt1->execute()) {
                     $stmt1 = null;
                     $Error = 'deleting data encountered a problem';
@@ -422,7 +405,8 @@ class fetchData extends DBH
     protected function themeStatus($id)
     {
         $exportData = "";
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`theme` where `id`='$id'");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`theme` where `id`=?");
+        $stmt->bindParam('1', $id, \PDO::PARAM_INT);
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -434,7 +418,8 @@ class fetchData extends DBH
                 $status = $row['status'];
                 $condition = false;
                 if ($status == 'active') {
-                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'unactive' WHERE `id`='$id'");
+                    $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'unactive' WHERE `id`=?");
+                    $stmt->bindParam('1', $id, \PDO::PARAM_INT);
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encounted a problem';
@@ -446,7 +431,8 @@ class fetchData extends DBH
 
                 } else {
                     if ($status == 'unactive') {
-                        $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'active' WHERE `id`='$id'");
+                        $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`theme` SET `status` = 'active' WHERE `id`=?");
+                        $stmt->bindParam('1', $id, \PDO::PARAM_INT);
                         if (!$stmt->execute()) {
                             $stmt = null;
                             $Error = 'Fetching data encounted a problem';
@@ -888,8 +874,8 @@ class fetchData extends DBH
     protected function Set_Notification($site)
     {
         $result = 'none';
-        $stmt = $this->data_connect()->prepare("SELECT * FROM  `zoeworshipcentre`.`notification` where `site`='$site' and `status`='unchecked'");
-
+        $stmt = $this->data_connect()->prepare("SELECT * FROM  `zoeworshipcentre`.`notification` where `site`=? and `status`='unchecked'");
+        $stmt->bindParam('1', $site, \PDO::PARAM_STR);
         if (!$stmt->execute()) {
             $stmt = null;
             $Error = 'Fetching data encounted a problem';
@@ -900,6 +886,7 @@ class fetchData extends DBH
             foreach ($result as $data) {
                 $Id = $data['id'];
                 $stmt = $this->data_connect()->prepare("UPDATE `zoeworshipcentre`.`notification` SET `status`='checked' WHERE `id`=$Id");
+                $stmt->bindParam('1', $Id, \PDO::PARAM_INT);
                 if (!$stmt->execute()) {
                     $stmt = null;
                     $Error = 'Fetching data encounted a problem';

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../../API/vendor/autoload.php';
+include '../SvgPath.php';
 $viewDataClass = new Gallery\viewData();
 $val = 1;
 
@@ -67,6 +68,17 @@ if ($condition) {
     </div>
     <div class="info_information event_menu_add"
         style="height:300px; width:500px; padding:10px;text-wrap:wrap;display:grid;place-items:center;">
+        <div class="loader_wrapper">
+            <div class="load-3">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="text">
+                <p style="color:crimson"></p>
+            </div>
+        </div>
+
         <header class="danger"></header>
     </div>
 
@@ -236,11 +248,18 @@ if ($condition) {
                         $date_uploaded = $item->date_uploaded;
                         $category = $item->category;
                         $ObjectData = $item->Obj;
+                        $path = '../../API/Images_folder/gallery/'.$imageName . '';
+                        $svg = $svg_path;
+                        if(!file_exists("../../../API/Images_folder/gallery/$imageName")){
+                            $path_img = $svg;
+                        }else{
+                            $path_img = '<img src='.$path.' alt="image file" />';
+                        }
                         echo
                             "<tr>
-                                                        <td><div class='details'>
+                                      <td><div class='details'>
                                         <div class='img'>
-                                        <img src='../../API/Images_folder/gallery/" . $imageName . "' alt='' />
+                                        ".$path_img."
                                         </div>
                                         <div class='text'>
                                         <p>" . $imageName . "</p>
@@ -284,7 +303,7 @@ if ($condition) {
     <div class="event_menu_add form_data">
         <form>
             <header>Gallery form</header>
-            <div class="loader_wrapper">
+            <div class="loader_wrapper" id="mainform_wrapper">
                 <div class="load-3">
                     <div class="line"></div>
                     <div class="line"></div>
@@ -305,9 +324,26 @@ if ($condition) {
                 <div class="field">
                     <label>Category</label>
                     <select name="category" required>
+                    <option>Active</option>
+                        <option>Baptism</option>
+                        <option>Communions</option>
+                        <option>Sunday School</option>
                         <option>Funeral</option>
                         <option>Wedding</option>
-                        <option>Ceremony</option>
+                        <option>Parties</option>
+                        <option>naming ceremonies</option>
+                        <option>Worship services</option>
+                        <option>conference</option>
+                        <option>Bible study</option>
+                        <option>evangelism</option>
+                        <option>missions</option>
+                        <option>Pastor</option>
+                        <option>leaders</option>
+                        <option>Flyer</option>
+                        <option>social media graphics</option>
+                        <option>children programs</option>
+                        <option>Retreats</option>
+                        <option>projects</option>
                     </select>
                 </div>
 
@@ -337,7 +373,7 @@ if ($condition) {
                 <div class="image_view">
                 </div>
                 <input name="delete_key" type="number" value="" hidden />
-                <button>Upload Image</button>
+                <button id="button_upload">Upload Image</button>
             </div>
         </form>
 

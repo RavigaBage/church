@@ -77,7 +77,6 @@ class fetchData extends DBH
     protected function calender_upload_data($EventName, $Year, $Month, $Day, $start_time, $end_time, $Venue, $Theme, $About, $Department, $Status, $uploaded_file_names)
     {
         $cleanData = $this->calender_time_clean($start_time, $end_time);
-        print_r($cleanData);
         if (count($cleanData) == 2) {
             $start_time = $cleanData[0];
             $end_time = $cleanData[1];
@@ -108,7 +107,7 @@ class fetchData extends DBH
                 } else {
                     $unique_id = rand(time(), 1999);
                     $stmt = $this->data_connect()->prepare("INSERT INTO `zoeworshipcentre`.`calender`(`unique_id`, `EventName`, `Year`, `Month`, `Day`, `start_time`, `end_time`, `Venue`, `Theme`, `About`, `Image`, `Department`, `Status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_STR);
+                    $stmt->bindParam('1', $unique_id, \PDO::PARAM_INT);
                     $stmt->bindParam('2', $EventName, \PDO::PARAM_STR);
                     $stmt->bindParam('3', $Year, \PDO::PARAM_STR);
                     $stmt->bindParam('4', $Month, \PDO::PARAM_STR);
@@ -193,11 +192,11 @@ class fetchData extends DBH
                         $stmt->bindParam('10', $uploaded_file_names, \PDO::PARAM_STR);
                         $stmt->bindParam('11', $Department, \PDO::PARAM_STR);
                         $stmt->bindParam('12', $Status, \PDO::PARAM_STR);
-                        $stmt->bindParam('13', $unique_id, \PDO::PARAM_STR);
+                        $stmt->bindParam('13', $unique_id, \PDO::PARAM_INT);
                     } else {
                         $stmt->bindParam('10', $Department, \PDO::PARAM_STR);
                         $stmt->bindParam('11', $Status, \PDO::PARAM_STR);
-                        $stmt->bindParam('12', $unique_id, \PDO::PARAM_STR);
+                        $stmt->bindParam('12', $unique_id, \PDO::PARAM_INT);
                     }
 
                     if (!$stmt->execute()) {
@@ -259,10 +258,10 @@ class fetchData extends DBH
                     $exportData = 'success';
                 }
             } else {
-                exit(json_encode('Data has already been deleted. if data is still in display, refresh
-                the page to incorporate changes'));
+                $exportData = 'Data has already been deleted. if data is still in display, refresh
+                the page to incorporate changes';
             }
-            return json_encode($exportData);
+            return $exportData;
 
         }
     }

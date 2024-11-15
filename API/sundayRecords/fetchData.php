@@ -168,7 +168,7 @@ class fetchData extends DBH
                     } else {
                         $date = date('Y-m-d H:i:s');
                         $namer = $_SESSION['unique_id'];
-                        
+
                         $historySet = $this->history_set($namer, "Sunday records  Data Update", $date, "Sunday records  page dashboard Admin", "User Updated a Records  data");
                         if (json_decode($historySet) != 'Success') {
                             $exportData = 'success';
@@ -219,7 +219,7 @@ class fetchData extends DBH
                 } else {
                     $date = date('Y-m-d H:i:s');
                     $namer = $_SESSION['unique_id'];
-                    
+
                     $historySet = $this->history_set($namer, "Sunday records  Data Export", $date, "Sunday records  page dashboard Admin", "User Exported a Records  data");
                     if (json_decode($historySet) != 'Success') {
                         $exportData = 'success';
@@ -593,10 +593,10 @@ class fetchData extends DBH
         return $exportData;
 
     }
-    
+
     protected function history_set($name, $event, $Date, $sitename, $action)
     {
-        
+
         $unique_id = rand(time(), 1002);
         $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`users` where `unique_id`='$name' ORDER BY `id` DESC");
         if (!$stmt->execute()) {

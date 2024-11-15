@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../../API/vendor/autoload.php';
+include '../SvgPath.php';
 $newDataRequest = new AssetProject\viewData();
 $val = 1;
 $year = "";
@@ -190,10 +191,18 @@ if ($condition) {
                                     $Status = "<div class='out_btn blue'><div></div>hold</div>";
                                 }
 
+                                $path = '../../API/Images_folder/projects/' . $Image. '';
+                                $svg = $svg_path;
+                                if(empty($Image) || !file_exists('../../../API/Images_folder/projects/' . $Image. '')){
+                                    $path_img = $svg;
+                                }else{
+                                    $path_img = '<img src='.$path.' alt="image file" />';
+                                }
+
                                 echo " <tr>
                                        <td><div class='details'>
                                     <div class='img'>
-                                    <img src='../../API/Images_folder/projects/" . $Image . "' alt='' />
+                                    ".$path_img."
                                     </div>
                                     <div class='text'>
                                     <p>" . $name . "</p>

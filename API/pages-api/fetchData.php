@@ -210,27 +210,30 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `status` ='active' ");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`announcement` where `status` ='active' limit 5 ");
         if (!$stmt->execute()) {
 
             $stmt = null;
             $Error = 'Fetching data encountered a problem';
             exit(json_encode($Error));
         }
+
         if ($stmt->rowCount() > 0) {
             $List = new \stdClass();
-            $last_data = $stmt->rowCount();
             $result = $stmt->fetchAll();
-            $Data = $result[$last_data - 1];
-            $name = $Data['title'];
-            $message = $Data['message'];
-            $file = $Data['file'];
-
-            $List->name = $name;
-            $List->message = $message;
-            $List->file = $file;
-
-            $exportData = json_encode($List);
+            $exportSend = new \stdClass();
+            foreach ($result as $item) {
+                $tempClass = new \stdClass();
+                $name = $item['title'];
+                $message = $item['message'];
+                $file = $item['file'];
+                $tempClass->name = $name;
+                $tempClass->message = $message;
+                $tempClass->file = $file;
+                $id = 'kas' . rand(time(), 1092);
+                $exportSend->$id = json_encode($tempClass);
+            }
+            $exportData = json_encode($exportSend);
 
         } else {
             $resultCheck = false;
@@ -304,7 +307,7 @@ class fetchData extends DBH
     {
         $exportData = '';
         $resultCheck = true;
-        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary`  ORDER BY RAND()limit 6");
+        $stmt = $this->data_connect()->prepare("SELECT * FROM `zoeworshipcentre`.`gallary`  ORDER BY RAND()limit 8");
         $dataList = new \stdClass();
         if (!$stmt->execute()) {
             $stmt = null;
@@ -1006,17 +1009,11 @@ class fetchData extends DBH
             $ExportSendMain = new \stdClass();
             foreach ($result as $data) {
                 $name = $this->validate($data['category_view']);
-                if (preg_match('/[,]/', $name)) {
-                    $explode = explode(",", $name);
-                    foreach ($explode as $sep) {
-                        $keys = get_object_vars($ExportSendMain);
-
-                        if (array_key_exists($sep, $keys)) {
-                            $ExportSendMain->$sep += 1;
-                        } else {
-                            $ExportSendMain->$sep = 0 + 1;
-                        }
-                    }
+                $keys = get_object_vars($ExportSendMain);
+                if (array_key_exists($name, $keys)) {
+                    $ExportSendMain->$name += 1;
+                } else {
+                    $ExportSendMain->$name = 0 + 1;
                 }
             }
             $exportData = $ExportSendMain;
@@ -1026,10 +1023,10 @@ class fetchData extends DBH
         $exportDataSift = new \stdClass();
         if (is_object($exportData)) {
             $Keys = array_keys(get_mangled_object_vars($exportData));
-            foreach ($Keys as $itemMain) {
-                if ($exportData->$itemMain >= 2) {
 
-                    $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`datacollections` where  category like '%$itemMain%' limit 5");
+            foreach ($Keys as $itemMain) {
+                if ($exportData->$itemMain >= 4) {
+                    $stmt = $this->data_connect()->prepare("SELECT * FROM `zoe_library`.`datacollections` where  category like '%$itemMain%'  limit 5");
                     if (!$stmt->execute()) {
                         $stmt = null;
                         $Error = 'Fetching data encountered a problem';

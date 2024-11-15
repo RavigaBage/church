@@ -444,8 +444,6 @@ class fetchData extends DBH
                 $unique_id = $this->validate($data['unique_id']);
                 $status = $this->validate($data['status']);
                 $ExportSend = new \stdClass();
-
-                $ExportSend->UniqueId = $unique_id;
                 $ExportSend->name = $name;
                 $ExportSend->partnership = $Partnership;
                 $ExportSend->date = $date;

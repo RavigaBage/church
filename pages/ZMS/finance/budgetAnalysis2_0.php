@@ -236,11 +236,11 @@ if (isset($_GET['Year'])) {
               function GetCashRegistry() {
                 if (typeof titheComparism == 'object') {
 
-                  document.querySelector('.color.online').style.setProperty('--width', titheComparism['Ecash'][0] + '%');
-                  Ecash.querySelector('h1').textContent = titheComparism['Ecash'][0] + '%';
+                  document.querySelector('.color.online').style.setProperty('--width', titheComparism['Ecash'][0].toFixed('1') + '%');
+                  Ecash.querySelector('h1').textContent = titheComparism['Ecash'][0].toFixed('1') + '%';
                   Ecash.querySelector('span.dim').textContent = '$' + titheComparism['Ecash'][1];
-                  document.querySelector('.color.in_person').style.setProperty('--width', titheComparism['Incash'][0] + '%');
-                  Incash.querySelector('h1').textContent = titheComparism['Incash'][0] + '%';
+                  document.querySelector('.color.in_person').style.setProperty('--width', titheComparism['Incash'][0].toFixed('1') + '%');
+                  Incash.querySelector('h1').textContent = titheComparism['Incash'][0].toFixed('1') + '%';
                   Incash.querySelector('span.dim').textContent = '$' + titheComparism['Incash'][1];
                 }
               }

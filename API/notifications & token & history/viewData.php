@@ -3,9 +3,9 @@ namespace notification;
 class viewData extends fetchData
 {
 
-    public function annc_upload($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name)
+    public function annc_upload($name, $receiver, $message, $date, $file_name)
     {
-        $RecordsResult = $this->annc_upload_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name);
+        $RecordsResult = $this->annc_upload_data($name, $receiver, $message, $date, $file_name);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $RecordsResult;
@@ -14,9 +14,9 @@ class viewData extends fetchData
         }
     }
 
-    public function annc_update($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $id)
+    public function annc_update($name, $receiver, $message, $date, $file_name, $id)
     {
-        $RecordsResult = $this->annc_update_data($name, $receiver, $message, $date, $file_name, $Image_type, $Image_tmp_name, $id);
+        $RecordsResult = $this->annc_update_data($name, $receiver, $message, $date, $file_name, $id);
         if ($RecordsResult == false) {
             $Error = 'Error Occurred';
             return $Error;
@@ -44,6 +44,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
     public function annc_liveUpdate($num)
     {
         $RecordsResult = $this->annc_liveUpdate_data($num);

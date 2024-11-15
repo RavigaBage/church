@@ -1,4 +1,4 @@
-define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", "transaction", "Expenses", "Tithe", "resumable"], function (
+define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", "transaction", "Expenses", "Tithe", "resumable", "intlTelInput"], function (
   jQuery,
   XLSX,
   timer,
@@ -9,7 +9,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
   transactions,
   Expenses,
   TitheCall,
-  resumable
+  resumable,
+  intlTelInput
   // emailjs
 ) {
   //   if ('serviceWorker' in navigator) {
@@ -212,6 +213,10 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
     try {
       if (!loader_status) {
+        document.querySelectorAll('.itemView').forEach(element => {
+          element.classList.remove('b_view');
+        });
+
         if (document.querySelector('.location_date')) {
           document.querySelector('.location_date').innerText = location;
         }
@@ -299,7 +304,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           const Access_Current_Data = new Date();
           const Access_CurentNow = Access_Current_Data.getTime();
           async function Access_ConfirmAssign() {
-            console.log(location_updator());
             if (location_updator() == "Access_token") {
               if (confirm("Are you sure you want to assign this password")) {
                 try {
@@ -465,9 +469,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           getFebDays = (year) => {
             return isLeapYear(year) ? 29 : 28;
           };
-          const DaysOfMonth = [
+          var DaysOfMonth = [
             31,
-            getFebDays(2024),
+            getFebDays(year),
             31,
             30,
             31,
@@ -791,6 +795,14 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                     loaderBtn.classList.add('active');
                     loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
                   } else {
+                    loaderBtn.classList.add('play');
+                    loaderBtn.classList.remove('active');
+                    const FormScroll = document.querySelector('.new_event_menu .main');
+                    FormScroll.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                    })
+
                     r.upload();
                     r.on('complete', function () {
                       loadRegistry();
@@ -994,47 +1006,25 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           function DisplayWeekResult(weekObj, direction) {
             last = weekObj[weekObj.length - 1];
             firstVal = weekObj[0];
+
             if (typeof DetectYear != 'boolean') {
               year = DetectYear;
             }
             if (direction == false) {
-
               if (weekObjTemp.includes(1)) {
                 if (workingMonth - 1 < 0) {
                   workingMonth = 11;
                   year--;
+                  DaysOfMonth[1] = getFebDays(year);
                   if (typeof DetectYear != 'boolean') {
                     DetectYear--;
                   }
                 } else {
-                  if (workingMonth > 0) {
-                    if (!AutoCall) {
-                      workingMonth--;
-                    } else {
-                      AutoCall = true;
-                    }
-                  }
-
-                }
-              }
-            } else if (direction == true) {
-              if (weekObjTemp.includes(WorkingMax)) {
-                if (workingMonth + 1 > 11) {
-                  workingMonth = 0;
-                  year++;
-                  if (typeof DetectYear != 'boolean') {
-                    DetectYear++;
-                  }
-                } else {
-                  if (!AutoCall) {
-                    workingMonth++;
-                  } else {
-                    AutoCall = false;
-                  }
-
+                  workingMonth--;
                 }
               }
             }
+
             DAYSData = ['Monday', 'Tuesday', 'Wednesday', 'Friday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
             const ElementsViewsMain = ViewElements.querySelectorAll(".event_record");
             if (ElementsViewsMain) {
@@ -1042,8 +1032,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                 element.classList.remove("active");
               });
             }
+            monthNamesRecord = monthNames[workingMonth];
+            WorkingMax = DaysOfMonth[workingMonth];
 
-            MenuData.innerHTML = `${monthNames[workingMonth]} ${year}`;
+
+            MenuData.innerHTML = `${monthNamesRecord} ${year}`;
             weekObj.forEach((element_main) => {
               Index = weekObj.indexOf(element_main);
               var element;
@@ -1091,8 +1084,24 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
             });
             weekObjTemp = weekObj;
-            WorkingMax = DaysOfMonth[workingMonth];
+
             calendaDate = `${workingMonth} -${year}  - ${weekObjTemp[0]}`;
+            if (direction == true) {
+              if (weekObj.includes(WorkingMax)) {
+                if (workingMonth + 1 >= 12) {
+                  workingMonth = 0;
+                  year++;
+                  DaysOfMonth[1] = getFebDays(year);
+                  if (typeof DetectYear != 'boolean') {
+                    DetectYear++;
+                  }
+                } else {
+                  workingMonth++;
+
+                }
+              }
+            }
+
           }
           function weekDataDisplay(year_d, month_d, day_d, index) {
             try {
@@ -1416,7 +1425,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
             });
           });
           window.addEventListener("click", function (e) {
-            console.log(currentPhase, calendaDate);
             try {
               if (location_updator() == "calender") {
                 const HeaderSelector = document.querySelectorAll("strong[data-id]");
@@ -1588,7 +1596,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           }
           function changeTabMenu(tabOrder) {
             try {
-              console.log(tabOrder);
               currentPhase = tabOrder;
               if (tabOrder != false) {
                 TabsMenu.forEach((element) => {
@@ -1647,10 +1654,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                 let API =
                   "../../API/calender/data_process.php?APICALL=true&&user=true&&submit=delete";
                 let Response = await PHPREQUESTDEL(API, validateKey);
+                dn_message.querySelector('p').innerText = Response;
                 if (Response == 'success') {
                   currentSpan.classList.remove('active');
-                  dn_message.querySelector('p').innerText = 'your request to delete was a success';
-
                 }
               }
             } catch (error) {
@@ -1909,23 +1915,21 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
             }
           }
 
-
-          getWeeks(month, year, Current);
-          FetchData(year, month, Current);
-          setMonthData();
-
-          //check current frame
-
-          // if (!currentPhase && currentPhase != "") {
-          changeTabMenu(currentPhase);
-          // }
-          if (!calendaDate && calendaDate != "") {
+          if (calendaDate != "") {
             calendaDate = calendaDate.split('-');
             if (calendaDate.length == 3) {
-              getWeeks(calendaDate[0], calendaDate[1], calendaDate[2]);
+              getWeeks(calendaDate[0], calendaDate[1] + 1, calendaDate[2]);
+            } else {
+              getWeeks(month, year, Current);
             }
 
+          } else {
+            getWeeks(month, year, Current);
+
           }
+          FetchData(year, month, Current);
+          setMonthData();
+          changeTabMenu(currentPhase);
 
         }
         //all clear
@@ -2019,6 +2023,9 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           const Finance_AddEventMenuForm = Finance_AddEventMenu.querySelector("form");
           const Finance_AddEventMenu_offForm = Finance_AddEventMenu_off.querySelector("form");
 
+          document.querySelectorAll('.itemView').forEach(element => {
+            element.classList.add('b_view');
+          });
           Finance_List_filter.addEventListener("click", function () {
             Finance_APIDOCS = "../../API/finance/data_process.php?APICALL=true&&user=offertory&&submit=filter";
             Finance_PHPREQUESTFILTER(Finance_APIDOCS);
@@ -2029,89 +2036,23 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           Finance_AddEventMenu_offForm.addEventListener("submit", function (e) {
             e.preventDefault();
           });
-          Finance_Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
-            e.preventDefault();
-          })
+
           Finance_Export_variables.onclick = function () {
             Finance_Export_variables_Dialogue.classList.add("active");
           };
           Finance_Export_variables_Dialogue_Btn.addEventListener('click', async function () {
-            const Finance_loaderBtn = Finance_Export_variables_Dialogue.querySelector(".loader");
-            Finance_loaderBtn.classList.add("active");
-            const Finance_formConditions = Finance_Export_variables_Dialogue.querySelectorAll(".form_condition");
-            if (ConditionFeilds(Finance_formConditions) != false) {
-              if (finance_ActivityMenu == false) {
-                Finance_bodyDisplay = document.querySelector('.menu.account .container_item');
-              } else {
-                Finance_bodyDisplay = document.querySelector('.menu.event .container_item');
-              }
-              Finance_ExportType = Finance_Export_variables_Dialogue.querySelector('select[name="export_type"]').value;
-              Finance_ExportDataName = Finance_Export_variables_Dialogue.querySelector('input[name="export_name"]').value;
-              if (Finance_Export_variables_Dialogue.querySelector('select[name="data_type"]').value == '1') {
-                Finance_template = "<ul>";
-                Finance_bodyDisplay.querySelectorAll('.details p').forEach(element => {
-                  Finance_template += `<li>${element.innerHTML}</li>`;
-                });
-                Finance_template += "</ul>";
-                ExportDataToSend = Finance_template;
-                ExportData(Finance_ExportType, ExportDataToSend, Finance_ExportDataName);
-              } else {
-                Finance_pageCondition = Finance_bodyDisplay.querySelector('.page_sys');
-                Finance_pages_more = false;
-                if (Finance_pageCondition) {
-                  if (Finance_pageCondition.innerText == " " || Finance_pageCondition.innerText == '') {
-                    Finance_template = "<ul>";
-                    Finance_bodyDisplay.querySelectorAll('.details p').forEach(element => {
-                      Finance_template += `<li>${element.innerHTML}</li>`;
-                    });
-                    Finance_template += "</ul>";
-                    ExportDataToSend = Finance_template;
-                    Finance_pages_more = true;
-                  }
-                } else {
-                  Finance_pages_more = true;
-                }
-                if (Finance_pages_more) {
-                  Finance_APIDOCS = "";
-                  if (finance_ActivityMenu == false) {
-                    Finance_APIDOCS = "../../API/finance/data_process.php?APICALL=true&&user=offertory&&submit=export";
-                  } else {
-                    Finance_APIDOCS = "../../API/finance/data_process.php?APICALL=true&&user=true&&submit=export";
-                  }
-                  try {
-                    const Request = await fetch(Finance_APIDOCS, {
-                      method: "POST",
-                      body: "",
-                    });
 
-                    if (Request.status === 200) {
-                      Finance_data = await Request.json();
-                      if (data) {
-                        const Finance_ObjectDataFrame = JSON.parse(Finance_data);
-                        if (Finance_ObjectDataFrame) {
-                          Finance_template = "<ul>"
-                          for (const key in Finance_ObjectDataFrame) {
-                            namer = Finance_ObjectDataFrame[key]['name'];
-                            amount = Finance_ObjectDataFrame[key]['amount'];
-                            date = Finance_ObjectDataFrame[key]['date'];
-                            Finance_template += `<li class='item_name'> <p>${namer} - Total ${amount}</p>
-                                  <p>last modified  . ${date}</p></li>`
-                          }
-                          Finance_template += "</ul>";
-                          ExportDataToSend = Finance_template;
-                          ExportData(Finance_ExportType, ExportDataToSend, Finance_ExportDataName);
-                        }
-                      }
-                    } else {
-                      console.error("Cannot initiate Download");
-                    }
-                  } catch (error) {
-                    console.error(error);
-                  }
-
-                }
-              }
+            Finance_APIDOCS = "";
+            Finance_name = 'default';
+            if (finance_ActivityMenu == false) {
+              Finance_name = 'offertory records'
+              Finance_APIDOCS = "../../API/finance/data_process.php?APICALL=true&&user=offertory&&submit=export";
+            } else {
+              Finance_name = 'dues and contributions records'
+              Finance_APIDOCS = "../../API/finance/data_process.php?APICALL=true&&user=true&&submit=export";
             }
+            ExportData(Finance_name, 'excel', Finance_APIDOCS)
+
           })
 
           Finance_NavigationFilter.addEventListener("click", function (e) {
@@ -3676,6 +3617,19 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           const Library_Export_variables_Dialogue_Form = Library_Export_variables_Dialogue.querySelector("form");
           const Library_FileChange = document.querySelector('input[name="upload_cover"]');
           const BatchUpload = document.querySelector('#data_upload');
+
+          ArrayList = document.querySelectorAll('.event_menu_add select[name="category"] option');
+          ListFine = [];
+          ArrayList.forEach(element => {
+            ListFine.push(element.innerHTML);
+          })
+          ListFine.sort();
+          document.querySelector('.event_menu_add select[name="category"]').innerHTML = "";
+          console.log(ListFine);
+          ListFine.forEach(element => {
+            document.querySelector('.event_menu_add select[name="category"]').innerHTML += `<option>${element}</option>`;
+          })
+
           // let BatchUpload_Content = false;
           // BatchUpload.addEventListener('click', function () {
           //   BatchSelect.click();
@@ -4078,8 +4032,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               '.event_menu_add input[name="author"]'
             ).value = newObject["Author"];
             document.querySelector(
-              '.event_menu_add input[name="category"]'
+              '.event_menu_add select[name="category"]'
             ).value = newObject["category"];
+            document.querySelector(
+              '.event_menu_add input[name="tag"]'
+            ).value = newObject["tag"];
             document.querySelector(
               '.event_menu_add input[name="source"]'
             ).value = newObject["source"];
@@ -4254,7 +4211,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                         if (CloneObject != '') {
                           const ElementDivCone = document.createElement('tr');
                           ElementDivCone.classList.add('SearchItem');
-                          CloneObject.querySelector('.Clonecat a').setAttribute('href') = `http://${source}`;
+                          CloneObject.querySelector('.Clonecat a').setAttribute('href', `http://${source}`);
                           CloneObject.querySelector('.Clonedate').innerText = date;
                           CloneObject.querySelector('.Clonesource').innerText = category;
                           CloneObject.querySelector('.Cloneauthor').innerText = author;
@@ -4340,6 +4297,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                     Library_loaderBtn.classList.add('active');
                     Library_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
                   } else {
+                    Library_loaderBtn.classList.add('play');
+                    Library_loaderBtn.classList.remove('active');
                     r.upload();
                     r.on('complete', function () {
                       console.log('complete');
@@ -5241,7 +5200,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
                 if (Request.status === 200) {
                   data = await Request.json(data);
-                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                  if (typeof data == 'object') {
                     Template = document.querySelector('.records_table tbody');
                     let CloneObject = document.querySelector('.CloneSearch').cloneNode(true);
                     ObjectDataFrame = JSON.parse(data);
@@ -5327,6 +5286,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                     Assets_loaderBtn.classList.add('active');
                     Assets_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
                   } else {
+                    Assets_loaderBtn.classList.add('play');
+                    Assets_loaderBtn.classList.remove('active');
                     r.upload();
                     r.on('complete', function () {
                       console.log('complete');
@@ -5348,11 +5309,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
           });
         }
-
         if (location == "Announcement") {
           let Announcement_APIDOCS;
           let Change_status = false;
-
+          let Update_trigger = false;
+          let AnccMediaFilenames = [];
           const Announcement_AddEventBtn = document.querySelector(".add_event");
           const Announcement_ResponseView = document.querySelector(".loader_wrapper");
           const toggleModes = document.querySelectorAll(".toggle_mode");
@@ -5366,11 +5327,63 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=true";
             Announcement_AddEventMenu.classList.add("active");
           });
-
           Announcement_SubmitForm.addEventListener("submit", async function (e) {
             e.preventDefault();
-            Announcement_PHPREQUEST(Announcement_APIDOCS);
+            permission = true;
+            if (Update_trigger && r.files.length == 0) {
+              Announcement_PHPREQUEST(Announcement_APIDOCS);
+            } else {
+              if (r.files.length > 0) {
+                if (r.files.length > 1) {
+                  Announcement_loaderBtn.classList.add('active');
+                  Announcement_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during upload";
+                }
+                AnccMediaFilenames = [];
+                r.files.forEach(element => {
+                  AnccMediaFilenames.push(element.file.name);
+                })
+              } else {
+                Announcement_PHPREQUEST(Announcement_APIDOCS);
+              }
+              if (permission) {
+                if (AnccMediaFilenames.length > 0) {
+                  if (AnccMediaFilenames.length > 1 && Update_trigger) {
+                    Announcement_loaderBtn.classList.add('active');
+                    Announcement_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
+                  } else {
+                    Announcement_loaderBtn.classList.add('play');
+                    Announcement_loaderBtn.classList.remove('active');
+                    r.upload();
+                    r.on('complete', function () {
+                      console.log('complete');
+                      document.querySelector('#browseButton span').textContent = "Select file to Upload";
+                      r.cancel();
+                      Announcement_PHPREQUEST(Announcement_APIDOCS);
+                      AnccMediaFilenames = [];
+                    });
+                    r.on('fileError', function () {
+                      Announcement_loaderBtn.classList.remove('play');
+                      Announcement_loaderBtn.classList.remove('active');
+                      Announcement_loaderBtn.querySelector('.text p').textContent = "An error occurred in uploading this file";
+                    })
+                    r.on('error', function () {
+                      Announcement_loaderBtn.classList.remove('play');
+                      Announcement_loaderBtn.classList.remove('active');
+                      Announcement_loaderBtn.querySelector('.text p').textContent = "An error occurred in uploading this file";
+                    })
+                  }
+
+                }
+              } else {
+                Announcement_loaderBtn.classList.remove('play');
+                Announcement_loaderBtn.classList.add('active');
+                Announcement_loaderBtn.querySelector('.text p').textContent = "Files accepted should have either JPG,PNG,JPEG";
+              }
+            }
+
+
           });
+
           searchBtn.addEventListener("click", e => {
             Announcement_APIDOCS =
               "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=search";
@@ -5380,13 +5393,20 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
             }
 
           })
+
+          if (location_updator() == "Announcement") {
+            r.assignBrowse(document.getElementById('browseButton'));
+            r.on('filesAdded', function (array) {
+              document.querySelector('#browseButton span').textContent = `${r.files.length} file has been added`;
+            });
+
+          }
           window.addEventListener("click", function (e) {
             if (location_updator() == "Announcement") {
               var target = e.target;
               let targetMain = '';
               if (target.parentElement.classList.contains('toggle_mode')) {
                 targetMain = target.parentElement;
-
               }
               if (target.parentElement.parentElement.classList.contains('toggle_mode')) {
                 targetMain = target.parentElement.parentElement;
@@ -5395,6 +5415,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               if (target.classList.contains('toggle_mode')) {
                 targetMain = target;
               }
+              Id = "";
+
               if (targetMain != '') {
                 if (targetMain.classList.contains("active")) {
                   Change_status = true;
@@ -5406,17 +5428,17 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                 } else {
                   Change_status = false;
                 }
-                Id = "";
+
                 if (targetMain.hasAttribute("data-id")) {
                   Id = targetMain.getAttribute("data-id");
                 }
 
                 if (Id != "") {
+
                   Announcement_APIDOCS =
                     "../../API/notifications & token & history/data_process.php?APICALL=true&&user=annc&&submit=status";
                   if (Announcement_PHPREQUESTSTATUS(Announcement_APIDOCS, Change_status, Id)) {
                     targetMain.classList.toggle('active');
-
                   } else {
                     alert("Sorry, an error occured activation the announcement");
                   }
@@ -5433,6 +5455,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                 if (!Announcement_AddEventMenu.contains(target)) {
                   Announcement_AddEventMenu.classList.remove("active");
                   Announcement_loaderBtn.querySelector('.text p').textContent = "";
+                  r.cancel();
                 }
               }
 
@@ -5564,6 +5587,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               Announcement_loaderBtn.classList.remove('active');
               try {
                 const formMain = new FormData(Announcement_SubmitForm);
+                formMain.append('fileNames', JSON.stringify(AnccMediaFilenames));
                 const Request = await fetch(Announcement_APIDOCS, {
                   method: "POST",
                   body: formMain,
@@ -5684,7 +5708,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
                 if (Request.status === 200) {
                   data = await Request.json(data);
-                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                  if (typeof data == 'object') {
                     let ObjectDataFrame = JSON.parse(data);
                     Template = document.querySelector('.tithe_list.ancc_list');
                     for (const key in ObjectDataFrame) {
@@ -6182,7 +6206,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
                 if (Request.status === 200) {
                   data = await Request.json(data);
-                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                  if (typeof data == 'object') {
 
                     Template = document.querySelector('.records_table table tbody');
                     ObjectDataFrame = JSON.parse(data);
@@ -6308,6 +6332,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                     Project_loaderBtn.classList.add('active');
                     Project_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
                   } else {
+                    Project_loaderBtn.classList.add('play');
+                    Project_loaderBtn.classList.remove('active');
                     r.upload();
                     r.on('complete', function () {
                       document.querySelector('#browseButton span').textContent = "Select file to Upload";
@@ -6825,7 +6851,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
                 if (Request.status === 200) {
                   data = await Request.json(data);
-                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                  if (typeof data == 'object') {
                     let ObjectDataFrame = JSON.parse(data);
                     Template = document.querySelector('.records_table table tbody');
 
@@ -7587,9 +7613,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               document.querySelector('#browseButton span').textContent = `${r.files.length} file has been added`;
 
             });
-            document.getElementById('browseButton').addEventListener('click', function () {
-              r.cancel();
-            });
+
           }
           window.addEventListener('click', function (e) {
             if (location_updator() == "Membership") {
@@ -7728,6 +7752,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                     Membership_loaderBtn.classList.add('active');
                     Membership_loaderBtn.querySelector('.text p').textContent = "You can only upload a single file during update";
                   } else {
+                    Membership_loaderBtn.classList.add('play');
+                    Membership_loaderBtn.classList.remove('active');
                     r.upload();
                     r.on('complete', function () {
                       console.log('complete');
@@ -7822,47 +7848,60 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               Membership_loaderBtn.classList.add('play');
               Membership_loaderBtn.classList.remove('active');
               try {
-                const formMain = new FormData(Membership_SubmitForm);
-                formMain.append('fileNames', JSON.stringify(MembershipMediaFilenames))
-                formMain.append(
-                  "status",
-                  document.querySelector('.event_menu_add select[name="status"]')
-                    .value
-                );
-                const Request = await fetch(Memebership_APIDOCS, {
-                  method: "POST",
-                  body: formMain,
-                });
+                countryCode = intInit.getSelectedCountryData().dialCode;
+                if (parseInt(countryCode)) {
+                  contactForms = document.querySelector(
+                    '.event_menu_add input[name="contact"]'
+                  ).value
+                  document.querySelector('.event_menu_add input[name="contact"]').value = countryCode + String(contactForms);
+                  console.log(document.querySelector('.event_menu_add input[name="contact"]').value);
 
-                if (Request.status === 200) {
-                  data = await Request.json();
-                  Membership_loaderBtn.classList.remove('play');
-                  Membership_loaderBtn.classList.add('active');
-                  Membership_loaderBtn.querySelector('.text p').textContent = data;
+                  const formMain = new FormData(Membership_SubmitForm);
+                  formMain.append('fileNames', JSON.stringify(MembershipMediaFilenames))
+                  formMain.append(
+                    "status",
+                    document.querySelector('.event_menu_add select[name="status"]')
+                      .value
+                  );
+                  const Request = await fetch(Memebership_APIDOCS, {
+                    method: "POST",
+                    body: formMain,
+                  });
 
-                  Membership_requestData = data;
-                  if (data == 'success' || data == 'Update success') {
-                    if (!Membership_validateKey) {
-                      Membership_validateKey = "";
+                  if (Request.status === 200) {
+                    data = await Request.json();
+                    Membership_loaderBtn.classList.remove('play');
+                    Membership_loaderBtn.classList.add('active');
+                    Membership_loaderBtn.querySelector('.text p').textContent = data;
+
+                    Membership_requestData = data;
+                    if (data == 'success' || data == 'Update success') {
+                      if (!Membership_validateKey) {
+                        Membership_validateKey = "";
+                      }
+                      Memebership_APIDOCS =
+                        "../../API/membership/data_process.php?APICALL=true&&user=true&&submit=fetchlatest";
+                      Membership_PHPLIVEUPDATE(Memebership_APIDOCS, Membership_validateKey);
+
                     }
-                    Memebership_APIDOCS =
-                      "../../API/membership/data_process.php?APICALL=true&&user=true&&submit=fetchlatest";
-                    Membership_PHPLIVEUPDATE(Memebership_APIDOCS, Membership_validateKey);
 
+                  } else {
+                    Membership_loaderBtn.classList.remove('play');
+                    Membership_loaderBtn.classList.add('active');
+                    Membership_loaderBtn.querySelector('.text p').textContent = "cannot find endpoint";
                   }
-                  r.cancel();
                 } else {
                   Membership_loaderBtn.classList.remove('play');
                   Membership_loaderBtn.classList.add('active');
-                  Membership_loaderBtn.querySelector('.text p').textContent = "cannot find endpoint";
+                  Membership_loaderBtn.querySelector('.text p').textContent = "country code was not captured!!";
                 }
+
               } catch (error) {
                 Membership_loaderBtn.classList.remove('play');
                 Membership_loaderBtn.classList.add('active');
                 Membership_loaderBtn.querySelector('.text p').textContent = error;
               }
             }
-
           }
           async function Membership_Batch(element) {
             if (location_updator() == "Membership") {
@@ -7963,7 +8002,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
 
                 if (Request.status === 200) {
                   data = await Request.json(data);
-                  if (data != '' || data != ' ' && data != 'Fetching data encounted a problem' && data != 'No Records Available') {
+                  if (typeof data == 'object') {
                     Template = document.querySelector('.membership_table tbody');
                     let CloneObject = document.querySelector('.CloneSearch').cloneNode(true);
                     ObjectDataFrame = JSON.parse(data);
@@ -8124,579 +8163,98 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
               }
             }
           })
+          const inputFeild = document.querySelector('#contact_form');
+          const intInit = window.intlTelInput(inputFeild, {
+            hiddenInput: function (inputFeild) {
+              return {
+                phone: "phone_full",
+                country: "country_code"
+              }
+            },
+            initialCountry: "gh",
+            nationalMode: true,
+            loadUtilsOnInit: "intl-tel-input-24.6.1/build/js/utils.js",
+          })
+
+          intInit
 
         }
         if (location == "Gallery") {
-          ////fixed do not touch 
-          Selectimages = {};
-          var Gal_APIDOCS = "";
-          let Gal_TempFiles = 1;
-          var Gal_validateKey = "";
-          var Gal_MainFormDel = "";
-          let MediaFilenames = [];
-          let Update_trigger = false;
-          const Gal_dn_message = document.querySelector(".dn_message");
+          require(['Gallery', "resumable"], function (Gallery, resumable) {
 
-          const Gal_confirmsBtns = document.querySelectorAll(".btn_confirm");
-          const Gal_AddEventBtn = document.querySelector(".add_event");
-          const Gal_SubmitForm = document.querySelector(".event_menu_add.form_data form");
-          const Gal_ResponseView = document.querySelector(".info_information.event_menu_add");
-          const Gal_Export_variables = document.querySelector('#ExportBtn');
-          const Gal_Export_variables_Dialogue = document.querySelector('.export_dialogue');
-          const Gal_Export_variables_Dialogue_Btn = document.querySelector('.export_dialogue button');
-          const Gal_Export_variables_Dialogue_Form = Gal_Export_variables_Dialogue.querySelector("form");
-          const Gal_Loader = document.querySelector('.loader_wrapper');
-          const Gal_AddEventMenu = document.querySelector(".event_menu_add.form_data");
-          const Gal_OptionElements = document.querySelectorAll(".option");
-          if (location_updator() == "Gallery") {
-            r.assignBrowse(document.getElementById('browseButton'));
-            r.on('filesAdded', function (array) {
-              document.querySelector('#browseButton span').textContent = `${r.files.length} file has been added`;
-            });
-            document.getElementById('browseButton').addEventListener('click', function () {
-              r.cancel();
-            });
-          }
-          Gal_AddEventBtn.addEventListener("click", function (e) {
-            Gal_AddEventMenu.classList.add("active");
-            document.querySelector('#browseButton span').textContent = "Select file to Upload";
-          });
-
-          Gal_OptionElements.forEach((element) => {
-            element.addEventListener("click", function () {
-              const Gal_ElementOptions = element.querySelector(".opt_element");
-              if (Gal_ElementOptions != null) {
-                Gal_ElementOptions.classList.add("active");
-              }
-            });
-          });
-          window.addEventListener("click", function (e) {
-            if (location_updator() == 'Gallery') {
-              var Gal_target = e.target;
-              if (Gal_Export_variables_Dialogue.classList.contains('active') && !Gal_Export_variables.contains(Gal_target)) {
-                if (!Gal_Export_variables_Dialogue.contains(Gal_target)) {
-                  Gal_Export_variables_Dialogue.classList.remove('active')
-                }
-              }
-              if (!Gal_ResponseView.contains(Gal_target) && !Gal_target.classList.contains('btn_confirm')) {
-                if (Gal_ResponseView.classList.contains('active')) {
-                  Gal_ResponseView.classList.remove('active');
-                  Gal_ResponseView.querySelector('header').textContent = "";
-                }
-              }
-              const Gal_Pages = document.querySelectorAll(".pages div");
-              var Gal_OptionElements = document.querySelectorAll(".option");
-              if (Gal_AddEventMenu.classList.contains("active") && !Gal_AddEventBtn.contains(Gal_target)) {
-                if (!Gal_AddEventMenu.contains(Gal_target)) {
-                  Gal_AddEventMenu.classList.remove("active");
-                  Gal_Loader.querySelector('.text p').textContent = "";
-                  Update_trigger = false;
-                }
-              }
-              Gal_OptionElements.forEach((element) => {
-                const ElementOptions = element.querySelector(".opt_element");
-                if (ElementOptions != null) {
-                  if (ElementOptions.classList.contains("active") && !element.contains(Gal_target)) {
-                    if (!ElementOptions.contains(Gal_target)) {
-                      ElementOptions.classList.remove("active");
-                    }
-                  } else {
-                    Gal_MainBody = document.querySelectorAll('#main_table tbody tr');
-                    if (Gal_MainBody) {
-                      Gal_MainBody.forEach(element => {
-                        if (element.contains(Gal_target)) {
-                          Gal_MainFormDel = element;
-                        }
-                      })
-                      if (Gal_target.classList.contains("Update_item") && element.contains(Gal_target)) {
-                        Gal_validateKey = Gal_target.getAttribute("data-id");
-                        Gal_UpdateItemFunction(Gal_target);
-                        ElementOptions.classList.remove("active");
-                      }
-                      if (Gal_target.classList.contains("delete_item") && element.contains(Gal_target)) {
-                        Gal_validateKey = Gal_target.getAttribute("data-id");
-                        Gal_dn_message.classList.add('active');
-                        ElementOptions.classList.remove("active");
-                      }
-                    }
-
-
-                  }
-                }
+            if (location_updator() == "Gallery") {
+              r.assignBrowse(document.getElementById('browseButton'));
+              r.on('filesAdded', function (array) {
+                document.querySelector('#browseButton span').textContent = `${r.files.length} file has been added`;
               });
-              Gal_Pages.forEach((element) => {
-                if (element.contains(Gal_target)) {
-                  Gal_value = element.innerHTML;
-                  pagnationSystem(Gal_value);
-                }
+              document.getElementById('browseButton').addEventListener('click', function () {
+                r.cancel();
               });
             }
-          });
-
-          Gal_Export_variables_Dialogue_Form.addEventListener('submit', function (e) {
-            e.preventDefault();
-          });
-          Gal_Export_variables.onclick = function () {
-            Gal_Export_variables_Dialogue.classList.add("active");
-          };
-          Gal_Export_variables_Dialogue_Btn.addEventListener('click', async function () {
-            Gal_APIDOCS = "../../API/gallery/data_process.php?APICALL=true&&user=true&&submit=export";
-            ExportData('GalleryExport', 'excel', Gal_APIDOCS)
-          });
-
-          Gal_confirmsBtns.forEach((element) => {
-            element.addEventListener("click", (e) => {
-              if (element.getAttribute("data-confirm") == "true") {
-                if (Gal_validateKey != "") {
-                  Gal_DeleteItemFunction(
-                    element.getAttribute("data-confirm"),
-                    Gal_validateKey
-                  );
-                }
-              }
-            });
-          });
-          acceptedExtension = ['jpg', 'png', 'jpeg'];
-          Gal_SubmitForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            permission = true;
-            if (Update_trigger && r.files.length == 0) {
-              Gal_PHPREQUEST(Gal_APIDOCS);
-              document.querySelector('#browseButton span').textContent = `Select a file to upload`;
-              r.cancel();
-              MediaFilenames = [];
-            } else {
-              if (r.files.length > 0) {
-                r.files.forEach(element => {
-                  console.log(element.file.name);
-                  if (acceptedExtension.includes(element.file.name.split('.')[1].toLowerCase())) {
-                    MediaFilenames.push(element.file.name);
-                  } else {
-                    permission = false;
-                  }
-                })
-              } else {
-                Gal_Loader.classList.add('active');
-                Gal_Loader.querySelector('.text p').textContent = "Select a file to upload !!";
-
-              }
-
-              if (permission) {
-                if (MediaFilenames.length > 0) {
-                  if (MediaFilenames.length > 1 && Update_trigger) {
-                    Gal_Loader.classList.add('active');
-                    Gal_Loader.querySelector('.text p').textContent = "You can only upload a single file during update";
-
-                  } else {
-                    r.upload();
-                    r.on('complete', function () {
-                      Gal_PHPREQUEST(Gal_APIDOCS);
-                      document.querySelector('#browseButton span').textContent = `Select a file to upload`;
-                      r.cancel();
-                      MediaFilenames = [];
-                    });
-                  }
-
-                }
-              } else {
-                Gal_Loader.classList.add('active');
-                Gal_Loader.querySelector('.text p').textContent = "Files accepted should have either JPG,PNG,JPEG";
-              }
-            }
-
-          });
-          Gal_AddEventBtn.addEventListener("click", function (e) {
-            Gal_APIDOCS = "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=true";
-            Gal_validateKey = "";
-          });
-          function Gal_UpdateItemFunction(value) {
-            const Gal_AddEventMenu = document.querySelector(".event_menu_add.form_data");
-            let Gal_newObject = value.getAttribute("data-information");
-            Gal_newObject = JSON.parse(Gal_newObject);
-
-            document.querySelector(
-              '.event_menu_add input[name="event_name"]'
-            ).value = Gal_newObject["Eventname"];
-
-            document.querySelector(
-              '.event_menu_add input[name="date"]'
-            ).value = Gal_newObject["date_uploaded"];
-            document.querySelector(
-              '.event_menu_add select[name="category"]'
-            ).value = Gal_newObject["category"];
-            document.querySelector(
-              '.event_menu_add input[type="file"]'
-            ).value = "";
-            document.querySelector(
-              '.event_menu_add input[name="delete_key"]'
-            ).value = Gal_newObject["UniqueId"];
-            setTimeout(() => {
-              Gal_AddEventMenu.classList.add("active");
-            }, 100);
-
-            Gal_APIDOCS =
-              "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=update_file";
-            Update_trigger = true;
-          }
-          function Gal_DeleteItemFunction(value, Gal_validateKey) {
-            if (value == "true" && location_updator() == 'Gallery') {
-              Gal_API = "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=delete_file";
-              Gal_PHPREQUESTDEL(Gal_API, Gal_validateKey);
-            }
-          }
-
-          async function Gal_PHPREQUEST(Gal_APIDOCS) {
-            if (location_updator() == 'Gallery') {
-              let Gal_data;
-              Gal_Loader.classList.remove('active');
+            acceptedExtension = ['jpg', 'png', 'jpeg'];
+            Gal_SubmitForm.addEventListener("submit", async function (e) {
+              e.preventDefault();
               Gal_Loader.classList.add('play');
-
-              try {
-                const formMain = new FormData(Gal_SubmitForm);
-                formMain.append("fileNames", JSON.stringify(MediaFilenames));
-                const Request = await fetch(Gal_APIDOCS, {
-                  method: "POST",
-                  body: formMain,
-                });
-
-                if (Request.status === 200) {
-                  Gal_data = await Request.json();
-                  if (Gal_data) {
-                    Gal_data = Gal_data.toLowerCase();
-                    Gal_Loader.classList.remove('play');
+              Gal_Loader.classList.remove('active');
+              setTimeout(() => {
+                permission = true;
+                if (Update_trigger && r.files.length == 0) {
+                  Gal_PHPREQUEST(Gal_APIDOCS);
+                  document.querySelector('#browseButton span').textContent = `Select a file to upload`;
+                  r.cancel();
+                  MediaFilenames = [];
+                } else {
+                  if (r.files.length > 0) {
+                    r.files.forEach(element => {
+                      if (acceptedExtension.includes(element.file.name.split('.')[1].toLowerCase())) {
+                        MediaFilenames.push(element.file.name);
+                      } else {
+                        permission = false;
+                      }
+                    })
+                    Gal_total = MediaFilenames.length;
+                  } else {
                     Gal_Loader.classList.add('active');
-                    Gal_Loader.querySelector('.text p').textContent = Gal_data;
-                    if (Gal_data == 'upload was a success' || Gal_data == 'update was a success') {
-                      Gal_Loader.classList.remove('play');
-                      Gal_Loader.classList.add('active');
-                      Gal_Loader.querySelector('.text p').textContent = Gal_data;
-                      Gal_APIDOCS = "../../API/Gallery/data_process.php?APICALL=true&&user=true&&submit=fetchLatest";
-                      Gal_total = Gal_TempFiles;
-                      if (!Gal_validateKey) {
-                        Gal_validateKey = "";
-                      }
-                      Gal_PHPLIVEUPDATE(Gal_APIDOCS, Gal_validateKey, Gal_total, Gal_data);
-                      r.cancel();
-                    }
+                    Gal_Loader.querySelector('.text p').textContent = "Select a file to upload !!";
+
                   }
-                } else {
-                  Gal_Loader.classList.remove('play');
-                  Gal_Loader.classList.add('active');
-                  Gal_Loader.querySelector('.text p').textContent = 'An error occured please again later';
-                }
-              } catch (error) {
-                console.error(error);
-              }
-              Gal_Loader.classList.remove('play');
-            }
 
-          }
-          async function Gal_PHPREQUESTDEL(Gal_APIDOCS, Gal_validateKey) {
-            if (location_updator() == 'Gallery') {
-              let Gal_data;
-              try {
-                Gal_ResponseView.classList.add('active');
-                dataSend = {
-                  key: Gal_validateKey,
-                };
-                const Request = await fetch(Gal_APIDOCS, {
-                  method: "POST",
-                  body: JSON.stringify(dataSend),
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                });
+                  if (permission) {
+                    if (MediaFilenames.length > 0) {
+                      if (MediaFilenames.length > 1 && Update_trigger) {
+                        Gal_Loader.classList.add('active');
+                        Gal_Loader.querySelector('.text p').textContent = "You can only upload a single file during update";
 
-                if (Request.status === 200) {
-                  Gal_data = await Request.json(Gal_data);
-
-                  if (Gal_data) {
-                    if (Gal_data == 'Item Deleted Successfully') {
-                      Gal_MainFormDel.classList.add('none')
-                      Gal_ResponseView.querySelector('header').textContent = "Delete was a success";
-                      Gal_validateKey = '';
-                    }
-                  }
-                } else {
-                  console.error("cannot find endpoint");
-                }
-              } catch (error) {
-                console.error(error);
-              }
-            }
-
-          }
-          async function Gal_PHPLIVEUPDATE(Gal_APIDOCS, Gal_validateKey, Gal_total, resquest_response) {
-            if (location_updator() == 'Gallery') {
-              let Gal_data;
-              if (!Gal_total > 10) {
-                alert('You have uploaded a large number of file, please stand by for manual refresh');
-                location.href = 'http://localhost/database/church/pages/ZMS/Dashboard.php#Gallery'
-              }
-              try {
-                dataSend = {
-                  key: Gal_validateKey,
-                  limit: Gal_total
-                };
-                const Request = await fetch(Gal_APIDOCS, {
-                  method: "POST",
-                  body: JSON.stringify(dataSend),
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                });
-
-                if (Request.status === 200) {
-                  Gal_data = await Request.json(Gal_data);
-                  if (Gal_data) {
-                    if (typeof Gal_data == 'object') {
-                      ConvertJson = Gal_data;
-                      const tableCell = document.querySelector('.membership_table table tbody');
-                      for (const key in ConvertJson) {
-                        const element = ConvertJson[key];
-                        ElementCreate = document.createElement('tr');
-                        unique_id = element['UniqueId'];
-                        Eventname = element['Eventname'];
-                        imageName = element['name'];
-                        date_uploaded = element['date_uploaded'];
-                        category = element['category'];
-                        ObjectData = element['Obj'];
-                        const CloneObject = document.querySelector('#livetemplate').cloneNode(true);
-                        if (CloneObject != '') {
-                          CloneObject.querySelector('.Clonefilename').innerText = imageName;
-                          CloneObject.querySelector('.CloneEventname').innerText = Eventname;
-                          CloneObject.querySelector('.CloneImage').setAttribute('src', `../../API/Images_folder/gallery/${imageName}`);
-                          CloneObject.querySelector('.downloadp').setAttribute('href', `../../API/Images_folder/gallery/${imageName}`);
-                          CloneObject.querySelector('.CloneDate').innerText = date_uploaded;
-                          CloneObject.querySelector('.CloneCategory').innerText = category;
-                          CloneObject.querySelector('.opt_element p.up').setAttribute('data-information', ObjectData);
-                          CloneObject.querySelector('.opt_element p.up').setAttribute('data-id', unique_id);
-                          CloneObject.querySelector('.opt_element p.dp').setAttribute('data-id', unique_id);
-                          tableCell.prepend(CloneObject);
-                          CloneObject.setAttribute('id', false);
-                          OptionElements = document.querySelectorAll(".option");
-                          const element = CloneObject.querySelector('.option');
-                          element.addEventListener("click", function () {
-                            var ElementOptions = element.querySelector(".opt_element");
-                            ElementOptions.classList.add("active");
-                          });
-                          if (resquest_response == 'update was a success') {
-                            if (Gal_MainFormDel != null) {
-                              Gal_MainFormDel.classList.add('hide');
-                              Gal_MainFormDel = CloneObject;
-                            }
-                          }
-
-                        }
+                      } else {
+                        r.upload();
+                        r.on('complete', function () {
+                          Gal_PHPREQUEST(Gal_APIDOCS);
+                          document.querySelector('#browseButton span').textContent = `Select a file to upload`;
+                          r.cancel();
+                          MediaFilenames = [];
+                        });
                       }
 
                     }
+                  } else {
+                    Gal_Loader.classList.add('active');
+                    Gal_Loader.querySelector('.text p').textContent = "Files accepted should have either JPG,PNG,JPEG";
                   }
-                } else {
-                  console.error("cannot find endpoint");
                 }
-              } catch (error) {
-                console.error(error);
-              }
-            }
 
-          }
+              }, 400)
+
+
+
+
+            });
+          })
         }
         if (location == "FinanceAccount") {
-          let Account_validateKey = false
-          const Account_loaderBtn = document.querySelector(".event_menu_add.form_data .loader");
-          const Account_AddEventMenu = document.querySelector(".event_menu_add.form_data");
-          const Account_AddEventMenu_far = document.querySelector(".event_menu_add.form_data.acc_delete");
-          const Account_ResponseView = document.querySelector(".info_information.event_menu_add");
-          const Account_AddEventMenuForm = Account_AddEventMenu.querySelector("form");
-          const Account_AddEventMenu_Btn = document.querySelector(".event_menu_add.form_data Button");
-          const Account_confirmsBtns = document.querySelectorAll(".btn_confirm");
-          const Account_dn_message = document.querySelector(".dn_message");
+          require(['Accounts'], function (Accounts) {
 
-          const Account_AddEventBtn = document.querySelector(".add_event");
-          const Account_AddEventBtn_far = document.querySelector(".add_event.far");
-          var OptionElements = document.querySelectorAll(".option");
-          Account_AddEventBtn.addEventListener("click", function (e) {
-            Account_AddEventMenu.classList.add("active");
-          });
-          Account_AddEventBtn_far.addEventListener("click", function (e) {
-            Account_AddEventMenu_far.classList.add("active");
-          });
+          })
 
-          OptionElements.forEach((element) => {
-            element.addEventListener("click", function () {
-              var ElementOptions = element.querySelector(".opt_element");
-              if (ElementOptions != null) {
-                ElementOptions.classList.add("active");
-              }
-            });
-          });
-          Account_confirmsBtns.forEach((element) => {
-            element.addEventListener("click", (e) => {
-              if (element.getAttribute("data-confirm") == "true") {
-                if (Account_validateKey != "") {
-                  Account_DeleteItemFunction(
-                    element.getAttribute("data-confirm"),
-                    Account_validateKey
-                  );
-                }
-              }
-            });
-          });
-
-          window.addEventListener("click", function (e) {
-            if (location_updator() == "FinanceAccount") {
-              var target = e.target;
-              const Pages = document.querySelectorAll(".pages div");
-              var OptionElements = document.querySelectorAll(".option");
-              if (Account_AddEventMenu.classList.contains("active") && !Account_AddEventBtn.contains(target)) {
-                if (!Account_AddEventMenu.contains(target)) {
-                  Account_AddEventMenu.classList.remove("active");
-                }
-              }
-              if (Account_AddEventMenu_far.classList.contains("active") && !Account_AddEventBtn_far.contains(target)) {
-                if (!Account_AddEventMenu_far.contains(target)) {
-                  Account_AddEventMenu_far.classList.remove("active");
-                }
-              }
-              if (target.tagName == 'I') {
-                if (target.hasAttribute('delete_acc')) {
-                  Account_validateKey = target.getAttribute('delete_acc');
-                  Account_dn_message.classList.add('active');
-                }
-              }
-              OptionElements.forEach((element) => {
-                var ElementOptions = element.querySelector(".opt_element");
-
-                if (ElementOptions != null) {
-                  if (
-                    ElementOptions.classList.contains("active") &&
-                    !element.contains(target)
-                  ) {
-
-                    if (!ElementOptions.contains(target)) {
-                      ElementOptions.classList.remove("active");
-                    }
-                  } else {
-                    MainBody = document.querySelectorAll('#main_table tbody tr');
-                    if (MainBody) {
-                      MainBody.forEach(element => {
-                        if (element.contains(target)) {
-                          MainFormDel = element;
-                        }
-                      })
-                      if (
-                        target.classList.contains("Update_item") &&
-                        element.contains(target)
-                      ) {
-                        validateKey = target.getAttribute("data-id");
-                        UpdateItemFunction(target);
-                        ElementOptions.classList.remove("active");
-                      }
-                      if (
-                        target.classList.contains("delete_item") &&
-                        element.contains(target)
-                      ) {
-                        validateKey = target.getAttribute("data-id");
-                        dn_message.classList.add('active');
-                        ElementOptions.classList.remove("active");
-                      }
-                    }
-
-
-                  }
-                }
-              });
-              Pages.forEach((element) => {
-                if (element.contains(target)) {
-                  value = element.innerHTML;
-                  pagnationSystem(value);
-                }
-              });
-            }
-          });
-
-          Account_AddEventMenuForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-          });
-          Account_AddEventMenu_Btn.onclick = function () {
-            Account_AddEventMenu.classList.add("active");
-            var Account_formCondiions = document.querySelectorAll(".form_condition");
-            Account_loaderBtn.classList.add("active");
-            if (ConditionFeilds(Account_formCondiions) != false) {
-              Account_APIDOCS = "../../API/finance/data_process.php?APICALL=account&&user=true&&submit=true";
-              Account_PHPREQUEST(Account_APIDOCS);
-            } else {
-              Account_loaderBtn.innerText = "All feilds are required";
-            }
-          };
-          async function Account_PHPREQUEST(Account_APIDOCS) {
-            if (location_updator() == "FinanceAccount") {
-              let data;
-              try {
-                const formMain = new FormData(Account_AddEventMenuForm);
-
-                const Request = await fetch(Account_APIDOCS, {
-                  method: "POST",
-                  body: formMain,
-                });
-
-                if (Request.status === 200) {
-                  data = await Request.json();
-                  Account_loaderBtn.innerText = data;
-                  if (data == 'Upload was a success') {
-                    requestData = data;
-
-                    if (!Account_validateKey) {
-                      Account_validateKey = "";
-                    }
-                  }
-                }
-              } catch (error) {
-                console.error(error);
-              }
-            }
-          }
-          function Account_DeleteItemFunction(value, Account_validateKey) {
-            if (value == "true" && location_updator() == "FinanceAccount") {
-              Account_API = "../../API/Finance/data_process.php?APICALL=account&&user=true&&submit=delete";
-              Account_PHPREQUESTDEL(Account_API, Account_validateKey);
-            }
-          }
-          async function Account_PHPREQUESTDEL(Account_APIDOCS, Account_validateKey) {
-            if (location_updator() == "FinanceAccount") {
-              let Account_data;
-              try {
-                Account_ResponseView.classList.add('active');
-                dataSend = {
-                  account: Account_validateKey,
-                };
-                const Request = await fetch(Account_APIDOCS, {
-                  method: "POST",
-                  body: JSON.stringify(dataSend),
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                });
-
-                if (Request.status === 200) {
-                  Account_data = await Request.json(Account_data);
-
-                  if (Account_data) {
-                    if (Account_data == 'Item Deleted Successfully') {
-                      UrlTrace();
-                      Account_validateKey = '';
-                    }
-                  }
-                } else {
-                  console.error("cannot find endpoint");
-                }
-              } catch (error) {
-                console.error(error);
-              }
-            }
-
-          }
         }
       }
 
@@ -8768,8 +8326,7 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           data = await Request.json();
           if (data) {
             var ExportData_vr = data;
-            if (ExportData_vr != "Fetching data encounted a problem" && ExportData_vr != "Not Records Available") {
-
+            if (typeof ExportData_vr == 'object') {
               const ObjectDataFrame = JSON.parse(ExportData_vr);
               if (ObjectDataFrame) {
                 ExportString = "";
@@ -8791,7 +8348,11 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
                 link.click();
                 document.body.removeChild(link);
               }
+
+            } else {
+              alert('Not enough data to export');
             }
+
 
           }
         } else {
@@ -9073,6 +8634,8 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
           return "../../API/Assets&projects/data_process.php?upload_submit=upload&&APICALL=Projects";
         } else if (location_updator() == 'Library') {
           return "../../API/Library/data_process.php?upload_submit=upload";
+        } else if (location_updator() == 'Announcement') {
+          return "../../API/notifications & token & history/data_process.php?upload_submit=upload";
         } else {
           return "sample.test";
         }
@@ -9086,7 +8649,6 @@ define(["jQuery", "xlsx", "Access", "projects", "finance", "calender", "slick", 
       Logout.click();
     }
   });
-
   var r = new resumable({
     target: getUploadApi(),
     query: { upload_token: 'my_token' }

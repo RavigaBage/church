@@ -14,6 +14,7 @@ class viewData extends fetchData
             return $RecordsResult;
         }
     }
+
     public function call_action_viewList()
     {
         $RecordsResult = $this->call_action_view();

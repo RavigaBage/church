@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../../API/vendor/autoload.php';
+include '../SvgPath.php';
 $viewDataClass = new Membership\viewData();
 $num = 1;
 if (isset($_GET['page'])) {
@@ -37,19 +38,12 @@ if ($condition) {
             </div>
             <div class="options flex opt_left">
                 <div class="item_opt flex" id="data_upload">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
                         <path d="M9 15l3 -3l3 3" />
                         <path d="M12 12l0 9" />
-                        </svg>
+                    </svg>
                     <p>upload</p>
                 </div>
                 <div class="item_opt flex">
@@ -211,11 +205,19 @@ if ($condition) {
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="red"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
                     Inactive</div>';
                             }
+                            $path = '../../API/Images_folder/users/' . $image. '';
+                            $svg = $svg_path;
+                            if(empty($image) || !file_exists('../../../API/Images_folder/users/' . $image. '')){
+                                $path_img = $svg;
+                            }else{
+                                $path_img = '<img src='.$path.' alt="image file" />';
+                            }
+
                             echo
                                 "<tr>
                 <td><div class='details'>
 <div class='img'>
-<img src='../../API/Images_folder/users/" . $image . "' alt='' />
+".$path_img."
 </div>
 <div class='text'>
 <p>" . $email . "</p>
@@ -301,7 +303,7 @@ if ($condition) {
                     </div>
                     <div class="field">
                         <label>contact</label>
-                        <input name="contact" type="text" placeholder="" required />
+                        <input id="contact_form" name="contact" type="tel" placeholder="553838464" pattern="[0-9]{2}[0-9]{3}[0-9]{4}" required />
                     </div>
                 </div>
                 <div class="cate_view">
@@ -336,26 +338,17 @@ if ($condition) {
                 <div class="field">
                     <label>Profile Image</label>
                     <div class="upload_blog">
-                            <a id="browseButton" name="imageFile">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                >
-                                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
-                                    <path d="M9 15l3 -3l3 3" />
-                                    <path d="M12 12l0 9" />
-                                </svg>
+                        <a id="browseButton" name="imageFile">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                                <path d="M9 15l3 -3l3 3" />
+                                <path d="M12 12l0 9" />
+                            </svg>
 
-                                <span>Select file to upload here</span>
-                            </a>
-                        </div>
+                            <span>Select file to upload here</span>
+                        </a>
+                    </div>
                 </div>
                 <input name="delete_key" type="number" value="" hidden />
                 <button>create Activity</button>

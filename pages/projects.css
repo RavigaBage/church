@@ -8,8 +8,7 @@
 }
 body {
   width: 100%;
-  background-color: #000000;
-  color: #fff;
+  color: #000;
   perspective: 1000px;
   perspective-origin: 50% 10em;
   font-family: redHart;
@@ -73,7 +72,6 @@ a {
   margin-top: 20px;
   opacity: 0;
   visibility: hidden;
-
   z-index: 10;
   transition: all 0.5s ease;
 }
@@ -141,7 +139,6 @@ a {
   width: 400px;
   display: grid;
   place-items: center;
-  border: 1px solid #000;
   padding: 10px;
   margin: 10px auto;
 }
@@ -157,7 +154,6 @@ a {
 .About .details .col .header {
   max-width: 300px;
   padding: 5px;
-  border-bottom: 2px solid #000;
   text-align: left;
 }
 .About .details .col p {
@@ -187,6 +183,7 @@ a {
   height: 100%;
   width: 100%;
   max-height: 200px;
+  border-radius: 10px;
 }
 .About .detail_project .col {
   width: 100%;
@@ -391,7 +388,7 @@ a {
   .menu_toggle.active svg:nth-child(1) {
     display: none;
   }
-  
+
   .navigation {
     position: fixed !important;
     top: 0;
@@ -471,5 +468,3 @@ a {
     width: auto;
   }
 }
-
-

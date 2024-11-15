@@ -6,7 +6,7 @@ if (isset($_GET['userlogin'])) {
     }
 } else {
     if (isset($_SESSION['unique_id']) && isset($_SESSION['Admin_access'])) {
-        header('Location:../pages/ZMS/Dashboard.php');
+        header('Location:../pages/ZMS/');
     }
 }
 if (empty($_SESSION['token_data'])) {
@@ -81,6 +81,10 @@ $token = $_SESSION['token_data'];
             splitScreen = window.location.href.split('?');
             if (splitScreen.length > 2) {
                 location.href = '../pages/error404/general404.html'
+            } else if (splitScreen[1].search('#') >= 0) {
+                //split second string
+                split = splitScreen[1].split('#');
+                location.href = splitScreen[0] + '?' + split[0];
             }
         }
         var form = document.querySelector('form');
@@ -152,7 +156,7 @@ $token = $_SESSION['token_data'];
                                         if (Splitname == 'userlogin') {
                                             location.href = '../pages/parallax.php';
                                         } else if (Splitname == 'admin') {
-                                            location.href = '../pages/ZMS/Dashboard.php#';
+                                            location.href = '../pages/ZMS/';
                                         }
                                     }
                                 }

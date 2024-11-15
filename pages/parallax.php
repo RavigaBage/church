@@ -114,17 +114,21 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
     </head>
 
     <body class="<?php
-    if ($data_theme != "Fetching data_theme encounted a problem" || $data_theme != "No records available'" || $data_theme != "Error Occurred") {
+    if (is_object($data_theme)) {
         echo $data_theme;
     }
     ?>">
         <div class="navigation">
 
             <div class="nav_logo">
-                <header>LOGO</header>
+                <img alt="logo icon" src="../icons/logo.jpg" alt="" />
             </div>
             <div class="nav_ele">
-
+                <a href="Donation/about.html">
+                    <div class="item_list">
+                        <p>Donate</p>
+                    </div>
+                </a>
                 <a href="../library/library.php">
                     <div class="item_list">
                         <p>Library</p>
@@ -135,20 +139,15 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         <p>Gallery</p>
                     </div>
                 </a>
-                <a href="testProject.php">
-                    <div class="item_list">
-                        <p>Projects</p>
-                    </div>
-                </a>
 
                 <a href="partnership/index.html">
                     <div class="item_list">
                         <p>Partnership</p>
                     </div>
                 </a>
-                <a href="leadership.php">
+                <a href="missions/">
                     <div class="item_list">
-                        <p>Leadership</p>
+                        <p>Missions</p>
                     </div>
                 </a>
 
@@ -189,7 +188,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                 THE APOSTOLIC CHURCH -
                                 GHANA</h1>
                             <p data-aos="fade-right" data-aos-delay="250" data-aos-duration="900">Zoe Worship centre -
-                                Galelia</p>
+                                Galelea</p>
                         </div>
                         <div class="motto">
                             <?php
@@ -341,20 +340,18 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
 
                     <div class="testimonials__grid">
                         <div class="swiper_class">
-                            <div class="swiper-wrapper recentSlider">
+                            <div class="swiper-wrapper recentSlider" id="recent_activities">
                                 <?php
                                 $data = json_decode($gallery);
                                 if (is_object($data)) {
-                                    foreach ($data as $file) {
-                                        foreach ($file as $img) { { {
-                                                    echo ' <figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card" >
-                                            <img loading="lazy" data-src="../API/images_folder/gallery/' . $img . '" alt="user" />
-                                            </figure><figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card" data-aos="zoom-in"  data-aos-duration="500">
+
+                                    foreach ($data->Mountain as $img) { {
+                                            echo ' <figure class="c4-izmir c4-border-cc-3 c4-image-rotate-right swiper-slide card" >
                                             <img loading="lazy" data-src="../API/images_folder/gallery/' . $img . '" alt="user" />
                                             </figure>';
-                                                }
-                                            }
                                         }
+
+
                                     }
                                 }
                                 ?>
@@ -439,18 +436,11 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         if (is_object($ShowData)) {
                             $Data = $ShowData->image;
                             if (is_array($Data)) { { {
-                                        echo '<div class="gallery_layout">
-                                <img data-src="../API/Images_folder/gallery/' . $Data[0] . '" alt="" />
-                            
-                                <img data-src="../API/Images_folder/gallery/' . $Data[1] . ' alt="" />
-                            
-                                    <img data-src="../API/Images_folder/gallery/' . $Data[2] . '" class="xxl" alt="" />
-                                    <img data-src="../API/Images_folder/gallery/' . $Data[3] . ' alt="" />
-                                    <img data-src="../API/Images_folder/gallery/' . $Data[4] . '" alt="" />
-                              
-                                <img data-src="../API/Images_folder/gallery/' . $Data[5] . '" alt="" />
-                           
-                             </div>';
+                                        echo '<div class="gallery_layout">';
+                                        foreach ($Data as $image) {
+                                            echo '<img data-src="../API/Images_folder/gallery/' . $image . '" alt="" />';
+                                        }
+                                        echo '</div>';
                                     }
                                 }
                             }
@@ -535,7 +525,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                                 <li>Sa</li>
                             </ul>
                             <div class="day" id="daysList">
-                                
+
 
                             </div>
                         </div>
@@ -552,17 +542,17 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                             </div>
 
                             <div class="content">
-                            <h1>Event</h1>
-                            <div class="eventsDetails">
-                                <div class="head">Date:: Wednesday,17th 2021</div>
-                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia ipsa veritatis
-                                    dolorem nihil iusto eligendi, distinctio optio reprehenderit commodi possimus
-                                    laborum. Ex recusandae dolorem rerum dignissimos, facilis labore enim
-                                    voluptates.</p>
-                                <div class="image">
-                                    <img data-src="images/bg (2).jpeg" alt="" />
+                                <h1>Event</h1>
+                                <div class="eventsDetails">
+                                    <div class="head">Date:: Wednesday,17th 2021</div>
+                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia ipsa veritatis
+                                        dolorem nihil iusto eligendi, distinctio optio reprehenderit commodi possimus
+                                        laborum. Ex recusandae dolorem rerum dignissimos, facilis labore enim
+                                        voluptates.</p>
+                                    <div class="image">
+                                        <img data-src="images/bg (2).jpeg" alt="" />
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -611,13 +601,13 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                 </div>
 
                 <div class="section__container" style="display:block;">
-                   <div class="testimonials__grid">
+                    <div class="testimonials__grid">
                         <div class="swiper_class">
-                            <div class="swiper-wrapper recentSlider main">
+                            <div class="swiper-wrapper recentSlider_main">
                                 <?php
                                 $data = $newDataRequest->library_viewList();
-                                
-                                if (is_object(json_decode($data))){
+
+                                if (is_object(json_decode($data))) {
                                     $data = json_decode($data);
                                     foreach ($data as $item) {
                                         $unique_id = $item->UniqueId;
@@ -642,23 +632,252 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
                         </div>
                     </div>
                 </div>
-                <div class="workshop">
-                    <?php
-                    if (is_object($decoded_annc)) { { {
-                                echo '
-                            <img data-src="../API/images/annc/' . $decoded_annc->file . '" alt="" />
-                            <div class="info">
-                                <h1>' . $decoded_annc->name . '</h1>
-                                <p>' . $decoded_annc->message . '</p>
-                            </div>';
-                            }
-                        }
-                    } else { { {
-                                echo "<header>Announcement data is not yet available</header>";
-                            }
-                        }
+                <div class="announcement">
+                    <img src="images/annc.png" alt="announcement image" />
+                </div>
+                <?php
+                $keys = [];
+                $newKeys = [];
+                if (is_object($decoded_annc)) {
+                    $keys = get_object_vars($decoded_annc);
+                    if (count($keys) > 0) {
+                        $newKeys = array_keys($keys);
                     }
-                    ?>
+                }
+
+                ?>
+                <div class="annc_honmo">
+
+                    <div class="left_pan">
+                        <div class="grid_annc cl">
+                            <div class="shape_annc">
+                                <div class="text_num">
+                                    <h1>
+                                        <?php
+                                        $Object_data = json_decode($decoded_annc->{$newKeys[4]});
+                                        echo $Object_data->name;
+                                        ?>
+                                    </h1>
+                                    <div class="inner_div_annc">
+                                        <p><?php echo $Object_data->message; ?></p>
+                                        <?php
+                                        if (!empty($Object_data->file)) {
+                                            echo '<div class="options" style="display:flex;gap:10px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M7 11l5 5l5 -5" />
+                                            <path d="M12 4l0 12" />
+                                        </svg>
+                                        <a href="../API/images/annc/' . $Object_data->file . '" target="_blank" download><p>Download File</p></a>
+                                    </div>';
+                                        }
+
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="indicator">
+                                <div class="indicator_min">
+                                    <div class="indicator_orig">
+                                        <h1>01</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pointer">
+                            <div class="s_contain">
+                                <div class="pock top">
+                                    <div class="inner"></div>
+                                </div>
+                                <div class="stick"></div>
+                                <div class="pock bottom">
+                                    <div class="inner"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="grid_annc cl">
+                            <div class="shape_annc">
+                                <div class="text_num">
+                                    <h1>
+                                        <?php
+                                        $Object_data = json_decode($decoded_annc->{$newKeys[3]});
+                                        echo $Object_data->name;
+                                        ?>
+                                    </h1>
+                                    <div class="inner_div_annc">
+                                        <p><?php echo $Object_data->message; ?></p>
+                                    </div>
+
+                                    <?php
+                                    if (!empty($Object_data->file)) {
+                                        echo '<div class="options" style="display:flex;gap:10px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M7 11l5 5l5 -5" />
+                                            <path d="M12 4l0 12" />
+                                        </svg>
+                                        <a href="../API/images/annc/' . $Object_data->file . '" target="_blank" download><p>Download File</p></a>
+                                    </div>';
+                                    }
+
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="indicator">
+                                <div class="indicator_min">
+                                    <div class="indicator_orig">
+                                        <h1>03</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pointer">
+                            <div class="s_contain">
+                                <div class="pock top">
+                                    <div class="inner"></div>
+                                </div>
+                                <div class="stick"></div>
+                                <div class="pock bottom">
+                                    <div class="inner"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="grid_annc cl">
+                            <div class="shape_annc">
+                                <div class="text_num">
+                                    <h1>
+                                        <?php
+                                        $Object_data = json_decode($decoded_annc->{$newKeys[2]});
+                                        echo $Object_data->name;
+                                        ?>
+                                    </h1>
+                                    <div class="inner_div_annc">
+                                        <p><?php echo $Object_data->message; ?></p>
+                                    </div>
+
+                                    <?php
+                                    if (!empty($Object_data->file)) {
+                                        echo '<div class="options" style="display:flex;gap:10px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M7 11l5 5l5 -5" />
+                                            <path d="M12 4l0 12" />
+                                        </svg>
+                                        <a href="../API/images/annc/' . $Object_data->file . '" target="_blank" download><p>Download File</p></a>
+                                    </div>';
+                                    }
+
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="indicator">
+                                <div class="indicator_min">
+                                    <div class="indicator_orig">
+                                        <h1>02</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right_pan">
+                        <div class="grid_annc">
+
+                            <div class="indicator">
+                                <div class="indicator_min">
+                                    <div class="indicator_orig">
+                                        <h1>04</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="shape_annc">
+                                <div class="text_num">
+                                    <h1>
+                                        <?php
+                                        $Object_data = json_decode($decoded_annc->{$newKeys[1]});
+                                        echo $Object_data->name;
+                                        ?>
+                                    </h1>
+                                    <div class="inner_div_annc">
+                                        <p><?php echo $Object_data->message; ?></p>
+                                    </div>
+
+                                    <?php
+                                    if (!empty($Object_data->file)) {
+                                        echo '<div class="options" style="display:flex;gap:10px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M7 11l5 5l5 -5" />
+                                            <path d="M12 4l0 12" />
+                                        </svg>
+                                        <a href="../API/images/annc/' . $Object_data->file . '" target="_blank" download><p>Download File</p></a>
+                                    </div>';
+                                    }
+
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pointer">
+                            <div class="s_contain">
+                                <div class="pock top">
+                                    <div class="inner"></div>
+                                </div>
+                                <div class="stick"></div>
+                                <div class="pock bottom">
+                                    <div class="inner"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="grid_annc">
+                            <div class="indicator">
+                                <div class="indicator_min">
+                                    <div class="indicator_orig">
+                                        <h1>05</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="shape_annc">
+                                <div class="text_num">
+                                    <h1>
+                                        <?php
+                                        $Object_data = json_decode($decoded_annc->{$newKeys[0]});
+                                        echo $Object_data->name;
+                                        ?>
+                                    </h1>
+                                    <div class="inner_div_annc">
+                                        <p><?php echo $Object_data->message; ?></p>
+                                    </div>
+
+                                    <?php
+                                    if (!empty($Object_data->file)) {
+                                        echo '<div class="options" style="display:flex;gap:10px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M7 11l5 5l5 -5" />
+                                            <path d="M12 4l0 12" />
+                                        </svg>
+                                        <a href="../API/images/annc/' . $Object_data->file . '" target="_blank" download><p>Download File</p></a>
+                                    </div>';
+                                    }
+
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
             <section id="easter">
@@ -695,7 +914,7 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
             </section>
             <a href="../login/?userlogin">
                 <div class="user_icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-user"></i>
                 </div>
             </a>
 
@@ -705,73 +924,88 @@ if ($records != "Fetching data encounted a problem" || $records != "No records a
 
         </main>
         <footer>
-            <div class="container">
-                <div class="brand">
-                    <header>ZOE WORSHIP CENTRE</header>
-                    <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+            <div class="footer-container">
+                <div class="sec aboutus">
+                    <h2>About Us</h2>
+                    <p>Zoe worship centre is a welcoming community of faith dedicated to loving God and loving
+                        others.
+                        We invite you to join us as we explore God's Word, experience His presence and serve our
+                        community.</p>
+                    <ul class="sci">
+                        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                 </div>
-                <div class="links">
+                <div class="sec quicklinks">
+                    <h2>Quick Links</h2>
                     <ul>
-                        <li>Home</li>
-                        <li>Projects</li>
-                        <li>Partnership</li>
-                        <li>leaders</li>
-                        <li>library</li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="Gallery.php">Gallery</a></li>
+                        <li><a href="testProjects.php">projects</a></li>
+                        <li><a href="missions/">missions</a></li>
+                        <li><a href="partnership/">partnerships</a></li>
+                        <li><a href="../library/library.php">library</a></li>
+
                     </ul>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis optio soluta sunt
-                        corrupti
-                        necessitatibus, reprehenderit aperiam sint, labore, voluptate aliquid earum. Sapiente quos
-                        quam
-                        ducimus asperiores nam voluptas iste perferendis?</p>
                 </div>
-                <div class="contact">
-                    <div class="field">
-                        <h2>Contact</h2>
-                        <ul>
-                            <li><span>Email :</span></li>
-                            <li>zoeworshipcentrechurch@gmail.com</li>
-                            <li><span>WhatsApp :</span></li>
-                            <li>(+233) - 553 838 464</li>
-                            <li><span>Caller :</span></li>
-                            <li>(+001) - 5534 838 4649</li>
-                        </ul>
-                    </div>
+                <div class="sec contactBx">
+                    <h2>Contact Info</h2>
+                    <ul class="info">
+                        <li>
+                            <span><i class='bx bxs-map'></i></span>
+                            <span>location Galalea street <br> Kasoa <br> Gh</span>
+                        </li>
+                        <li>
+                            <span><i class='bx bx-envelope'></i></span>
+                            <p><a href="mailto:zoe@gmail.com">Zoe@gmail.com</a></p>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <?php
-            if ($data_theme == 'christmas_theme') { { {
-                        echo '<img data-src="../images/gift5.png" alt="gift1" />';
-                    }
-                }
-            }
-            ?>
         </footer>
         <script src="css/slick.min.js" defer></script>
         <script src="../js/aos.js"></script>
         <script>
             $(document).ready(function () {
 
-                Sliders = document.querySelector('.recentSlider.main');
-                    $(Sliders).slick({
-                        slidesToShow: 4,
-                        slidesToScroll: 1,
-                        autoplay:true,
-                        arrows:false,
-                    })
-                Slider_event = document.querySelector('.recentSlider');
-                $(Slider_event).slick({
-                    slidesToShow: 2,
+                Sliders = document.querySelector('.recentSlider_main');
+                $(Sliders).slick({
+                    slidesToShow: 4,
                     slidesToScroll: 1,
-                    autoplay:true,
-                    arrows:false,
+                    autoplay: true,
+                    arrows: false,
+
                 })
-                
+                Slider_event = document.querySelector('#recent_activities');
+                settings = {
+                    slidesToShow: 4,
+                    slidesToScroll: 2,
+                    autoplay: true,
+                    arrows: false,
+                    dots: false,
+                    pauseOnHover: true,
+                    mobileFirst: true,
+                    responsive: [{
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1
+                        }
+                    }, {
+                        breakpoint: 520,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+
+
+                    }]
+
+                }
+                $(Slider_event).slick(settings);
+
                 AOS.init();
                 const toggle = document.querySelector(".menu_toggle");
                 const sendUp = document.querySelector(".send_up");

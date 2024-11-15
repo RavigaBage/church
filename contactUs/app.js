@@ -1,4 +1,9 @@
 try {
+  (function () {
+    emailjs.init({
+      publicKey: "RtfFLq0ZUtE5gn-AE",
+    });
+  })();
   const formData = document.querySelector('form');
   let EmailAddress = document.querySelector('input[type="email"]');
   let textArea = document.querySelector('textarea');
